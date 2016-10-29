@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 using System;
+using System.Text;
+using System.IO;  
 
 public enum STATE 
 {
@@ -22,9 +24,6 @@ public enum MODIFIER
 
 public class SceneManager : MonoBehaviour {
 
-
-
-
     public GameObject menuChoicePrefab;
     public RectTransform ScrollMenu;
     public Text LeftDialogue;
@@ -36,9 +35,12 @@ public class SceneManager : MonoBehaviour {
     private int currentDialogue = 0;
 	private DNode activeNode;
 	private bool nodeChanging = false;
+    public Dialogue bastard;
 
 	// Use this for initialization
 	void Start () {
+        string contents = File.ReadAllText("Assets/Text/Dialogue_1_2.json");
+        JsonUtility.FromJsonOverwrite(contents, bastard);
 	}
 
     public void ShowChoices(){

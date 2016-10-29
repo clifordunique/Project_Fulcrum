@@ -1,0 +1,79 @@
+{
+    "script": {
+        "id": "twine-user-script",
+        "role": "script",
+        "type": "text/twine-javascript"
+    },
+    "tw-passagedata": [
+        {
+            "name": "Start",
+            "pid": "1",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ],
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                "left",
+                ">Hi there ally NPC!"
+            ],
+            "position": "503,281",
+            "tags": ""
+        },
+        {
+            "name": "Start",
+            "pid": "1",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ],
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                "left",
+                ">Hi there ally NPC!"
+            ],
+            "position": "503,281",
+            "tags": ""
+        },
+        {
+            "pid": "2",
+            "tags": "",
+            "position": "378,423",
+            "dialogue_1": [
+                "morris",
+                "neutral",
+                ">Double-click this passage to edit it."
+            ],
+            "name": "Hi there ally NPC!"
+        },
+        {
+            "pid": "3",
+            "tags": "",
+            "position": "653,431",
+            "dialogue_1": [
+                "morris",
+                "neutral",
+                ">Double-click this passage to edit it."
+            ],
+            "name": "Hi player! How are you doing?"
+        }
+    ],
+    "style": {
+        "id": "twine-user-stylesheet",
+        "role": "stylesheet",
+        "type": "text/twine-css"
+    },
+    "tw-storydata": {
+        "creator": "Twine",
+        "format": "Harlowe",
+        "creator-version": "2.0.11",
+        "startnode": "1",
+        "ifid": "806285FD-0840-4051-9C12-AD60EABEDA08",
+        "name": "TEST1",
+        "options": ""
+    }
+}
