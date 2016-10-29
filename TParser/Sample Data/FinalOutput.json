@@ -1,0 +1,75 @@
+{
+    "tw-storydata": {
+        "creator-version": "2.0.11",
+        "startnode": "1",
+        "options": "",
+        "ifid": "806285FD-0840-4051-9C12-AD60EABEDA08",
+        "format": "Harlowe",
+        "name": "TEST1",
+        "creator": "Twine"
+    },
+    "style": {
+        "id": "twine-user-stylesheet",
+        "type": "text/twine-css",
+        "role": "stylesheet"
+    },
+    "tw-passagedata": [
+        {
+            "dialogue_0": [
+                "athena",
+                "neutral",
+                "left",
+                "Hi there ally NPC!"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                "Hi player! How are you doing\""
+            ],
+            "pid": "1",
+            "tags": "",
+            "position": "503,281",
+            "name": "Start"
+        },
+        {
+            "dialogue_0": [
+                "athena",
+                "neutral",
+                "left",
+                "Hi there ally NPC!"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                "Hi player! How are you doing\""
+            ],
+            "pid": "1",
+            "tags": "",
+            "position": "503,281",
+            "name": "Start"
+        },
+        {
+            "position": "378,423",
+            "name": "Hi there ally NPC!",
+            "dialogue_0": [
+                "Double-click this passage to edit it."
+            ],
+            "pid": "2",
+            "tags": ""
+        },
+        {
+            "position": "653,431",
+            "name": "Hi player! How are you doing?",
+            "dialogue_0": [
+                "Double-click this passage to edit it."
+            ],
+            "pid": "3",
+            "tags": ""
+        }
+    ],
+    "script": {
+        "id": "twine-user-script",
+        "type": "text/twine-javascript",
+        "role": "script"
+    }
+}

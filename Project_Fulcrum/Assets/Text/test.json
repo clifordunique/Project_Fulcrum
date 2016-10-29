@@ -1,0 +1,44 @@
+{
+    "tw-passagedata": [
+        {
+            "position": "503,281",
+            "tags": "",
+            "name": "Start",
+            "pid": "1",
+            "text": "\nathena neutral left [[Hi there ally NPC!]] \n\nmorris happy [[Hi player! How are you doing?]]\n\n"
+        },
+        {
+            "position": "378,423",
+            "tags": "",
+            "name": "Hi there ally NPC!",
+            "pid": "2",
+            "text": "Double-click this passage to edit it."
+        },
+        {
+            "position": "653,431",
+            "tags": "",
+            "name": "Hi player! How are you doing?",
+            "pid": "3",
+            "text": "Double-click this passage to edit it."
+        }
+    ],
+    "script": {
+        "role": "script",
+        "type": "text/twine-javascript",
+        "id": "twine-user-script"
+    },
+    "style": {
+        "role": "stylesheet",
+        "type": "text/twine-css",
+        "id": "twine-user-stylesheet"
+    },
+    "tw-storydata": {
+        "creator": "Twine",
+        "format": "Harlowe",
+        "name": "TEST1",
+        "startnode": "1",
+        "options": "",
+        "ifid": "806285FD-0840-4051-9C12-AD60EABEDA08",
+        "creator-version": "2.0.11"
+    },
+}

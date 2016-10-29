@@ -1,0 +1,438 @@
+##################
+#GAME STORY NOTES#
+##################
+
+unsorted junk
+weapon hardness and sharpness
+battle tempering
+shitty branch has highest temper scaling
+
+CHARACTERS ############################################
+	
+	AZI LYSENNE
+	VYSO OCTREMERE
+	
+	Very skilled fighter who is terrified of losing	
+	Berzerker Character
+	Rich, Thrill-Seeking Character who pays to take part
+	
+	RUMIN XXXXXX, THE BLEEDING HEART
+	"Quote"
+		
+		Home Province: Outlands
+		*Act 1 Candidate*
+		
+	MORRIS XXXXXX, THE PACKRAT
+	"Quote"
+		
+		Home Province: Cerebos
+		*Act 1 Candidate*
+
+	JOM BRAKAS, THE BIPARTITE
+	"Wake me up when we're about to die"
+	
+		Home Province: Lateria
+		*Act 1 Candidate*
+		Terrifyingly fierce fighter, but narcoleptic and unwilling to fight most of the time.
+		Man whose presence is split between an arca and a human body. 
+		After being imprisoned and thought dead by his friends, they tried to bring him back through an arcan binding.
+		Having been left in solitary confinement for so long, his mind had faded, loosening his spirit from his body and allowing him to be bound to a shell while still alive.
+		He's unable to be fully aware in both bodies at once, and so leaves one sleeping while controlling the other. 
+		He is attending to matters very important to him with his arcan body, which is with his family.
+		This has the effect of making his human self seem lazy and narcoleptic to the player, who doesn't know of his predicament.
+
+		
+	GAZKAN NOYCLAH, THE WISE CRACKING OLD MAN
+	"I'm just trying to lighten the mood!"
+	
+		Home Province: ???
+		An old man who joined the warband without being asked to, and frequently remarks with terrible jokes at inappropriate times.
+		Is usually asked to leave, which he does, albeit temporarily.
+		Comic relief character.
+		Laughs obnoxiously at his own offensive jokes.
+		Has nearly no screen time outside of his comical intrusions.
+		
+		He is actually a secret agent working for the enemy, who infiltrated the group with the intention of leaking information. 
+		This leads to a spy scare subplot and the option to kick a suspected infiltrator out of the party.
+		
+	JURIOUS PYLE, AKA SGT.PYLE, THE WARTORN
+	"I'll give you a hint at how I'm feeling: it rhymes with my name. And no, I'm not feeling curious."
+	
+		Home Province: Vasculos
+		-
+		Battle scarred commander, conflicted by the things he saw at war. Very opinionated and bull-headed ally, but well intentioned.
+		Kind of like Kenny from the Walking Dead games, but less annoyingly contrarian.
+		
+	VELLA MOROMA, THE KEEPER
+	"Quote"
+	
+		Home Province: Vasculos
+		Sent at a young age to learn in Cerobos because of her natural talent.
+	
+	SOLENOID "SOL" HANSMOORE, THE LOST
+	"Quote"
+	
+		Home Province: Cerobos
+		He was named after the first electrical component he selected from a box, as is tradition in Cerobos.
+		Not particularly smart, especially by Cerobos standards. He thinks in unorthodox ways, however, leading to breakthroughs unconcievable by common researchers.
+		Classified by the Cerobos Academic Command as 'Divergent Type', because of his usefully unique mindset. He is considered quite valuable despite his generally poor performance.
+	
+	SILVA KOZO, THE PROPAGANDIST
+	"The people need to see this!"
+	
+		Home Province: Hedonia
+		*Act 1 Candidate*
+		A talented sculptor of public opinion. Her journalistic integrity got her in trouble with the Othryc Council, who sent her to an outland labour camp.
+		
+		
+	ROSKA OZEHR, THE CONSPIRACY THEORIST
+	"You say none of the things I worry about ever happen? It's because of my vigilance that they don't!"
+		
+		Home Province: Hedonia
+		-Extreme paranoia, which is actually often justified.
+		-Long, messy, black hair with straight bangs
+		-Looks like a total mess, bags under eyes
+		Runs a conspiracy theory blog describing real government pacification measures being used to control the populace. 
+		Wears a gas mask to prevent the effects of the pacifying agent. 
+	
+	ESTIEL REGNIS, THE LEGACY
+	"There is nothing more dangerous than an ignorant man with something to lose."
+		
+		Home Province: Lateria
+		Ruler of a long gone civilization. Had his devout followers brainwashed to wish for his immortality, 
+		then had them all killed in the hopes that their combined will would manifest. 
+		He has lived for 300 years after successfully attaining immortality. In that time he has experienced much, and come to regret far more.
+		He now lives in solitude in his former temple, wasting his days sculpting endlessly to occupy himself.
+		Believing to have seen all the good and bad the world has to offer, Estiel has become jaded and no longer wishes to be a part of worldly affairs.
+		A certain fiery spirited rebel just might rekindle his faith in humanity, however.
+		
+	ATHENA VERGRYP, THE USURPER, HEIRESS OF AVARICE
+	"Composition. Motive. Delivery. Deniability. All components of a good lie."
+	
+		Home Province: Outlands
+		Daughter of the leaders of a rebellion, the likes of which the world had never seen before or since.
+		Manipulator. Mastermind. She has shown a fiery resolve and controlling temperament since a young age.
+		A born leader.
+		Raised deep in the forests of the Outlands.
+		
+	AVATAR, THE RISING FLAME
+	"Quote"
+		
+SETTING ##################################################
+
+	Each faction is based off one of the pursuits of man.
+
+			 Control
+	Knowledge   |    Spirituality
+			\   |   /
+			  \ | /
+			  / | \       
+			/   |   \
+	Hedonism	|     Strength
+			 Freedom
+
+	Geographically opposite factions have opposing ideals.
+	Top 3 are external forces, bottom three are internal forces
+
+	PROVINCE NAMES:
+
+
+			  Othrys
+	Cerebos   	|    Lateria
+			\   |   /
+			  \ | /
+			  / | \       
+			/   |   \
+	Hedonia		|     Vasculos
+			 Olympus
+			 Outlands
+
+	
+	CEREBOS ##########################################################
+		"When I think of Cerebos, I envision vast automated industrial complexes, grand universities, and secret research centres buried deep underground.
+		The whirring machinery calls forth thoughts of awe-inspiring revelations. A desire to master the laws that govern our world.
+		A land of fixated study and technological wonder."
+	
+		--
+		
+		-Incentive to liberate: technological advantage.
+		
+	LATERIA ##########################################################
+		"When I think of Lateria, I envision countless shrines, silent meditation, and immaculate masonry, as white as ivory.
+		The ornate spires call forth thoughts of pious self-reflection. Abstinence in pursuit of a higher existence.
+		A land of marble sculptures and spiritual awakening."
+	
+		--
+		
+		-Incentive to liberate: unlocking the secrets of the aether
+		
+	VASCULOS #########################################################
+		"When I think of Vasculos, I envision 
+		The dented iron walls call forth thoughts of fierce training. A lifelong dedication to personal greatness and physical power.
+		A land of wrought iron and rippling muscle."
+		
+		--
+		
+		
+		-Incentive to liberate: able bodied and zealous warriors.
+		
+	OUTLANDS(OLYMPUS) ################################################
+		"When I think of the Outlands, I envision boundless forests, virtuous people,
+		The ancient redwoods call forth thoughts of true freedom. A humble place without law, 
+		A land of untamed wilds and diverse people.
+	
+		--
+		
+		-Othrys is in the process of deforesting the Outlands, and has turned one third of it into farmland.
+		
+	HEDONIA ##########################################################
+		"When I think of Hedonia, I envision raucous celebrations, exquisite food, and overindulgence of every variety. 
+		The ??? call forth thoughts of freed inhibitions. A mind at ease, lulled to sleep in the soft arms of simple living. 
+		A land of bright lights and smiling faces."	
+		
+		--
+		
+		-Incentive to liberate: control of the media.
+		-Shrouded in a permanent fog, which is actually a "pacifying agent". It is an airborn chemical designed to keep the masses complacent. It was designed in Ceroboros.
+		
+	OTHRYS ###########################################################
+		"When I think of Othrys, 
+		These lands call forth thoughts of 
+	
+STORYLINE ############################################################
+
+	The story follows a band of rebels seeking to overthrow the oppressive government. Shit goes off the rails pretty fast.
+	The player will lead the fourth insurrection on Othrys.
+	Need a character that gives player impetus to rebel
+	
+
+	ACT 0
+		Start as the 'rising flame' character, overconfident and upbeat.
+		The player character will be named by the player.
+		Tutorials and shit, player starts strengthening their character and getting invested in him.
+		Collects a few allies along the way.
+		Tensions rise as the overly optimistic avatar's ideals clash with those of Athena.
+	ACT 1
+		Things come to a head as Athena confronts the player about the way he's leading the resistance movement.
+		Athena kills player and the story's point of view abruptly shifts to Athena along with the player's controls.
+	ACT 2
+		Athena builds up the warband and ramps up AXIS liberation efforts. She struggles to keep members in line after the change in leadership.
+	ACT 3
+		Imprisonment arc - major character development for Athena
+	ACT 4
+		Discovery of the true nature of the aether and possibly the origins of the pocket dimension.
+		Reveal that the aether is having a cyclical and self replicating effect on the denizens of this world, leading to a potential catastrophe.
+		
+	ACT ???
+		Ultimate end goal in seizing total control of the aether and unifying it, stopping the aetheric cycle and effectively becoming God, 
+		or destroying the aether and reverting the world to a mundane state similar to earth's.
+		
+WORLD BUILDING #####################################################
+
+	Arca/Arcan, name for those brought back to life via arcan binding
+	
+	When a massacre takes place, it causes it to rain. This is from the influx of tragic emotions into the aether.
+	
+	Every person is born with a link to the aether, giving them a small amount of agency over cause and effect. 
+	For example, one connected to the aether might find it much easier to find their car keys than one without.
+	Could be thought of as a positive influence on "luck".
+	
+	Those who have broken their link to the aether are thought to be cursed, due to their very apparent loss of the benefits it provides.
+
+	A man described the Aether as being such: Strings; infinitely thin and unfathomably long strings soaring in every direction, perfectly straight all the while.
+	The deeper you look the more the strings intertwine, until they form into thick braided ropes.
+	
+	Athena learning to interact with the Aether: 'I can't see the strings, but somehow, I can sense them there. Like a strand of spider's web.'
+	
+	Olympus was destroyed in the first rebellion. A powerful nuclear weapon destroyed the mountain, 
+	and in the process wiped out much of the original technology of earth due to the EMP. 
+	A massive boulder from the mountain was flung into Vasculos, where it was hollowed out and made into a city. 
+	Vasculosan legends say the founder of Vasculos placed it there, proving his strength.
+	
+	The presence of the aether had a subtle effect on conventional physics, creating a new column of elements on the periodic table.
+	
+HISTORY ##########################################################
+	
+	Original Project Fulcrum Science Team ########################
+		A group of highly certified experts were assembled to oversee Project Fulcrum on P7.
+	
+		Physiologist - Vasculos
+ 		Project Overseer - Othrys
+		Psychologist - Hedonia
+		Botanist - Outlands
+		Engineer - Cerebos
+		Aetheric Specialist - Lateria
+
+	E2016-E2103 ######################################################
+		Earth is barren and low on resources. No hospitable planets exist within viable travelling distance of earth. 
+		Earth population is 296 million, 1/25th of its former size. The rich elite still survive while the working class wastes away through lack of health care and food shortages.
+		The aether is discovered; Its power is harnessed to open pocket dimensions with lush worlds suitable for the upper class.
+		Pocket Seven is formed. The large circular plateau below the entry point was quickly terraformed to fit the project's specifications, and was dubbed AXIS.
+		The scientists of Pocket 7 begin work on PROJECT FULCRUM, with the goal of linking the aether to humans.
+		Pocket 7 is unpopulated. It's colonization was delayed to determine if Project Fulcrum produced safe conditions.
+		A pact is made between a group of pocket dimension projects to evacuate the lower class and sever their connections to earth in a mass exodus.
+		On Dec XX, 2103, Pockets 7, 8, and 10 staged a short-lived coup, buying enough time to shepherd an estimated 270,000 people through the gateways.
+		Pocket 7 was only able to take in 43,000 refugees before the decision was made to sever connection to earth. The military and leadership did not make it.
+		The PROJECT FULCRUM science team was put in charge due to their experience and extensive knowledge of AXIS.
+		
+	A1-A5 ###############################################################
+		
+		Settlement of axis begins. 
+		The botanist immediately assembles an expedition to lower altitude in search of arable land. 
+		Once a steady food supply was established, the Engineer travelled to the mineral-rich mountains of Cerebos to develop industry on AXIS.
+		The Aetherist traced Aether flows and found strong concentrations to study in Lateria.
+		The Physiologist found the elevation at which air composition was the healthiest, and encouraged people to settle there.
+		The Project Overseer set up a base of operations on the high mountain of Othrys for its clear line of sight and distance from the former gateway, in case of earthly attack.
+		The botanist remained at the foot of Olympus, improving agriculture operations to suit the new climate.
+		
+	A5-A10 ##############################################################
+		
+		
+	
+#############
+#GAME STATES#
+#############
+
+There are three distinct game states, with different mechanics accompanying each. Battle, Social, and Tactical.
+	
+BATTLE ##################################################
+	
+	The 'high speed action and combat' game state. Physically simulated platformer combat. Orthographic 2D side-on perspective. High graphical fidelity.
+
+SOCIAL ##################################################
+
+	This state is played out on a small, rpg exploration style map, usually only encompassing the player's base camp. 2D, Low Angle Top-Down perspective. 
+	No physics, just linear WASD movement of character. Interact with objects or characters in the scene to trigger dialogue. 
+	Low graphical fidelity; characters are presented as 1-2 colour cutouts with low fps sprite animations. These are the Cutout Sprites.
+	Upon triggering dialogue, the player and character will appear on opposing sides of the screen with full detail upper bodies taking up most of the vertical space.
+	These high detail sprites are the Actor Sprites, and will emote based on the dialogue taking place. 
+	Between/behind them, the low detail scene continues, where the Cutout sprites of the characters might act out the events taking place in low detail. 
+	This will make it more feasible to bring hundreds of interactions to life without requiring too much effort.
+
+TACTICAL ################################################	
+	
+	There is no controllable character in this mode, only a map and menus.
+	This is where the management component of the game is played. A symbolic, unrealistic, perspective map of AXIS is the main feature of this state. 
+	Each region can be highlighted and clicked on after being unlocked, and from there they can be viewed top-down in higher detail. 
+	Nodes dot each region, denoting places of interest that the player can travel to. 
+	Menus let the player manage supplies, modify tactics, and read log entries on characters and enemies to learn more about the world.
+	
+############################
+#GENERAL GAMEPLAY MECHANICS#
+############################
+
+WARBAND ############################################################
+	The player is tasked with leading a warband across the harsh landscapes of *world*, keeping them safe and motivated.
+	The warband consists of: 1) the leading party(LP), and 2) the masses.
+		1) The leading party(LP) consists of important characters and active battle companions.
+		2) The masses are a large force of grunt fighters that make up the bulk of the warband. They serve a less direct purpose.
+		   The masses can be sent into battles to lessen the amount of forces the LP must fight. 
+		   A larger amount of supporting fighters are often needed to deal with obstacles and conflicts.
+
+TOKENS/BOONS #######################################################
+	Gained through combat and actions, and used in dialogue to open extra speech options.
+	This has the effect of tying playstyle to conversation style which could be very unique, but also dangerous territory if they conflict with the player.
+	Con: Could also encourage savescumming to get the right dialogue option.
+
+	Mettle - trading blows while at very low health.
+	Courage - taking a fight against a superior foe.
+	Conviction - drive to continue in your mission.
+	Fucks To Give - joke token, always at 0.
+	Patience - Used to unlock expository dialogue options. - Talking wide.
+	Persistence - Used to dig deeper into a conversation. - Talking deep.
+	
+CONVERSATION ######################################################
+	Conversation plays a large role in Project Fulcrum
+	Each Leading Character(LC) has emotion values which are affected by dialogue choices.
+	Each LC acts based on their emotion values. For example one who is too angry may attack the player, or one who isn't confident might desert the warband.
+	
+SPEECHES###########################################################
+
+	The player will occasionally be prompted to make a speech in front of the warband, which affects the mood of the leading characters as well as overall morale.
+	Certain concerns can be addressed with regards to recent events, with story implications.
+	Serves as a closing and opening point to new chapters of the story.
+	As usual, tokens can be spent to unlock special dialogue options.
+
+MINDSCAPE #########################################################
+	Area inside the character's own mind, traversable like an ordinary level.
+	A place for the player to upgrade certain attributes of their character.
+	The physical limiter is found here and can be bypassed to provide temporarily heightened strength, for a price.
+	A battle could be fought here maybe?
+
+SECOND IN COMMAND #################################################
+
+	The player will be prompted to select a second in command, to act as their right hand man. 
+	This will have emotional effects as well as provide bonuses (or penalties) to speeches.
+	
+	
+PUBLIC SUPPORT ####################################################
+	
+	Each region will have a SUPPORT BAR, measuring public opinion of the rebellion. It will have 3 segments: Opposing, Neutral/Unsure, and Supporting.
+	Propaganda will slowly convert supporters and neutral parties to the opposing side, but the effect will lessen when their propaganda machine is dismantled in Hedonia.
+	Neutral population can be won over through liberation of specific locations, while Opposing population must be first made Neutral through public messages or acts of kindness.
+	Locations cannot be liberated if there is no neutral population, only occupied.
+
+INTERDICTION ######################################################
+EXECRATION ########################################################
+
+
+########
+#COMBAT#
+########
+
+VIGOR #############################################################
+
+	Health and Stamina are replaced with one resource, Vigor. It starts very high and over the course of a battle slowly depletes. 
+	Combatants can take a lot of hits before going down in Project Fulcrum. You can also attempt to exhaust an enemy's vigor by evading them to tire them out.
+	Vigor can be temporarily boosted in a variety of ways including support abilities and mental bypass (see MINDSCAPE).
+	Denoted by a big 'power level' style bar that goes across the bottom of the screen and up the left side.
+	
+
+
+########
+#SOCIAL#
+########
+
+RESPONSE TYPES ############################################################################
+
+Basic:
+P.A.W.N.S. system
+
+	Passive - Submissive, agreeable, defusing, or relaxed.
+	Active - Assertive, angry, determined, or excited.
+	Witty - Facetious, sarcastic, humorous, or playful.
+	Neutral - Normal, matter of fact.
+	Subversive - Opposite, misleading, or lying.
+
+Combinations:
+
+	Passive/Subversive - Dodging the issue, changing the subject, or telling the partial truth
+	Active/Subversive - Full-on lying
+	Passive/Wit - Subtle quips, defusing humour, or light hearted japes.
+	Active/Wit - Insults, sass, or rhetorical sarcasm.
+	
+EMOTIONAL STATS ###########################################################################
+	
+	Opinion of player:
+		Like/Dislike
+		Trust
+		Confidence
+		
+	
+	Personal feelings:
+		Stress
+		Anger
+		Happiness
+		Fear
+		Guilt
+	
+	Outlook:
+		Optimism
+		Morals
+
+	
+RANDOM JUNK ###########################################################################
+	MAC8 = EMACIATE
+	
+	Achievement: Desperado Esper Grotto
+	

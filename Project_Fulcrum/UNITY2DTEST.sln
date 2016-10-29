@@ -1,0 +1,62 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{672D8419-0162-8BBA-9D1B-49BC0EEF32FC}") = "UNITY2DTEST", "Assembly-CSharp-firstpass.csproj", "{D1C722F7-159F-5E2D-FADD-445FFC2E3F1C}"
+EndProject
+Project("{672D8419-0162-8BBA-9D1B-49BC0EEF32FC}") = "UNITY2DTEST", "Assembly-CSharp.csproj", "{8DFA35FE-AEF8-FEC9-96A7-C60BFF9A570F}"
+EndProject
+Project("{672D8419-0162-8BBA-9D1B-49BC0EEF32FC}") = "UNITY2DTEST", "Assembly-CSharp-Editor.csproj", "{20C010D9-9A7A-64EC-20EC-DB3BA495C6CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1C722F7-159F-5E2D-FADD-445FFC2E3F1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1C722F7-159F-5E2D-FADD-445FFC2E3F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1C722F7-159F-5E2D-FADD-445FFC2E3F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1C722F7-159F-5E2D-FADD-445FFC2E3F1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DFA35FE-AEF8-FEC9-96A7-C60BFF9A570F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DFA35FE-AEF8-FEC9-96A7-C60BFF9A570F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DFA35FE-AEF8-FEC9-96A7-C60BFF9A570F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DFA35FE-AEF8-FEC9-96A7-C60BFF9A570F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C010D9-9A7A-64EC-20EC-DB3BA495C6CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C010D9-9A7A-64EC-20EC-DB3BA495C6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C010D9-9A7A-64EC-20EC-DB3BA495C6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C010D9-9A7A-64EC-20EC-DB3BA495C6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $2
+		$2.inheritsSet = null
+		$2.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $3
+		$3.StatementBraceStyle = NextLine
+		$3.BeforeMethodDeclarationParentheses = False
+		$3.BeforeMethodCallParentheses = False
+		$3.BeforeConstructorDeclarationParentheses = False
+		$3.BeforeIndexerDeclarationBracket = False
+		$3.BeforeDelegateDeclarationParentheses = False
+		$3.AfterDelegateDeclarationParameterComma = True
+		$3.NewParentheses = False
+		$3.IfParentheses = False
+		$3.WhileParentheses = False
+		$3.ForParentheses = False
+		$3.ForeachParentheses = False
+		$3.CatchParentheses = False
+		$3.SwitchParentheses = False
+		$3.LockParentheses = False
+		$3.UsingParentheses = False
+		$3.SpacesBeforeBrackets = False
+		$3.inheritsSet = Mono
+		$3.inheritsScope = text/x-csharp
+		$3.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal

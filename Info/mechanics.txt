@@ -1,0 +1,2 @@
+guard + direction - land
+crouch + jump (hold) - charge jump

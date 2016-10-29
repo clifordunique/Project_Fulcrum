@@ -1,0 +1,14 @@
+
+
+Vel.X
+Vel.Y
+Movestate
+
+
+
+
+
+							Standing-running
+							
+							
+Get parallel vector to ground and travel along it at current velocity
