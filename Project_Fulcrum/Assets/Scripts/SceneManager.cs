@@ -26,8 +26,8 @@ public class SceneManager : MonoBehaviour {
 
     public GameObject menuChoicePrefab;
     public RectTransform ScrollMenu;
-    public Text LeftDialogue;
-    public Text RightDialogue;
+    public InputField LeftDialogue;
+    public InputField RightDialogue;
 	public Animator SocialMenu;
 	public Animator ActorAnimator;
     public Choice selectedChoice;
@@ -35,12 +35,9 @@ public class SceneManager : MonoBehaviour {
     private int currentDialogue = 0;
 	private DNode activeNode;
 	private bool nodeChanging = false;
-    public Dialogue bastard;
 
 	// Use this for initialization
 	void Start () {
-        string contents = File.ReadAllText("Assets/Text/Dialogue_1_2.json");
-        JsonUtility.FromJsonOverwrite(contents, bastard);
 	}
 
     public void ShowChoices(){
@@ -106,11 +103,13 @@ public class SceneManager : MonoBehaviour {
         if (dialogue.leftSide)
         {
             LeftDialogue.text = dialogue.text;
+            LeftDialogue.GetComponent<TextFieldModder>().activeDialogue = dialogue;
             RightDialogue.text = "";
         }
         else
         {
             RightDialogue.text = dialogue.text;
+            RightDialogue.GetComponent<TextFieldModder>().activeDialogue = dialogue;
             LeftDialogue.text = "";
         }
 		if (dialogue.exit) 

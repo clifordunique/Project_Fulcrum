@@ -1,17 +1,26 @@
 {
-    "script": {
-        "id": "twine-user-script",
-        "role": "script",
-        "type": "text/twine-javascript"
+    "tw-storydata": {
+        "name": "TEST1",
+        "startnode": "1",
+        "creator": "Twine",
+        "options": "",
+        "creator-version": "2.0.11",
+        "ifid": "806285FD-0840-4051-9C12-AD60EABEDA08",
+        "format": "Harlowe"
+    },
+    "style": {
+        "type": "text/twine-css",
+        "id": "twine-user-stylesheet",
+        "role": "stylesheet"
     },
     "tw-passagedata": [
         {
             "name": "Start",
-            "pid": "1",
-            "dialogue_2": [
-                "morris",
+            "dialogue_3": [
+                "athena",
                 "happy",
-                ">Hi player! How are you doing?"
+                "left",
+                "[[Good!]]"
             ],
             "dialogue_1": [
                 "athena",
@@ -19,16 +28,28 @@
                 "left",
                 ">Hi there ally NPC!"
             ],
-            "position": "503,281",
-            "tags": ""
+            "pid": "1",
+            "position": "540,285",
+            "dialogue_4": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Bad!]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ]
         },
         {
             "name": "Start",
-            "pid": "1",
-            "dialogue_2": [
-                "morris",
+            "dialogue_3": [
+                "athena",
                 "happy",
-                ">Hi player! How are you doing?"
+                "left",
+                "[[Good!]]"
             ],
             "dialogue_1": [
                 "athena",
@@ -36,44 +57,302 @@
                 "left",
                 ">Hi there ally NPC!"
             ],
-            "position": "503,281",
-            "tags": ""
+            "pid": "1",
+            "position": "540,285",
+            "dialogue_4": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Bad!]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ]
         },
         {
+            "name": "Start",
+            "dialogue_3": [
+                "athena",
+                "happy",
+                "left",
+                "[[Good!]]"
+            ],
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                "left",
+                ">Hi there ally NPC!"
+            ],
+            "pid": "1",
+            "position": "540,285",
+            "dialogue_4": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Bad!]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ]
+        },
+        {
+            "name": "Start",
+            "dialogue_3": [
+                "athena",
+                "happy",
+                "left",
+                "[[Good!]]"
+            ],
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                "left",
+                ">Hi there ally NPC!"
+            ],
+            "pid": "1",
+            "position": "540,285",
+            "dialogue_4": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Bad!]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "morris",
+                "happy",
+                ">Hi player! How are you doing?"
+            ]
+        },
+        {
+            "name": "Good!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm doing bad.->Bad!]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                ">I'm glad to hear it!"
+            ],
             "pid": "2",
-            "tags": "",
-            "position": "378,423",
-            "dialogue_1": [
-                "morris",
-                "neutral",
-                ">Double-click this passage to edit it."
+            "position": "389,433",
+            "dialogue_4": [
+                "athena",
+                "happy",
+                "left",
+                "[[Goodbye.]]"
             ],
-            "name": "Hi there ally NPC!"
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "happy",
+                "left",
+                ">I'm glad to say it!"
+            ]
         },
         {
-            "pid": "3",
+            "name": "Good!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm doing bad.->Bad!]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                ">I'm glad to hear it!"
+            ],
+            "pid": "2",
+            "position": "389,433",
+            "dialogue_4": [
+                "athena",
+                "happy",
+                "left",
+                "[[Goodbye.]]"
+            ],
             "tags": "",
-            "position": "653,431",
+            "dialogue_2": [
+                "athena",
+                "happy",
+                "left",
+                ">I'm glad to say it!"
+            ]
+        },
+        {
+            "name": "Good!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm doing bad.->Bad!]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                ">I'm glad to hear it!"
+            ],
+            "pid": "2",
+            "position": "389,433",
+            "dialogue_4": [
+                "athena",
+                "happy",
+                "left",
+                "[[Goodbye.]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "happy",
+                "left",
+                ">I'm glad to say it!"
+            ]
+        },
+        {
+            "name": "Good!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm doing bad.->Bad!]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "happy",
+                ">I'm glad to hear it!"
+            ],
+            "pid": "2",
+            "position": "389,433",
+            "dialogue_4": [
+                "athena",
+                "happy",
+                "left",
+                "[[Goodbye.]]"
+            ],
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "happy",
+                "left",
+                ">I'm glad to say it!"
+            ]
+        },
+        {
+            "name": "Bad!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Goodbye.]]"
+            ],
             "dialogue_1": [
                 "morris",
                 "neutral",
-                ">Double-click this passage to edit it."
+                ">Sorry to hear that!"
             ],
-            "name": "Hi player! How are you doing?"
+            "pid": "3",
+            "position": "704,438",
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm good!->Good!]]"
+            ]
+        },
+        {
+            "name": "Bad!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Goodbye.]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "neutral",
+                ">Sorry to hear that!"
+            ],
+            "pid": "3",
+            "position": "704,438",
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm good!->Good!]]"
+            ]
+        },
+        {
+            "name": "Bad!",
+            "dialogue_3": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Goodbye.]]"
+            ],
+            "dialogue_1": [
+                "morris",
+                "neutral",
+                ">Sorry to hear that!"
+            ],
+            "pid": "3",
+            "position": "704,438",
+            "tags": "",
+            "dialogue_2": [
+                "athena",
+                "neutral",
+                "left",
+                "[[Actually I'm good!->Good!]]"
+            ]
+        },
+        {
+            "name": "Goodbye.",
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                ">Goodbye."
+            ],
+            "pid": "4",
+            "position": "541,579",
+            "tags": "",
+            "dialogue_2": [
+                "exit",
+                "morris",
+                "neutral",
+                ">Bye."
+            ]
+        },
+        {
+            "name": "Goodbye.",
+            "dialogue_1": [
+                "athena",
+                "neutral",
+                ">Goodbye."
+            ],
+            "pid": "4",
+            "position": "541,579",
+            "tags": "",
+            "dialogue_2": [
+                "exit",
+                "morris",
+                "neutral",
+                ">Bye."
+            ]
         }
     ],
-    "style": {
-        "id": "twine-user-stylesheet",
-        "role": "stylesheet",
-        "type": "text/twine-css"
-    },
-    "tw-storydata": {
-        "creator": "Twine",
-        "format": "Harlowe",
-        "creator-version": "2.0.11",
-        "startnode": "1",
-        "ifid": "806285FD-0840-4051-9C12-AD60EABEDA08",
-        "name": "TEST1",
-        "options": ""
+    "script": {
+        "type": "text/twine-javascript",
+        "id": "twine-user-script",
+        "role": "script"
     }
 }

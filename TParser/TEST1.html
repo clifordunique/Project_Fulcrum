@@ -1,7 +1,18 @@
 <tw-storydata name="TEST1" startnode="1" creator="Twine" creator-version="2.0.11" ifid="806285FD-0840-4051-9C12-AD60EABEDA08" format="Harlowe" options=""><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">
-</script><tw-passagedata pid="1" name="Start" tags="" position="503,281">athena/neutral/left/>Hi there ally NPC!
-morris/happy/>Hi player! How are you doing?</tw-passagedata>
-<tw-passagedata pid="2" name="Hi there ally NPC!" tags="" position="378,423">morris/neutral/>Double-click this passage to edit it.</tw-passagedata>
-<tw-passagedata pid="3" name="Hi player! How are you doing?" tags="" position="653,431">morris/neutral/>Double-click this passage to edit it.</tw-passagedata>
+
+</script><tw-passagedata pid="1" name="Start" tags="" position="540,285">athena/neutral/left/&gt;Hi there ally NPC!
+morris/happy/&gt;Hi player! How are you doing?
+athena/happy/left/[[Good!]]
+athena/neutral/left/[[Bad!]]</tw-passagedata>
+<tw-passagedata pid="2" name="Good!" tags="" position="389,433">morris/happy/&gt;I&#39;m glad to hear it!
+athena/happy/left/&gt;I&#39;m glad to say it!
+athena/neutral/left/[[Actually I&#39;m doing bad.-&gt;Bad!]]
+athena/happy/left/[[Goodbye.]]</tw-passagedata>
+<tw-passagedata pid="3" name="Bad!" tags="" position="704,438">morris/neutral/&gt;Sorry to hear that!
+athena/neutral/left/[[Actually I&#39;m good!-&gt;Good!]]
+athena/neutral/left/[[Goodbye.]]</tw-passagedata>
+<tw-passagedata pid="4" name="Goodbye." tags="" position="541,579">athena/neutral/&gt;Goodbye.
+exit/morris/neutral/&gt;Bye.</tw-passagedata>
 </tw-storydata>
