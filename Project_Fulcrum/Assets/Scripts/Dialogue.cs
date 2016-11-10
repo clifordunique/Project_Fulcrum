@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Text;
+using System.IO;  
 
 public class Dialogue : MonoBehaviour {
 
 	public string text;
+    public int dialogue_id;
+    public string rawtext;
 	public int emote;
 	public int actor;
 	public bool exit;
@@ -21,19 +25,15 @@ public class Dialogue : MonoBehaviour {
 	
 	}
 
-	/*
-	public void GenFromString(string str)
-	{
-		string[] components = str.Split("-");
-		foreach (string s in components)
-		{
-			print (s);
-		}
-	}
-	*/
+    public void GenFromJson(string filePath)
+    {
+        string jsonString = File.ReadAllText(filePath);
+        JsonUtility.FromJsonOverwrite(jsonString, this);
+    }
 
 	public GameObject Create(int id, string t, int e, int a){
 		newDialog = new GameObject("Dialogue_"+id);
+        dialogue_id = id;
 		text = t;
 		emote = e;
 		actor = a;

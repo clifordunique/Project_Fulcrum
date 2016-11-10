@@ -86,6 +86,7 @@ public class SceneManager : MonoBehaviour {
 	public void StartConvo(DNode startNode)
 	{
 		ChangeNode(startNode);
+        ConvoToJson(startNode);
 	}
 
 	public void ExitConvo()
@@ -159,8 +160,19 @@ public class SceneManager : MonoBehaviour {
       
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public void JsonToConvo()
+    {
+    
+
+
+    }
+
+    public void ConvoToJson(DNode root)
+    {
+        string jsonString = JsonUtility.ToJson(root);
+        string outPath = Application.persistentDataPath + "Node_" + root.nodeID + ".json";
+        print(outPath);
+        //FileStream output = File.Create(Application.persistentDataPath + "Node_" + root.nodeID + ".json");
+        System.IO.File.WriteAllText(outPath, jsonString);
+    }
 }

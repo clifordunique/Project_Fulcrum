@@ -8,9 +8,7 @@ public class Choice : MonoBehaviour {
 	[SerializeField] public int token;
 	[SerializeField] public DNode[] outcome;
 
-
 	GameObject newChoice;
-
 
 	// Use this for initialization
 	void Start () {
