@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Text;
 using System.IO;  
@@ -6,13 +7,13 @@ using System.IO;
 public class Dialogue : MonoBehaviour {
 
 	public string text;
-    public int dialogue_id;
+    public int dialogueID;
     public string rawtext;
 	public int emote;
 	public int actor;
 	public bool exit;
 	[SerializeField]public bool leftSide;
-	GameObject newDialog;
+	//GameObject newDialog;
 
 
 	// Use this for initialization
@@ -30,18 +31,17 @@ public class Dialogue : MonoBehaviour {
         string jsonString = File.ReadAllText(filePath);
         JsonUtility.FromJsonOverwrite(jsonString, this);
     }
-
+	/*
 	public GameObject Create(int id, string t, int e, int a){
 		newDialog = new GameObject("Dialogue_"+id);
-        dialogue_id = id;
+        dialogueID = id;
 		text = t;
 		emote = e;
 		actor = a;
 		return newDialog;
 	}
-
+	*/
 	public void Kill() {
-		Destroy(newDialog);
 		Destroy(this);
 	}
 

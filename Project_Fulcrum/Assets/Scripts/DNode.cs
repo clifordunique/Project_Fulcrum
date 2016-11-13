@@ -1,14 +1,23 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Text;
+using System.IO;  
 
 public class DNode : MonoBehaviour {
 
 	[SerializeField] public string nodeName;
-    [SerializeField] public int nodeID;
-	[SerializeField] public Dialogue[] speech;
-	[SerializeField] public Choice[] Responses;
-    GameObject newDNode;
+    [SerializeField] public int dnodeID;
+    //[SerializeField] public int[] dialogIDs;
+    //[SerializeField] public int[] choiceIDs;
+    [SerializeField] public Dialogue[] speech;
+    [SerializeField] public Choice[] responses;
 
+	public void GenFromJson(string dir)
+	{
+		string contents = File.ReadAllText(dir);
+		JsonUtility.FromJsonOverwrite(contents, this);
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -21,16 +30,7 @@ public class DNode : MonoBehaviour {
 
 	}
 
-	public GameObject Create(int id,string name, Dialogue[] npcspeech){
-		speech = npcspeech;
-        nodeID = id;
-		newDNode = new GameObject("Node_"+id);
-		nodeName = name;
-		return newDNode;
-	}
-
-	public void Kill() {
-		Destroy(newDNode);
+	public void Kill(){
 		Destroy(this);
 	}
 

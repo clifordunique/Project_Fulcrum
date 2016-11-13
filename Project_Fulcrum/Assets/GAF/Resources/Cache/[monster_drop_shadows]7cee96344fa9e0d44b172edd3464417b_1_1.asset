@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59f0b625614a406468ee087f147489e7, type: 3}
-  m_Name: 
+  m_Name: '[monster_drop_shadows]7cee96344fa9e0d44b172edd3464417b_1_1'
   m_EditorClassIdentifier: 
   m_Asset: {fileID: 11400000, guid: 7cee96344fa9e0d44b172edd3464417b, type: 2}
   m_Scale: 1

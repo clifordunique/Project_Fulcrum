@@ -1,34 +1,37 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Text;
+using System.IO;  
 
 public class Choice : MonoBehaviour {
 
-	[SerializeField] public string choiceName;
+	public string choiceName;
+	public int choiceID;
 	[SerializeField] public Dialogue[] playerDialogue;
 	[SerializeField] public int token;
+	public bool[] options;
 	[SerializeField] public DNode[] outcome;
+    public int[] outcomeID;
 
-	GameObject newChoice;
 
 	// Use this for initialization
 	void Start () {
-//		gameObject.GetComponent<Text>.text = playerDialogue[0].text;
+		
 	}
 
 	// Update is called once per frame
 	void Update () {
 
 	}
-
-	public GameObject Create(int id, int t, DNode[] o){
-		newChoice = new GameObject("Choice_"+id);
-		token = t;
-		outcome = o;
-		return newChoice;
+		
+	public void GenFromJson(string dir)
+	{
+		string contents = File.ReadAllText(dir);
+		JsonUtility.FromJsonOverwrite(contents, this);
 	}
 
 	public void Kill() {
-		Destroy(newChoice);
 		Destroy(this);
 	}
 

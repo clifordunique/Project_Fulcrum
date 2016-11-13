@@ -24,7 +24,13 @@ public enum MODIFIER
 
 public class SceneManager : MonoBehaviour {
 
+	public ChoicePrefabScript activeChoicePrefab;
+	public Scene[] sceneList;
+	public GameObject ChoicePrefab;
+	public GameObject DialoguePrefab;
     public GameObject menuChoicePrefab;
+	public GameObject ScenePrefab;
+	public GameObject DNodePrefab;
     public RectTransform ScrollMenu;
     public InputField LeftDialogue;
     public InputField RightDialogue;
@@ -34,10 +40,12 @@ public class SceneManager : MonoBehaviour {
     public int modifier = -1;
     private int currentDialogue = 0;
 	private DNode activeNode;
+	public Scene activeScene;
 	private bool nodeChanging = false;
 
 	// Use this for initialization
 	void Start () {
+		
 	}
 
     public void ShowChoices(){
@@ -60,9 +68,20 @@ public class SceneManager : MonoBehaviour {
             {
 				if (nodeChanging) 
 				{
-					ChangeNode(selectedChoice.outcome[modifier]);
-					nodeChanging = false;
-                    modifier = -1;
+					
+					//ChangeNode(selectedChoice.outcome[modifier]);
+					if (selectedChoice.outcomeID[modifier] < 0)
+					{
+						ChangeNode(activeScene.nodes[0]);
+						nodeChanging = false;
+						modifier = -1;
+					}
+					else
+					{
+						ChangeNode(activeScene.nodes[selectedChoice.outcomeID[modifier]]);
+						nodeChanging = false;
+						modifier = -1;
+					}
 				} 
 				else 
 				{
@@ -83,21 +102,31 @@ public class SceneManager : MonoBehaviour {
         }
     }
 
-	public void StartConvo(DNode startNode)
+	public void StartScene(int sceneID)
 	{
-		ChangeNode(startNode);
-        ConvoToJson(startNode);
+		Scene scene = JsonToScene(sceneID);
+		if (scene == null)
+		{
+			print("SCENE_" + sceneID + " NOT FOUND");
+		}
+		else
+		{
+			activeScene = scene;
+	        ChangeNode(scene.root);
+		}
 	}
 
-	public void ExitConvo()
+	public void ExitScene()
 	{
+		SceneToJson(activeScene);
+		activeScene = null;
 		activeNode = null;
 		selectedChoice = null;
 		modifier = -1;
 		currentDialogue = 0;
 		nodeChanging = false;
 		ActorAnimator.SetInteger("state", (int)STATE.Closed);
-		SocialMenu.SetInteger("state", (int)STATE.Closed);
+		SocialMenu.SetInteger("state", (int)STATE.Closed); 
 	}
 
 	public void SetDialogue(Dialogue dialogue){
@@ -106,16 +135,18 @@ public class SceneManager : MonoBehaviour {
             LeftDialogue.text = dialogue.text;
             LeftDialogue.GetComponent<TextFieldModder>().activeDialogue = dialogue;
             RightDialogue.text = "";
+			RightDialogue.GetComponent<TextFieldModder>().activeDialogue = null;
         }
         else
         {
             RightDialogue.text = dialogue.text;
             RightDialogue.GetComponent<TextFieldModder>().activeDialogue = dialogue;
             LeftDialogue.text = "";
+			LeftDialogue.GetComponent<TextFieldModder>().activeDialogue = null;
         }
 		if (dialogue.exit) 
 		{
-            ExitConvo();
+            ExitScene();
 		}
 	}
 
@@ -134,21 +165,22 @@ public class SceneManager : MonoBehaviour {
     }
 
 	public void ChangeNode(DNode newNode){
+		print("Switching to node: "+ newNode);
 		if (activeNode != null) {
-			for (int i = 0; i < activeNode.Responses.Length; i++) {
+			for (int i = 0; i < activeNode.responses.Length; i++) {
 				Destroy(GameObject.Find("Choice_" + i));
 			}
 		}
 		activeNode = newNode;
         print("Now switched to node: "+ activeNode.nodeName);
-		for(int i = 0; i < activeNode.Responses.Length; i++){
-            print("Choice number " + i + " created");
+		for(int i = 0; i < activeNode.responses.Length; i++){
+            //print("Choice number " + i + " created");
 			GameObject newChoice = (GameObject)Instantiate(menuChoicePrefab);
 			newChoice.transform.SetParent(ScrollMenu, false);
-            newChoice.GetComponent<Text>().text = activeNode.Responses[i].choiceName;
+            newChoice.GetComponent<Text>().text = activeNode.responses[i].choiceName;
 			newChoice.name = "Choice_"+i;
-            print(newChoice.GetComponent<ChoicePrefabScript>());
-            newChoice.GetComponent<ChoicePrefabScript>().SetChoice(activeNode.Responses[i]);
+            //print(newChoice.GetComponent<ChoicePrefabScript>());
+            newChoice.GetComponent<ChoicePrefabScript>().SetChoice(activeNode.responses[i]);
             newChoice.GetComponent<ChoicePrefabScript>().mySceneManager = this;
 //			activeChoices[i] = newChoice;
 		}
@@ -157,22 +189,257 @@ public class SceneManager : MonoBehaviour {
 		ActorAnimator.SetInteger("state", (int)STATE.Dialogue);
         currentDialogue = 0;
         SetDialogue(activeNode.speech[0]);
-      
 	}
-	
-    public void JsonToConvo()
+
+
+
+//
+//
+// SCENE LOADING FROM JSON FUNCTIONS
+//
+//
+
+
+	public Scene JsonToScene(int sceneID)
+	{
+		Transform requestedScene = transform.Find("Scene_"+sceneID);
+		if(requestedScene!=null)
+		{
+			activeScene = requestedScene.gameObject.GetComponent<Scene>();
+			return activeScene;
+			print("Scene already loaded. Using.");
+		}
+		else
+		{
+			print("Loading Scene from JSON.");
+			string sceneDirectory = Application.persistentDataPath + "/Scenes/Scene_" + sceneID + "/";
+			if (Directory.Exists(sceneDirectory))
+			{
+				GameObject sceneObject = (GameObject)Instantiate(ScenePrefab);
+				sceneObject.name = "Scene_"+sceneID;
+				sceneObject.transform.SetParent(this.gameObject.transform, false);
+				Scene myScene = sceneObject.GetComponent<Scene>();
+				myScene.sceneID = sceneID;
+				myScene.GenFromJson(sceneDirectory + "Scene_" + sceneID + ".json");
+				for (int i = 0; i < myScene.nodes.Length; i++)
+				{
+					myScene.nodes[i] = JsonToDNode(sceneObject, sceneDirectory, i);
+				}
+				myScene.root = myScene.nodes[0];
+
+				return myScene;
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
+
+	public DNode JsonToDNode(GameObject parent, string dir, int dnodeID)
+	{
+		string dnodeDirectory = dir + "DNode_" + dnodeID + "/";
+
+		if (Directory.Exists(dnodeDirectory))
+		{
+			GameObject dnodeObject = (GameObject)Instantiate(DNodePrefab);
+			dnodeObject.name = "DNode_"+dnodeID;
+			dnodeObject.transform.SetParent(parent.transform, false);
+			DNode myDNode = dnodeObject.GetComponent<DNode>();
+			myDNode.dnodeID = dnodeID;
+			myDNode.GenFromJson(dnodeDirectory + "DNode_" + dnodeID + ".json");
+
+			for (int i = 0; i < myDNode.responses.Length; i++)
+			{
+				myDNode.responses[i] = JsonToChoice(dnodeObject, dnodeDirectory, i);
+			}
+
+			for (int i = 0; i < myDNode.speech.Length; i++)
+			{
+				myDNode.speech[i] = JsonToDialogue(dnodeObject, dnodeDirectory, i);
+			}
+
+			return myDNode;
+		}
+		else
+		{
+			return null;
+		}
+	}
+		
+	public Choice JsonToChoice(GameObject parent, string dir, int choiceID)
+	{
+		string choiceDirectory = dir + "Choice_" + choiceID + "/";
+
+		if (Directory.Exists(choiceDirectory))
+		{
+			GameObject choiceObject = (GameObject)Instantiate(ChoicePrefab);
+			choiceObject.name = "Choice_"+choiceID;
+			choiceObject.transform.SetParent(parent.transform, false);
+			Choice myChoice = choiceObject.GetComponent<Choice>();
+			myChoice.choiceID = choiceID;
+			myChoice.GenFromJson(choiceDirectory + "Choice_" + choiceID + ".json");
+
+			for (int i = 0; i < myChoice.playerDialogue.Length; i++)
+			{
+				myChoice.playerDialogue[i] = JsonToDialogue(choiceObject, choiceDirectory, i);
+			}
+
+			/*
+			for (int i = 0; i < myChoice.options.Length; i++)
+			{
+				if (myChoice.outcomeID[i] >= 0)
+				{
+					myChoice.options[i] = true;
+					print("i: " + i + ", NODEID: " + myChoice.outcomeID[i]);
+					if (activeScene.nodes[0] != null)
+					{
+						myChoice.outcome[i] = activeScene.nodes[myChoice.outcomeID[i]];
+					}
+					else
+					{
+						print("shit is fucked");
+					}
+				}
+				else
+				{
+					myChoice.options[i] = false;
+					myChoice.outcome[i] = null;
+				}
+			}
+			*/
+
+			return myChoice;
+		}
+		else
+		{
+			return null;
+		}
+	}
+		
+	public Dialogue JsonToDialogue(GameObject parent, string dir, int dialogueID)
+	{
+		string dialogueDirectory = dir + "Dialogue_" + dialogueID + ".json";
+
+		if (Directory.Exists(dir)&&System.IO.File.Exists(dialogueDirectory))
+		{
+			GameObject dialogueObject = (GameObject)Instantiate(DialoguePrefab);
+			dialogueObject.name = "Dialogue_"+dialogueID;
+			dialogueObject.transform.SetParent(parent.transform, false);
+			Dialogue myDialogue = dialogueObject.GetComponent<Dialogue>();
+			myDialogue.dialogueID = dialogueID;
+			myDialogue.GenFromJson(dialogueDirectory);
+
+			return myDialogue;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+
+//
+//
+// SCENE SAVING TO JSON FUNCTIONS
+//
+//
+
+    public void SceneToJson(Scene scene)
     {
-    
+        string sceneJson = JsonUtility.ToJson(scene);
+        string sceneDirectory = Application.persistentDataPath + "/Scenes/Scene_" + scene.sceneID + "/";
+        string scenePath = sceneDirectory + "Scene_" + scene.sceneID + ".json";
+        print(scenePath);
 
+        if (!Directory.Exists(sceneDirectory))
+        {
+            Directory.CreateDirectory(sceneDirectory);
+        }
 
+        for (int i = 0; i < scene.nodes.Length; i++)
+        {
+            DNodeToJson(sceneDirectory, scene.nodes[i]);
+        }
+
+        //FileStream output = File.Create(Application.persistentDataPath + "Node_" + root.nodeID + ".json");
+        System.IO.File.WriteAllText(scenePath, sceneJson);
     }
 
-    public void ConvoToJson(DNode root)
+    public void DNodeToJson(string dir, DNode dnode)
     {
-        string jsonString = JsonUtility.ToJson(root);
-        string outPath = Application.persistentDataPath + "Node_" + root.nodeID + ".json";
-        print(outPath);
-        //FileStream output = File.Create(Application.persistentDataPath + "Node_" + root.nodeID + ".json");
-        System.IO.File.WriteAllText(outPath, jsonString);
+        string dnodeJson = JsonUtility.ToJson(dnode);
+        string dnodeDirectory = dir + "DNode_" + dnode.dnodeID + "/";
+        string dnodePath = dnodeDirectory + "DNode_" + dnode.dnodeID + ".json";
+
+        if (!Directory.Exists(dnodeDirectory))
+        {
+            Directory.CreateDirectory(dnodeDirectory);
+        }
+
+        for (int i = 0; i < dnode.speech.Length; i++)
+        {
+			print("Saving dialogue number: " + i);
+            DialogueToJson(dnodeDirectory, dnode.speech[i]);
+        }
+       
+        for (int i = 0; i < dnode.responses.Length; i++)
+        {
+            //print("C2J #: " + i);
+            ChoiceToJson(dnodeDirectory, dnode.responses[i]);
+        }
+
+        System.IO.File.WriteAllText(dnodePath, dnodeJson);
+    }
+
+    public void ChoiceToJson(string dir, Choice choice)
+    {
+		for (int i = 0; i < choice.outcome.Length; i++)
+		{
+			if (choice.outcome[i] != null)
+			{
+				choice.options[i] = true;
+				choice.outcomeID[i] = choice.outcome[i].dnodeID;
+			}
+			else
+			{
+				choice.options[i] = false;
+				choice.outcomeID[i] = -1;
+			}
+		}
+
+        string choiceJson = JsonUtility.ToJson(choice);
+        string choiceDirectory = dir + "Choice_" + choice.choiceID + "/";
+        string choicePath = choiceDirectory + "Choice_" + choice.choiceID + ".json";
+
+        if (!Directory.Exists(choiceDirectory))
+        {
+            Directory.CreateDirectory(choiceDirectory);
+        }
+
+        for (int i = 0; i < choice.playerDialogue.Length; i++)
+        {
+            if (choice.playerDialogue[i] != null)
+            {
+				//print("Saving dialogue number: " + i);
+                DialogueToJson(choiceDirectory, choice.playerDialogue[i]);
+            }
+        }
+
+        System.IO.File.WriteAllText(choicePath, choiceJson);
+    }
+
+    public void DialogueToJson(string dir, Dialogue dialogue)
+    {
+        string dialogueJson = JsonUtility.ToJson(dialogue);
+        string dialogueDirectory = dir;
+        string dialoguePath = dialogueDirectory + "Dialogue_" + dialogue.dialogueID + ".json";
+
+        if (!Directory.Exists(dialogueDirectory))
+        {
+            Directory.CreateDirectory(dialogueDirectory);
+        }
+
+        System.IO.File.WriteAllText(dialoguePath, dialogueJson);
     }
 }

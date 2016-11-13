@@ -211,6 +211,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee599e9414c3d34c96ac83f8c66ef5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  neutralButton: {fileID: 1000013289929822}
+  passiveButton: {fileID: 1000010352242396}
+  activeButton: {fileID: 1000012481749814}
+  wittyButton: {fileID: 1000014285932034}
+  subversiveButton: {fileID: 1000013367348090}
   choice: {fileID: 0}
   mySceneManager: {fileID: 0}
 --- !u!114 &114000011291294256
