@@ -15,9 +15,11 @@ public class ChoicePrefabScript : MonoBehaviour {
 
     public void SetChoice(Choice theChoice) 
 	{
+		print("SetChoice activating on: "+theChoice.choiceID);
         choice = theChoice;
 		if (choice.options[1])
 		{
+			print("Passive choice = true, making interactable");
 			passiveButton.GetComponent<Button>().interactable = true;
 		}
 		else
@@ -60,18 +62,41 @@ public class ChoicePrefabScript : MonoBehaviour {
 			}
 			else
 			{
-				print("IT'S NOT THIS");
+				//print("IT'S NOT THIS");
 				mySceneManager.activeChoicePrefab.neutralButton.SetActive(true);
 				mySceneManager.activeChoicePrefab = this;
 			}
 		}
 		else
 		{
-			print("IT'S THIS!!!!!!!!!!!!!");
+			//print("IT'S THIS!!!!!!!!!!!!!");
 		}
         mySceneManager.SelectNeutral(choice);
 		neutralButton.SetActive(false);
     }
+
+	public void PassiveClick()
+	{
+		if (mySceneManager.activeChoicePrefab != this)
+		{
+			if (mySceneManager.activeChoicePrefab == null)
+			{
+				mySceneManager.activeChoicePrefab = this;
+			}
+			else
+			{
+				//print("IT'S NOT THIS");
+				mySceneManager.activeChoicePrefab.neutralButton.SetActive(true);
+				mySceneManager.activeChoicePrefab = this;
+			}
+		}
+		else
+		{
+			//print("IT'S THIS!!!!!!!!!!!!!");
+		}
+		mySceneManager.SelectNeutral(choice);
+		neutralButton.SetActive(false);
+	}
 
 	public void ActiveClick()
 	{

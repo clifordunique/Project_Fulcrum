@@ -432,7 +432,7 @@ EMOTIONAL STATS ################################################################
 
 	
 RANDOM JUNK ###########################################################################
-	MAC8 = EMACIATE
+	M.A.C.8 = EMACIATE
 	
 	Achievement: Desperado Esper Grotto
 	

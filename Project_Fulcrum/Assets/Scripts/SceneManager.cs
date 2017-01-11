@@ -164,19 +164,19 @@ public class SceneManager : MonoBehaviour {
         }
         else
         {
-            print("No neutral response available.");
+        	//print("No neutral response available.");
         }
     }
 
 	public void ChangeNode(DNode newNode){
-		print("Switching to node: "+ newNode);
+		//print("Switching to node: "+ newNode);
 		if (activeNode != null) {
 			for (int i = 0; i < activeNode.responses.Length; i++) {
 				Destroy(GameObject.Find("Choice_" + i));
 			}
 		}
 		activeNode = newNode;
-        print("Now switched to node: "+ activeNode.nodeName);
+        //print("Now switched to node: "+ activeNode.nodeName);
 		for(int i = 0; i < activeNode.responses.Length; i++){
             //print("Choice number " + i + " created");
 			GameObject newChoice = (GameObject)Instantiate(menuChoicePrefab);
@@ -211,11 +211,11 @@ public class SceneManager : MonoBehaviour {
 		{
 			activeScene = requestedScene.gameObject.GetComponent<Scene>();
 			return activeScene;
-			print("Scene already loaded. Using.");
+			//print("Scene already loaded. Using.");
 		}
 		else
 		{
-			print("Loading Scene from JSON.");
+			//print("Loading Scene from JSON.");
 			string sceneDirectory = Application.persistentDataPath + "/Scenes/Scene_" + sceneID + "/";
 			if (Directory.Exists(sceneDirectory))
 			{
@@ -351,11 +351,11 @@ public class SceneManager : MonoBehaviour {
 
     public void SceneToJson(Scene scene)
     {
-		print("Saving scene number: " + scene.sceneID);
+		//print("Saving scene number: " + scene.sceneID);
         string sceneJson = JsonUtility.ToJson(scene);
         string sceneDirectory = Application.persistentDataPath + "/Scenes/Scene_" + scene.sceneID + "/";
         string scenePath = sceneDirectory + "Scene_" + scene.sceneID + ".json";
-        print(scenePath);
+        //print(scenePath);
 
         if (!Directory.Exists(sceneDirectory))
         {
@@ -364,7 +364,7 @@ public class SceneManager : MonoBehaviour {
 
         for (int i = 0; i < scene.nodes.Length; i++)
         {
-			print("Saving DNode number: " + i);
+			//print("Saving DNode number: " + i);
             DNodeToJson(sceneDirectory, scene.nodes[i]);
         }
 
@@ -385,13 +385,13 @@ public class SceneManager : MonoBehaviour {
 
         for (int i = 0; i < dnode.speech.Length; i++)
         {
-			print("Saving dialogue number: " + i);
+			//print("Saving dialogue number: " + i);
             DialogueToJson(dnodeDirectory, dnode.speech[i]);
         }
        
         for (int i = 0; i < dnode.responses.Length; i++)
         {
-			print("Saving choice number: " + i);
+			//print("Saving choice number: " + i);
             ChoiceToJson(dnodeDirectory, dnode.responses[i]);
         }
 
@@ -404,7 +404,7 @@ public class SceneManager : MonoBehaviour {
 		{
 			if (choice.outcomeID[i] >= 0)
 			{
-				print("Saving choice outcome number: " + i);
+				//print("Saving choice outcome number: " + i);
 				choice.options[i] = true;
 				//choice.outcomeID[i] = choice.outcome[i].dnodeID;
 			}
