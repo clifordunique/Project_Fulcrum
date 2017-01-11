@@ -33,24 +33,20 @@ namespace GAFInternal.Core
 	{
 		#region Members
 
-		[HideInInspector]
-		[SerializeField]
-		private int m_ClipVersion = 0;
-		[HideInInspector]
-		[SerializeField]
-		private int m_SequenceIndex = 0;
-		[HideInInspector]
-		[SerializeField]
-		private ObjectsManagerType m_ObjectsManager = null;
+		[HideInInspector][SerializeField] private int m_ClipVersion = 0;
+		[HideInInspector][SerializeField] private int m_SequenceIndex = 0;
+		[HideInInspector][SerializeField] private ObjectsManagerType m_ObjectsManager = null;
 
 		//private Dictionary<uint, List<GAFFrameTrigger>> m_FrameEvents = new Dictionary<uint, List<GAFFrameTrigger>>();
 
 		private bool m_IsPlaying = false;
 		private bool m_ContiniousPlaying = false;
+		private bool m_IsFirstFrame = false;
 
-		private float m_Stopwatch = 0f;
-		private float m_StoredTime = 0f;
-		private float m_PreviouseUpdateTime = 0f;
+		private float	m_Stopwatch				= 0f;
+		private float	m_StoredTime			= 0f;
+		private float	m_PreviouseUpdateTime	= 0f;
+		private uint	m_TargetFrame			= 0;
 
 		#endregion // Members
 
@@ -92,6 +88,8 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndStop(uint _FrameNumber)
 		{
+			currentFrameNumber = _FrameNumber;
+
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -112,6 +110,12 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndPlay(uint _FrameNumber)
 		{
+			currentFrameNumber = int.MaxValue;
+
+			m_TargetFrame = _FrameNumber;
+
+			m_IsFirstFrame = true;
+
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -176,6 +180,12 @@ namespace GAFInternal.Core
 				(sequenceIndex != uint.MaxValue && !isPlaying()))
 			{
 				currentSequenceIndex = sequenceIndex;
+
+				currentFrameNumber = _PlayImmediately ? int.MaxValue : currentSequence.startFrame;
+
+				m_TargetFrame = currentSequence.startFrame;
+
+				m_IsFirstFrame = true;
 
 				updateToFrame(currentSequence.startFrame, true);
 
@@ -474,15 +484,16 @@ namespace GAFInternal.Core
 
 			cleanView();
 
-			//m_FrameEvents.Clear();
-
 			isInitialized = false;
+			//asset.dropLoadedTexturesReferences();
 			asset = null;
 			resource = null;
 			settings = new GAFAnimationPlayerSettings();
-
+			
 			m_SequenceIndex = 0;
 			m_Stopwatch = 0.0f;
+
+			Resources.UnloadUnusedAssets();
 		}
 
 		/// <summary>
@@ -497,10 +508,10 @@ namespace GAFInternal.Core
 			}
 
 			if (parent == null)
-				m_RegisteredMaterials.Clear();
+				clearMaterials(m_RegisteredMaterials);
 			else
 			{
-				parent.registeredMaterials.Clear();
+				clearMaterials(parent.registeredMaterials);
 			}
 		}
 
@@ -548,94 +559,103 @@ namespace GAFInternal.Core
 		#region MonoBehaviour
 
 		private void FixedUpdate()
-		{
-			if (asset != null
-				&& asset.isLoaded
-				&& isLoaded
-				&& isPlaying()
-				&& !settings.ignoreTimeScale
-				&& gafTransform.localVisible//m_IsActive
-				)
-			{
-				OnUpdate(Time.deltaTime);
-			}
-		}
-
-		private void Update()
-		{
-			if (asset != null
-				&& asset.isLoaded
-				&& isLoaded
-				&& isPlaying()
-				&& settings.ignoreTimeScale
-				&& gafTransform.localVisible//m_IsActive
-				)
-			{
-				OnUpdate(Mathf.Clamp(Time.realtimeSinceStartup - m_PreviouseUpdateTime, 0f, Time.maximumDeltaTime));
-
-				m_PreviouseUpdateTime = Time.realtimeSinceStartup;
-			}
-		}
-
-		protected override void Start()
-		{
-			if (Application.isPlaying
-				&& isLoaded
-				)
-			{
-				defineFramesEvents(stop, play, setSequence, gotoAndStop, gotoAndPlay);
+        {
+			if (   asset != null
+                && asset.isLoaded 
+                && isLoaded 
+                && isPlaying() 
+                && !settings.ignoreTimeScale 
+			    && gafTransform.localVisible//m_IsActive
+                )
+            {
+            	OnUpdate(Time.deltaTime);
+            }
+        }
+        
+        private void Update()
+        {
+            if (   asset != null 
+                && asset.isLoaded 
+                && isLoaded 
+                && isPlaying() 
+                && settings.ignoreTimeScale 
+			    && gafTransform.localVisible//m_IsActive
+                )
+            {
+                OnUpdate(Mathf.Clamp(Time.realtimeSinceStartup - m_PreviouseUpdateTime, 0f, Time.maximumDeltaTime));
+                
+                m_PreviouseUpdateTime = Time.realtimeSinceStartup;
+            }
+        }
+        
+        protected override void Start()
+        {
+            if (Application.isPlaying 
+                && isLoaded 
+                )
+            {
+                defineFramesEvents(stop, play, setSequence, gotoAndStop, gotoAndPlay);
 				m_IsActive = true;
-				m_ContiniousPlaying = settings.playAutomatically;
-				setPlaying(settings.playAutomatically);
+				m_IsFirstFrame = true;
+
+				if (!m_ContiniousPlaying)
+				{
+					m_ContiniousPlaying = settings.playAutomatically;
+					setPlaying(settings.playAutomatically);
+				}
+				else
+				{
+					setPlaying(true);
+				}
 			}
-		}
+        }
+        
+        private void OnDestroy()
+        {
+            clear(true);
+        }
+        
+        private void OnApplicationFocus(bool _FocusStatus)
+        {
+            if (   isLoaded 
+                && !settings.playInBackground 
+                )
+            {
+                setPlaying(_FocusStatus && m_ContiniousPlaying);
+            }
+        }
+        
+        private void OnApplicationPause(bool _PauseStatus)
+        {
+            if ( isLoaded 
+                && !settings.playInBackground 
+                )
+            {
+                setPlaying(_PauseStatus);
+            }
+        }
+        
+        #endregion // MonoBehaviour
+        
+        #region Implementation
 
-		private void OnDestroy()
-		{
-			clear(true);
-		}
-
-		private void OnApplicationFocus(bool _FocusStatus)
-		{
-			if (isLoaded
-				&& !settings.playInBackground
-				)
-			{
-				setPlaying(_FocusStatus && m_ContiniousPlaying);
-			}
-		}
-
-		private void OnApplicationPause(bool _PauseStatus)
-		{
-			if (isLoaded
-				&& !settings.playInBackground
-				)
-			{
-				setPlaying(_PauseStatus);
-			}
-		}
-
-		#endregion // MonoBehaviour
-
-		#region Implementation
-
-		private void EditorUpdate()
-		{
-			if (asset != null
-				&& asset.isLoaded
-				&& isLoaded
-				&& isPlaying())
-			{
-				if (gafTransform.localVisible)//m_IsActive
+        private void EditorUpdate()
+        {
+			if (  asset != null 
+                && asset.isLoaded 
+                && isLoaded 
+                && isPlaying())
+            {
+                if (gafTransform.localVisible)//m_IsActive
 					OnUpdate(Mathf.Clamp(Time.realtimeSinceStartup - m_PreviouseUpdateTime, 0f, Time.maximumDeltaTime));
+                
+                m_PreviouseUpdateTime = Time.realtimeSinceStartup;
+            }
+        }
 
-				m_PreviouseUpdateTime = Time.realtimeSinceStartup;
-			}
-		}
-
-		private void OnUpdate(float _TimeDelta)
-		{
-			m_Stopwatch += _TimeDelta;
+        private void OnUpdate(float _TimeDelta)
+        {
+            m_Stopwatch += _TimeDelta;
 
 			if (m_Stopwatch >= settings.targetSPF)
 			{
@@ -654,14 +674,22 @@ namespace GAFInternal.Core
 				m_Stopwatch = 0f;
 
 				if (internalFrameNumber > 1)
-					currentFrameNumber = internalFrameNumber;
+				{
+					currentFrameNumber = !m_IsFirstFrame ? internalFrameNumber : internalFrameNumber - 1;
+					m_IsFirstFrame = false;
+				}
+				else
+				{
+					currentFrameNumber = currentSequence.startFrame - 1;
+					m_IsFirstFrame = false;
+				}
 
-				var targetFrame = internalFrameNumber + (uint)framesCount;
+				m_TargetFrame = internalFrameNumber + (uint)framesCount;
 
 				GAFFrameData tempFrame = null;
-
-				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= targetFrame; currentFrameNumber++)
-				{
+				
+				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= m_TargetFrame; currentFrameNumber++)
+                {
 					if (currentFrameNumber > currentSequence.endFrame)
 					{
 						currentFrameNumber = currentSequence.endFrame;
@@ -679,27 +707,42 @@ namespace GAFInternal.Core
 						{
 							var soundEvent = tempEvent as GAFSoundEvent;
 
-							var audioFrame = m_AudioSources.Find(x => x.frameNumber == tempFrame.frameNumber);
-							if (audioFrame != null)
+							if (soundEvent.action == GAFSoundEvent.SoundAction.Stop)
 							{
-								var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
-
-								if (data != null)
+								foreach (var frameAudioData in m_FramesAudioData)
 								{
-									if (soundEvent.action == 2)
-										data.source.Play();
-									else if (soundEvent.action == 1)
+									for (int i = 0, count = frameAudioData.audios.Count; i < count; i++)
 									{
-										foreach (var audioData in audioFrame.audios)
+										var frameAudio = frameAudioData.audios[i];
+
+										if (frameAudio.ID == soundEvent.id)
 										{
-											audioData.source.Stop();
+											frameAudio.source.Stop();
 										}
 									}
-									else if (soundEvent.action == 3)
+								}
+							}
+
+							else
+							{
+								var audioFrame = m_FramesAudioData.Find(x => x.frameNumber == tempFrame.frameNumber);
+								if (audioFrame != null)
+								{
+									var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
+
+									if (data != null)
 									{
-										if (!data.source.isPlaying)
+										switch (soundEvent.action)
 										{
-											data.source.Play();
+											case GAFSoundEvent.SoundAction.Continue:
+												data.source.Play();
+												break;
+											case GAFSoundEvent.SoundAction.Start:
+												if (!data.source.isPlaying)
+												{
+													data.source.Play();
+												}
+												break;
 										}
 									}
 								}
@@ -711,9 +754,9 @@ namespace GAFInternal.Core
 					{
 						m_Triggers[tempFrame.frameNumber](this);
 					}
-				}
+                }
 
-				if (targetFrame > currentSequence.endFrame)
+				if (m_TargetFrame > currentSequence.endFrame)
 				{
 					switch (settings.wrapMode)
 					{
@@ -727,8 +770,9 @@ namespace GAFInternal.Core
 						case GAFWrapMode.Loop:
 							updateToFrame(currentSequence.startFrame, true);
 							currentFrameNumber = 0;
+							m_IsFirstFrame = true;
 
-							if (on_stop_play != null)
+                            if (on_stop_play != null)
 								on_stop_play(this);
 
 							if (on_start_play != null)
@@ -743,16 +787,16 @@ namespace GAFInternal.Core
 					}
 				}
 
-				updateToFrame(targetFrame, false);
+				updateToFrame(m_TargetFrame, false);
 			}
 		}
-
-		private void updateToFrame(uint _FrameNumber, bool _RefreshStates)
-		{
+        
+        private void updateToFrame(uint _FrameNumber, bool _RefreshStates)
+        {
 			if (isInitialized && isLoaded)
-			{
-				if (internalFrameNumber != _FrameNumber || _RefreshStates)
-				{
+            {
+                if (internalFrameNumber != _FrameNumber || _RefreshStates)
+                {
 					if (asset.enableSequenceCaching && _RefreshStates)
 					{
 						var states = asset.getKeyFrameStates(timelineID, _FrameNumber);
@@ -763,17 +807,17 @@ namespace GAFInternal.Core
 						else
 						{
 							objManagerUpdateToFrame(_FrameNumber, _RefreshStates);
-						}
+                        }
 					}
 					else
 					{
 						objManagerUpdateToFrame(_FrameNumber, _RefreshStates);
-					}
+                    }
 
 					internalFrameNumber = _FrameNumber;
-				}
+                }
 			}
-		}
+        }
 
 		private void objManagerUpdateToFrame(uint _FrameNumber, bool _RefreshStates)
 		{
@@ -783,57 +827,57 @@ namespace GAFInternal.Core
 				m_ObjectsManager.updateToFrame(states, _RefreshStates);
 			}
 		}
-
-		private void setPlaying(bool _IsPlay)
-		{
+        
+        private void setPlaying(bool _IsPlay) 
+        {
 			if (m_IsPlaying != _IsPlay)
-			{
-				m_IsPlaying = _IsPlay;
-
-				if (m_IsPlaying)
-				{
-					if (on_start_play != null)
-						on_start_play(this);
-
-					m_Stopwatch = 0.0f;
-					m_PreviouseUpdateTime = 0f;
-				}
-				else
-				{
-					if (on_stop_play != null)
-						on_stop_play(this);
-
-					m_Stopwatch = 0.0f;
-					m_PreviouseUpdateTime = 0f;
-				}
-			}
-		}
-
-		private void onTransformChanged(GAFTransform.TransformType _Type)
-		{
-			switch (_Type)
-			{
-				case GAFTransform.TransformType.Geometry:
-					onGeometryChanged();
-					break;
-
-				case GAFTransform.TransformType.Visibility:
-					onVisibilityChanged();
-					break;
-
-				case GAFTransform.TransformType.Color:
-					onColorChanged();
-					break;
-
-				case GAFTransform.TransformType.Masking:
-					onMaskingChanged();
-					break;
-			}
-		}
-
-		private void onGeometryChanged()
-		{
-			m_ObjectsManager.reload();
+            {
+                m_IsPlaying = _IsPlay;
+                
+                if (m_IsPlaying)
+                {
+                    if (on_start_play != null)
+                        on_start_play(this);
+                    
+                    m_Stopwatch = 0.0f;
+                    m_PreviouseUpdateTime = 0f;
+                }
+                else
+                {
+                    if (on_stop_play != null)
+                        on_stop_play(this);
+                    
+                    m_Stopwatch = 0.0f;
+                    m_PreviouseUpdateTime = 0f;
+                }
+            }
+        }
+        
+        private void onTransformChanged(GAFTransform.TransformType _Type)
+        {
+            switch (_Type)
+            {
+                case GAFTransform.TransformType.Geometry:
+                    onGeometryChanged();
+                    break;
+                    
+                case GAFTransform.TransformType.Visibility:
+                    onVisibilityChanged();
+                    break;
+                    
+                case GAFTransform.TransformType.Color:
+                    onColorChanged();
+                    break;
+                    
+                case GAFTransform.TransformType.Masking:
+                    onMaskingChanged();
+                    break;
+            }
+        }
+        
+        private void onGeometryChanged()
+        {
+            m_ObjectsManager.reload();
 			updateToFrame(internalFrameNumber, true);
 		}
 
@@ -842,26 +886,26 @@ namespace GAFInternal.Core
 			gafTransform.localVisible = m_IsActive = gafTransform.gafParent.visible;
 
 			foreach (var _child in gafTransform.gafChilds.Values)
-			{
+			{ 
 				_child.localVisible = gafTransform.localVisible && _child.realVisibility;
 			}
 		}
+        
+        private void onColorChanged()
+        {
+            if (!settings.hasIndividualMaterial)
+            {
+                settings.hasIndividualMaterial = true;
+                setupMaterials();
+                m_ObjectsManager.reload();
+                updateToFrame(internalFrameNumber, true);
+            }
+            else
+            {
+                // TODO: Wait for first bugs. 
 
-		private void onColorChanged()
-		{
-			if (!settings.hasIndividualMaterial)
-			{
-				settings.hasIndividualMaterial = true;
-				setupMaterials();
-				m_ObjectsManager.reload();
-				updateToFrame(internalFrameNumber, true);
-			}
-			else
-			{
-				// TODO: Wait for first bugs. 
-
-				var multiplier = GAFTransform.combineColor(gafTransform.colorMultiplier, settings.animationColorMultiplier);
-				var offset = GAFTransform.combineColorOffset(gafTransform.colorOffset, settings.animationColorOffset, settings.animationColorMultiplier);
+                var multiplier      = GAFTransform.combineColor(gafTransform.colorMultiplier, settings.animationColorMultiplier);
+                var offset          = GAFTransform.combineColorOffset(gafTransform.colorOffset, settings.animationColorOffset, settings.animationColorMultiplier);
 
 				if (parent == null)
 				{
@@ -882,7 +926,7 @@ namespace GAFInternal.Core
 					foreach (var _pair in parent.baseMaterials)
 					{
 						_pair.Value.SetColor("_CustomColorMultiplier", multiplier);
-						_pair.Value.SetVector("_CustomColorOffset", offset);
+						_pair.Value.SetVector("_CustomColorOffset",offset);
 					}
 
 					foreach (var _material in parent.registeredMaterials)
@@ -891,7 +935,7 @@ namespace GAFInternal.Core
 						_material.SetVector("_CustomColorOffset", offset);
 					}
 				}
-			}
+            }
 
 			//foreach (var item in m_ObjectsManager.timelines)
 			//{
@@ -902,19 +946,19 @@ namespace GAFInternal.Core
 			//	}
 			//}
 		}
-
-		private void onMaskingChanged()
-		{
-			if (!settings.hasIndividualMaterial)
-			{
-				settings.hasIndividualMaterial = true;
-				setupMaterials();
-				m_ObjectsManager.reload();
-				updateToFrame(internalFrameNumber, true);
-			}
-			else
-			{
-				var combinedStencil = GAFTransform.combineStencil(gafTransform.stencilValue, settings.stencilValue);
+        
+        private void onMaskingChanged()
+        {
+            if (!settings.hasIndividualMaterial)
+            {
+                settings.hasIndividualMaterial = true;
+                setupMaterials();
+                m_ObjectsManager.reload();
+                updateToFrame(internalFrameNumber, true);
+            }
+            else
+            {
+                var combinedStencil = GAFTransform.combineStencil(gafTransform.stencilValue, settings.stencilValue);
 
 				if (parent == null)
 				{
@@ -940,26 +984,26 @@ namespace GAFInternal.Core
 						_material.SetInt("_StencilID", combinedStencil);
 					}
 				}
-			}
-		}
-
-		private void upgrade()
-		{
-			var _asset = asset;
-			var _timelineID = timelineID;
-			var _settings = settings;
-			var _sequenceIndex = getCurrentSequenceIndex();
-			var _currentFrameNumber = internalFrameNumber;
-
-			clear(true);
-
-			settings = _settings;
-			currentSequenceIndex = _sequenceIndex;
-			internalFrameNumber = _currentFrameNumber;
-
-			initialize(_asset, _timelineID);
-		}
-
-		#endregion // Implementation
-	}
+            }
+        }
+        
+        private void upgrade()
+        {
+            var _asset              = asset;
+            var _timelineID         = timelineID;
+            var _settings           = settings;
+            var _sequenceIndex      = getCurrentSequenceIndex();
+            var _currentFrameNumber = internalFrameNumber;
+            
+            clear(true);
+            
+            settings                = _settings;
+            currentSequenceIndex    = _sequenceIndex;
+			internalFrameNumber		= _currentFrameNumber;
+            
+            initialize(_asset, _timelineID);
+        }
+        
+        #endregion // Implementation
+    }
 }

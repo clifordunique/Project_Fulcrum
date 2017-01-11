@@ -25,7 +25,7 @@ The player is deposited in a labor camp, where they're introduced to four new ch
 
 Leading Characters encountered:
 SILVA KOZO, THE PROPAGANDIST
-JOM BRAKAS, THE BIPARTITE
+// JOM BRAKAS, THE BIPARTITE
 RUMIN, THE BLEEDING HEART
 MORRIS, THE PACKRAT
 

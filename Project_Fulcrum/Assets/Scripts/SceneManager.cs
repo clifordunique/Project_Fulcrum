@@ -42,6 +42,7 @@ public class SceneManager : MonoBehaviour {
 	private DNode activeNode;
 	public Scene activeScene;
 	private bool nodeChanging = false;
+	public bool manualSave;
 
 	// Use this for initialization
 	void Start () {
@@ -118,7 +119,10 @@ public class SceneManager : MonoBehaviour {
 
 	public void ExitScene()
 	{
-		SceneToJson(activeScene);
+		if (manualSave)
+		{
+			SceneToJson(activeScene);
+		}
 		activeScene = null;
 		activeNode = null;
 		selectedChoice = null;
@@ -225,7 +229,7 @@ public class SceneManager : MonoBehaviour {
 				{
 					myScene.nodes[i] = JsonToDNode(sceneObject, sceneDirectory, i);
 				}
-				myScene.root = myScene.nodes[0];
+				myScene.root = myScene.nodes[myScene.rootID];
 
 				return myScene;
 			}
@@ -347,6 +351,7 @@ public class SceneManager : MonoBehaviour {
 
     public void SceneToJson(Scene scene)
     {
+		print("Saving scene number: " + scene.sceneID);
         string sceneJson = JsonUtility.ToJson(scene);
         string sceneDirectory = Application.persistentDataPath + "/Scenes/Scene_" + scene.sceneID + "/";
         string scenePath = sceneDirectory + "Scene_" + scene.sceneID + ".json";
@@ -359,6 +364,7 @@ public class SceneManager : MonoBehaviour {
 
         for (int i = 0; i < scene.nodes.Length; i++)
         {
+			print("Saving DNode number: " + i);
             DNodeToJson(sceneDirectory, scene.nodes[i]);
         }
 
@@ -385,7 +391,7 @@ public class SceneManager : MonoBehaviour {
        
         for (int i = 0; i < dnode.responses.Length; i++)
         {
-            //print("C2J #: " + i);
+			print("Saving choice number: " + i);
             ChoiceToJson(dnodeDirectory, dnode.responses[i]);
         }
 
@@ -394,18 +400,33 @@ public class SceneManager : MonoBehaviour {
 
     public void ChoiceToJson(string dir, Choice choice)
     {
-		for (int i = 0; i < choice.outcome.Length; i++)
+		for (int i = 0; i < choice.outcomeID.Length; i++)
 		{
+			if (choice.outcomeID[i] >= 0)
+			{
+				print("Saving choice outcome number: " + i);
+				choice.options[i] = true;
+				//choice.outcomeID[i] = choice.outcome[i].dnodeID;
+			}
+			else
+			{
+				//print("Saving choice outcome number: " + i);
+				choice.options[i] = false;
+				choice.outcomeID[i] = -1;
+			}
+			/*
 			if (choice.outcome[i] != null)
 			{
+				print("Saving choice outcome number: " + i);
 				choice.options[i] = true;
 				choice.outcomeID[i] = choice.outcome[i].dnodeID;
 			}
 			else
 			{
+				//print("Saving choice outcome number: " + i);
 				choice.options[i] = false;
 				choice.outcomeID[i] = -1;
-			}
+			} */
 		}
 
         string choiceJson = JsonUtility.ToJson(choice);

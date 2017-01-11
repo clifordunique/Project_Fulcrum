@@ -67,11 +67,11 @@ namespace GAFInternal.Objects
 		/// All objects list. Serialized data
 		/// </summary>
 		/// <value>The objects.</value>
-		public override IEnumerable<IGAFObject> objects
+		public override List<IGAFObject> objects
 		{
 			get
 			{
-				return m_BakedObjects.Cast<IGAFObject>();
+				return m_BakedObjects.Cast<IGAFObject>().ToList();
 			}
 		}
 

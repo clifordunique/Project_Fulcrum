@@ -82,6 +82,7 @@
      <Compile Include="Assets\Scripts\WorldTile.cs" />
      <Compile Include="Assets\Scripts\WorldTileManager.cs" />
      <Compile Include="Assets\Scripts\WorldTile_backup.cs" />
+     <Compile Include="Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\TextFieldModder.cs" />
      <Compile Include="Assets\asd.cs" />
      <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />

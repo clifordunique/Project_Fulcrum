@@ -112,8 +112,8 @@ CHARACTERS ############################################
 		Home Province: Outlands
 		Daughter of the leaders of a rebellion, the likes of which the world had never seen before or since.
 		Manipulator. Mastermind. She has shown a fiery resolve and controlling temperament since a young age.
-		A born leader.
-		Raised deep in the forests of the Outlands.
+		-Born leader.
+		-Raised deep in the forests of the Outlands.
 		
 	AVATAR, THE RISING FLAME
 	"Quote"

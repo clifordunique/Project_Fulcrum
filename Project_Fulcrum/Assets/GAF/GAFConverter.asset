@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ConverterSettings:
     m_CheckForUpdates: 1
-    m_TexturesPOT: 1
+    m_TexturesPOT: 0
     m_ForceSquared: 0
     m_CompressGAF: 0
     m_UseActionAfterConversion: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_SaveAsZip: 0
     m_SaveAsZipTo: 
     m_MainTimeline: 1
-    m_Library: 1
+    m_Library: 0
     m_ConversionMode: nesting
     m_LimitMaxBakeScaleOn: 0
     m_LimitMaxBakeScale: 1
