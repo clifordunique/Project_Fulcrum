@@ -39,7 +39,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   choiceName: CHOICE PREFAB
-  playerDialogue:
+  choiceID: -1
+  playerDialogueChain:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -62,7 +63,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   outcomeID: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-  choiceID: -1
 --- !u!224 &224000014086880962
 RectTransform:
   m_ObjectHideFlags: 1

@@ -77,25 +77,8 @@ public class ChoicePrefabScript : MonoBehaviour {
 
 	public void PassiveClick()
 	{
-		if (mySceneManager.activeChoicePrefab != this)
-		{
-			if (mySceneManager.activeChoicePrefab == null)
-			{
-				mySceneManager.activeChoicePrefab = this;
-			}
-			else
-			{
-				//print("IT'S NOT THIS");
-				mySceneManager.activeChoicePrefab.neutralButton.SetActive(true);
-				mySceneManager.activeChoicePrefab = this;
-			}
-		}
-		else
-		{
-			//print("IT'S THIS!!!!!!!!!!!!!");
-		}
-		mySceneManager.SelectNeutral(choice);
-		neutralButton.SetActive(false);
+		//mySceneManager.SelectPassive(choice);
+		//PassiveButton.SetActive(false);
 	}
 
 	public void ActiveClick()

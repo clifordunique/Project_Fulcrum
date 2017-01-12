@@ -39,10 +39,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodeName: DNODE PREFAB
-  dnodeID: 0
-  dialogIDs: 
-  choiceIDs: 
-  speech: []
+  dnodeID: -1
+  speechChain: []
   responses: []
 --- !u!224 &224000012365819358
 RectTransform:

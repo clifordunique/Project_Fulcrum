@@ -72,6 +72,7 @@
      <Compile Include="Assets\Scripts\ChoicePrefabScript.cs" />
      <Compile Include="Assets\Scripts\DNode.cs" />
      <Compile Include="Assets\Scripts\Dialogue.cs" />
+     <Compile Include="Assets\Scripts\DialogueChain.cs" />
      <Compile Include="Assets\Scripts\Dialogue_Parser.cs" />
      <Compile Include="Assets\Scripts\DisplayText.cs" />
      <Compile Include="Assets\Scripts\JSONDialogue.cs" />

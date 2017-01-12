@@ -8,7 +8,7 @@ public class Choice : MonoBehaviour {
 
 	public string choiceName;
 	public int choiceID;
-	[SerializeField] public Dialogue[] playerDialogue;
+	[SerializeField] public DialogueChain[] playerDialogueChain;
 	[SerializeField] public int token;
 	public bool[] options;
 	[SerializeField] public DNode[] outcome;

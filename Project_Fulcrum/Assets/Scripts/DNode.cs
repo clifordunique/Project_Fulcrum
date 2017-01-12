@@ -10,7 +10,7 @@ public class DNode : MonoBehaviour {
     [SerializeField] public int dnodeID;
     //[SerializeField] public int[] dialogIDs;
     //[SerializeField] public int[] choiceIDs;
-    [SerializeField] public Dialogue[] speech;
+    [SerializeField] public DialogueChain[] speechChain;
     [SerializeField] public Choice[] responses;
 
 	public void GenFromJson(string dir)
