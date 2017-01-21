@@ -41,12 +41,10 @@ namespace GAFInternal.Core
 
 		private bool m_IsPlaying = false;
 		private bool m_ContiniousPlaying = false;
-		private bool m_IsFirstFrame = false;
 
-		private float	m_Stopwatch				= 0f;
-		private float	m_StoredTime			= 0f;
-		private float	m_PreviouseUpdateTime	= 0f;
-		private uint	m_TargetFrame			= 0;
+		private float m_Stopwatch = 0f;
+		private float m_StoredTime = 0f;
+		private float m_PreviouseUpdateTime = 0f;
 
 		#endregion // Members
 
@@ -88,8 +86,6 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndStop(uint _FrameNumber)
 		{
-			currentFrameNumber = _FrameNumber;
-
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -110,12 +106,6 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndPlay(uint _FrameNumber)
 		{
-			currentFrameNumber = int.MaxValue;
-
-			m_TargetFrame = _FrameNumber;
-
-			m_IsFirstFrame = true;
-
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -180,12 +170,6 @@ namespace GAFInternal.Core
 				(sequenceIndex != uint.MaxValue && !isPlaying()))
 			{
 				currentSequenceIndex = sequenceIndex;
-
-				currentFrameNumber = _PlayImmediately ? int.MaxValue : currentSequence.startFrame;
-
-				m_TargetFrame = currentSequence.startFrame;
-
-				m_IsFirstFrame = true;
 
 				updateToFrame(currentSequence.startFrame, true);
 
@@ -344,6 +328,7 @@ namespace GAFInternal.Core
 		{
 			if (!System.Object.Equals(asset, null)
 				&& isInitialized
+				&& !usePlaceholder
 				)
 			{
 				if (!asset.isLoaded)
@@ -394,6 +379,7 @@ namespace GAFInternal.Core
 					}
 				}
 			}
+			else if (usePlaceholder) rebuildPlaceholderMesh(); // TODO: Placeholder method refactor.
 		}
 
 		#region TEST
@@ -484,16 +470,15 @@ namespace GAFInternal.Core
 
 			cleanView();
 
+			//m_FrameEvents.Clear();
+
 			isInitialized = false;
-			//asset.dropLoadedTexturesReferences();
 			asset = null;
 			resource = null;
 			settings = new GAFAnimationPlayerSettings();
 			
 			m_SequenceIndex = 0;
 			m_Stopwatch = 0.0f;
-
-			Resources.UnloadUnusedAssets();
 		}
 
 		/// <summary>
@@ -508,10 +493,10 @@ namespace GAFInternal.Core
 			}
 
 			if (parent == null)
-				clearMaterials(m_RegisteredMaterials);
+				m_RegisteredMaterials.Clear();
 			else
 			{
-				clearMaterials(parent.registeredMaterials);
+				parent.registeredMaterials.Clear();
 			}
 		}
 
@@ -560,12 +545,13 @@ namespace GAFInternal.Core
 
 		private void FixedUpdate()
         {
-			if (   asset != null
+            if (   asset != null
                 && asset.isLoaded 
                 && isLoaded 
                 && isPlaying() 
                 && !settings.ignoreTimeScale 
 			    && gafTransform.localVisible//m_IsActive
+				&& !usePlaceholder
                 )
             {
             	OnUpdate(Time.deltaTime);
@@ -580,6 +566,7 @@ namespace GAFInternal.Core
                 && isPlaying() 
                 && settings.ignoreTimeScale 
 			    && gafTransform.localVisible//m_IsActive
+				&& !usePlaceholder
                 )
             {
                 OnUpdate(Mathf.Clamp(Time.realtimeSinceStartup - m_PreviouseUpdateTime, 0f, Time.maximumDeltaTime));
@@ -592,22 +579,14 @@ namespace GAFInternal.Core
         {
             if (Application.isPlaying 
                 && isLoaded 
+                && !usePlaceholder
                 )
             {
                 defineFramesEvents(stop, play, setSequence, gotoAndStop, gotoAndPlay);
 				m_IsActive = true;
-				m_IsFirstFrame = true;
-
-				if (!m_ContiniousPlaying)
-				{
-					m_ContiniousPlaying = settings.playAutomatically;
-					setPlaying(settings.playAutomatically);
-				}
-				else
-				{
-					setPlaying(true);
-				}
-			}
+                m_ContiniousPlaying = settings.playAutomatically;
+                setPlaying(settings.playAutomatically);
+            }
         }
         
         private void OnDestroy()
@@ -619,6 +598,7 @@ namespace GAFInternal.Core
         {
             if (   isLoaded 
                 && !settings.playInBackground 
+                && !usePlaceholder
                 )
             {
                 setPlaying(_FocusStatus && m_ContiniousPlaying);
@@ -629,6 +609,7 @@ namespace GAFInternal.Core
         {
             if ( isLoaded 
                 && !settings.playInBackground 
+                && !usePlaceholder
                 )
             {
                 setPlaying(_PauseStatus);
@@ -641,10 +622,11 @@ namespace GAFInternal.Core
 
         private void EditorUpdate()
         {
-			if (  asset != null 
+            if (  asset != null 
                 && asset.isLoaded 
                 && isLoaded 
-                && isPlaying())
+                && isPlaying() 
+                && !usePlaceholder)
             {
                 if (gafTransform.localVisible)//m_IsActive
 					OnUpdate(Mathf.Clamp(Time.realtimeSinceStartup - m_PreviouseUpdateTime, 0f, Time.maximumDeltaTime));
@@ -652,7 +634,7 @@ namespace GAFInternal.Core
                 m_PreviouseUpdateTime = Time.realtimeSinceStartup;
             }
         }
-
+        
         private void OnUpdate(float _TimeDelta)
         {
             m_Stopwatch += _TimeDelta;
@@ -674,21 +656,13 @@ namespace GAFInternal.Core
 				m_Stopwatch = 0f;
 
 				if (internalFrameNumber > 1)
-				{
-					currentFrameNumber = !m_IsFirstFrame ? internalFrameNumber : internalFrameNumber - 1;
-					m_IsFirstFrame = false;
-				}
-				else
-				{
-					currentFrameNumber = currentSequence.startFrame - 1;
-					m_IsFirstFrame = false;
-				}
+					currentFrameNumber = internalFrameNumber;
 
-				m_TargetFrame = internalFrameNumber + (uint)framesCount;
+				var targetFrame = internalFrameNumber + (uint)framesCount;
 
 				GAFFrameData tempFrame = null;
 				
-				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= m_TargetFrame; currentFrameNumber++)
+				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= targetFrame; currentFrameNumber++)
                 {
 					if (currentFrameNumber > currentSequence.endFrame)
 					{
@@ -707,47 +681,32 @@ namespace GAFInternal.Core
 						{
 							var soundEvent = tempEvent as GAFSoundEvent;
 
-							if (soundEvent.action == GAFSoundEvent.SoundAction.Stop)
+							var audioFrame = m_AudioSources.Find(x => x.frameNumber == tempFrame.frameNumber);
+							if (audioFrame != null)
 							{
-								foreach (var frameAudioData in m_FramesAudioData)
-								{
-									for (int i = 0, count = frameAudioData.audios.Count; i < count; i++)
-									{
-										var frameAudio = frameAudioData.audios[i];
+								var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
 
-										if (frameAudio.ID == soundEvent.id)
+								if (data != null)
+								{
+									if (soundEvent.action == 2)
+										data.source.Play();
+									else if (soundEvent.action == 1)
+									{
+										foreach (var audioData in audioFrame.audios)
 										{
-											frameAudio.source.Stop();
+											audioData.source.Stop();
+                                        }
+									}
+									else if (soundEvent.action == 3)
+									{
+										if (!data.source.isPlaying)
+										{
+											data.source.Play();
 										}
 									}
 								}
 							}
-
-							else
-							{
-								var audioFrame = m_FramesAudioData.Find(x => x.frameNumber == tempFrame.frameNumber);
-								if (audioFrame != null)
-								{
-									var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
-
-									if (data != null)
-									{
-										switch (soundEvent.action)
-										{
-											case GAFSoundEvent.SoundAction.Continue:
-												data.source.Play();
-												break;
-											case GAFSoundEvent.SoundAction.Start:
-												if (!data.source.isPlaying)
-												{
-													data.source.Play();
-												}
-												break;
-										}
-									}
-								}
-							}
-						}
+                        }
 					}
 
 					if (m_Triggers != null && m_Triggers.ContainsKey(tempFrame.frameNumber))
@@ -756,7 +715,7 @@ namespace GAFInternal.Core
 					}
                 }
 
-				if (m_TargetFrame > currentSequence.endFrame)
+				if (targetFrame > currentSequence.endFrame)
 				{
 					switch (settings.wrapMode)
 					{
@@ -770,9 +729,8 @@ namespace GAFInternal.Core
 						case GAFWrapMode.Loop:
 							updateToFrame(currentSequence.startFrame, true);
 							currentFrameNumber = 0;
-							m_IsFirstFrame = true;
 
-                            if (on_stop_play != null)
+							if (on_stop_play != null)
 								on_stop_play(this);
 
 							if (on_start_play != null)
@@ -787,7 +745,7 @@ namespace GAFInternal.Core
 					}
 				}
 
-				updateToFrame(m_TargetFrame, false);
+				updateToFrame(targetFrame, false);
 			}
 		}
         
@@ -830,7 +788,7 @@ namespace GAFInternal.Core
         
         private void setPlaying(bool _IsPlay) 
         {
-			if (m_IsPlaying != _IsPlay)
+            if (m_IsPlaying != _IsPlay)
             {
                 m_IsPlaying = _IsPlay;
                 

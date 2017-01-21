@@ -9,6 +9,7 @@ public class ChoicePrefabScript : MonoBehaviour {
 	public GameObject activeButton;
 	public GameObject wittyButton;
 	public GameObject subversiveButton;
+	public int activeModifier = 0;
 
     public Choice choice;
     public SceneManager mySceneManager;
@@ -17,16 +18,16 @@ public class ChoicePrefabScript : MonoBehaviour {
 	{
 		print("SetChoice activating on: "+theChoice.choiceID);
         choice = theChoice;
-		if (choice.options[1])
+		if (choice.options[(int)MODIFIER.Passive])
 		{
-			print("Passive choice = true, making interactable");
+			print("Passive choice available, making button interactable");
 			passiveButton.GetComponent<Button>().interactable = true;
 		}
 		else
 		{
 			passiveButton.GetComponent<Button>().interactable = false;
 		}
-		if(choice.options[2])
+		if(choice.options[(int)MODIFIER.Active])
 		{
 			activeButton.GetComponent<Button>().interactable = true;
 		}
@@ -34,7 +35,7 @@ public class ChoicePrefabScript : MonoBehaviour {
 		{
 			activeButton.GetComponent<Button>().interactable = false;
 		}
-		if(choice.options[3])
+		if(choice.options[(int)MODIFIER.Witty])
 		{
 			wittyButton.GetComponent<Button>().interactable = true;
 		}
@@ -42,7 +43,7 @@ public class ChoicePrefabScript : MonoBehaviour {
 		{
 			wittyButton.GetComponent<Button>().interactable = false;
 		}
-		if(choice.options[4])
+		if(choice.options[(int)MODIFIER.Subversive])
 		{
 			subversiveButton.GetComponent<Button>().interactable = true;
 		}
@@ -77,14 +78,22 @@ public class ChoicePrefabScript : MonoBehaviour {
 
 	public void PassiveClick()
 	{
-		//mySceneManager.SelectPassive(choice);
-		//PassiveButton.SetActive(false);
+		mySceneManager.SelectPassive(choice);
 	}
 
 	public void ActiveClick()
 	{
-//		mySceneManager.SelectActive(choice);
-//		neutralButton.SetActive(false);
+		mySceneManager.SelectActive(choice);
+	}
+
+	public void WittyClick()
+	{
+		mySceneManager.SelectWitty(choice);
+	}
+
+	public void SubversiveClick()
+	{
+		mySceneManager.SelectSubversive(choice);
 	}
 
 	// Use this for initialization

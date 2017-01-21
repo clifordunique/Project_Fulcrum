@@ -67,7 +67,9 @@ namespace GAFEditor.Assets
 							EditorUtility.SetDirty(asset);
 							AssetDatabase.SaveAssets();
 
+							GAFResourceManagerInternal.initInstance<GAFResourceManager>();
 							GAFResourceManagerInternal.instance.createResources<GAFTexturesResource>(asset);
+							GAFResourceManagerInternal.instance.createMecanimResources(asset);
 							GAFResourceManagerInternal.instance.defineAudioResources(asset);
 
 							EditorUtility.SetDirty(asset);
@@ -88,7 +90,9 @@ namespace GAFEditor.Assets
 
 						if (asset != null && ((asset.resourcesPaths == null || asset.resourcesPaths.Count == 0) || (asset.audioResources.Count == 0 && asset.sharedData.audioClips.Count > 0)))
 						{
+							GAFResourceManagerInternal.initInstance<GAFResourceManager>();
 							GAFResourceManagerInternal.instance.createResources<GAFTexturesResource>(asset);
+							GAFResourceManagerInternal.instance.createMecanimResources(asset);
 							GAFResourceManagerInternal.instance.defineAudioResources(asset);
 
 							EditorUtility.SetDirty(asset);

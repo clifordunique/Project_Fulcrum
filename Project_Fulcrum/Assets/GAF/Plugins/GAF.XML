@@ -50,6 +50,32 @@
             Returns reference to resource file of current animation.
             </summary>
         </member>
+        <member name="P:GAFInternal.Core.GAFBaseClip.useCustomDelegate">
+            <summary>
+            Returns true if current clip uses custom method for getting resources.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Core.GAFBaseClip.customGetResourceDelegate">
+            <summary>
+            Returns delegate that contains custom method for getting resources.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Core.GAFBaseClip.usePlaceholder">
+            <summary>
+            Returns true if animation will use placeholder texture
+            <para />instead of animation resources or during resources loading.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Core.GAFBaseClip.placeholderSize">
+            <summary>
+            Returns placeholder size.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Core.GAFBaseClip.placeholderOffset">
+            <summary>
+            Returns offset of placeholder position.
+            </summary>
+        </member>
         <member name="M:GAFInternal.Core.GAFBaseClip.initialize(GAFInternal.Assets.GAFAnimationAssetInternal)">
             <summary>
             Initialize animation clip with it's root timeline. Crashes if root timeline is not present.
@@ -185,138 +211,118 @@
             </summary>
             <param name="_Material">Material to register</param>
         </member>
-        <member name="P:GAFInternal.Core.GAFBehaviour.gafTransform">
-            <summary>
-            GAF transformation component.
-            <para />Contains redundant data for nested clips transforms.
-            </summary>
-        </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.play">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.play">
             <summary>
             Start playing animation.
             </summary>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.isPlaying">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.isPlaying">
             <summary>
             Check if animation is playing.
             </summary>
             <returns><c>true</c> if this instance is playing; otherwise, <c>false</c>.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.pause">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.pause">
             <summary>
             Pause animation.
             </summary>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.stop">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.stop">
             <summary>
             Stop playing animation. Moving playback to a first frame in a current sequence.
             </summary>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.gotoAndStop(System.UInt32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.gotoAndStop(System.UInt32)">
             <summary>
             Go to the desired frame.
             </summary>
             <param name="_FrameNumber">Number of frame.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.gotoAndPlay(System.UInt32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.gotoAndPlay(System.UInt32)">
             <summary>
             Go to the desired frame and start playing.
             </summary>
             <param name="_FrameNumber">Number of frame.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.setSequence(System.String,System.Boolean)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.setSequence(System.String,System.Boolean)">
             <summary>
             Set sequence for playing.
             </summary>
             <param name="_SequenceName">Name of desired sequence.</param>
             <param name="_PlayImmediately">Run this sequence immediately.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.setDefaultSequence(System.Boolean)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.setDefaultSequence(System.Boolean)">
             <summary>
             Set playback to a default sequence.
             </summary>
             <param name="_PlayImmediately">Run this sequence immediately.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.sequenceIndexToName(System.UInt32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.sequenceIndexToName(System.UInt32)">
             <summary>
             Get sequence name by index.
             </summary>
             <param name="_Index">Index of sequence.</param>
             <returns>System.String.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.sequenceNameToIndex(System.String)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.sequenceNameToIndex(System.String)">
             <summary>
             Get sequence index by name.
             </summary>
             <param name="_Name">Name of sequence.</param>
             <returns>System.UInt32.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.getCurrentSequenceIndex">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.getCurrentSequenceIndex">
             <summary>
             Get index of current sequence.
             </summary>
             <returns>System.UInt32.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.getCurrentFrameNumber">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.getCurrentFrameNumber">
             <summary>
             Get current frame number.
             </summary>
             <returns>System.UInt32.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.getFramesCount">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.getFramesCount">
             <summary>
             Get count of frames in current timeline.
             </summary>
             <returns>System.UInt32.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.getAnimationWrapMode">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.getAnimationWrapMode">
             <summary>
             Get wrap mode.
             </summary>
             <returns>GAFWrapMode.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.setAnimationWrapMode(GAFInternal.Core.GAFWrapMode)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.setAnimationWrapMode(GAFInternal.Core.GAFWrapMode)">
             <summary>
             Set wrap mode.
             </summary>
             <param name="_Mode">Type of wrap mode.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.duration">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.duration">
             <summary>
             Get duration of current sequence.
             </summary>
             <returns>System.Single.</returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.removeTrigger(System.Int32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.removeTrigger(System.Int32)">
             <summary>
             Remove event trigger by its ID.
             </summary>
             <param name="_ID">ID of trigger.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.removeAllTriggers(System.UInt32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.removeAllTriggers(System.UInt32)">
             <summary>
             Remove all event triggers on selected frame.
             </summary>
             <param name="_FrameNumber">Number of frame.</param>
         </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.removeAllTriggers">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.removeAllTriggers">
             <summary>
             Remove all event triggers in current animation.
             </summary>
-        </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.objectIDToPartName(System.UInt32)">
-            <summary>
-            Get object name by it's ID.
-            </summary>
-            <param name="_ID">ID of object.</param>
-            <returns></returns>
-        </member>
-        <member name="M:GAFInternal.Core.IGAFBaseClip.partNameToObjectID(System.String)">
-            <summary>
-            Get object id by name.
-            </summary>
-            <param name="_PartName">Named part name.</param>
-            <returns></returns>
         </member>
         <member name="M:GAFInternal.Core.IGAFMovieClip.getObject(System.UInt32)">
             <summary>
@@ -332,18 +338,18 @@
             <param name="_PartName">Name of part.</param>
             <returns></returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFCanvasClip.getObject(System.UInt32)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.objectIDToPartName(System.UInt32)">
             <summary>
-            Getting reference to an object by ID
+            Get object name by it's ID.
             </summary>
-            <param name="_ID">ID of animation suboject e.g "2_27" - "27" is object ID.</param>
-            <returns>IGAFObject.</returns>
+            <param name="_ID">ID of object.</param>
+            <returns></returns>
         </member>
-        <member name="M:GAFInternal.Core.IGAFCanvasClip.getObject(System.String)">
+        <member name="M:GAFInternal.Core.IGAFMovieClip.partNameToObjectID(System.String)">
             <summary>
-            Get object by name. If your object has custom name in inspector you can get it here.
+            Get object id by name.
             </summary>
-            <param name="_PartName">Name of part.</param>
+            <param name="_PartName">Named part name.</param>
             <returns></returns>
         </member>
         <member name="M:GAFInternal.Objects.GAFBakedObjectInternal.initialize(System.String,GAFInternal.Objects.ObjectBehaviourType,GAFInternal.Core.GAFBaseClip,GAFInternal.Objects.GAFBaseObjectsManager,GAFInternal.Data.GAFObjectData)">
@@ -417,80 +423,6 @@
             Serialized data of this object.
             </summary>
         </member>
-        <member name="M:GAFInternal.Objects.GAFCanvasObjectInternal.initialize(System.String,GAFInternal.Objects.ObjectBehaviourType,GAFInternal.Core.GAFBaseClip,GAFInternal.Objects.GAFBaseObjectsManager,GAFInternal.Data.GAFObjectData)">
-            <summary>
-            Create and initialize serialized object data.
-            </summary>
-            <param name="_Name">Object name.</param>
-            <param name="_BehaviourType">Behaviour type of object.</param>
-            <param name="_Clip">Clip associated with current object.</param>
-            <param name="_Manager">Objects manager associated with current object.</param>
-            <param name="_GAFData">Data loaded from .gaf file for current object.</param>
-        </member>
-        <member name="M:GAFInternal.Objects.GAFCanvasObjectInternal.reload">
-            <summary>
-            Reset object state and create non-serialized data.
-            </summary>
-        </member>
-        <member name="M:GAFInternal.Objects.GAFCanvasObjectInternal.updateToState(GAFInternal.Data.GAFObjectStateData,System.Boolean)">
-            <summary>
-            Update object to desired state.
-            </summary>
-            <param name="_State">State data.</param>
-            <param name="_Refresh">Force refresh state.</param>
-        </member>
-        <member name="M:GAFInternal.Objects.GAFCanvasObjectInternal.cleanUp">
-            <summary>
-            Clean non-serialized data.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.objectID">
-            <summary>
-            Get the object identifier.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.name">
-            <summary>
-            Get the name.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.type">
-            <summary>
-            Get the GAF type of object.
-            </summary>
-            <value>The type.</value>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.gafTransform">
-            <summary>
-            GAF transformation component.
-            <para />Contains redundant data for nested clips transforms.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.currentState">
-            <summary>
-            Information about current state of this object.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.previousState">
-            <summary>
-            Information about previous state of this object.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.currentMaterial">
-            <summary>
-            Material of this object.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.currentMesh">
-            <summary>
-            Mesh of this object.
-            </summary>
-        </member>
-        <member name="P:GAFInternal.Objects.GAFCanvasObjectInternal.serializedProperties">
-            <summary>
-            Serialized data of this object.
-            </summary>
-        </member>
         <member name="M:GAFInternal.Objects.GAFObjectInternal.initialize(System.String,GAFInternal.Objects.ObjectBehaviourType,GAFInternal.Core.GAFBaseClip,GAFInternal.Objects.GAFBaseObjectsManager,GAFInternal.Data.GAFObjectData)">
             <summary>
             Create and initialize serialized object data.
@@ -534,6 +466,12 @@
             </summary>
             <value>The type.</value>
         </member>
+        <member name="P:GAFInternal.Objects.GAFObjectInternal.gafTransform">
+            <summary>
+            GAF transformation component.
+            <para />Contains redundant data for nested clips transforms.
+            </summary>
+        </member>
         <member name="P:GAFInternal.Objects.GAFObjectInternal.currentState">
             <summary>
             Information about current state of this object.
@@ -559,34 +497,34 @@
             Serialized data of this object.
             </summary>
         </member>
-        <member name="M:GAFInternal.Objects.IGAFBaseObject.reload">
+        <member name="M:GAFInternal.Objects.IGAFObject.reload">
             <summary>
             Reset object state and create non-serialized data.
             </summary>
         </member>
-        <member name="M:GAFInternal.Objects.IGAFBaseObject.updateToState(GAFInternal.Data.GAFObjectStateData,System.Boolean)">
+        <member name="M:GAFInternal.Objects.IGAFObject.updateToState(GAFInternal.Data.GAFObjectStateData,System.Boolean)">
             <summary>
             Update object to desired state.
             </summary>
             <param name="_State">State data.</param>
             <param name="_Refresh">Force refresh state.</param>
         </member>
-        <member name="M:GAFInternal.Objects.IGAFBaseObject.cleanUp">
+        <member name="M:GAFInternal.Objects.IGAFObject.cleanUp">
             <summary>
             Clean non-serialized data.
             </summary>
         </member>
-        <member name="P:GAFInternal.Objects.IGAFBaseObject.objectID">
+        <member name="P:GAFInternal.Objects.IGAFObject.objectID">
             <summary>
             Get the object identifier.
             </summary>
         </member>
-        <member name="P:GAFInternal.Objects.IGAFBaseObject.name">
+        <member name="P:GAFInternal.Objects.IGAFObject.name">
             <summary>
             Get the name.
             </summary>
         </member>
-        <member name="P:GAFInternal.Objects.IGAFBaseObject.type">
+        <member name="P:GAFInternal.Objects.IGAFObject.type">
             <summary>
             Get the GAF type of object.
             </summary>
@@ -647,20 +585,6 @@
             <param name="_States">The _ states.</param>
             <param name="_Refresh">if set to <c>true</c> [_ refresh].</param>
         </member>
-        <member name="M:GAFInternal.Utils.Json.Deserialize(System.String)">
-            <summary>
-            Parses the string json into a value
-            </summary>
-            <param name="json">A JSON string.</param>
-            <returns>An List&lt;object&gt;, a Dictionary&lt;string, object&gt;, a double, an integer,a string, null, true, or false</returns>
-        </member>
-        <member name="M:GAFInternal.Utils.Json.Serialize(System.Object)">
-            <summary>
-            Converts a IDictionary / IList object or a simple type (string, int, etc.) into a JSON string
-            </summary>
-            <param name="obj">A Dictionary&lt;string, object&gt; / List&lt;object&gt;</param>
-            <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
-        </member>
         <member name="M:GAFInternal.Assets.GAFAnimationAssetInternal.initialize(System.Byte[],System.String,System.String)">
             <summary>
             Initialize asset data with .gaf file binary data content and GUID.
@@ -682,6 +606,13 @@
             </summary>
             <param name="_Scale">Scale of desired resource.</param>
             <param name="_CSF">Content scale factor of desired resource.</param>
+            <returns></returns>
+        </member>
+        <member name="M:GAFInternal.Assets.GAFAnimationAssetInternal.getAnimatorController(System.Int32)">
+            <summary>
+            Get runtime animator controller associated with current animation.
+            </summary>
+            <param name="_TimelineID">ID of animation timeline.</param>
             <returns></returns>
         </member>
         <member name="M:GAFInternal.Assets.GAFAnimationAssetInternal.getResourceName(System.Single,System.Single)">
@@ -805,6 +736,11 @@
             Returns list with paths to animation resources assets.
             </summary>
         </member>
+        <member name="P:GAFInternal.Assets.GAFAnimationAssetInternal.animatorControllers">
+            <summary>
+            Returns list with references to mecanim controllers.
+            </summary>
+        </member>
         <member name="P:GAFInternal.Assets.GAFAnimationAssetInternal.audioResources">
             <summary>
             Returns list with references to audio clips.
@@ -823,6 +759,16 @@
         <member name="P:GAFInternal.Assets.GAFAnimationAssetInternal.audioResourcesDirectory">
             <summary>
             Returns path to custom directory for audio resources storing.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Assets.GAFAnimationAssetInternal.resourcesDirectory">
+            <summary>
+            Returns path to custom directory for animation resources storing.
+            </summary>
+        </member>
+        <member name="P:GAFInternal.Assets.GAFAnimationAssetInternal.mecanimResourcesDirectory">
+            <summary>
+            Returns path to custom directory for mecanim resources storing.
             </summary>
         </member>
         <member name="M:GAFInternal.Assets.GAFTexturesResourceInternal.setData(System.String,UnityEngine.Texture2D,UnityEngine.Material)">

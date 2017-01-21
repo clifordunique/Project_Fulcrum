@@ -66,6 +66,8 @@ namespace GAFEditorInternal.Core
 			
 			drawAsset();
 			drawResourcesState();
+			drawPlaceholder();
+			drawResourceManagement();
 
 			drawSettings();
 			drawSequences();

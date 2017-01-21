@@ -11,8 +11,8 @@ using UnityEngine;
 
 using GAF.Objects;
 using GAFInternal.Data;
-using System.Collections.Generic;
 using GAFInternal.Objects;
+using System.Collections.Generic;
 
 namespace GAF.Core
 {
@@ -56,7 +56,39 @@ namespace GAF.Core
 		/// Updating animation view to a currently selected frame.
 		/// Should be called every time when animation view has been changed e.g. setting animation color.
 		/// </summary>
-		//public override void reload()
+		public override void reload()
+		{
+			GAFCustomDelegateCreator.Init();
+
+			base.reload();
+		}
+
+		protected override void setState(ref GAFObjectStateData _State, Dictionary<uint, IGAFObject> _Objects)
+		{
+			if (settings.cacheStates)
+			{
+				_State.vertices = new Vector3[4];
+
+				float scale = settings.pixelsPerUnit / settings.scale;
+				var matrix = Matrix4x4.identity;
+				var obj = _Objects[_State.id].impl;
+
+				matrix[0, 0] = _State.a;
+				matrix[0, 1] = _State.c;
+				matrix[1, 0] = _State.b;
+				matrix[1, 1] = _State.d;
+				matrix[0, 3] = _State.localPosition.x / scale + obj.serializedProperties.offset.x + settings.pivotOffset.x;
+				matrix[1, 3] = -_State.localPosition.y / scale + obj.serializedProperties.offset.y + settings.pivotOffset.y;
+				matrix[2, 3] = 0;
+
+				for (int j = 0; j < obj.initialVertices.Length; j++)
+					_State.vertices[j] = matrix.MultiplyPoint3x4(obj.initialVertices[j]);
+			}
+			else
+			{
+				_State.vertices = null;
+			}
+		}
 		//-------------------------------------------------------//
 
 		//-------------------Get object------------------------------//
@@ -360,33 +392,6 @@ namespace GAF.Core
 		//public void removeAllTriggers()
 
 		//-------------------------------------------------------//
-
-		protected override void setState(ref GAFObjectStateData _State, Dictionary<uint, IGAFObject> _Objects)
-		{
-			if (settings.cacheStates)
-			{
-				_State.vertices = new Vector3[4];
-				
-				float scale = settings.pixelsPerUnit / settings.scale;
-				var matrix = Matrix4x4.identity;
-				var obj = _Objects[_State.id].impl;
-				
-				matrix[0, 0] = _State.a;
-				matrix[0, 1] = _State.c;
-				matrix[1, 0] = _State.b;
-				matrix[1, 1] = _State.d;
-				matrix[0, 3] = _State.localPosition.x / scale + obj.serializedProperties.offset.x + settings.pivotOffset.x;
-				matrix[1, 3] = -_State.localPosition.y / scale + obj.serializedProperties.offset.y + settings.pivotOffset.y;
-				matrix[2, 3] = 0;
-				
-				for (int j = 0; j < obj.initialVertices.Length; j++)
-					_State.vertices[j] = matrix.MultiplyPoint3x4(obj.initialVertices[j]);
-			}
-			else
-			{
-				_State.vertices = null;
-			}
-		}
 
 		#endregion //////// GAFMovieClip /////////
 

@@ -10,7 +10,7 @@ public class GAFSceneController : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetMouseButtonUp(0))
+		if (Input.GetKeyUp(KeyCode.Space))
 		{
 			if (Application.loadedLevelName != "Main")
 				Application.LoadLevel("Main");

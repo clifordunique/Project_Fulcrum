@@ -60,6 +60,8 @@ namespace GAFEditorInternal.Core
 			
 			drawAsset();
 			drawResourcesState();
+			drawPlaceholder();
+			drawResourceManagement();
 			drawSettings();
 			drawSequences();
 			drawPlayback();
@@ -115,7 +117,7 @@ namespace GAFEditorInternal.Core
                     EditorGUI.BeginChangeCheck();
 
 					var guiEnabled = GUI.enabled;
-					GUI.enabled = targets.Any(x => !x.asset) || targets.All(x => !x.asset.hasNesting);
+                    GUI.enabled = targets.Any(x => !x.asset) || targets.All(x => !x.asset.hasNesting);
 					drawProperty(settingProperty.FindPropertyRelative("m_DecomposeFlashTransform"), new GUIContent("Decompose Flash transform: ", "​")); 
                     if (EditorGUI.EndChangeCheck())
                     {

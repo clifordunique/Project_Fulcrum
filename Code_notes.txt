@@ -1,6 +1,5 @@
-Make Dialog Chains
+
 invert luminosity shader for fun
+Invert colour shader might be better!
 
 CHANGE ALL REFERENCES OF CHAINS AND SUCH TO ID REFS INSTEAD OF DIRECT POINTERS
-
-FIX OKAYBUTTON() SO THAT CHOICES CAN HAVE MULTIPLE DIALOGS IN THE CHAIN

@@ -63,11 +63,11 @@ namespace GAFInternal.Objects
 		/// All objects list. Serialized data
 		/// </summary>
 		/// <value>The objects.</value>
-		public override List<IGAFObject> objects
+		public override IEnumerable<IGAFObject> objects
 		{
 			get
 			{
-				return m_Objects.Cast<IGAFObject>().ToList();
+				return m_Objects.Cast<IGAFObject>();
 			}
 		}
 
@@ -233,23 +233,6 @@ namespace GAFInternal.Objects
 						obj.updateToState(GAFObjectStateData.defaultState, _Refresh);
 					}
 				}
-
-				//foreach (var obj in objects)
-				//{
-				//	if (obj.name == "13_38" || obj.name == "14_39")
-				//	{
-				//		int test = 0;
-				//	}
-
-				//	if (_States.ContainsKey(obj.objectID))
-				//	{
-				//		obj.updateToState(_States[obj.objectID]);
-				//	}
-				//	else
-				//	{
-				//		obj.updateToState(Data.GAFObjectStateData.defaultState);
-				//	}
-				//}
 			}
 			else
 			{
@@ -291,14 +274,23 @@ namespace GAFInternal.Objects
 		protected sealed override void createObjects()
 		{
 			var objects = clip.asset.getObjects(clip.timelineID);
-			var masks	= clip.asset.getMasks(clip.timelineID);
+			var masks = clip.asset.getMasks(clip.timelineID);
 
 			for (int i = 0; i < objects.Count; ++i)
 			{
 				var _objectData = objects[i];
-				var _name		= getObjectName(_objectData);
-				var _type		= clip.asset.getExternalData(clip.timelineID).objectTypeFlags[i];
-				
+				string _name = string.Empty;
+
+				if (_objectData.type == GAFObjectType.Timeline)
+				{
+					_name = clip.asset.getTimeline((int)_objectData.atlasElementID).linkageName;
+				}
+				if (string.IsNullOrEmpty(_name))
+				{
+					_name = getObjectName(_objectData);
+				}
+				var _type = clip.asset.getExternalData(clip.timelineID).objectTypeFlags[i];
+
 				m_Objects.Add(createObject(_name, _type, _objectData));
 			}
 

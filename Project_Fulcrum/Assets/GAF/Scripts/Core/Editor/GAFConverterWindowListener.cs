@@ -149,11 +149,17 @@ namespace GAFEditor.Core
 			GAFInternal.Core.GAFBaseClip clip = null;
 			if (_IsBaked)
 			{
-				clip = clipObject.AddComponent<GAFBakedMovieClip>();
+				if (!_IsAnimator)
+					clip = clipObject.AddComponent<GAFBakedMovieClip>();
+				else
+					clip = clipObject.AddComponent<GAFBakedAnimator>();
 			}
 			else
 			{
-				clip = clipObject.AddComponent<GAFMovieClip>();
+				if (!_IsAnimator)
+					clip = clipObject.AddComponent<GAFMovieClip>();
+				else
+					clip = clipObject.AddComponent<GAFAnimator>();
 			}
 
 			clip.initialize(_Asset);

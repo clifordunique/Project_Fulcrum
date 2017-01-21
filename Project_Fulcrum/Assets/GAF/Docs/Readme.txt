@@ -1,7 +1,7 @@
 A Unity3D editor plugin for importing and playing GAF files.
-Author: Nikolay Nikitin, Alexey Nikitin.
+Authors: Nikolay Nikitin, Alexey Nikitin.
 Copyright: © GAF Media.
-Version: 5.2b
+Version: 5.1
 
 How to:
 
