@@ -19,7 +19,7 @@ MonoBehaviour:
     m_UseActionAfterConversion: 1
     m_ActionAfterConversionMovieClip: 0
     m_ActionAfterConversionNotBaked: 1
-    m_ActionAfterConversion: 41
+    m_ActionAfterConversion: 42
     m_AutoConverting: 0
     m_MaxTextureSize: {x: 4096, y: 4096}
     m_UseAdvancedInterface: 0

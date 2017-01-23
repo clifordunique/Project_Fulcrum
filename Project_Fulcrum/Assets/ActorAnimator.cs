@@ -30,7 +30,7 @@ public class ActorAnimator : MonoBehaviour {
 	{
 		if (!loadedActors[dialogue.actor])
 		{ 
-			print("Actor not loaded!!");
+			//print("Loading actor...");
 			GameObject newActor = (GameObject)Instantiate(actorPrefabs[dialogue.actor]);
 			actorIndex[dialogue.actor] = newActor.GetComponent<Actor>();
 			newActor.transform.SetParent(this.transform, false);
