@@ -87,6 +87,7 @@
      <Compile Include="Assets\Standard Assets\Utility\WaypointCircuit.cs" />
      <Compile Include="Assets\Standard Assets\Utility\WaypointProgressTracker.cs" />
      <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
+     <None Include="Assets\Scripts\TestShader.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
      <None Include="Assets\GAF\Docs\What&apos;s new.txt" />
      <None Include="Assets\LC1.txt" />

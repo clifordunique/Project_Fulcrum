@@ -13,6 +13,7 @@ namespace UnityStandardAssets._2D
 		[SerializeField] private Vector2 GroundNormal;
 		[SerializeField] private bool m_Grounded;    
 		[SerializeField] private LayerMask mask;
+		[SerializeField] private float maxRunSpeed;
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -85,9 +86,14 @@ namespace UnityStandardAssets._2D
 			RaycastHit2D MidHit = Physics2D.Raycast (m_MidFoot.position, Vector2.down, 0.42f, mask);
 			if (MidHit.collider != null) 
 			{
+				Vector2 surfacePosition = MidHit.point;
+				surfacePosition.y += 0.61f;
+				this.transform.position = surfacePosition;
+				//print ("MIDHIT NORMAL INITIAL:    " + MidHit.normal);
 				midcontact = true;
 				m_MidLine.endColor = Color.green;
 				m_MidLine.startColor = Color.green;
+				GroundNormal = MidHit.normal;
 			} 
 			else 
 			{
@@ -105,17 +111,7 @@ namespace UnityStandardAssets._2D
 			{
 				rightcontact = false;
 			}
-
-			/*
-			if (rightcontact && leftcontact) 
-			{
-				m_Grounded = true;
-			} 
-			else 
-			{
-				m_Grounded = false;
-			}
-			*/
+				
 
 			if (midcontact) 
 			{
@@ -126,6 +122,7 @@ namespace UnityStandardAssets._2D
 				m_Grounded = false;
 			}
 
+			/*
 			if (m_Grounded) //RightHit.distance <= 0.1f || LeftHit.distance <= 0.1f
 			{
 
@@ -135,13 +132,13 @@ namespace UnityStandardAssets._2D
 					{
 						GroundNormal = LeftHit.normal;
 						//print(LeftHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - LeftHit.distance));
+						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - LeftHit.distance));
 					} 
 					else 
 					{
 						GroundNormal = RightHit.normal;
 						//print(RightHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - RightHit.distance));
+						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - RightHit.distance));
 					}
 				}
 				else
@@ -150,52 +147,22 @@ namespace UnityStandardAssets._2D
 					{
 						GroundNormal = LeftHit.normal;
 						//print(LeftHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - LeftHit.distance));
+						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - LeftHit.distance));
 					} 
 					else 
 					{
 						GroundNormal = RightHit.normal;
 						//print(RightHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - RightHit.distance));
+						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - RightHit.distance));
 					}	
 				}
-				/*
-				if(RightHit.distance <= 0.25f || LeftHit.distance <= 0.25f)
-				{
-					if (LeftHit.distance <= RightHit.distance) 
-					{
-						GroundNormal = LeftHit.normal;
-						//print(LeftHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.75f - LeftHit.distance));
-					} 
-					else 
-					{
-						GroundNormal = RightHit.normal;
-						//print(RightHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.75f - RightHit.distance));
-					}
-				}
-				else
-				{
-					if (LeftHit.distance >= RightHit.distance) 
-					{
-						GroundNormal = LeftHit.normal;
-						//print(LeftHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - LeftHit.distance));
-					} 
-					else 
-					{
-						GroundNormal = RightHit.normal;
-						//print(RightHit.normal);
-						//m_Rigidbody2D.position = new Vector2 (m_Rigidbody2D.position.x, m_Rigidbody2D.position.y+(0.5f - RightHit.distance));
-					}
-				}
-				*/
-
-			
+					
 				GroundNormal = MidHit.normal;
 			}
+			*/
 
+
+			/*
 			//Midair Physics!
 			if (!m_Grounded) 
 			{
@@ -206,47 +173,39 @@ namespace UnityStandardAssets._2D
 
 				if (PredictedLoc.collider != null) 
 				{
-					m_Rigidbody2D.velocity = Vector2.zero;	
-					print ("We've hit land, captain!!");
+					m_Rigidbody2D.velocity = DirectionCorrection(PredictedLoc);
+					//m_Rigidbody2D.velocity = Vector2.zero;	
+					//print ("We've hit land, captain!!");
 					m_Grounded = true;
 					Vector2 setCharPos = PredictedLoc.point;
-					setCharPos.y = setCharPos.y + 0.62f;
-					m_Rigidbody2D.position = setCharPos;
+					setCharPos.y = setCharPos.y + 0.61f;
+					this.transform.position = setCharPos;
+					//this.transform.position
 				} 
-
-				//PVel.y -= 1;
-			} else {
-				//PVel.y = 0;
 			}
-				
-			if (m_Grounded) 
+			*/
+
+			//Midair Physics!
+			if (!m_Grounded) 
+			{
+				//print ("FLIGHT!");
+				m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
+			}
+
+			DirectionCorrection ();
+
+			if (m_Grounded) //Handles velocity along ground surface.
 			{
 				Vector2 groundperp;
 				Vector2 AdjustedVel;
-
-			//	if(m_FacingRight)
-			//	{
-					groundperp.x = GroundNormal.y;
-					groundperp.y = -GroundNormal.x;
-			//	}
-			//	else
-			//	{
-			//		groundperp.x = -GroundNormal.y;
-			//		groundperp.y = GroundNormal.x;
-			//	}
-
-				//m_Rigidbody2D.velocity.x += h;
-				//m_Rigidbody2D.velocity = new Vector2( m_Rigidbody2D.velocity.x + h*10 ,m_Rigidbody2D.velocity.y);
-
-				//groundperp.x = GroundNormal.y;
-				//groundperp.y = -GroundNormal.x;
-
-				//float test = Vector2.Dot(m_Rigidbody2D.velocity, groundperp);
-				//print(test);
+			
+				groundperp.x = GroundNormal.y;
+				groundperp.y = -GroundNormal.x;
+				//print("Groundperp="+groundperp);
 				float projectionVal = Vector2.Dot(m_Rigidbody2D.velocity, groundperp)/groundperp.sqrMagnitude;
-				//print(projectionVal);
+				//print("P"+projectionVal);
 				AdjustedVel = groundperp * projectionVal;
-				//print(AdjustedVel);
+				//print("A"+AdjustedVel);
 
 				if(AdjustedVel.normalized.x < 0)
 				{
@@ -268,17 +227,45 @@ namespace UnityStandardAssets._2D
 					m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y + m_JumpForce);
 					m_Jump = false;
 				}
-					
 
-				//m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, PVel.y); //remove later
 			}
 
 
 			//print(GroundNormal);
+			Vector2 offset = new Vector2(0, 0.62f);
 
-			m_DebugLine.SetPosition(1, m_Rigidbody2D.velocity*Time.deltaTime);
-			//m_DebugLine.SetPosition(1, GroundNormal);
+			m_DebugLine.SetPosition(1, (m_Rigidbody2D.velocity*Time.deltaTime)-offset);
 
+			//
+			//Animator Controls
+			//
+
+			if (m_Rigidbody2D.velocity.x < 0) 
+			{
+				this.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			} 
+			else 
+			{
+				this.transform.localScale = new Vector3 (1f, 1f, 1f);
+			}
+
+			m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude); //m_Rigidbody2D.velocity.magnitude
+
+			float multiplier = 1;
+			if(m_Rigidbody2D.velocity.magnitude > 20.0f)
+			{
+				multiplier = ((m_Rigidbody2D.velocity.magnitude - 20) / 20)+1;
+			}
+
+			m_Anim.SetFloat("Multiplier", multiplier);
+
+			if (!m_Grounded) 
+			{
+				print ("Flying");
+			}
+			m_Anim.SetBool("Ground", m_Grounded);
+			//print ("Final Position4  " + this.transform.position);
+			//m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, PVel.y); //remove later
 
         }
 
@@ -290,5 +277,154 @@ namespace UnityStandardAssets._2D
 				m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
 			}
 		}
-    }
+   
+		private void DirectionCorrection()
+		{
+
+			Vector2 adjustedBot = m_MidFoot.position;
+			adjustedBot.y = adjustedBot.y - 0.40f;
+			RaycastHit2D groundCheck = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D predictedLoc = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
+			Vector2 invertedGroundNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
+			invertedGroundNormal.x = -groundCheck.normal.y;
+			invertedGroundNormal.y = groundCheck.normal.x;
+
+			//print("MIDFOOT POSITION=" + m_MidFoot.position);
+			//print("THEBODY POSITION=" + this.transform.position);
+			//print("THETRAN POSITION=" + this.transform.position);
+
+			if (predictedLoc.collider != null) 
+			{
+				if (groundCheck.collider == null) {
+					//print ("We've hit land, captain!!");
+					//
+					//print ("Starting velocity:  " + m_Rigidbody2D.velocity);
+					Vector2 expendedVel = predictedLoc.point;
+					expendedVel.x -= this.transform.position.x;
+					expendedVel.y -= this.transform.position.y;
+					//print ("Player Pos:  " + this.transform.position);
+					//print ("Impact Pos:  " + predictedLoc.point);
+					//print ("Expended velocity:  " + expendedVel);
+					Vector2 remainingVel = m_Rigidbody2D.velocity-expendedVel;
+					//print ("Remaining velocity:  " + remainingVel);
+
+					m_Grounded = true;
+					Vector2 setCharPos = predictedLoc.point;
+					setCharPos.y = setCharPos.y + 0.61f;
+					this.transform.position = setCharPos;
+					//print ("Final Position:  " + this.transform.position);
+					m_Rigidbody2D.velocity = remainingVel;
+					//TEST CODE AFTER THIS POINT
+					//Vector2 newTestRayOrigin = this.transform.position;
+					//newTestRayOrigin.y = newTestRayOrigin.y - 0.20f;
+					RaycastHit2D groundCheck2 = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+					if (groundCheck2.collider != null) {
+						
+						//print ("groundCheck2.normal=" + groundCheck2.normal);
+						//print ("groundCheck2.collider=" + groundCheck2.transform.gameObject);
+						GroundNormal = groundCheck2.normal;
+					} 
+					else 
+					{
+						//print ("GroundCheck2=null!");
+					}
+
+
+					//DirectionCorrection();
+					//print ("Final Position2:  " + this.transform.position);
+					return;
+				} 
+				else if (groundCheck.normal != predictedLoc.normal && invertedGroundNormal != predictedLoc.normal) 
+				{
+					
+					//print ("We've hit slope, sir!!");
+					//print ("groundCheck.normal=" + groundCheck.normal);
+					//print ("inverseGround.normal=" + invertedGroundNormal);
+					//print ("predictedLoc.normal=" + predictedLoc.normal);
+
+					if (groundCheck.normal == predictedLoc.normal || invertedGroundNormal == predictedLoc.normal) {
+						//print ("They're equal.");
+					} 
+					else 
+					{
+						//print ("They're not equal.");
+
+					}
+
+
+					//
+					//print ("Starting velocity:  " + m_Rigidbody2D.velocity);
+					Vector2 expendedVel = predictedLoc.point;
+					expendedVel.x -= this.transform.position.x;
+					expendedVel.y -= this.transform.position.y;
+					//print ("Player Pos:  " + this.transform.position);
+					//print ("Impact Pos:  " + predictedLoc.point);
+					//print ("Expended velocity:  " + expendedVel);
+					Vector2 remainingVel = m_Rigidbody2D.velocity-expendedVel;
+					//print ("Remaining velocity:  " + remainingVel);
+
+					m_Grounded = true;
+					Vector2 setCharPos = predictedLoc.point;
+					setCharPos.y = setCharPos.y + 0.61f;
+					this.transform.position = setCharPos;
+					//print ("Final Position:  " + this.transform.position);
+					m_Rigidbody2D.velocity = remainingVel;
+					//TEST CODE AFTER THIS POINT
+					//Vector2 newTestRayOrigin = this.transform.position;
+					//newTestRayOrigin.y = newTestRayOrigin.y - 0.20f;
+					RaycastHit2D groundCheck2 = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+					if (groundCheck2.collider != null) 
+					{
+						//print ("something is happens!");
+						//print ("groundCheck2.normal=" + groundCheck2.normal);
+						//print ("groundCheck2.collider=" + groundCheck2.transform.gameObject);
+					}
+					GroundNormal = groundCheck2.normal;
+					//DirectionCorrection();
+					//print ("Final Position2:  " + this.transform.position);
+					return;
+				}
+				else 
+				{
+					//print ("Same surface, no trajectory change needed");
+					return;
+				}
+			} 
+		}
+
+		private void Traction()
+		{
+			if (h = 0) 
+			{//if not pressing any move direction, slow to zero linearly.
+				
+				if (m_Rigidbody2D.velocity.x > 0) {
+					m_Rigidbody2D.velocity.x -= 1;
+				} 
+				else 
+				{
+					m_Rigidbody2D.velocity.x += 1;
+				}
+
+				if (m_Rigidbody2D.velocity.y > 0) {
+					m_Rigidbody2D.velocity.y -= 1;
+				} 
+				else 
+				{
+					m_Rigidbody2D.velocity.y += 1;
+				}
+
+			}
+			else if((h > 0 && m_Rigidbody2D.velocity.x > 0) || (h < 0 && m_Rigidbody2D.velocity.x < 0))
+			{//if pressing same button as move direction, slow to MAXSPEED.
+				if(m_Rigidbody2D.velocity.magnitude >= maxRunSpeed)
+				{
+					m_Rigidbody2D.velocity = m_Rigidbody2D.velocity
+				}
+			}
+			else if((h > 0 && m_Rigidbody2D.velocity.x < 0) || (h < 0 && m_Rigidbody2D.velocity.x > 0))
+			{//if pressing button opposite of move direction, slow to zero exponentially.
+				m_Rigidbody2D.velocity = m_Rigidbody2D.velocity/2;
+			}
+		}
+	}
 }
