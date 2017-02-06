@@ -8162,11 +8162,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 57977547c59abb546bbb1501e3c417db, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 21.1
+      value: -201.2
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 57977547c59abb546bbb1501e3c417db, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -20.7
+      value: 42.3
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 57977547c59abb546bbb1501e3c417db, type: 2}
       propertyPath: m_LocalPosition.z
@@ -8628,7 +8628,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 735294935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -200.1, y: 71.1, z: 0}
+  m_LocalPosition: {x: 24.5, y: 0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 198151974}
@@ -8775,17 +8775,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MaxSpeed: 10
   m_JumpForce: 20
-  m_CrouchSpeed: 0.252
+  m_CrouchSpeed: 0.36
   m_AirControl: 0
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 512
   GroundNormal: {x: 0, y: 0}
   m_Grounded: 0
   mask:
     serializedVersion: 2
     m_Bits: 512
-  maxRunSpeed: 50
+  maxRunSpeed: 0
+  showVelocityIndicator: 0
 --- !u!50 &735294940
 Rigidbody2D:
   serializedVersion: 4

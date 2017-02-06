@@ -5,15 +5,19 @@ namespace UnityStandardAssets._2D
 {
     public class PlatformerCharacter2D : MonoBehaviour
     {
-        [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
-        [SerializeField] private float m_JumpForce = 10f;                  // Amount of force added when the player jumps.
-        [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;  // Amount of maxSpeed applied to crouching movement. 1 = 100%
-        [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
+        [SerializeField] private float m_MaxSpeed = 50f;                    // The fastest the player can travel in the x axis.
+		[SerializeField] private float m_MinSpeed = 10f; 					// The instant starting speed while moving
+		[SerializeField] private float m_JumpForce = 10f;                  // Amount of force added when the player jumps.
+		[SerializeField] private float tractionChangeSpeed = 40f;			// Where movement changes from exponential to linear acceleration.
+		[SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
 		[SerializeField] private Vector2 GroundNormal;
 		[SerializeField] private bool m_Grounded;    
 		[SerializeField] private LayerMask mask;
 		[SerializeField] private float maxRunSpeed;
+		[SerializeField] private bool showVelocityIndicator;
+
+
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -34,12 +38,17 @@ namespace UnityStandardAssets._2D
 		private bool midcontact;
 		private bool rightcontact;
 		private bool m_Jump;
+		private bool facingDirection; 		//true means right (the direction), false means left.
 
 
 
         private void Awake()
         {
 			m_DebugLine = GetComponent<LineRenderer>();
+			if(!showVelocityIndicator){
+				m_DebugLine.enabled = false;
+			}
+	
 
             m_GroundCheck = transform.Find("GroundCheck");
 
@@ -70,6 +79,15 @@ namespace UnityStandardAssets._2D
 			m_RightLine.startColor = Color.red;
 			m_MidLine.endColor = Color.red;
 			m_MidLine.startColor = Color.red;
+
+			if (h < 0) 
+			{
+				facingDirection = false; //true means right (the direction), false means left.
+			} 
+			else if (h > 0)
+			{
+				facingDirection = true; //true means right (the direction), false means left.
+			}
 
 			RaycastHit2D LeftHit = Physics2D.Raycast (m_LeftFoot.position, Vector2.down, 0.42f, mask);
 			if (LeftHit.collider != null)
@@ -115,75 +133,13 @@ namespace UnityStandardAssets._2D
 
 			if (midcontact) 
 			{
+				//print ("Midcontact");
 				m_Grounded = true;
 			} 
 			else 
 			{
 				m_Grounded = false;
 			}
-
-			/*
-			if (m_Grounded) //RightHit.distance <= 0.1f || LeftHit.distance <= 0.1f
-			{
-
-				if(m_Rigidbody2D.velocity.y >= 0)
-				{
-					if (LeftHit.distance >= RightHit.distance) 
-					{
-						GroundNormal = LeftHit.normal;
-						//print(LeftHit.normal);
-						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - LeftHit.distance));
-					} 
-					else 
-					{
-						GroundNormal = RightHit.normal;
-						//print(RightHit.normal);
-						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - RightHit.distance));
-					}
-				}
-				else
-				{
-					if (LeftHit.distance <= RightHit.distance) 
-					{
-						GroundNormal = LeftHit.normal;
-						//print(LeftHit.normal);
-						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - LeftHit.distance));
-					} 
-					else 
-					{
-						GroundNormal = RightHit.normal;
-						//print(RightHit.normal);
-						//this.transform.position = new Vector2 (this.transform.position.x, this.transform.position.y+(0.5f - RightHit.distance));
-					}	
-				}
-					
-				GroundNormal = MidHit.normal;
-			}
-			*/
-
-
-			/*
-			//Midair Physics!
-			if (!m_Grounded) 
-			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
-				Vector2 adjBot = m_MidFoot.position;
-				adjBot.y = adjBot.y - 0.42f;
-				RaycastHit2D PredictedLoc = Physics2D.Raycast(adjBot, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
-
-				if (PredictedLoc.collider != null) 
-				{
-					m_Rigidbody2D.velocity = DirectionCorrection(PredictedLoc);
-					//m_Rigidbody2D.velocity = Vector2.zero;	
-					//print ("We've hit land, captain!!");
-					m_Grounded = true;
-					Vector2 setCharPos = PredictedLoc.point;
-					setCharPos.y = setCharPos.y + 0.61f;
-					this.transform.position = setCharPos;
-					//this.transform.position
-				} 
-			}
-			*/
 
 			//Midair Physics!
 			if (!m_Grounded) 
@@ -192,10 +148,11 @@ namespace UnityStandardAssets._2D
 				m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
 			}
 
-			DirectionCorrection ();
+			DirectionCorrection();
 
 			if (m_Grounded) //Handles velocity along ground surface.
 			{
+				Traction(h);
 				Vector2 groundperp;
 				Vector2 AdjustedVel;
 			
@@ -214,12 +171,12 @@ namespace UnityStandardAssets._2D
 
 				if(m_Rigidbody2D.velocity == Vector2.zero)
 				{
-					m_Rigidbody2D.velocity = new Vector2(h, m_Rigidbody2D.velocity.y);
-					//print("FUCKYOU");
+					//m_Rigidbody2D.velocity = new Vector2(h, m_Rigidbody2D.velocity.y);
 				}
 				else
 				{
-					m_Rigidbody2D.velocity = AdjustedVel + AdjustedVel.normalized*h;
+					//m_Rigidbody2D.velocity = AdjustedVel + AdjustedVel.normalized*h;
+					m_Rigidbody2D.velocity = AdjustedVel;
 				}
 
 				if(m_Jump)
@@ -234,24 +191,57 @@ namespace UnityStandardAssets._2D
 			//print(GroundNormal);
 			Vector2 offset = new Vector2(0, 0.62f);
 
-			m_DebugLine.SetPosition(1, (m_Rigidbody2D.velocity*Time.deltaTime)-offset);
-
+			#region Animator Controls
 			//
 			//Animator Controls
 			//
 
-			if (m_Rigidbody2D.velocity.x < 0) 
+			if (!facingDirection) //If facing left
 			{
+				//print("FACING LEFT!   "+h);
+				Vector2 debugLineInverted = ((m_Rigidbody2D.velocity*Time.deltaTime)-offset);
+				debugLineInverted = new Vector2(-debugLineInverted.x, debugLineInverted.y);
+				m_DebugLine.SetPosition (1, debugLineInverted);
 				this.transform.localScale = new Vector3 (-1f, 1f, 1f);
+				if(m_Rigidbody2D.velocity.x > 0)
+				{
+					m_Anim.SetBool("Crouch", true);
+				}
+				else
+				{
+					m_Anim.SetBool("Crouch", false);
+				}
 			} 
-			else 
+			else //If facing right
 			{
+				//print("FACING RIGHT!   "+h);
+				m_DebugLine.SetPosition(1, (m_Rigidbody2D.velocity*Time.deltaTime)-offset);
 				this.transform.localScale = new Vector3 (1f, 1f, 1f);
+				if(m_Rigidbody2D.velocity.x < 0)
+				{
+					m_Anim.SetBool("Crouch", true);
+				}
+				else
+				{
+					m_Anim.SetBool("Crouch", false);
+				}
+			}
+				
+			m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude);
+
+			if(m_Rigidbody2D.velocity.magnitude >= tractionChangeSpeed)
+			{
+				m_DebugLine.endColor = Color.white;
+				m_DebugLine.startColor = Color.white;
+			}   
+			else
+			{   
+				m_DebugLine.endColor = Color.red;
+				m_DebugLine.startColor = Color.red;
 			}
 
-			m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude); //m_Rigidbody2D.velocity.magnitude
+			float multiplier = 1; // Animation playspeed multiplier that increases with higher velocity
 
-			float multiplier = 1;
 			if(m_Rigidbody2D.velocity.magnitude > 20.0f)
 			{
 				multiplier = ((m_Rigidbody2D.velocity.magnitude - 20) / 20)+1;
@@ -261,12 +251,12 @@ namespace UnityStandardAssets._2D
 
 			if (!m_Grounded) 
 			{
-				print ("Flying");
+				//print ("Flying");
 			}
 			m_Anim.SetBool("Ground", m_Grounded);
 			//print ("Final Position4  " + this.transform.position);
 			//m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, PVel.y); //remove later
-
+			#endregion
         }
 
 		private void Update()
@@ -391,40 +381,68 @@ namespace UnityStandardAssets._2D
 				}
 			} 
 		}
-
-		private void Traction()
+			
+		private void Traction(float horizontalInput)
 		{
-			if (h = 0) 
+			float rawSpeed = m_Rigidbody2D.velocity.magnitude;
+			Vector2 velChange;
+			if (horizontalInput == 0) 
 			{//if not pressing any move direction, slow to zero linearly.
-				
-				if (m_Rigidbody2D.velocity.x > 0) {
-					m_Rigidbody2D.velocity.x -= 1;
-				} 
-				else 
+				if(rawSpeed <= 2)
 				{
-					m_Rigidbody2D.velocity.x += 1;
+					m_Rigidbody2D.velocity = Vector2.zero;	
 				}
-
-				if (m_Rigidbody2D.velocity.y > 0) {
-					m_Rigidbody2D.velocity.y -= 1;
-				} 
-				else 
+				else
 				{
-					m_Rigidbody2D.velocity.y += 1;
+					m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, -1f);
 				}
-
 			}
-			else if((h > 0 && m_Rigidbody2D.velocity.x > 0) || (h < 0 && m_Rigidbody2D.velocity.x < 0))
+			else if((horizontalInput > 0 && m_Rigidbody2D.velocity.x > 0) || (horizontalInput < 0 && m_Rigidbody2D.velocity.x < 0))
 			{//if pressing same button as move direction, slow to MAXSPEED.
-				if(m_Rigidbody2D.velocity.magnitude >= maxRunSpeed)
+				if(rawSpeed >= maxRunSpeed)
 				{
-					m_Rigidbody2D.velocity = m_Rigidbody2D.velocity
+					//m_Rigidbody2D.velocity = m_Rigidbody2D.velocity
 				}
 			}
-			else if((h > 0 && m_Rigidbody2D.velocity.x < 0) || (h < 0 && m_Rigidbody2D.velocity.x > 0))
+			else if((horizontalInput > 0 && m_Rigidbody2D.velocity.x < 0) || (horizontalInput < 0 && m_Rigidbody2D.velocity.x > 0))
 			{//if pressing button opposite of move direction, slow to zero exponentially.
-				m_Rigidbody2D.velocity = m_Rigidbody2D.velocity/2;
+				
+
+				if(rawSpeed > tractionChangeSpeed)
+				{
+					print("fast");
+					m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, -0.1f);
+				}
+				else
+				{
+					print("slow");
+					float eqnX = (1+Mathf.Abs(rawSpeed));
+					float curveMultiplier = 1+(1/(eqnX*eqnX));
+					m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity/rawSpeed) * (rawSpeed/curveMultiplier);
+				}
+
+				//float modifier = Mathf.Abs(m_Rigidbody2D.velocity.x/m_Rigidbody2D.velocity.y);
+				//print("SLOPE MODIFIER: " + modifier);
+				//m_Rigidbody2D.velocity = m_Rigidbody2D.velocity/(1.25f);
 			}
+		}
+
+		private Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)
+		{
+			Vector2 newVelocity;
+			float speed = inputVelocity.magnitude*multiplier;
+			Vector2 direction = inputVelocity.normalized;
+			newVelocity = direction * speed;
+			return newVelocity;
+		}
+
+		private Vector2 ChangeSpeedLinear(Vector2 inputVelocity, float changeAmount)
+		{
+			Vector2 newVelocity;
+			float speed = inputVelocity.magnitude+changeAmount;
+			Vector2 direction = inputVelocity.normalized;
+			newVelocity = direction * speed;
+			return newVelocity;
 		}
 	}
 }
