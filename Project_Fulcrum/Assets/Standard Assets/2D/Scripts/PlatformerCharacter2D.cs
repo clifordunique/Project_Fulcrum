@@ -45,10 +45,8 @@ namespace UnityStandardAssets._2D
 		private Transform m_LeftSide;
 		private Transform m_RightSide;
 
-		private Transform m_Collider1;
-		private Transform m_Collider2;
-		private Transform m_Collider3;
-		private Transform m_Collider4;
+		[SerializeField] private Transform[] m_Colliders;
+		[SerializeField] private Transform m_Collider1;
 
 		private bool leftcontact;
 		private bool midcontact;
@@ -93,10 +91,6 @@ namespace UnityStandardAssets._2D
 			m_RightLine = m_RightFoot.GetComponent<LineRenderer>();
 
 			m_Collider1 = transform.Find("Collider1");
-			m_Collider2 = transform.Find("Collider2");
-			m_Collider3 = transform.Find("Collider3");
-			m_Collider4 = transform.Find("Collider4");
-
 
             m_CeilingCheck = transform.Find("CeilingCheck");
             m_Anim = GetComponent<Animator>();
@@ -130,7 +124,7 @@ namespace UnityStandardAssets._2D
 				CtrlH = 1;
 			}
 				
-			print("CTRLH=" + CtrlH);
+			//print("CTRLH=" + CtrlH);
 
 			#region raytesting
 
@@ -171,6 +165,12 @@ namespace UnityStandardAssets._2D
 				m_MidLine.endColor = Color.green;
 				m_MidLine.startColor = Color.green;
 				GroundNormal = MidHit.normal;
+
+				Vector2 surfacePosition = MidHit.point;
+				surfacePosition.y += 0.61f;
+				this.transform.position = surfacePosition;
+				//print ("MIDHIT NORMAL INITIAL:    " + MidHit.normal);
+
 			} 
 			else 
 			{
@@ -201,7 +201,7 @@ namespace UnityStandardAssets._2D
 				m_Grounded = false;
 			}
 
-			print("Starting velocity: " + m_Rigidbody2D.velocity);
+			//print("Starting velocity: " + m_Rigidbody2D.velocity);
 
 			//Midair Physics!
 			if (!m_Grounded) 
@@ -282,7 +282,7 @@ namespace UnityStandardAssets._2D
 
 			//Collision();
 
-			print("Velocity at end of physics frame: "+m_Rigidbody2D.velocity);
+			//print("Velocity at end of physics frame: "+m_Rigidbody2D.velocity);
 
 			//print(GroundNormal);
 			Vector2 offset = new Vector2(0, 0.62f);
@@ -364,13 +364,13 @@ namespace UnityStandardAssets._2D
    
 		private void DirectionCorrection()
 		{
-			print("DC Executing");
+			//print("DC Executing");
 			errorDetectingRecursionCount++;
 
 			if(errorDetectingRecursionCount >= 5)
 			{
 				throw new Exception("Your recursion code is fucked!");
-				//return;
+				return;
 			}
 
 			//Vector2 surfacePosition = MidHit.point;
@@ -394,17 +394,17 @@ namespace UnityStandardAssets._2D
 
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
-				print("              MOVING LEFT!");
+				//print("              MOVING LEFT!");
 				collider1Position.x = m_Collider1.position.x-0.01f;
 			}
 			else if(m_Rigidbody2D.velocity.x > 0)
 			{
-				print("              MOVING RIGHT!");
+				//print("              MOVING RIGHT!");
 				collider1Position.x = m_Collider1.position.x+0.01f;
 			}
 			else
 			{
-				print("alternate");
+				//print("alternate");
 				collider1Position.x = m_Collider1.position.x;
 			}
 
@@ -533,9 +533,8 @@ namespace UnityStandardAssets._2D
 
 		private bool Collision()
 		{
-
 			Vector2 collider1Position;
-
+			print("Collision!");
 
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
@@ -559,6 +558,8 @@ namespace UnityStandardAssets._2D
 			//futureColliderPos.x += futureMove
 
 			RaycastHit2D collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
+			print("Collision normal: "+ collider1Check.normal);
+
 
 			if(collider1Check.collider != null)
 			{
@@ -684,7 +685,7 @@ namespace UnityStandardAssets._2D
 			Vector2 remainingVel = m_Rigidbody2D.velocity-expendedVel;
 			//print ("Remaining velocity:  " + remainingVel);
 
-			m_Grounded = true;
+
 			Vector2 setCharPos = predictedLoc.point;
 			setCharPos.y += 0.61f;
 			this.transform.position = setCharPos;
@@ -696,14 +697,16 @@ namespace UnityStandardAssets._2D
 			RaycastHit2D groundCheck2 = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
 			if (groundCheck2.collider != null) {
 
+				m_Grounded = true;
 				//print ("groundCheck2.normal=" + groundCheck2.normal);
 				//print ("groundCheck2.collider=" + groundCheck2.transform.gameObject);
 				GroundNormal = groundCheck2.normal;
-				Traction(CtrlH);
+				//Traction(CtrlH);
 				//DirectionCorrection();
 			} 
 			else 
 			{
+				m_Grounded = false;
 				//print ("GroundCheck2=null!");
 			}
 			//Collision();

@@ -3,9 +3,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
     <ProjectGuid>{2B9DE329-3951-C3B0-886A-43F884009B02}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -34,130 +33,130 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.XML" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAssetPostProcessor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFResourceManager.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFTexturesResourceEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFAnimatorEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFBakedAnimatorEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFBakedMovieClipEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFConverterWindowListener.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFMovieClipEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFAnimatorInternalEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFBakedAnimatorInternalEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFBakedMovieClipInternalEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFMovieClipInternalEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFBakedObjectControllerEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFBakedObjectsManagerEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFObjectEditor.cs" />
-     <Compile Include="Assets\GAF\Scripts\Utils\Editor\GAFMecanimResourcesRelocator.cs" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
-     <None Include="Assets\Scripts\TestShader.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
-     <None Include="Assets\GAF\Docs\What&apos;s new.txt" />
-     <None Include="Assets\LC1.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
-     <None Include="Assets\Text\LC1.txt" />
-     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
-     <None Include="Assets\Text\TEST1.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFFilteredObject.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
-     <None Include="Assets\Text\test2.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
-     <None Include="Assets\GAF\Docs\Readme.txt" />
- <Reference Include="UnityEditor.Advertisements">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
- </Reference>
- <Reference Include="nunit.framework">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/nunit.framework.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.EditorTestsRunner">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/EditorTestsRunner/Editor/UnityEditor.EditorTestsRunner.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Networking">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Networking">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/Editor/UnityEditor.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.PlaymodeTestsRunner">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/Editor/UnityEditor.PlaymodeTestsRunner.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.PlaymodeTestsRunner">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.TreeEditor">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/TreeEditor/Editor/UnityEditor.TreeEditor.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Analytics">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/Editor/UnityEditor.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.HoloLens">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/Editor/UnityEditor.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.HoloLens">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.VR">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/Editor/UnityEditor.VR.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.VR">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
- </Reference>
- <Reference Include="GAF">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
- </Reference>
- <Reference Include="Ionic.Zip.Reduced">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
- </Reference>
- <Reference Include="GAFConverter">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFConverter.dll</HintPath>
- </Reference>
- <Reference Include="GAFEditor">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFEditor.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/MiniJson.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.Graphs">
- <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.WindowsStandalone.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
- </Reference>
+    <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAssetPostProcessor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFResourceManager.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFTexturesResourceEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFAnimatorEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFBakedAnimatorEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFBakedMovieClipEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFConverterWindowListener.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\GAFMovieClipEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFAnimatorInternalEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFBakedAnimatorInternalEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFBakedMovieClipInternalEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Editor\Interfaces\GAFMovieClipInternalEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFBakedObjectControllerEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFBakedObjectsManagerEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\Editor\GAFObjectEditor.cs" />
+    <Compile Include="Assets\GAF\Scripts\Utils\Editor\GAFMecanimResourcesRelocator.cs" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
+    <None Include="Assets\Scripts\TestShader.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
+    <None Include="Assets\LC1.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
+    <None Include="Assets\Text\LC1.txt" />
+    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
+    <None Include="Assets\Text\TEST1.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFFilteredObject.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
+    <None Include="Assets\Text\test2.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
+    <None Include="Assets\GAF\Docs\Readme.txt" />
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\Advertisements\Editor\UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\EditorTestsRunner\Editor\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.EditorTestsRunner">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\EditorTestsRunner\Editor\UnityEditor.EditorTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\Editor\UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\Networking\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\Networking\Editor\UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.PlaymodeTestsRunner">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\PlaymodeTestsRunner\Editor\UnityEditor.PlaymodeTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlaymodeTestsRunner">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\PlaymodeTestsRunner\UnityEngine.PlaymodeTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TreeEditor">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\TreeEditor\Editor\UnityEditor.TreeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityAnalytics\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Analytics">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityAnalytics\Editor\UnityEditor.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.HoloLens">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityHoloLens\Editor\UnityEditor.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityHoloLens\RuntimeEditor\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.VR">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityVR\Editor\UnityEditor.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityVR\RuntimeEditor\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="GAF">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\GAF.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniJson">
+      <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
+    </Reference>
+    <Reference Include="GAFConverter">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\Editor\GAFConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="GAFEditor">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\Editor\GAFEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniJson">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\MiniJson.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>C:\Program Files\Unity\Editor\Data\PlaybackEngines\windowsstandalonesupport\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <None Include="Assets\GAF\Docs\What%27s new.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{50D804C8-5513-A419-C6A9-F390EE55FD1F}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{612EBBF6-0547-7685-1FC2-6729D17B080D}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+      <Project>{612EBBF6-0547-7685-1FC2-6729D17B080D}</Project>
+      <Name>Assembly-CSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -167,6 +166,14 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ProjectExtensions xmlns="http://schemas.microsoft.com/developer/msbuild/2003"><MonoDevelop><Properties><Policies><TextStylePolicy inheritsSet="null" scope="text/x-csharp" /><CSharpFormattingPolicy StatementBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" IfParentheses="False" WhileParentheses="False" ForParentheses="False" ForeachParentheses="False" CatchParentheses="False" SwitchParentheses="False" LockParentheses="False" UsingParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" /></Policies></Properties></MonoDevelop></ProjectExtensions>
-
+  <ProjectExtensions xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
+          <CSharpFormattingPolicy StatementBraceStyle="NextLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" BeforeConstructorDeclarationParentheses="False" BeforeIndexerDeclarationBracket="False" BeforeDelegateDeclarationParentheses="False" AfterDelegateDeclarationParameterComma="True" NewParentheses="False" IfParentheses="False" WhileParentheses="False" ForParentheses="False" ForeachParentheses="False" CatchParentheses="False" SwitchParentheses="False" LockParentheses="False" UsingParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

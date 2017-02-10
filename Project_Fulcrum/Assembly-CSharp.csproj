@@ -3,9 +3,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.20506</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
     <ProjectGuid>{612EBBF6-0547-7685-1FC2-6729D17B080D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -34,116 +33,112 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.XML" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
-      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+      <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Actor.cs" />
-     <Compile Include="Assets\ActorAnimator.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\InventoryControl.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
-     <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
-     <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
-     <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
-     <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomStaticResourceLoader.cs" />
-     <Compile Include="Assets\GAF\Examples\Scripts\GAFLoadResourceFromBundle.cs" />
-     <Compile Include="Assets\GAF\Examples\Scripts\GAFSceneController.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\GAFAnimationAsset.cs" />
-     <Compile Include="Assets\GAF\Scripts\Asset\GAFTexturesResource.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\GAFAnimator.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\GAFBakedAnimator.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\GAFBakedMovieClip.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\GAFCustomDelegateCreator.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\GAFMovieClip.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Interfaces\GAFAnimatorInternal.cs" />
-     <Compile Include="Assets\GAF\Scripts\Core\Interfaces\GAFMovieClipInternal.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObject.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObjectController.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObjectsManager.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\GAFObject.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
-     <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\Scene.cs" />
-     <Compile Include="Assets\Scripts\CameraController.cs" />
-     <Compile Include="Assets\Scripts\Character.cs" />
-     <Compile Include="Assets\Scripts\Choice.cs" />
-     <Compile Include="Assets\Scripts\ChoicePrefabScript.cs" />
-     <Compile Include="Assets\Scripts\DNode.cs" />
-     <Compile Include="Assets\Scripts\Dialogue.cs" />
-     <Compile Include="Assets\Scripts\DialogueChain.cs" />
-     <Compile Include="Assets\Scripts\Dialogue_Parser.cs" />
-     <Compile Include="Assets\Scripts\DisplayText.cs" />
-     <Compile Include="Assets\Scripts\JSONDialogue.cs" />
-     <Compile Include="Assets\Scripts\MenuChoicePrefab.cs" />
-     <Compile Include="Assets\Scripts\NeutralButton.cs" />
-     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
-     <Compile Include="Assets\Scripts\SceneManager.cs" />
-     <Compile Include="Assets\Scripts\WorldTile.cs" />
-     <Compile Include="Assets\Scripts\WorldTileManager.cs" />
-     <Compile Include="Assets\Scripts\WorldTile_backup.cs" />
-     <Compile Include="Assets\Test_Gaf_Controller.cs" />
-     <Compile Include="Assets\TextFieldModder.cs" />
-     <Compile Include="Assets\asd.cs" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
-     <None Include="Assets\Scripts\TestShader.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
-     <None Include="Assets\GAF\Docs\What&apos;s new.txt" />
-     <None Include="Assets\LC1.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
-     <None Include="Assets\Text\LC1.txt" />
-     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
-     <None Include="Assets\Text\TEST1.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFFilteredObject.shader" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
-     <None Include="Assets\Text\test2.txt" />
-     <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
-     <None Include="Assets\GAF\Docs\Readme.txt" />
- <Reference Include="UnityEngine.UI">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Networking">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.PlaymodeTestsRunner">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/PlaymodeTestsRunner/UnityEngine.PlaymodeTestsRunner.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Analytics">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.HoloLens">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.VR">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
- </Reference>
- <Reference Include="GAF">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
- </Reference>
- <Reference Include="Ionic.Zip.Reduced">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
- </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{50D804C8-5513-A419-C6A9-F390EE55FD1F}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <Compile Include="Assets\Actor.cs" />
+    <Compile Include="Assets\ActorAnimator.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\InventoryControl.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
+    <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
+    <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
+    <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
+    <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomStaticResourceLoader.cs" />
+    <Compile Include="Assets\GAF\Examples\Scripts\GAFLoadResourceFromBundle.cs" />
+    <Compile Include="Assets\GAF\Examples\Scripts\GAFSceneController.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\GAFAnimationAsset.cs" />
+    <Compile Include="Assets\GAF\Scripts\Asset\GAFTexturesResource.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\GAFAnimator.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\GAFBakedAnimator.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\GAFBakedMovieClip.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\GAFCustomDelegateCreator.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\GAFMovieClip.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Interfaces\GAFAnimatorInternal.cs" />
+    <Compile Include="Assets\GAF\Scripts\Core\Interfaces\GAFMovieClipInternal.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObject.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObjectController.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\GAFBakedObjectsManager.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\GAFObject.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
+    <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+    <Compile Include="Assets\Scene.cs" />
+    <Compile Include="Assets\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Character.cs" />
+    <Compile Include="Assets\Scripts\Choice.cs" />
+    <Compile Include="Assets\Scripts\ChoicePrefabScript.cs" />
+    <Compile Include="Assets\Scripts\DNode.cs" />
+    <Compile Include="Assets\Scripts\Dialogue.cs" />
+    <Compile Include="Assets\Scripts\DialogueChain.cs" />
+    <Compile Include="Assets\Scripts\Dialogue_Parser.cs" />
+    <Compile Include="Assets\Scripts\DisplayText.cs" />
+    <Compile Include="Assets\Scripts\JSONDialogue.cs" />
+    <Compile Include="Assets\Scripts\MenuChoicePrefab.cs" />
+    <Compile Include="Assets\Scripts\NeutralButton.cs" />
+    <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
+    <Compile Include="Assets\Scripts\SceneManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTile.cs" />
+    <Compile Include="Assets\Scripts\WorldTileManager.cs" />
+    <Compile Include="Assets\Scripts\WorldTile_backup.cs" />
+    <Compile Include="Assets\Test_Gaf_Controller.cs" />
+    <Compile Include="Assets\TextFieldModder.cs" />
+    <Compile Include="Assets\asd.cs" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
+    <None Include="Assets\Scripts\TestShader.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
+    <None Include="Assets\LC1.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
+    <None Include="Assets\Text\LC1.txt" />
+    <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
+    <None Include="Assets\Text\TEST1.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFFilteredObject.shader" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
+    <None Include="Assets\Text\test2.txt" />
+    <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
+    <None Include="Assets\GAF\Docs\Readme.txt" />
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\Networking\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PlaymodeTestsRunner">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\PlaymodeTestsRunner\UnityEngine.PlaymodeTestsRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Analytics">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityAnalytics\UnityEngine.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HoloLens">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityHoloLens\RuntimeEditor\UnityEngine.HoloLens.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VR">
+      <HintPath>C:\Program Files\Unity\Editor\Data\UnityExtensions\Unity\UnityVR\RuntimeEditor\UnityEngine.VR.dll</HintPath>
+    </Reference>
+    <Reference Include="GAF">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\GAF.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip.Reduced">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="MiniJson">
+      <HintPath>C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Assets\GAF\Plugins\MiniJson.dll</HintPath>
+    </Reference>
+    <None Include="Assets\GAF\Docs\What%27s new.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -153,5 +148,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  
 </Project>
