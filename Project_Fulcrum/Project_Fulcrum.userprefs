@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs">
     <Files>
-      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="1" Column="158" />
+      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="383" Column="15" />
       <File FileName="Assets\Standard Assets\2D\Scripts\CameraFollow.cs" Line="1" Column="1" />
       <File FileName="Assets\Standard Assets\2D\Scripts\Restarter.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\TestShader.shader" Line="1" Column="1" />
@@ -14,7 +14,4 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <DisabledProjects>
-    <String>Assembly-CSharp-firstpass.csproj</String>
-  </DisabledProjects>
 </Properties>

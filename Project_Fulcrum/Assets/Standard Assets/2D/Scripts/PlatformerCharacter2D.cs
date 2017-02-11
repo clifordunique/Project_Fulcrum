@@ -106,7 +106,7 @@ namespace UnityStandardAssets._2D
 
         private void FixedUpdate()
 		{
-			print("Initial Pos: " + this.transform.position);
+			//print("Initial Pos: " + this.transform.position);
 
 			m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
 			//print("LEFT="+m_KeyLeft);
@@ -223,15 +223,16 @@ namespace UnityStandardAssets._2D
 				cPerp.y = -CeilingNormal.x;
 
 				float cornerAngle = Vector2.Angle(cPerp, gPerp);
-				print("Corner Angle = " + cornerAngle);
-				print("Ground Perp = " + gPerp);
-				print("Ceiling Perp = " + cPerp);
+				//print("Corner Angle = " + cornerAngle);
+				//print("Ground Perp = " + gPerp);
+				//print("Ceiling Perp = " + cPerp);
 
 				if(cPerp.y > 0)
 				{
 					if(m_Rigidbody2D.velocity.x > 0)
 					{
 						m_Rigidbody2D.velocity = new Vector2(0f, 0f);
+						m_RightWalled = true;
 						print("Right wedge!");
 					}
 				}
@@ -240,6 +241,8 @@ namespace UnityStandardAssets._2D
 					if(m_Rigidbody2D.velocity.x < 0)
 					{
 						print("Left wedge!");
+						m_LeftWalled = true;
+
 						m_Rigidbody2D.velocity = new Vector2(0f, 0f);
 					}
 				}
@@ -248,19 +251,51 @@ namespace UnityStandardAssets._2D
 					throw new Exception("Ceiling is vertical! CEILINGS CAN'T BE VERTICAL!");
 				}
 				m_Ceilinged = false;
-
 			}
+				
+			if(m_Jump)
+			{
+				if(m_Grounded){
+					if(m_Rigidbody2D.velocity.y >= 0)
+					{
+						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y +m_JumpForce);
+					}
+					else
+					{
+						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_JumpForce);
+					}
+					m_Jump = false;
+					m_Grounded = false;
+				}
+				else if(m_Ceilinged)
+				{
+					if(m_Rigidbody2D.velocity.y <= 0)
+					{
+						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y -m_JumpForce);
+					}
+					else
+					{
+						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, -m_JumpForce);
+					}
 
+					m_Jump = false;
+					m_Ceilinged = false;
+				}
+			}
 
 			if(m_Grounded)
 			{//Locomotion!
 				Traction(CtrlH);
+			}else
+			{//Gravity!
+				m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
+				m_Ceilinged = false;
 			}
 
 			errorDetectingRecursionCount = 0; //Used for DirectionCorrection();
 
-			print("Velocity before directioncorrection: "+m_Rigidbody2D.velocity);
-			print("Position before directioncorrection: "+this.transform.position);
+			//print("Velocity before directioncorrection: "+m_Rigidbody2D.velocity);
+			//print("Position before directioncorrection: "+this.transform.position);
 
 			DirectionCorrection();
 
@@ -268,21 +303,15 @@ namespace UnityStandardAssets._2D
 			{
 				CeilingTraversal();
 			}
-				
-			if (!m_Grounded) 
-			{//Gravity!
-				m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
-				m_Ceilinged = false;
-			}
 
 			if (m_Grounded) //Handles velocity along ground surface.
 			{
 				GroundTraversal();
 			}
 				
-			print("Per frame velocity at end of physics frame: "+m_Rigidbody2D.velocity*Time.deltaTime);
-			print("Pos at end of physics frame: "+this.transform.position);
-			print("##############################################################################################");
+			//print("Per frame velocity at end of physics frame: "+m_Rigidbody2D.velocity*Time.deltaTime);
+			//print("Pos at end of physics frame: "+this.transform.position);
+			//print("##############################################################################################");
 
 			//print(GroundNormal);
 			Vector2 offset = new Vector2(0, 0.20f);
@@ -379,6 +408,8 @@ namespace UnityStandardAssets._2D
 				return;
 			}
 
+			m_LeftWalled = false;
+			m_RightWalled = false;
 			//Vector2 surfacePosition = MidHit.point;
 			//surfacePosition.y += 0.61f;
 			//this.transform.position = surfacePosition;
@@ -404,7 +435,7 @@ namespace UnityStandardAssets._2D
 
 			if (predictedLoc.collider != null) 
 			{//If you're going to hit something.
-				print("impact");
+				//print("impact");
 				collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, predictedLoc.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
 
 				//print("Velocity before impact: "+m_Rigidbody2D.velocity);
@@ -439,7 +470,7 @@ namespace UnityStandardAssets._2D
 			} 
 			else if(collider1Check.collider != null)
 			{
-				print("Free move into obstacle.");
+				//print("Free move into obstacle.");
 				Collision();
 				//print("Velocity after impact: "+m_Rigidbody2D.velocity);
 			}
@@ -453,7 +484,7 @@ namespace UnityStandardAssets._2D
 		{
 			if( ((m_LeftWalled)&&(horizontalInput < 0)) || ((m_RightWalled)&&(horizontalInput > 0)) )
 			{// If running at a wall you're up against.
-				return;
+				horizontalInput = 0;
 			}
 			else
 			{
@@ -562,30 +593,30 @@ namespace UnityStandardAssets._2D
 			//futureColliderPos.x += futureMove
 
 			RaycastHit2D collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
-			print("Collision normal: "+ collider1Check.normal);
+			//print("Collision normal: "+ collider1Check.normal);
 
 
 			if(collider1Check.collider != null)
 			{
-				print("DOING THE COLLISION!");
-				print("Original Velocity: "+ m_Rigidbody2D.velocity);
-				print("Original location: "+ collider1Position);
-				print("Predicted location: "+ collider1Check.point);
-				print("Struck object: " + collider1Check.collider.transform.gameObject);
+				//print("DOING THE COLLISION!");
+				//print("Original Velocity: "+ m_Rigidbody2D.velocity);
+				//print("Original location: "+ collider1Position);
+				//print("Predicted location: "+ collider1Check.point);
+				//print("Struck object: " + collider1Check.collider.transform.gameObject);
 				//collider1Check.collider.transform.gameObject.SetActive(false);
 				Vector2 expendedVel = collider1Check.point;
 				expendedVel.x -= collider1Position.x;
 				expendedVel.y -= collider1Position.y;
 				Vector2 remainingVel = m_Rigidbody2D.velocity-expendedVel;
-				print("Expended Velocity: "+ expendedVel);
-				print("Remaining Velocity: "+ remainingVel);
+				//print("Expended Velocity: "+ expendedVel);
+				//print("Remaining Velocity: "+ remainingVel);
 
 				float hOffset = 0;
 				float vOffset = 0.22f;
 
 				if(m_Rigidbody2D.velocity.y != 0)
 				{
-					vOffset = 0.19f;
+					vOffset = 0.18f;
 				}
 				else
 				{
@@ -594,17 +625,17 @@ namespace UnityStandardAssets._2D
 
 				if(m_Rigidbody2D.velocity.x < 0)
 				{
-					print("HOFFSET NEG VELO");
+					//print("HOFFSET NEG VELO");
 					hOffset = 0.02f;
 				}
 				else if(m_Rigidbody2D.velocity.x > 0)
 				{
-					print("HOFFSET POS VELO");
+					//print("HOFFSET POS VELO");
 					hOffset = -0.02f;
 				}
 				else
 				{
-					print("HOFFSET 0");
+					//print("HOFFSET 0");
 					hOffset = 0;
 				}
 
@@ -614,7 +645,7 @@ namespace UnityStandardAssets._2D
 
 				if(collider1Check.normal.y == 0)
 				{
-					print("normal.y == 0");
+					//print("normal.y == 0");
 
 					if(m_Rigidbody2D.velocity.x < 0)
 					{
@@ -628,15 +659,13 @@ namespace UnityStandardAssets._2D
 					}
 					else
 					{
-						m_RightWalled = false;
-						m_LeftWalled = false;
-						print("Hit a wall without moving horizontally, somehow.");
+						//print("Hit a wall without moving horizontally, somehow.");
 					}
 					m_Rigidbody2D.velocity = new Vector2(0.0f, remainingVel.y);
 				}
 				else
 				{
-					print("normal.y != 0");
+					//print("normal.y != 0");
 					Vector2 adjustedBot = m_Collider1.position; // AdjustedBot marks the bottom of the middle raycast.
 					adjustedBot.y = adjustedBot.y - 0.40f;
 					m_Ceilinged = true;
@@ -662,7 +691,7 @@ namespace UnityStandardAssets._2D
 
 				//this.transform.position =  new Vector2(collider1Check.point.x+0.01f, collider1Check.point.y+0.2f);
 				//m_Rigidbody2D.velocity = new Vector2(0f, m_Rigidbody2D.velocity.y);
-				Debug.Break();
+				//Debug.Break();
 				return true;
 			}
 			else
@@ -741,9 +770,6 @@ namespace UnityStandardAssets._2D
 				m_Grounded = false;
 			}
 			GroundNormal = groundCheck2.normal;
-			//DirectionCorrection();
-			//Collision();
-
 			//print ("Final Position2:  " + this.transform.position);
 		}
 
@@ -773,8 +799,6 @@ namespace UnityStandardAssets._2D
 				//print ("groundCheck2.normal=" + groundCheck2.normal);
 				//print ("groundCheck2.collider=" + groundCheck2.transform.gameObject);
 				GroundNormal = groundCheck2.normal;
-				//Traction(CtrlH);
-				//DirectionCorrection();
 			} 
 			else 
 			{
@@ -834,12 +858,6 @@ namespace UnityStandardAssets._2D
 					print("adjustedVel"+AdjustedVel);
 				}
 			}
-
-			if(m_Jump)
-			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y + m_JumpForce);
-				m_Jump = false;
-			}
 		}
 	
 		private void CeilingTraversal()
@@ -847,7 +865,7 @@ namespace UnityStandardAssets._2D
 			float testNumber = CeilingNormal.y/CeilingNormal.x;
 			if(float.IsNaN(testNumber))
 			{
-				print("IT'S NaN BRO LoLoLOL XD");
+				//print("IT'S NaN BRO LoLoLOL XD");
 			}
 
 			Vector2 ceilingPerp;
@@ -872,20 +890,14 @@ namespace UnityStandardAssets._2D
 			try
 			{
 				m_Rigidbody2D.velocity = adjustedVel;
-				print("Velocity after ceiling traversal: "+ m_Rigidbody2D.velocity);
+				//print("Velocity after ceiling traversal: "+ m_Rigidbody2D.velocity);
 			}
 			catch(Exception e)
 			{
 				print(e);
-				print("CeilingPerp="+ceilingPerp);
-				print("projectionVal"+projectionVal);
-				print("adjustedVel"+adjustedVel);
-			}
-
-			if(m_Jump)
-			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - m_JumpForce);
-				m_Jump = false;
+				//print("CeilingPerp="+ceilingPerp);
+				//print("projectionVal"+projectionVal);
+				//print("adjustedVel"+adjustedVel);
 			}
 		}
 	}
