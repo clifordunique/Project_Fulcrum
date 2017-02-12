@@ -12,7 +12,7 @@ namespace UnityStandardAssets._2D
 		[SerializeField] private float m_MinSpeed = 10f; 					// The instant starting speed while moving
 		[SerializeField] private float maxRunSpeed;							// The fastest the player can travel in the x axis.
 		[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    	// Speed the player accelerates at
-		[SerializeField] private float m_JumpForce = 10f;                  	// Amount of force added when the player jumps.
+		[SerializeField] private float m_JumpForce = 20f;                  	// Amount of force added when the player jumps.
 		[SerializeField] private float tractionChangeSpeed = 100f;			// Where movement changes from exponential to linear acceleration.
 		[SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
@@ -23,50 +23,68 @@ namespace UnityStandardAssets._2D
 		[SerializeField] private bool showVelocityIndicator;
 
 
-		//##################################
+		//############################################################################################################################################################################################################
 		// PLAYER COMPONENTS
-		//###################################
-
+		//###########################################################################################################################################################################
+		#region PLAYERCOMPONENTS
+		[SerializeField] private Camera m_MainCamera;
+		private float cameraZoom;
         private Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
 		private SpriteRenderer m_SpriteRenderer;
-
-		//##################################
+		#endregion
+		//############################################################################################################################################################################################################
 		// PHYSICS&RAYCASTING
-		//###################################
-		private Transform m_CeilingCheck;   // A position marking where to check for ceilings.
-		private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
-		private Transform m_LeftFoot;
-		private Transform m_RightFoot;
-		private Transform m_MidFoot;
-		private Transform m_LeftSide;
-		private Transform m_RightSide;
+		//###########################################################################################################################################################################
+		#region PHYSICS&RAYCASTING
+		private Transform m_LeftFoot; // Floor collider, left.
+		private Vector2 m_LeftFootOffset;
+		private float m_LeftFootLength;
+
+		private Transform m_RightFoot; // Floor collider, right.
+		private Vector2 m_RightFootOffset;
+		private float m_RightFootLength;
+
+		private Transform m_MidFoot; // Floor collider, middle.
+		private Vector2 m_MidFootOffset; 
+		private float m_MidFootLength;
+
+		private Transform m_CeilingFoot; // Ceiling collider, middle.
+		private Vector2 m_CeilingFootOffset;
+		private float m_CeilingFootLength;
+
+		private Transform m_LeftSide; // Unused for now.
+		private Transform m_RightSide; // Unused for now.
 
 		private Vector2 GroundNormal;   
 		private Vector2 CeilingNormal;
 		[SerializeField] private Transform[] m_Colliders;
-		[SerializeField] private Transform m_Collider1;
 
-		private bool leftcontact;
-		private bool midcontact;
-		private bool rightcontact;
+
+		private bool leftContact;
+		private bool midContact;
+		private bool rightContact;
+		private bool ceilingContact;
+
 		[SerializeField] private bool m_Grounded; 
 		[SerializeField] private bool m_Ceilinged; 
 		[SerializeField] private bool m_LeftWalled; 
 		[SerializeField] private bool m_RightWalled; 
-
-		//##################################
+		#endregion
+		//##########################################################################################################################################################################
 		// PLAYER INPUT VARIABLES
-		//###################################
+		//###########################################################################################################################################################################
+		#region PLAYERINPUT
 		private bool m_Jump;
 		private bool m_KeyLeft;
 		private bool m_KeyRight;
 		private int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 		private bool facingDirection; 		// true means right (the direction), false means left.
-
-		//##################################
+		#endregion
+		//############################################################################################################################################################################################################
 		// DEBUGGING VARIABLES
-		//##################################
+		//##########################################################################################################################################################################
+		#region DEBUGGING
 		private int errorDetectingRecursionCount; //Iterates each time recursive trajectory correction executes on the current frame.
 		[SerializeField] private bool autoRun; // When set to true, the player will run even after the key is released.
 		[SerializeField] private bool autoJump;
@@ -75,34 +93,48 @@ namespace UnityStandardAssets._2D
 		private LineRenderer m_LeftLine; 
 		private LineRenderer m_MidLine;
 		private LineRenderer m_RightLine;
-
+		private LineRenderer m_CeilingLine;
+		#endregion
+		//########################################################################################################################################
+		// MAIN FUNCTIONS
+		//########################################################################################################################################
 
         private void Awake()
         {
+			Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 			m_DebugLine = GetComponent<LineRenderer>();
 			if(!showVelocityIndicator){
 				m_DebugLine.enabled = false;
 			}
 
-            m_GroundCheck = transform.Find("GroundCheck");
-
 			m_LeftFoot = transform.Find("LeftFoot");
 			m_LeftLine = m_LeftFoot.GetComponent<LineRenderer>();
-
-			m_MidFoot = transform.Find("MidFoot");
-			m_MidLine = m_MidFoot.GetComponent<LineRenderer>();
+			m_LeftFootOffset.x = m_LeftFoot.position.x-playerOrigin.x;
+			m_LeftFootOffset.y = m_LeftFoot.position.y-playerOrigin.y;
+			m_LeftFootLength = m_LeftFootOffset.magnitude;
 
 			m_RightFoot = transform.Find("RightFoot");
 			m_RightLine = m_RightFoot.GetComponent<LineRenderer>();
+			m_RightFootOffset.x = m_RightFoot.position.x-playerOrigin.x;
+			m_RightFootOffset.y = m_RightFoot.position.y-playerOrigin.y;
+			m_RightFootLength = m_RightFootOffset.magnitude;
 
-			m_Collider1 = transform.Find("Collider1");
+			m_MidFoot = transform.Find("MidFoot");
+			m_MidLine = m_MidFoot.GetComponent<LineRenderer>();
+			m_MidFootOffset.x = m_MidFoot.position.x-playerOrigin.x;
+			m_MidFootOffset.y = m_MidFoot.position.y-playerOrigin.y;
+			m_MidFootLength = m_MidFootOffset.magnitude;
 
-            m_CeilingCheck = transform.Find("CeilingCheck");
+			m_CeilingFoot = transform.Find("CeilingFoot");
+			m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
+			m_CeilingFootOffset.x = m_CeilingFoot.position.x-playerOrigin.x;
+			m_CeilingFootOffset.y = m_CeilingFoot.position.y-playerOrigin.y;
+			m_CeilingFootLength = m_CeilingFootOffset.magnitude;
+
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
 			m_SpriteRenderer = GetComponent<SpriteRenderer>();
         }
-
 
         private void FixedUpdate()
 		{
@@ -153,29 +185,30 @@ namespace UnityStandardAssets._2D
 				facingDirection = true; //true means right (the direction), false means left.
 			}
 
-			RaycastHit2D LeftHit = Physics2D.Raycast (m_LeftFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D LeftHit = Physics2D.Raycast (this.transform.position, Vector2.down, m_LeftFootLength, mask);
 			if (LeftHit.collider != null)
 			{
-				leftcontact = true;
+				leftContact = true;
 				m_LeftLine.endColor = Color.green;
 				m_LeftLine.startColor = Color.green;
 			} 
 			else
 			{
-				leftcontact = false;
+				leftContact = false;
 			}
 
-			RaycastHit2D MidHit = Physics2D.Raycast (m_MidFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D MidHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
 			if (MidHit.collider != null) 
 			{
-				midcontact = true;
+				m_Grounded = true;
+				//midContact = true;
 				m_MidLine.endColor = Color.green;
 				m_MidLine.startColor = Color.green;
 				GroundNormal = MidHit.normal;
 				if(antiTunneling)
 				{
 					Vector2 surfacePosition = MidHit.point;
-					surfacePosition.y += 0.61f;
+					surfacePosition.y += m_MidFootLength-0.01f;
 					this.transform.position = surfacePosition;
 					//print ("MIDHIT NORMAL INITIAL:    " + MidHit.normal);
 				}
@@ -183,32 +216,58 @@ namespace UnityStandardAssets._2D
 			} 
 			else 
 			{
-				midcontact = false;
+				m_Grounded = false;
+				//midContact = false;
 			}
 				
-			RaycastHit2D RightHit = Physics2D.Raycast (m_RightFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D RightHit = Physics2D.Raycast (this.transform.position, Vector2.down,  m_RightFootLength, mask);
 			if (RightHit.collider != null) 
 			{
-				rightcontact = true;
+				rightContact = true;
 				m_RightLine.endColor = Color.green;
 				m_RightLine.startColor = Color.green;
 			} 
 			else 
 			{
-				rightcontact = false;
+				rightContact = false;
+			}
+
+			RaycastHit2D CeilingHit = Physics2D.Raycast (this.transform.position, Vector2.up,  m_CeilingFootLength, mask);
+			if (CeilingHit.collider != null) 
+			{
+				m_Ceilinged = true;
+				//ceilingContact = true;
+				m_CeilingLine.endColor = Color.green;
+				m_CeilingLine.startColor = Color.green;
+				//CeilingNormal = CeilingHit.normal;
+				if(antiTunneling)
+				{
+					Vector2 surfacePosition = CeilingHit.point;
+					surfacePosition.y -= (m_CeilingFootLength+0.01f);
+					this.transform.position = surfacePosition;
+					print ("HEAD IMPACTED IN SURFACE " + CeilingHit.normal);
+				}
+
+			} 
+			else 
+			{
+				m_Ceilinged = false;
+				//ceilingContact = false;
 			}
 
 			#endregion
 
-			if (midcontact) 
+			/*
+			if (midContact) 
 			{
-				//print ("Midcontact");
+				//print ("midContact");
 				m_Grounded = true;
 			}
 			else 
 			{
 				m_Grounded = false;
 			}
+			*/
 
 			//print("Starting velocity: " + m_Rigidbody2D.velocity);
 
@@ -258,7 +317,7 @@ namespace UnityStandardAssets._2D
 				if(m_Grounded){
 					if(m_Rigidbody2D.velocity.y >= 0)
 					{
-						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y +m_JumpForce);
+						m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y+m_JumpForce);
 					}
 					else
 					{
@@ -397,6 +456,16 @@ namespace UnityStandardAssets._2D
 			}
 		}
    
+		private void LateUpdate()
+		{
+			cameraZoom = Mathf.Lerp(cameraZoom, m_Rigidbody2D.velocity.magnitude, 0.1f);
+			m_MainCamera.orthographicSize = 5f+(0.15f*cameraZoom);
+		}
+
+		//###################################################################################################################################
+		// CUSTOM FUNCTIONS
+		//###################################################################################################################################
+
 		private void DirectionCorrection()
 		{
 			//print("DC Executing");
@@ -408,12 +477,11 @@ namespace UnityStandardAssets._2D
 				return;
 			}
 
-			m_LeftWalled = false;
-			m_RightWalled = false;
-			//Vector2 surfacePosition = MidHit.point;
-			//surfacePosition.y += 0.61f;
-			//this.transform.position = surfacePosition;
-			//print ("MIDHIT NORMAL INITIAL:    " + MidHit.normal);
+			if(m_Rigidbody2D.velocity.magnitude != 0)
+			{
+				m_LeftWalled = false;
+				m_RightWalled = false;
+			}
 
 			//print ("Player Pos:  " + this.transform.position);
 			//print ("velocity:  " + m_Rigidbody2D.velocity);
@@ -421,25 +489,23 @@ namespace UnityStandardAssets._2D
 			//print ("predOrigin:  " + predOrigin);
 			//print ("MidFoot:  " + m_MidFoot.position);
 
-			Vector2 adjustedBot = m_MidFoot.position; // AdjustedBot marks the bottom of the middle raycast, but 0.02 higher.
-			adjustedBot.y = adjustedBot.y - 0.40f;
-			RaycastHit2D groundCheck = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+			Vector2 adjustedBot = m_MidFoot.position; // AdjustedBot marks the end of the middle raycast, but 0.02 higher.
+			adjustedBot.y += 0.02f;
+
+			Vector2 adjustedTop = m_CeilingFoot.position; // AdjustedTop marks the end of the middle ceiling raycast, but 0.02 lower.
+			adjustedTop.y = adjustedTop.y-0.02f;
+
+			RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
 			RaycastHit2D predictedLoc = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
 
-			Vector2 collider1Position;
-			collider1Position.x = m_Collider1.position.x;
-			collider1Position.y = m_Collider1.position.y;
-			RaycastHit2D collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
-
-			//print("COL1POS_MOD = " + collider1Position);
+			RaycastHit2D collider1Check = Physics2D.Raycast(m_CeilingFoot.position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
 
 			if (predictedLoc.collider != null) 
 			{//If you're going to hit something.
 				//print("impact");
-				collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, predictedLoc.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
+				collider1Check = Physics2D.Raycast(m_CeilingFoot.position, m_Rigidbody2D.velocity, predictedLoc.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
 
-				//print("Velocity before impact: "+m_Rigidbody2D.velocity);
-				//print("Velocity after impact: "+m_Rigidbody2D.velocity);
+				print("Velocity before impact: "+m_Rigidbody2D.velocity);
 
 				Vector2 invertedImpactNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
 				invertedImpactNormal.x = -predictedLoc.normal.y; //Inverting the normal.
@@ -574,21 +640,21 @@ namespace UnityStandardAssets._2D
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
 				//print("              MOVING LEFT!");
-				collider1Position.x = m_Collider1.position.x;
+				collider1Position.x = m_CeilingFoot.position.x;
 			}
 			else if(m_Rigidbody2D.velocity.x > 0)
 			{
 				//print("              MOVING RIGHT!");
-				collider1Position.x = m_Collider1.position.x;
+				collider1Position.x = m_CeilingFoot.position.x;
 			}
 			else
 			{
 				//print("alternate");
-				collider1Position.x = m_Collider1.position.x;
+				collider1Position.x = m_CeilingFoot.position.x;
 			}
 
-			//collider1Position.x = m_Collider1.position.x;
-			collider1Position.y = m_Collider1.position.y;
+			//collider1Position.x = m_CeilingFoot.position.x;
+			collider1Position.y = m_CeilingFoot.position.y;
 			//Vector2 futureMove = m_Rigidbody2D.velocity*Time.deltaTime
 			//futureColliderPos.x += futureMove
 
@@ -612,15 +678,15 @@ namespace UnityStandardAssets._2D
 				//print("Remaining Velocity: "+ remainingVel);
 
 				float hOffset = 0;
-				float vOffset = 0.22f;
+				float vOffset = -0.20f;
 
 				if(m_Rigidbody2D.velocity.y != 0)
 				{
-					vOffset = 0.18f;
+					vOffset = -0.22f;
 				}
 				else
 				{
-					vOffset = 0.20f;
+					vOffset = -0.20f;
 				}
 
 				if(m_Rigidbody2D.velocity.x < 0)
@@ -650,12 +716,12 @@ namespace UnityStandardAssets._2D
 					if(m_Rigidbody2D.velocity.x < 0)
 					{
 						m_LeftWalled = true;
-						this.transform.position =  new Vector2(collider1Check.point.x+0.02f, collider1Check.point.y+0.20f);
+						this.transform.position =  new Vector2(collider1Check.point.x+0.02f, collider1Check.point.y-0.20f);
 					}
 					else if(m_Rigidbody2D.velocity.x > 0)
 					{
 						m_RightWalled = true;
-						this.transform.position =  new Vector2(collider1Check.point.x-0.02f, collider1Check.point.y+0.20f);
+						this.transform.position =  new Vector2(collider1Check.point.x-0.02f, collider1Check.point.y-0.20f);
 					}
 					else
 					{
@@ -666,8 +732,8 @@ namespace UnityStandardAssets._2D
 				else
 				{
 					//print("normal.y != 0");
-					Vector2 adjustedBot = m_Collider1.position; // AdjustedBot marks the bottom of the middle raycast.
-					adjustedBot.y = adjustedBot.y - 0.40f;
+					//Vector2 adjustedBot = m_CeilingFoot.position; // AdjustedBot marks the bottom of the middle raycast.
+					//adjustedBot.y = adjustedBot.y-0.02f;
 					m_Ceilinged = true;
 					CeilingNormal = collider1Check.normal;
 					/*
@@ -739,20 +805,20 @@ namespace UnityStandardAssets._2D
 
 			m_Grounded = true;
 			Vector2 setCharPos = predictedLoc.point;
-			setCharPos.y = setCharPos.y + 0.61f;
+			setCharPos.y = setCharPos.y+m_MidFootLength-0.01f; //Embed slightly in floor to ensure raycasts still hit floor.
 			this.transform.position = setCharPos;
 			//print ("Final Position:  " + this.transform.position);
 			m_Rigidbody2D.velocity = remainingVel;
 			//TEST CODE AFTER THIS POINT
 			//Vector2 newTestRayOrigin = this.transform.position;
 			//newTestRayOrigin.y = newTestRayOrigin.y - 0.20f;
-			RaycastHit2D groundCheck2 = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
 			if (groundCheck2.collider != null) 
 			{
 				//print(
 				//Vector2 surfacePosition = groundCheck2.point;
 				//print(groundCheck2.point);
-				//surfacePosition.y += 0.61f;
+				//surfacePosition.y += m_MidFootLength;
 				//this.transform.position = surfacePosition;
 				//print ("ASCENDING!");
 			}
@@ -787,12 +853,12 @@ namespace UnityStandardAssets._2D
 
 
 			Vector2 setCharPos = predictedLoc.point;
-			setCharPos.y += 0.61f;
+			setCharPos.y += m_MidFootLength;
 			this.transform.position = setCharPos;
 			//print ("Final Position:  " + this.transform.position);
 			m_Rigidbody2D.velocity = remainingVel;
 			//TEST CODE AFTER THIS POINT
-			RaycastHit2D groundCheck2 = Physics2D.Raycast(m_MidFoot.position, Vector2.down, 0.42f, mask);
+			RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
 			if (groundCheck2.collider != null) {
 
 				m_Grounded = true;
