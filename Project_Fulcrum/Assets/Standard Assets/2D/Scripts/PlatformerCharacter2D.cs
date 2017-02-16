@@ -17,13 +17,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 	//[Range(0,2)][SerializeField] private float m_Acceleration = 1f;  	// Speed the player accelerates at
 	[SerializeField] private float m_VJumpForce = 40f;                  // Amount of vertical force added when the player jumps.
 	[SerializeField] private float m_HJumpForce = 5f;  					// Amount of horizontal force added when the player jumps.
-	[SerializeField] private float tractionChangeSpeed = 100f;			// Threshold where movement changes from exponential to linear acceleration.  
+	[SerializeField] private float tractionChangeThreshold = 20f;			// Threshold where movement changes from exponential to linear acceleration.  
 	[Range(0,1)][SerializeField] private float m_LinearStopRate = 1f; 			// How fast the player decelerates when changing direction.
 	[Range(0,1)][SerializeField] private float m_LinearSlideRate = 0.20f;			// How fast the player decelerates with no input.
 	[Range(0,1)][SerializeField] private float m_LinearAccelRate = 0.35f;			// How fast the player accelerates with input.
 	[Range(1,8)][SerializeField] private float m_StationaryBoostMultiplier = 2f;	// Governs how much the player accelerates on the very first frame from stationary.
+	[Range(0,89)][SerializeField] private float m_AngleSpeedLossMin = 20f; 	// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_AngleSpeedLossMax.
+	[Range(1,90)][SerializeField] private float m_AngleSpeedLossMax = 80f; 	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_AngleSpeedLossMin!!
 	#endregion
-
 	//############################################################################################################################################################################################################
 	// PLAYER COMPONENTS
 	//###########################################################################################################################################################################
@@ -96,7 +97,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private int errorDetectingRecursionCount; //Iterates each time recursive trajectory correction executes on the current frame.
 	[Header("Debug:")]
-	[SerializeField] private bool autoRun; // When set to true, the player will run even after the key is released.
+	[SerializeField] private bool autoSprint; // When set to true, the player will run even after the key is released.
 	[SerializeField] private bool autoJump;
 	[SerializeField] private bool antiTunneling; // When set to true, the player will be pushed up out of objects they are stuck in.
 	[SerializeField] private bool noGravity; 
@@ -172,7 +173,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if((!m_KeyLeft && !m_KeyRight) || (m_KeyLeft && m_KeyRight))
 		{
 			//print("BOTH/NEITHER");
-			if(!autoRun)
+			if(!autoSprint)
 			{
 				CtrlH = 0;
 			}
@@ -307,7 +308,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(m_Ceilinged&&m_Grounded)
 		{
-			Wedged();
+			if(m_Rigidbody2D.velocity.magnitude != 0)
+			{
+				Wedged();
+			}
 			m_Ceilinged = false;
 		}
 			
@@ -347,7 +351,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
-		//print(GroundNormal);
+
 
 		#region Animator Controls
 
@@ -388,7 +392,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			
 		m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude);
 
-		if(m_Rigidbody2D.velocity.magnitude >= tractionChangeSpeed)
+		if(m_Rigidbody2D.velocity.magnitude >= tractionChangeThreshold )
 		{
 			m_DebugLine.endColor = Color.white;
 			m_DebugLine.startColor = Color.white;
@@ -413,7 +417,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print ("Flying");
 		}
 		m_Anim.SetBool("Ground", m_Grounded);
-
+		//print("Speed at end of frame: " + m_Rigidbody2D.velocity.magnitude);
 		#endregion
     }
 
@@ -483,7 +487,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			invertedImpactNormal.x = -predictedLoc.normal.y; //Inverting the normal.
 			invertedImpactNormal.y = -predictedLoc.normal.x; //Inverting the normal.
 
-			if(collider1Check.collider != null) //if((collider1Check.collider != null) && (collider1Check.normal != predictedLoc.normal) && (collider1Check.normal != invertedImpactNormal))
+			if(collider1Check.collider != null)
 			{// If player hits an obstacle that is too high for its feet to take care of.
 				print("Obstacle");
 				Collision();
@@ -497,7 +501,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			} 
 			else if (groundCheck.normal != predictedLoc.normal && groundCheck.normal != invertedImpactNormal) 
 			{ // If the slope you're hitting is different than your current slope.
-				ChangeSlope(predictedLoc);
+				GroundToGround(predictedLoc);
 				return;
 			}
 			else 
@@ -520,6 +524,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		
 	private void Traction(float horizontalInput)
 	{
+		//print("Traction");
 		if( ((m_LeftWalled)&&(horizontalInput < 0)) || ((m_RightWalled)&&(horizontalInput > 0)) )
 		{// If running at a wall you're up against.
 			horizontalInput = 0;
@@ -556,7 +561,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			if(rawSpeed <= maxRunSpeed)
 			{
 				//print("Rawspeed("+rawSpeed+") less than max");
-				if(rawSpeed > tractionChangeSpeed)
+				if(rawSpeed > tractionChangeThreshold )
 				{
 					//print("LinAccel-> " + rawSpeed);
 					m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, m_LinearAccelRate);
@@ -569,7 +574,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				else
 				{
 					//print("Accelerating");
-					float eqnX = (1+Mathf.Abs((1/tractionChangeSpeed)*rawSpeed));
+					float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
 					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 					float addedSpeed = curveMultiplier*m_Acceleration;
 					m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed+addedSpeed);
@@ -584,7 +589,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{//if pressing button opposite of move direction, slow to zero exponentially.
 			
 
-			if(rawSpeed > tractionChangeSpeed)
+			if(rawSpeed > tractionChangeThreshold )
 			{
 				//print("LinDecel");
 				m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, -m_LinearStopRate);
@@ -592,7 +597,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			else
 			{
 				//print("Decelerating");
-				float eqnX = (1+Mathf.Abs((1/tractionChangeSpeed)*rawSpeed));
+				float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 				float addedSpeed = curveMultiplier*m_Acceleration;
 				m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed-2*addedSpeed);
@@ -607,6 +612,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private bool Collision()
 	{
+		//print("Collision");
 		Vector2 collider1Position;
 
 		if(m_Rigidbody2D.velocity.x < 0)
@@ -636,7 +642,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(collider1Check.collider != null)
 		{
-			print("Head collision.");
+			//print("Head collision.");
 			//print("Original Velocity: "+ m_Rigidbody2D.velocity);
 			//print("Original location: "+ collider1Position);
 			//print("Predicted location: "+ collider1Check.point);
@@ -710,7 +716,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 					Wedged();
 				}
 
-				print("After collision, Ceilinged = true, Grounded = " + m_Grounded);
+				//print("After collision, Ceilinged = true, Grounded = " + m_Grounded);
 
 				/*
 				RaycastHit2D ceilingCheck2 = Physics2D.Raycast(adjustedBot, Vector2.up, 0.42f, mask);
@@ -760,9 +766,19 @@ public class PlatformerCharacter2D : MonoBehaviour
 		return newVelocity;
 	}
 
-	private void ChangeSlope(RaycastHit2D predictedLoc)
+	private Vector2 SetSpeed(Vector2 inputVelocity, float speed)
 	{
-		float testNumber = predictedLoc.normal.y/predictedLoc.normal.x;
+		//print("SetSpeed");
+		Vector2 newVelocity;
+		Vector2 direction = inputVelocity.normalized;
+		newVelocity = direction * speed;
+		return newVelocity;
+	}
+
+	private void GroundToGround(RaycastHit2D predictedLoc) //Rename to GroundtoGround()
+	{
+		
+		//float testNumber = predictedLoc.normal.y/predictedLoc.normal.x;
 		//print(testNumber);
 		print ("We've hit slope, sir!!");
 		//print ("predictedLoc.normal=" + predictedLoc.normal);
@@ -774,14 +790,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print ("Final Position:  " + this.transform.position);
 
 		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
-		if (groundCheck2.collider != null) 
+		if (groundCheck2.collider != null&&antiTunneling) 
 		{
-			//print(
-			//Vector2 surfacePosition = groundCheck2.point;
-			//print(groundCheck2.point);
-			//surfacePosition.y += m_MidFootLength;
-			//this.transform.position = surfacePosition;
-			//print ("ASCENDING!");
+			Vector2 surfacePosition = groundCheck2.point;
+			surfacePosition.y += m_MidFootLength-0.01f;
+			this.transform.position = surfacePosition;
 		}
 		else
 		{
@@ -832,6 +845,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void GroundTraversal()
 	{
+		//print("GT");
+		Vector2 initialDirection = m_Rigidbody2D.velocity.normalized;
+		float initialSpeed = m_Rigidbody2D.velocity.magnitude;
+		//print("Speed before : " + m_Rigidbody2D.velocity.magnitude);
 		//print("GroundTraversal");
 		float testNumber = GroundNormal.y/GroundNormal.x;
 		if(float.IsNaN(testNumber))
@@ -840,23 +857,38 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("X = "+ GroundNormal.x +", Y = " + GroundNormal.y);
 		}
 
-		Vector2 groundperp;
+
+
+		Vector2 groundPerp;
 		Vector2 AdjustedVel;
 
-		groundperp.x = GroundNormal.y;
-		groundperp.y = -GroundNormal.x;
+		groundPerp.x = GroundNormal.y;
+		groundPerp.y = -GroundNormal.x;
+
+		float impactAngle = Vector2.Angle(initialDirection,groundPerp);
+
+		if (initialDirection.x < 0)
+		{
+			impactAngle = 180f - impactAngle;
+		}
+		else if((initialDirection.x == 0) && (impactAngle > 90))
+		{
+			impactAngle = 180f - impactAngle;
+		}
+
+		print("impactAngle: " +impactAngle);
 
 		float projectionVal;
-		if(groundperp.sqrMagnitude == 0)
+		if(groundPerp.sqrMagnitude == 0)
 		{
 			projectionVal = 0;
 		}
 		else
 		{
-			projectionVal = Vector2.Dot(m_Rigidbody2D.velocity, groundperp)/groundperp.sqrMagnitude;
+			projectionVal = Vector2.Dot(m_Rigidbody2D.velocity, groundPerp)/groundPerp.sqrMagnitude;
 		}
 		//print("P"+projectionVal);
-		AdjustedVel = groundperp * projectionVal;
+		AdjustedVel = groundPerp * projectionVal;
 		//	print("A"+AdjustedVel);
 
 		if(m_Rigidbody2D.velocity == Vector2.zero)
@@ -873,11 +905,29 @@ public class PlatformerCharacter2D : MonoBehaviour
 			catch(Exception e)
 			{
 				print(e);
-				print("Groundperp="+groundperp);
+				print("groundPerp="+groundPerp);
 				print("projectionVal"+projectionVal);
 				print("adjustedVel"+AdjustedVel);
 			}
 		}
+		float speedLossMult; // The % of speed loss, based on sharpness of impact angle. A direct impact = full stop.
+
+		if(impactAngle <= m_AngleSpeedLossMin)
+		{
+			speedLossMult = 1;
+		}
+		else if(impactAngle < m_AngleSpeedLossMax)
+		{
+			speedLossMult = 1-Mathf.Pow((impactAngle-m_AngleSpeedLossMin)/(m_AngleSpeedLossMax-m_AngleSpeedLossMin),2); // See Workflowy notes section for details on this formula.
+		}
+		else
+		{
+			speedLossMult = 0;
+		}
+		print("SPLMLT " + speedLossMult);
+		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult); //Do this more considerately when you come back to it. Probably like an angle based decrease starting at 45 deg.
+
+
 	}
 
 	private void CeilingTraversal()
@@ -941,7 +991,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(floorHit.collider == null)
 		{
-			print("Bottom not wedged, using GroundNormal!");
+			//print("Bottom not wedged, using GroundNormal!");
 			gPerp.x = GroundNormal.x;
 			gPerp.y = GroundNormal.y;
 		}
@@ -952,30 +1002,30 @@ public class PlatformerCharacter2D : MonoBehaviour
 			Vector2 floorPosition = floorHit.point;
 			floorPosition.y += m_MidFootLength-0.01f;
 			this.transform.position = floorPosition;
-			print("Hitting bottom, shifting up!");
+			//print("Hitting bottom, shifting up!");
 		}
 
 		ceilingHit = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);
 
 		if(ceilingHit.collider == null)
 		{
-			print("Top not wedged!");
+			//print("Top not wedged!");
 			return;
 			cPerp.x = CeilingNormal.x;
 			cPerp.y = CeilingNormal.y;
 		}
 		else
 		{
-			print("Hitting top, superunwedging...");
+			//print("Hitting top, superunwedging...");
 			cPerp.x = ceilingHit.normal.y;
 			cPerp.y = -ceilingHit.normal.x;
 		}
 			
 		embedDepth = m_CeilingFootLength-ceilingHit.distance;
-		print("Embedded ("+embedDepth+") units into the ceiling");
+		//print("Embedded ("+embedDepth+") units into the ceiling");
 
-		print("Ground Perp = " + gPerp);
-		print("Ceiling Perp = " + cPerp);
+		//print("Ground Perp = " + gPerp);
+		//print("Ceiling Perp = " + cPerp);
 
 		if(cPerp.y > 0)
 		{
@@ -984,9 +1034,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
 				m_Rigidbody2D.velocity = new Vector2(0f, 0f);
 				m_RightWalled = true;
-				print("Right wedge!");
-				print("cPerp: "+cPerp);
-				print("gPerp: "+gPerp);
+				//print("Right wedge!");
+				//print("cPerp: "+cPerp);
+				//print("gPerp: "+gPerp);
 			}
 		}
 		else if(cPerp.y < 0)
@@ -994,9 +1044,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				print("Left wedge!");
-				print("cPerp: "+cPerp);
-				print("gPerp: "+gPerp);
+				//print("Left wedge!");
+				//print("cPerp: "+cPerp);
+				//print("gPerp: "+gPerp);
 				m_LeftWalled = true;
 				m_Rigidbody2D.velocity = new Vector2(0f, 0f);
 			}
@@ -1015,7 +1065,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		if(!cornerIsLeft)
 		{// Setting up variables	
-			print("Resolving right wedge.");
+			//print("Resolving right wedge.");
 			if(gPerp.x>0)
 			{// Ensure both perpendicular vectors are pointing left, out of the corner the player is lodged in.
 				gPerp *= -1;
@@ -1052,7 +1102,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			print("Resolving left wedge.");
+			//print("Resolving left wedge.");
 			// Ensure both perpendicular vectors are pointing right, out of the corner the player is lodged in.
 			if(gPerp.x<0)
 			{
@@ -1089,8 +1139,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 		}
 			
-		print("Adapted Ground Perp = " + gPerp);
-		print("Adapted Ceiling Perp = " + cPerp);
+		//print("Adapted Ground Perp = " + gPerp);
+		//print("Adapted Ceiling Perp = " + cPerp);
 
 		//
 		// Now, the equation for repositioning a vertical line that is embedded in a corner:
@@ -1104,17 +1154,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 		float X;
 		float Y;
 
-		print("(A, B)=("+ A +", "+ B +").");
+		//print("(A, B)=("+ A +", "+ B +").");
 
 		if(B <= 0)
 		{
-			print("B <= 0, using normal eqn.");
+			//print("B <= 0, using normal eqn.");
 			DivX = B-A;
 			DivY = -(DivX/B);
 		}
 		else
 		{
-			print("B >= 0, using alternate eqn.");
+			//print("B >= 0, using alternate eqn.");
 			DivX = 1f/(B-A);
 			DivY = -(A*DivX);
 		}
@@ -1147,7 +1197,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			X = -X;
 		}
 
-		print("Adding the movement: ("+ X +", "+Y+").");
+		//print("Adding the movement: ("+ X +", "+Y+").");
 		return new Vector2(X,Y); // Returns the distance the object must move to resolve wedging.
 	}
 
