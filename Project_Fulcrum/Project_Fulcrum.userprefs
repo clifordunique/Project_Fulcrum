@@ -1,8 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs">
     <Files>
-      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="68" Column="3" />
+      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="176" Column="18" />
       <File FileName="Assets\Standard Assets\2D\Scripts\CameraFollow.cs" Line="1" Column="1" />
       <File FileName="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" Line="3" Column="15" />
       <File FileName="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" Line="7" Column="19" />
