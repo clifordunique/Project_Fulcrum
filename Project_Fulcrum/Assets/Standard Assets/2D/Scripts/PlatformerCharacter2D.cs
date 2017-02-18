@@ -865,6 +865,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		groundPerp.x = GroundNormal.y;
 		groundPerp.y = -GroundNormal.x;
 
+		print("InitialDirection: "+initialDirection);
+		print("GroundDirection: "+groundPerp);
+
 		float impactAngle = Vector2.Angle(initialDirection,groundPerp);
 
 		if (initialDirection.x < 0)
@@ -910,20 +913,29 @@ public class PlatformerCharacter2D : MonoBehaviour
 				print("adjustedVel"+AdjustedVel);
 			}
 		}
+
+		//Speed loss from impact angle handling beyond this point
+
 		float speedLossMult; // The % of speed loss, based on sharpness of impact angle. A direct impact = full stop.
 
 		if(impactAngle <= m_AngleSpeedLossMin)
-		{
+		{ // Angle lower than min, no speed penalty.
 			speedLossMult = 1;
 		}
 		else if(impactAngle < m_AngleSpeedLossMax)
-		{
+		{ // In the midrange, administering momentum loss on a curve leading from min to max.
 			speedLossMult = 1-Mathf.Pow((impactAngle-m_AngleSpeedLossMin)/(m_AngleSpeedLossMax-m_AngleSpeedLossMin),2); // See Workflowy notes section for details on this formula.
 		}
 		else
-		{
+		{ // Angle beyond max, momentum halted. 
 			speedLossMult = 0;
 		}
+
+		if(initialSpeed <= 2f)
+		{ // If the player is near stationary, do not remove any velocity because there is no impact!
+			speedLossMult = 1;
+		}
+
 		print("SPLMLT " + speedLossMult);
 		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult); //Do this more considerately when you come back to it. Probably like an angle based decrease starting at 45 deg.
 
