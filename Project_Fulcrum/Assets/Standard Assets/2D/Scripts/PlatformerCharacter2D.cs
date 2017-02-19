@@ -11,19 +11,22 @@ public class PlatformerCharacter2D : MonoBehaviour
 	//###########################################################################################################################################################################
 	#region HANDLINGCHARACTERISTICS
 	[Header("Movement Tuning:")]
-	[SerializeField] private float m_MinSpeed = 10f; 					// The instant starting speed while moving
-	[SerializeField] private float maxRunSpeed;							// The fastest the player can travel in the x axis.
-	[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    	// Speed the player accelerates at
-	//[Range(0,2)][SerializeField] private float m_Acceleration = 1f;  	// Speed the player accelerates at
-	[SerializeField] private float m_VJumpForce = 40f;                  // Amount of vertical force added when the player jumps.
-	[SerializeField] private float m_HJumpForce = 5f;  					// Amount of horizontal force added when the player jumps.
-	[SerializeField] private float tractionChangeThreshold = 20f;			// Threshold where movement changes from exponential to linear acceleration.  
+	[SerializeField] private float m_MinSpeed = 10f; 							// The instant starting speed while moving
+	[SerializeField] private float maxRunSpeed;									// The fastest the player can travel in the x axis.
+	[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    			// Speed the player accelerates at
+	[SerializeField] private float m_VJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
+	[SerializeField] private float m_HJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
+	[SerializeField] private float tractionChangeThreshold = 20f;				// Threshold where movement changes from exponential to linear acceleration.  
 	[Range(0,1)][SerializeField] private float m_LinearStopRate = 1f; 			// How fast the player decelerates when changing direction.
-	[Range(0,1)][SerializeField] private float m_LinearSlideRate = 0.20f;			// How fast the player decelerates with no input.
-	[Range(0,1)][SerializeField] private float m_LinearAccelRate = 0.35f;			// How fast the player accelerates with input.
-	[Range(1,8)][SerializeField] private float m_StationaryBoostMultiplier = 2f;	// Governs how much the player accelerates on the very first frame from stationary.
-	[Range(0,89)][SerializeField] private float m_AngleSpeedLossMin = 20f; 	// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_AngleSpeedLossMax.
-	[Range(1,90)][SerializeField] private float m_AngleSpeedLossMax = 80f; 	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_AngleSpeedLossMin!!
+	[Range(0,1)][SerializeField] private float m_LinearSlideRate = 0.20f;		// How fast the player decelerates with no input.
+	[Range(0,1)][SerializeField] private float m_LinearAccelRate = 0.35f;		// How fast the player accelerates with input.
+	[Range(1,8)][SerializeField] private float m_StationaryBoostMultiplier = 2f;// Governs how much the player accelerates on the very first frame from stationary.
+	[Range(1,89)][SerializeField] private float m_AngleSpeedLossMin = 20f; 		// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_AngleSpeedLossMax.
+	[Range(1,89)][SerializeField] private float m_AngleSpeedLossMax = 80f; 		// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_AngleSpeedLossMin!!
+	[Range(1,89)][SerializeField] private float m_TractionLossAngle = 45f; 		// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default equates to 45 degrees.
+	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  
+	[Range(0.5f,3)][SerializeField] private float m_SteepSurfaceHangTime = 1f; 	// How long the player can cling to walls before gravity takes over.
+
 	#endregion
 	//############################################################################################################################################################################################################
 	// PLAYER COMPONENTS
@@ -478,7 +481,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (predictedLoc.collider != null) 
 		{//If you're going to hit something.
-			print("Impact!");
+			//print("Impact!");
 			collider1Check = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, predictedLoc.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
 
 			//print("Velocity before impact: "+m_Rigidbody2D.velocity);
@@ -524,6 +527,28 @@ public class PlatformerCharacter2D : MonoBehaviour
 		
 	private void Traction(float horizontalInput)
 	{
+		Vector2 groundPerp;
+		groundPerp.x = GroundNormal.y;
+		groundPerp.y = -GroundNormal.x;
+
+		if(groundPerp.x > 0)
+		{
+			groundPerp*=-1;
+		}
+
+		float steepnessAngle = Vector2.Angle(Vector2.left,groundPerp);
+		//print(""+steepnessAngle);
+
+		float slopeMultiplier = 0;
+	
+		if(steepnessAngle > m_TractionLossAngle)
+		{
+			slopeMultiplier = ((steepnessAngle-m_TractionLossAngle)/(90f-m_TractionLossAngle));
+
+			//print("Ding! slopeMultiplier: "+ slopeMultiplier);
+			//print("groundPerpY: "+groundPerpY+", slopeThreshold: "+slopeThreshold);
+		}
+
 		//print("Traction");
 		if( ((m_LeftWalled)&&(horizontalInput < 0)) || ((m_RightWalled)&&(horizontalInput > 0)) )
 		{// If running at a wall you're up against.
@@ -540,6 +565,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				m_RightWalled = false;
 			}
 		}
+
 		//print("Traction executing");
 		float rawSpeed = m_Rigidbody2D.velocity.magnitude;
 		if (horizontalInput == 0) 
@@ -564,11 +590,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if(rawSpeed > tractionChangeThreshold )
 				{
 					//print("LinAccel-> " + rawSpeed);
-					m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, m_LinearAccelRate);
+					if(m_Rigidbody2D.velocity.y > 0)
+					{ 	// If climbing, recieve uphill movement penalty.
+						m_Rigidbody2D.velocity = ChangeSpeedLinear(m_Rigidbody2D.velocity, m_LinearAccelRate*(1-slopeMultiplier));
+					}
+					else
+					{
+						m_Rigidbody2D.velocity = ChangeSpeedLinear(m_Rigidbody2D.velocity, m_LinearAccelRate);
+					}
 				}
 				else if(rawSpeed == 0)
 				{
-					m_Rigidbody2D.velocity = new Vector2(m_Acceleration*horizontalInput*m_StationaryBoostMultiplier, 0);
+					m_Rigidbody2D.velocity = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
 					//print("Starting motion. Adding " + m_Acceleration);
 				}
 				else
@@ -576,7 +609,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 					//print("Accelerating");
 					float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
 					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-					float addedSpeed = curveMultiplier*m_Acceleration;
+
+					float addedSpeed = curveMultiplier*(m_Acceleration);
+					if(m_Rigidbody2D.velocity.y > 0)
+					{ // If climbing, recieve uphill movement penalty.
+						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
+					}
 					m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed+addedSpeed);
 				}
 			}
@@ -587,8 +625,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else if((horizontalInput > 0 && m_Rigidbody2D.velocity.x < 0) || (horizontalInput < 0 && m_Rigidbody2D.velocity.x > 0))
 		{//if pressing button opposite of move direction, slow to zero exponentially.
-			
-
 			if(rawSpeed > tractionChangeThreshold )
 			{
 				//print("LinDecel");
@@ -599,7 +635,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				//print("Decelerating");
 				float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-				float addedSpeed = curveMultiplier*m_Acceleration;
+				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
 				m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed-2*addedSpeed);
 			}
 
@@ -607,6 +643,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("SLOPE MODIFIER: " + modifier);
 			//m_Rigidbody2D.velocity = m_Rigidbody2D.velocity/(1.25f);
 		}
+
+		Vector2 downSlope = m_Rigidbody2D.velocity.normalized; // Normal vector pointing down the current slope!
+		if (downSlope.y > 0) //Make sure the vector is descending.
+		{
+			downSlope *= -1;
+		}
+
+		if(downSlope == Vector2.zero)
+		{
+			downSlope = Vector2.down;
+		}
+
+		m_Rigidbody2D.velocity += downSlope*m_SlippingAcceleration*slopeMultiplier;
+			//ChangeSpeedLinear(m_Rigidbody2D.velocity, );
 		//print("PostTraction velocity: "+m_Rigidbody2D.velocity);
 	}
 
@@ -780,7 +830,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		
 		//float testNumber = predictedLoc.normal.y/predictedLoc.normal.x;
 		//print(testNumber);
-		print ("We've hit slope, sir!!");
+		//print ("We've hit slope, sir!!");
 		//print ("predictedLoc.normal=" + predictedLoc.normal);
 
 		m_Grounded = true;
@@ -815,7 +865,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void AirToGround(RaycastHit2D predictedLoc)
 	{
-		print("AirToGround");
+		//print("AirToGround");
 		//print ("Starting velocity:  " + m_Rigidbody2D.velocity);
 
 		Vector2 setCharPos = predictedLoc.point;
@@ -865,8 +915,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 		groundPerp.x = GroundNormal.y;
 		groundPerp.y = -GroundNormal.x;
 
-		print("InitialDirection: "+initialDirection);
-		print("GroundDirection: "+groundPerp);
+		//print("InitialDirection: "+initialDirection);
+		//print("GroundDirection: "+groundPerp);
 
 		float impactAngle = Vector2.Angle(initialDirection,groundPerp);
 
@@ -879,7 +929,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			impactAngle = 180f - impactAngle;
 		}
 
-		print("impactAngle: " +impactAngle);
+		//print("impactAngle: " +impactAngle);
 
 		float projectionVal;
 		if(groundPerp.sqrMagnitude == 0)
@@ -936,7 +986,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			speedLossMult = 1;
 		}
 
-		print("SPLMLT " + speedLossMult);
+		//print("SPLMLT " + speedLossMult);
 		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult); //Do this more considerately when you come back to it. Probably like an angle based decrease starting at 45 deg.
 
 
