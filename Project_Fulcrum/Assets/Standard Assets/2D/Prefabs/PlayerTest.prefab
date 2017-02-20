@@ -80,7 +80,9 @@ GameObject:
   - component: {fileID: 9261594}
   - component: {fileID: 12479668}
   - component: {fileID: 8131770}
-  m_Layer: 8
+  - component: {fileID: 114973687671534724}
+  - component: {fileID: 114674256244052792}
+  m_Layer: 13
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -107,7 +109,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.22, y: -0.781, z: 0}
+  m_LocalPosition: {x: -169.7, y: 121.5, z: 0}
   m_LocalScale: {x: 1.7715329, y: 1.7715304, z: 1}
   m_Children:
   - {fileID: 4237788597759686}
@@ -168,7 +170,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_BackGroundColor: {r: 0.39987025, g: 0.5323854, b: 0.63235295, a: 0.019607844}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -179,7 +181,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -188,7 +190,7 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
+  m_HDR: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -283,18 +285,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08f91df3bd212f429df17f53ce2f364, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxSpeed: 10
-  m_JumpForce: 20
-  m_CrouchSpeed: 0.252
-  m_AirControl: 0
-  m_WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  GroundNormal: {x: 0, y: 0}
-  m_Grounded: 0
+  m_MinSpeed: 10
+  maxRunSpeed: 0
+  m_Acceleration: 1
+  m_VJumpForce: 40
+  m_HJumpForce: 5
+  tractionChangeThreshold: 20
+  m_LinearStopRate: 1
+  m_LinearSlideRate: 0.2
+  m_LinearAccelRate: 0.35
+  m_StationaryBoostMultiplier: 2
+  m_AngleSpeedLossMin: 20
+  m_AngleSpeedLossMax: 80
+  m_TractionLossAngle: 45
+  m_SlippingAcceleration: 1
+  m_SteepSurfaceHangTime: 1
+  m_Speedometer: {fileID: 0}
+  m_MainCamera: {fileID: 0}
   mask:
     serializedVersion: 2
     m_Bits: 512
+  m_Colliders: []
+  m_Grounded: 0
+  m_NearGround: 0
+  m_Ceilinged: 0
+  m_NearCeiling: 0
+  m_LeftWalled: 0
+  m_RightWalled: 0
+  autoSprint: 0
+  autoJump: 0
+  antiTunneling: 0
+  noGravity: 0
+  showVelocityIndicator: 0
+  showContactIndicators: 0
 --- !u!120 &12004392
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -573,6 +596,33 @@ Light:
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114674256244052792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 192034}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a2083ad114a07d000fbfb8d76c639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
+  blurAmount: 0.686
+  extraBlur: 0
+--- !u!114 &114973687671534724
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 192034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 287890c9892fd234c9bafd7b87ed9dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveParallax: 1
+  storedPosition: {x: 0, y: 0, z: 0}
 --- !u!120 &120121574220226832
 LineRenderer:
   m_ObjectHideFlags: 1

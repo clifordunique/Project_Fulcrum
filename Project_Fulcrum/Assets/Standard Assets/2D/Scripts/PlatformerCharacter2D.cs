@@ -26,7 +26,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Range(1,89)][SerializeField] private float m_TractionLossAngle = 45f; 		// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default equates to 45 degrees.
 	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  
 	[Range(0.5f,3)][SerializeField] private float m_SteepSurfaceHangTime = 1f; 	// How long the player can cling to walls before gravity takes over.
-
+	private float timeSpentHanging = 0f;										// Amount of time the player has been in walljump stance.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PLAYER COMPONENTS
@@ -350,7 +350,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		//print("Speed this frame: "+m_Rigidbody2D.velocity.magnitude);
-		//print("Per frame velocity at end of physics frame: "+m_Rigidbody2D.velocity*Time.deltaTime);
+		//print("Per frame velocity at end of physics frame: "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
@@ -362,10 +362,31 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//Animator Controls
 		//
 
+		m_Anim.SetBool("LeftWalled", false);
+
+		if(m_LeftWalled)
+		{
+			if (!facingDirection) //If facing left
+			{
+				m_Anim.SetBool("LeftWalled", true);
+			}
+		}
+
+		m_Anim.SetBool("RightWalled", false);
+
+		if(m_RightWalled)
+		{
+			if (facingDirection) //If facing Right
+			{
+				m_Anim.SetBool("RightWalled", true);
+			}
+		}
+
 		if (!facingDirection) //If facing left
 		{
 			//print("FACING LEFT!   "+h);
-			Vector2 debugLineInverted = ((m_Rigidbody2D.velocity*Time.deltaTime));
+			Vector2 debugLineInverted = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
+			debugLineInverted.y -= m_MidFootLength-0.02f;
 			debugLineInverted = new Vector2(-debugLineInverted.x, debugLineInverted.y);
 			m_DebugLine.SetPosition (1, debugLineInverted);
 			this.transform.localScale = new Vector3 (-1f, 1f, 1f);
@@ -381,7 +402,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		else //If facing right
 		{
 			//print("FACING RIGHT!   "+h);
-			m_DebugLine.SetPosition(1, (m_Rigidbody2D.velocity*Time.deltaTime));
+			Vector2 debugLineVector = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
+			debugLineVector.y -= m_MidFootLength-0.02f;
+			m_DebugLine.SetPosition(1, debugLineVector);
 			this.transform.localScale = new Vector3 (1f, 1f, 1f);
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
@@ -420,6 +443,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print ("Flying");
 		}
 		m_Anim.SetBool("Ground", m_Grounded);
+
 		//print("Speed at end of frame: " + m_Rigidbody2D.velocity.magnitude);
 		#endregion
     }
@@ -465,9 +489,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_RightWalled = false;
 		}
 
-		//print ("Player Pos:  " + this.transform.position);
-		//print ("velocity:  " + m_Rigidbody2D.velocity);
-
+	
 		Vector2 adjustedBot = m_MidFoot.position; // AdjustedBot marks the end of the middle floor raycast, but 0.02 higher.
 		adjustedBot.y += 0.02f;
 
@@ -475,47 +497,72 @@ public class PlatformerCharacter2D : MonoBehaviour
 		adjustedTop.y -= 0.02f;
 
 		RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
-		RaycastHit2D predictedLoc = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
+		RaycastHit2D predictedLoc = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.fixedDeltaTime, mask);
 
-		RaycastHit2D collider1Check = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
+
+
+		RaycastHit2D collider1Check = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.fixedDeltaTime, mask);
 
 		if (predictedLoc.collider != null) 
 		{//If you're going to hit something.
-			//print("Impact!");
+			GameObject collisionPoint = new GameObject("Impact");
+			collisionPoint.transform.position = new Vector2(predictedLoc.point.x, predictedLoc.point.y);
+			GameObject rayStartPoint = new GameObject("Ray");
+			rayStartPoint.transform.position = new Vector2(adjustedBot.x, adjustedBot.y);
+			print("Impact!");
+			//print ("Player Pos:  " + this.transform.position);
+			print ("velocity:  " + m_Rigidbody2D.velocity);
+
 			collider1Check = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, predictedLoc.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
 
 			//print("Velocity before impact: "+m_Rigidbody2D.velocity);
+			Vector2 moveDirectionNormal;
+			moveDirectionNormal.x = m_Rigidbody2D.velocity.normalized.y;
+			moveDirectionNormal.y = -m_Rigidbody2D.velocity.normalized.x;
 
 			Vector2 invertedImpactNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
-			invertedImpactNormal.x = -predictedLoc.normal.y; //Inverting the normal.
-			invertedImpactNormal.y = -predictedLoc.normal.x; //Inverting the normal.
+			invertedImpactNormal.x = -predictedLoc.normal.x; //Inverting the normal.
+			invertedImpactNormal.y = -predictedLoc.normal.y; //Inverting the normal.
 
 			if(collider1Check.collider != null)
 			{// If player hits an obstacle that is too high for its feet to take care of.
 				print("Obstacle");
 				Collision();
+				//DirectionCorrection();
+				return;
 				//print("Velocity after impact: "+m_Rigidbody2D.velocity);
 				//DirectionCorrection();
 			}
 			else if (groundCheck.collider == null) 
 			{ // If player is airborne beforehand.
+				print("A2G");
 				AirToGround(predictedLoc);
+				//GroundTraversal();
+				//DirectionCorrection();
 				return;
 			} 
-			else if (groundCheck.normal != predictedLoc.normal && groundCheck.normal != invertedImpactNormal) 
+			else if ((moveDirectionNormal != predictedLoc.normal) && (moveDirectionNormal != invertedImpactNormal)) 
 			{ // If the slope you're hitting is different than your current slope.
+				print("G2G");
 				GroundToGround(predictedLoc);
+				//GroundTraversal();
+				//DirectionCorrection();
 				return;
 			}
 			else 
 			{
-				//print ("Same surface, no trajectory change needed");
+				print ("("+moveDirectionNormal+")!=("+predictedLoc.normal+")");
+				print ("("+moveDirectionNormal+")!=("+invertedImpactNormal+")");
+				print ("Same surface, no trajectory change needed");
 				return;
 			}
 		} 
 		else if(collider1Check.collider != null)
 		{
-			//print("Free move into obstacle.");
+			print("Free move into obstacle.");
+			//print ("Player Pos:  " + this.transform.position);
+			print ("velocity:  " + m_Rigidbody2D.velocity);
+
 			Collision();
 			//print("Velocity after impact: "+m_Rigidbody2D.velocity);
 		}
@@ -683,10 +730,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//collider1Position.x = m_CeilingFoot.position.x;
 		collider1Position.y = m_CeilingFoot.position.y;
-		//Vector2 futureMove = m_Rigidbody2D.velocity*Time.deltaTime
+		//Vector2 futureMove = m_Rigidbody2D.velocity*Time.fixedDeltaTime
 		//futureColliderPos.x += futureMove
 
-		RaycastHit2D collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.deltaTime, mask);
+		RaycastHit2D collider1Check = Physics2D.Raycast(collider1Position, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.fixedDeltaTime, mask);
 		//print("Collision normal: "+ collider1Check.normal);
 
 
@@ -732,7 +779,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 			if(collider1Check.normal.y == 0)
 			{//If hitting a vertical wall.
-				//print("normal.y == 0");
+				print("normal.y == 0");
 
 				if(m_Rigidbody2D.velocity.x < 0)
 				{
@@ -825,8 +872,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 		return newVelocity;
 	}
 
-	private void GroundToGround(RaycastHit2D predictedLoc) //Rename to GroundtoGround()
-	{
+	private void GroundToGround(RaycastHit2D predictedLoc) 
+	{ //Sets the new position of the player and their ground normal.
 		
 		//float testNumber = predictedLoc.normal.y/predictedLoc.normal.x;
 		//print(testNumber);
@@ -836,21 +883,33 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_Grounded = true;
 		Vector2 setCharPos = predictedLoc.point;
 		setCharPos.y = setCharPos.y+m_MidFootLength-0.01f; //Embed slightly in floor to ensure raycasts still hit floor.
+
+		print("Sent to Pos:" + setCharPos);
+		print("Sent to normal:" + predictedLoc.normal);
+
+		if(predictedLoc.normal.y == 0f)
+		{//If vertical surface
+			throw new Exception("Existence is suffering");
+			print("GtG VERTICAL :O");
+		}
+
 		this.transform.position = setCharPos;
 		//print ("Final Position:  " + this.transform.position);
 
 		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
-		if (groundCheck2.collider != null&&antiTunneling) 
+		if (groundCheck2.collider != null) 
 		{
-			Vector2 surfacePosition = groundCheck2.point;
-			surfacePosition.y += m_MidFootLength-0.01f;
-			this.transform.position = surfacePosition;
+			if(antiTunneling){
+				Vector2 surfacePosition = groundCheck2.point;
+				surfacePosition.y += m_MidFootLength-0.01f;
+				this.transform.position = surfacePosition;
+			}
 		}
 		else
 		{
 			//print ("Impact Pos:  " + predictedLoc.point);
 			//print ("Expended velocity:  " + expendedVel);
-			//print("Reflected back into the air!");
+			print("Reflected back into the air!");
 			//print("Transform position: " + this.transform.position);
 			//print("RB2D position: " + m_Rigidbody2D.position);
 			//print("Velocity : " + m_Rigidbody2D.velocity);
@@ -859,7 +918,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print(" ");	
 			m_Grounded = false;
 		}
-		GroundNormal = groundCheck2.normal;
+		//GroundNormal = groundCheck2.normal;
+		GroundNormal = predictedLoc.normal;
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -869,34 +929,38 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print ("Starting velocity:  " + m_Rigidbody2D.velocity);
 
 		Vector2 setCharPos = predictedLoc.point;
-		setCharPos.y += m_MidFootLength;
+		setCharPos.y += m_MidFootLength-0.01f;
 		this.transform.position = setCharPos;
 		//print ("Final Position:  " + this.transform.position);
+
+		m_Grounded = true;
 
 		//TEST CODE AFTER THIS POINT
 		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_MidFootLength, mask);
 		if (groundCheck2.collider != null) {
-
-			m_Grounded = true;
-			//print ("groundCheck2.normal=" + groundCheck2.normal);
-			//print ("groundCheck2.collider=" + groundCheck2.transform.gameObject);
-			GroundNormal = groundCheck2.normal;
+			if(antiTunneling){
+				Vector2 surfacePosition = groundCheck2.point;
+				surfacePosition.y += m_MidFootLength-0.01f;
+				this.transform.position = surfacePosition;
+			}
 		} 
 		else 
 		{
 			m_Grounded = false;
-			//print ("GroundCheck2=null!");
+			print ("GroundCheck2=null!");
 		}
 		//Collision();
-
-
+		print ("A2G Vel:  " + m_Rigidbody2D.velocity);
+		GroundNormal = predictedLoc.normal;
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
 	private void GroundTraversal()
 	{
-		//print("GT");
+		
 		Vector2 initialDirection = m_Rigidbody2D.velocity.normalized;
+
+
 		float initialSpeed = m_Rigidbody2D.velocity.magnitude;
 		//print("Speed before : " + m_Rigidbody2D.velocity.magnitude);
 		//print("GroundTraversal");
@@ -904,6 +968,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if(float.IsNaN(testNumber))
 		{
 			print("IT'S NaN BRO LoLoLOL XD");
+			throw new Exception("NaN value.");
 			//print("X = "+ GroundNormal.x +", Y = " + GroundNormal.y);
 		}
 
@@ -915,10 +980,23 @@ public class PlatformerCharacter2D : MonoBehaviour
 		groundPerp.x = GroundNormal.y;
 		groundPerp.y = -GroundNormal.x;
 
+
+		if((initialDirection == groundPerp)||initialDirection == Vector2.zero)
+		{
+			//print("same angle BITCH");
+			return;
+		}
+		else
+		{
+			print("Different lul. Init: "+initialDirection+", gPerp: "+groundPerp+".");
+		}
+
 		//print("InitialDirection: "+initialDirection);
 		//print("GroundDirection: "+groundPerp);
 
 		float impactAngle = Vector2.Angle(initialDirection,groundPerp);
+		//print("TrueimpactAngle: " +impactAngle);
+
 
 		if (initialDirection.x < 0)
 		{
@@ -928,6 +1006,16 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			impactAngle = 180f - impactAngle;
 		}
+
+		//if(impactAngle > 180)
+		//{
+		//	impactAngle = 180f - impactAngle;
+		//}
+
+		//if(impactAngle > 90)
+		//{
+		//	impactAngle = 180f - impactAngle;
+		//}
 
 		//print("impactAngle: " +impactAngle);
 
@@ -987,9 +1075,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		//print("SPLMLT " + speedLossMult);
-		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult); //Do this more considerately when you come back to it. Probably like an angle based decrease starting at 45 deg.
+		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult);
 
-
+		print ("GT Vel:  " + m_Rigidbody2D.velocity);
 	}
 
 	private void CeilingTraversal()
@@ -1078,7 +1166,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			//print("Hitting top, superunwedging...");
+			//print("Hitting top, superunwedging..."); 
+			// What is this code? RECHECK LATER
 			cPerp.x = ceilingHit.normal.y;
 			cPerp.y = -ceilingHit.normal.x;
 		}

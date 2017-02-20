@@ -15,8 +15,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - BackupPlayerCollider
+  - MovingObjects
   - Background
   - 
   - Player
