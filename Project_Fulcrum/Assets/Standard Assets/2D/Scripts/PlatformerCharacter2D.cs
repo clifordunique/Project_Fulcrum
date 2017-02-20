@@ -34,6 +34,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	#region PLAYERCOMPONENTS
 	[SerializeField] private Text m_Speedometer;      
 	[SerializeField] private Camera m_MainCamera;
+	[SerializeField] private GameObject PlayerSprite;
 	private float cameraZoom;
     private Animator m_Anim;            // Reference to the player's animator component.
     private Rigidbody2D m_Rigidbody2D;
@@ -149,9 +150,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_CeilingFootOffset.y = m_CeilingFoot.position.y-playerOrigin.y;
 		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
 
-        m_Anim = GetComponent<Animator>();
+		m_Anim = PlayerSprite.GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-		m_SpriteRenderer = GetComponent<SpriteRenderer>();
+		m_SpriteRenderer = PlayerSprite.GetComponent<SpriteRenderer>();
 
 
 		if(!showContactIndicators)
@@ -199,7 +200,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_Grounded = false;
 		m_Ceilinged = false;
 
-		m_SpriteRenderer.color = Color.white;
+		//m_SpriteRenderer.color = Color.white;
 		m_LeftLine.endColor = Color.red;
 		m_LeftLine.startColor = Color.red;
 		m_RightLine.endColor = Color.red;
@@ -362,34 +363,28 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//Animator Controls
 		//
 
-		m_Anim.SetBool("LeftWalled", false);
+		m_Anim.SetBool("Walled", false);
 
 		if(m_LeftWalled)
 		{
 			if (!facingDirection) //If facing left
 			{
-				m_Anim.SetBool("LeftWalled", true);
+				m_Anim.SetBool("Walled", true);
 			}
 		}
-
-		m_Anim.SetBool("RightWalled", false);
 
 		if(m_RightWalled)
 		{
 			if (facingDirection) //If facing Right
 			{
-				m_Anim.SetBool("RightWalled", true);
+				m_Anim.SetBool("Walled", true);
 			}
 		}
 
 		if (!facingDirection) //If facing left
 		{
-			//print("FACING LEFT!   "+h);
-			Vector2 debugLineInverted = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
-			debugLineInverted.y -= m_MidFootLength-0.02f;
-			debugLineInverted = new Vector2(-debugLineInverted.x, debugLineInverted.y);
-			m_DebugLine.SetPosition (1, debugLineInverted);
-			this.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			//print("FACING LEFT!   "+h)
+			PlayerSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			if(m_Rigidbody2D.velocity.x > 0)
 			{
 				m_Anim.SetBool("Crouch", true);
@@ -402,10 +397,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 		else //If facing right
 		{
 			//print("FACING RIGHT!   "+h);
-			Vector2 debugLineVector = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
-			debugLineVector.y -= m_MidFootLength-0.02f;
-			m_DebugLine.SetPosition(1, debugLineVector);
-			this.transform.localScale = new Vector3 (1f, 1f, 1f);
+
+			PlayerSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
 				m_Anim.SetBool("Crouch", true);
@@ -416,6 +409,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 		}
 			
+		Vector2 debugLineVector = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
+		debugLineVector.y -= m_MidFootLength-0.02f;
+		m_DebugLine.SetPosition(1, debugLineVector);
+
 		m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude);
 
 		if(m_Rigidbody2D.velocity.magnitude >= tractionChangeThreshold )
@@ -998,24 +995,24 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("TrueimpactAngle: " +impactAngle);
 
 
-		if (initialDirection.x < 0)
-		{
-			impactAngle = 180f - impactAngle;
-		}
-		else if((initialDirection.x == 0) && (impactAngle > 90))
-		{
-			impactAngle = 180f - impactAngle;
-		}
-
-		//if(impactAngle > 180)
+		//if (initialDirection.x < 0)
+		//{
+		//	impactAngle = 180f - impactAngle;
+		//}
+		//else if((initialDirection.x == 0) && (impactAngle > 90))
 		//{
 		//	impactAngle = 180f - impactAngle;
 		//}
 
-		//if(impactAngle > 90)
-		//{
-		//	impactAngle = 180f - impactAngle;
-		//}
+		if(impactAngle > 180)
+		{
+			impactAngle = 180f - impactAngle;
+		}
+
+		if(impactAngle > 90)
+		{
+			impactAngle = 180f - impactAngle;
+		}
 
 		//print("impactAngle: " +impactAngle);
 
