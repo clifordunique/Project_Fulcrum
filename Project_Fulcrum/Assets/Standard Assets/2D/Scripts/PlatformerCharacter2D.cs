@@ -38,7 +38,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Header("Player Components:")]
 	[SerializeField] private Text m_Speedometer;      
 	[SerializeField] private Camera m_MainCamera;
-	[SerializeField] private GameObject PlayerSprite;
+	[SerializeField] private GameObject m_PlayerSprite;
 	private float cameraZoom;
     private Animator m_Anim;            // Reference to the player's animator component.
     private Rigidbody2D m_Rigidbody2D;
@@ -175,9 +175,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RightSideLength = m_RightSideOffset.magnitude;
 
 
-		m_Anim = PlayerSprite.GetComponent<Animator>();
+		m_Anim = m_PlayerSprite.GetComponent<Animator>();
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-		m_SpriteRenderer = PlayerSprite.GetComponent<SpriteRenderer>();
+		m_SpriteRenderer = m_PlayerSprite.GetComponent<SpriteRenderer>();
 
 
 		if(!showContactIndicators)
@@ -195,8 +195,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
     private void FixedUpdate()
 	{
-		print("Initial Pos: " + this.transform.position);
-		print("Initial Vel: " + m_Rigidbody2D.velocity);
+		//print("Initial Pos: " + this.transform.position);
+		//print("Initial Vel: " + m_Rigidbody2D.velocity);
 
 		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
 		//print("LEFT="+m_KeyLeft);
@@ -477,24 +477,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(m_LeftWalled)
 		{
-			if (!facingDirection) //If facing left
-			{
-				m_Anim.SetBool("Walled", true);
-			}
+			m_Anim.SetBool("Walled", true);
+			facingDirection = false;
 		}
 
 		if(m_RightWalled)
 		{
-			if (facingDirection) //If facing Right
-			{
-				m_Anim.SetBool("Walled", true);
-			}
+			m_Anim.SetBool("Walled", true);
+			facingDirection = true;
 		}
 
 		if (!facingDirection) //If facing left
 		{
 			//print("FACING LEFT!   "+h)
-			PlayerSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			m_PlayerSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			if(m_Rigidbody2D.velocity.x > 0)
 			{
 				m_Anim.SetBool("Crouch", true);
@@ -508,7 +504,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			//print("FACING RIGHT!   "+h);
 
-			PlayerSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			m_PlayerSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			if(m_Rigidbody2D.velocity.x < 0)
 			{
 				m_Anim.SetBool("Crouch", true);
@@ -545,14 +541,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		m_Anim.SetFloat("Multiplier", multiplier);
 
-		if (!m_Grounded) 
+		if (!m_Grounded&&!m_LeftWalled&!m_RightWalled) 
 		{
-			//print ("Flying");
+			m_Anim.SetBool("Ground", false);
 		}
-		m_Anim.SetBool("Ground", m_Grounded);
+		else
+		{
+			m_Anim.SetBool("Ground", true);
+		}
 	
-		print("FinaL Pos: " + this.transform.position);
-		print("FinaL Vel: " + m_Rigidbody2D.velocity);
+		//print("FinaL Pos: " + this.transform.position);
+		//print("FinaL Vel: " + m_Rigidbody2D.velocity);
 		
 		//print("Speed at end of frame: " + m_Rigidbody2D.velocity.magnitude);
 		#endregion
@@ -633,6 +632,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		float shortestDistH = 0;
 		float shortestDist = 0;
 
+
 		//Shortest non-zero vertical collision.
 		if(gDist != 0 && cDist != 0)
 		{
@@ -711,24 +711,21 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(leftCheck&&rightCheck)
 		{
-			//throw new Exception("ERROR: Vertical wedge fix not yet implemented. Unhandled physics interaction.")
+			throw new Exception("ERROR: Vertical wedge fix not yet implemented. Unhandled physics interaction.");
 		}
-		/*
-		if(groundCheck&&ceilingCheck)
-		{
-			print("WEDGE DETECTED AND PREEMPTED");
-			//Wedged();
-			return;
-		}
-		*/
+			
 
 		//Find shortest of the 4 checks. If 2 are both very small, choose the one with the steepest vertical angle.
 
 		if(leftCheck)
 		{
+			print("ToLeftWall");
+			ToLeftWall(leftCheck);
+			return;
 			if(groundCheck) //If hitting wall and ground.
 			{
 				
+
 			}
 			else if(ceilingCheck) //If hitting wall and ceiling.
 			{
@@ -736,7 +733,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 			else
 			{ //If simply hitting wall.
-				ToLeftWall(leftCheck);
+				
 				//return;
 			}
 		}
@@ -951,9 +948,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void ToLeftWall(RaycastHit2D leftCheck) 
 	{ //Sets the new position of the player and their leftNormal.
 
-		//float testNumber = groundCheck.normal.y/groundCheck.normal.x;
-		//print(testNumber);
-		//print ("We've hit slope, sir!!");
+		print ("We've hit LeftWall, sir!!");
 		//print ("groundCheck.normal=" + groundCheck.normal);
 		//print("preleftwall Pos:" + this.transform.position);
 
@@ -1273,7 +1268,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if((initialDirection == newPerp)||initialDirection == Vector2.zero)
 		{
 			//print("same angle BITCH");
-			//return;
+			return;
 		}
 		else
 		{
@@ -1306,7 +1301,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			impactAngle = 180f - impactAngle;
 		}
 
-		//print("impactAngle: " +impactAngle);
+		print("impactAngle: " +impactAngle);
 
 		float projectionVal;
 		if(newPerp.sqrMagnitude == 0)
@@ -1363,7 +1358,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			speedLossMult = 1;
 		}
 
-		//print("SPLMLT " + speedLossMult);
+		print("SPLMLT " + speedLossMult);
 		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult);
 
 		//print ("GT Vel:  " + m_Rigidbody2D.velocity);
