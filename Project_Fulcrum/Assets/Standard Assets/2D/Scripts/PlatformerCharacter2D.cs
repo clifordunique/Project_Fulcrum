@@ -623,10 +623,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 		RaycastHit2D leftCheck = Physics2D.Raycast(adjustedLeft, m_Rigidbody2D.velocity, crntSpeed, mask);
 		RaycastHit2D rightCheck = Physics2D.Raycast(adjustedRight, m_Rigidbody2D.velocity, crntSpeed, mask);
 
-		float gDist = groundCheck.distance;
-		float cDist = ceilingCheck.distance;
-		float lDist = leftCheck.distance;
-		float rDist = rightCheck.distance;
+		float gDist = groundCheck.distance; 	// NUMBER 0
+		float cDist = ceilingCheck.distance; 	// NUMBER 1
+		float lDist = leftCheck.distance;		// NUMBER 2
+		float rDist = rightCheck.distance;		// NUMBER 3
+
+		int shortestRaycast = -1;
+
+		print("gDist: "+gDist);
 
 		float shortestDistV = 0;
 		float shortestDistH = 0;
@@ -636,6 +640,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//Shortest non-zero vertical collision.
 		if(gDist != 0 && cDist != 0)
 		{
+			if(gDist <
 			shortestDistV = Math.Min(gDist, cDist);
 		}
 		else if(gDist != 0)
@@ -679,11 +684,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("VDist: "+shortestDistV);
 		//print("HDist: "+shortestDistH);
 
-		// THIS SYSTEM IS NOT OPTIMAL! REPLACE IT WITH SOMETHING ELSE LATER. SOMETHING THAT JUST CHOOSES FROM THE ORIGINAL RAYCASTS.
-		groundCheck = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, shortestDist, mask); 	
-		ceilingCheck = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, shortestDist, mask);
-		leftCheck = Physics2D.Raycast(adjustedLeft, m_Rigidbody2D.velocity, shortestDist, mask);
-		rightCheck = Physics2D.Raycast(adjustedRight, m_Rigidbody2D.velocity, shortestDist, mask);
+		//THIS SYSTEM IS NOT OPTIMAL! REPLACE IT WITH SOMETHING ELSE LATER. SOMETHING THAT JUST CHOOSES FROM THE ORIGINAL RAYCASTS.
+		//groundCheck = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, shortestDist, mask); 	
+		//ceilingCheck = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, shortestDist, mask);
+		//leftCheck = Physics2D.Raycast(adjustedLeft, m_Rigidbody2D.velocity, shortestDist, mask);
+		//rightCheck = Physics2D.Raycast(adjustedRight, m_Rigidbody2D.velocity, shortestDist, mask);
+
+		print("shortestDist: "+shortestDist);
 
 		int collisionNum = 0;
 
@@ -740,7 +747,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (groundCheck) 
 		{//If you're going to hit something with your feet.
-
+			print("impact");
 			Vector2 testperp = new Vector2(groundCheck.normal.y,-groundCheck.normal.x);
 
 			float steepnessAngle = Vector2.Angle(Vector2.right,testperp);
@@ -988,11 +995,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(leftCheck.normal.y == 0f)
 		{//If vertical surface
+			if(m_Rigidbody2D.velocity.x < 0)
+			{
+				m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
+			}
 			//throw new Exception("Existence is suffering");
-			//print("LEFT VERTICAL");
+			print("LEFT VERTICAL");
 		}
 		//groundNormal = groundCheck2.normal;
 		//roundNormal = groundCheck.normal;
+
+
 		leftNormal = leftCheck2.normal;
 		//print ("Final Position2:  " + this.transform.position);
 	}
@@ -1301,7 +1314,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			impactAngle = 180f - impactAngle;
 		}
 
-		print("impactAngle: " +impactAngle);
+		//print("impactAngle: " +impactAngle);
 
 		float projectionVal;
 		if(newPerp.sqrMagnitude == 0)
@@ -1358,7 +1371,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			speedLossMult = 1;
 		}
 
-		print("SPLMLT " + speedLossMult);
+		//print("SPLMLT " + speedLossMult);
 		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult);
 
 		//print ("GT Vel:  " + m_Rigidbody2D.velocity);
