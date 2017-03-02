@@ -2,4 +2,4 @@
 invert luminosity shader for fun
 Invert colour shader might be better!
 
-CHANGE ALL REFERENCES OF CHAINS AND SUCH TO ID REFS INSTEAD OF DIRECT POINTERS
+CHANGE ALL REFERENCES OF CHAINS AND SUCH TO ID REFS INSTEAD OF DIRECT POINTERS //This is referring to dialogue code

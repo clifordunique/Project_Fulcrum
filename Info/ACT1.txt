@@ -31,7 +31,7 @@ MORRIS, THE PACKRAT
 
 Additional Characters:
 Warden
-Duamano Spy (Fellow prisoner)
+Splitter - Duamano Spy (Fellow prisoner)
 
 
 You wake up in a cell across from your cellmate, Morris. Morris Dialogue 1 begins.
