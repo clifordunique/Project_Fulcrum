@@ -82,6 +82,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	[Header("Player State:")]
 
+	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
 	[SerializeField][ReadOnlyAttribute]private bool leftFootContact;
 	[SerializeField][ReadOnlyAttribute]private bool floorContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightFootContact;
@@ -198,7 +199,7 @@ public class PlatformerCharacter2D : MonoBehaviour
     private void FixedUpdate()
 	{
 		//print("Initial Pos: " + this.transform.position);
-		//print("Initial Vel: " + m_Rigidbody2D.velocity);
+		//print("Initial Vel: " + pVel);
 
 		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
 		//print("LEFT="+m_KeyLeft);
@@ -229,7 +230,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(m_Ceilinged&&m_Grounded)
 		{
-			if(m_Rigidbody2D.velocity.magnitude != 0)
+			if(pVel.magnitude != 0)
 			{
 				Wedged();
 			}
@@ -241,40 +242,38 @@ public class PlatformerCharacter2D : MonoBehaviour
 			Jump(CtrlH);
 		}
 
-		//print("Per frame velocity before traction: "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
+		//print("Per frame velocity before traction: "+pVel*Time.fixedDeltaTime);
 
 		if(m_Grounded)
 		{//Locomotion!
 			Traction(CtrlH);
 		}else
 		{//Gravity!
-			m_Rigidbody2D.velocity = new Vector2 (m_Rigidbody2D.velocity.x, m_Rigidbody2D.velocity.y - 1);
+			pVel = new Vector2 (pVel.x, pVel.y - 1);
 			m_Ceilinged = false;
 		}
 			
-		//print("Per frame velocity at end of Traction "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of Traction "+pVel*Time.fixedDeltaTime);
 
 		errorDetectingRecursionCount = 0; //Used for Collision();
 
-		//print("Velocity before Collision: "+m_Rigidbody2D.velocity);
+		//print("Velocity before Collision: "+pVel);
 		//print("Position before Collision: "+this.transform.position);
 
 		Collision();
-
 	
-		//print("Per frame velocity at end of Collision() "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of Collision() "+pVel*Time.fixedDeltaTime);
 
 		//UpdateContactNormals(false);
-
 	
-		//print("Per frame velocity at end of updatecontactnormals "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of updatecontactnormals "+pVel*Time.fixedDeltaTime);
 
 		if(m_LeftWalled)
 		{
 			if(m_Grounded)
 			{
 				//print("Both!");
-				if(m_Rigidbody2D.velocity.y > 0)
+				if(pVel.y > 0)
 				{
 					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
 					//print("LS="+leftSteepness);
@@ -289,7 +288,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 						DirectionChange(groundNormal);
 					}
 				}
-				else if(m_Rigidbody2D.velocity.y < 0)
+				else if(pVel.y < 0)
 				{
 					//print("DESCENDING IMPACT");
 					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
@@ -326,7 +325,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			if(m_Grounded)
 			{
 				//print("Both!");
-				if(m_Rigidbody2D.velocity.y > 0)
+				if(pVel.y > 0)
 				{
 					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
 					//print("LS="+rightSteepness);
@@ -341,7 +340,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 						DirectionChange(groundNormal);
 					}
 				}
-				else if(m_Rigidbody2D.velocity.y < 0)
+				else if(pVel.y < 0)
 				{
 					//print("DESCENDING IMPACT");
 					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
@@ -386,9 +385,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 
-		//print("Speed this frame: "+m_Rigidbody2D.velocity.magnitude);
+		//print("Speed this frame: "+pVel.magnitude);
 	
-		//print("Per frame velocity at end of physics frame: "+m_Rigidbody2D.velocity*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of physics frame: "+pVel*Time.fixedDeltaTime);
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
@@ -418,7 +417,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			//print("FACING LEFT!   "+h)
 			m_PlayerSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
-			if(m_Rigidbody2D.velocity.x > 0)
+			if(pVel.x > 0)
 			{
 				m_Anim.SetBool("Crouch", true);
 			}
@@ -432,7 +431,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("FACING RIGHT!   "+h);
 
 			m_PlayerSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
-			if(m_Rigidbody2D.velocity.x < 0)
+			if(pVel.x < 0)
 			{
 				m_Anim.SetBool("Crouch", true);
 			}
@@ -442,13 +441,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 		}
 			
-		Vector2 debugLineVector = ((m_Rigidbody2D.velocity*Time.fixedDeltaTime));
+		Vector2 debugLineVector = ((pVel*Time.fixedDeltaTime));
 		debugLineVector.y -= m_FloorFootLength-m_MaxEmbed;
 		m_DebugLine.SetPosition(1, debugLineVector);
 
-		m_Anim.SetFloat("Speed", m_Rigidbody2D.velocity.magnitude);
+		m_Anim.SetFloat("Speed", pVel.magnitude);
 
-		if(m_Rigidbody2D.velocity.magnitude >= tractionChangeThreshold )
+		if(pVel.magnitude >= tractionChangeThreshold )
 		{
 			m_DebugLine.endColor = Color.white;
 			m_DebugLine.startColor = Color.white;
@@ -461,9 +460,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		float multiplier = 1; // Animation playspeed multiplier that increases with higher velocity
 
-		if(m_Rigidbody2D.velocity.magnitude > 20.0f)
+		if(pVel.magnitude > 20.0f)
 		{
-			multiplier = ((m_Rigidbody2D.velocity.magnitude - 20) / 20)+1;
+			multiplier = ((pVel.magnitude - 20) / 20)+1;
 		}
 
 		m_Anim.SetFloat("Multiplier", multiplier);
@@ -476,17 +475,19 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			m_Anim.SetBool("Ground", true);
 		}
-	
-		//print("FinaL Pos: " + this.transform.position);
-		//print("FinaL Vel: " + m_Rigidbody2D.velocity);
-		
-		//print("Speed at end of frame: " + m_Rigidbody2D.velocity.magnitude);
 		#endregion
+
+
+		//print("FinaL Pos: " + this.transform.position);
+		//print("FinaL Vel: " + pVel);
+		//print("Speed at end of frame: " + pVel.magnitude);
+		Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
+		m_Rigidbody2D.MovePosition(finalPos);
     }
 
 	private void Update()
 	{
-		m_Speedometer.text = ""+Math.Round(m_Rigidbody2D.velocity.magnitude,0);
+		m_Speedometer.text = ""+Math.Round(pVel.magnitude,0);
 		if (!m_Jump && (m_Grounded||m_Ceilinged))
 		{
 			// Read the jump input in Update so button presses aren't missed.
@@ -510,7 +511,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void Collision()
 	{
-		float crntSpeed = m_Rigidbody2D.velocity.magnitude*Time.fixedDeltaTime; //Current speed.
+		float crntSpeed = pVel.magnitude*Time.fixedDeltaTime; //Current speed.
 		//print("DC Executing");
 		errorDetectingRecursionCount++;
 
@@ -520,13 +521,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			return;
 		}
 			
-		if(m_Rigidbody2D.velocity.x > 0)
+		if(pVel.x > 0)
 		{
 			print("leftwalled removed during col");
 			m_LeftWalled = false;
 		}
 
-		if(m_Rigidbody2D.velocity.x < 0)
+		if(pVel.x < 0)
 		{
 			m_RightWalled = false;
 		}
@@ -548,10 +549,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
 		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
 
-		predictedLoc[0] = Physics2D.Raycast(adjustedBot, m_Rigidbody2D.velocity, crntSpeed, mask); 	// Ground
-		predictedLoc[1] = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, crntSpeed, mask); 	// Ceiling
-		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, m_Rigidbody2D.velocity, crntSpeed, mask); // Left
-		predictedLoc[3] = Physics2D.Raycast(adjustedRight, m_Rigidbody2D.velocity, crntSpeed, mask);// Right  
+		predictedLoc[0] = Physics2D.Raycast(adjustedBot, pVel, crntSpeed, mask); 	// Ground
+		predictedLoc[1] = Physics2D.Raycast(adjustedTop, pVel, crntSpeed, mask); 	// Ceiling
+		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, pVel, crntSpeed, mask); // Left
+		predictedLoc[3] = Physics2D.Raycast(adjustedRight, pVel, crntSpeed, mask);// Right  
 
 		float[] rayDist = new float[4];
 		rayDist[0] = predictedLoc[0].distance; // Ground dist
@@ -683,15 +684,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 				//rayStartPoint.transform.position = new Vector2(adjustedBot.x, adjustedBot.y);
 				//print("Impact!");
 				//print ("Player Pos:  " + this.transform.position);
-				//print ("velocity:  " + m_Rigidbody2D.velocity);
+				//print ("velocity:  " + pVel);
 				#endregion
 
-				//ceilingCheck = Physics2D.Raycast(adjustedTop, m_Rigidbody2D.velocity, groundCheck.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
+				//ceilingCheck = Physics2D.Raycast(adjustedTop, pVel, groundCheck.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
 
-				//print("Velocity before impact: "+m_Rigidbody2D.velocity);
-				Vector2 moveDirectionNormal = Perp(m_Rigidbody2D.velocity.normalized);
-				//moveDirectionNormal.x = m_Rigidbody2D.velocity.normalized.y;
-				//moveDirectionNormal.y = -m_Rigidbody2D.velocity.normalized.x;
+				//print("Velocity before impact: "+pVel);
+				Vector2 moveDirectionNormal = Perp(pVel.normalized);
+				//moveDirectionNormal.x = pVel.normalized.y;
+				//moveDirectionNormal.y = -pVel.normalized.x;
 
 				Vector2 invertedImpactNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
 				invertedImpactNormal.x = -predictedLoc[0].normal.x; //Inverting the normal.
@@ -809,20 +810,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		//print("Traction executing");
-		float rawSpeed = m_Rigidbody2D.velocity.magnitude;
+		float rawSpeed = pVel.magnitude;
 		if (horizontalInput == 0) 
 		{//if not pressing any move direction, slow to zero linearly.
 			//print("No input, slowing...");
 			if(rawSpeed <= 2)
 			{
-				m_Rigidbody2D.velocity = Vector2.zero;	
+				pVel = Vector2.zero;	
 			}
 			else
 			{
-				m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, -m_LinearSlideRate);
+				pVel = ChangeSpeedLinear (pVel, -m_LinearSlideRate);
 			}
 		}
-		else if((horizontalInput > 0 && m_Rigidbody2D.velocity.x >= 0) || (horizontalInput < 0 && m_Rigidbody2D.velocity.x <= 0))
+		else if((horizontalInput > 0 && pVel.x >= 0) || (horizontalInput < 0 && pVel.x <= 0))
 		{//if pressing same button as move direction, move to MAXSPEED.
 			//print("Running with momentum.");
 			//print("Moving with keypress");
@@ -832,18 +833,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if(rawSpeed > tractionChangeThreshold )
 				{
 					//print("LinAccel-> " + rawSpeed);
-					if(m_Rigidbody2D.velocity.y > 0)
+					if(pVel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
-						m_Rigidbody2D.velocity = ChangeSpeedLinear(m_Rigidbody2D.velocity, m_LinearAccelRate*(1-slopeMultiplier));
+						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate*(1-slopeMultiplier));
 					}
 					else
 					{
-						m_Rigidbody2D.velocity = ChangeSpeedLinear(m_Rigidbody2D.velocity, m_LinearAccelRate);
+						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate);
 					}
 				}
 				else if(rawSpeed == 0)
 				{
-					m_Rigidbody2D.velocity = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+					pVel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
 					print("Starting motion. Adding " + m_Acceleration);
 				}
 				else
@@ -853,11 +854,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 
 					float addedSpeed = curveMultiplier*(m_Acceleration);
-					if(m_Rigidbody2D.velocity.y > 0)
+					if(pVel.y > 0)
 					{ // If climbing, recieve uphill movement penalty.
 						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
 					}
-					m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed+addedSpeed);
+					pVel = (pVel.normalized)*(rawSpeed+addedSpeed);
 				}
 			}
 			else
@@ -865,12 +866,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 				//print("Rawspeed("+rawSpeed+") more than max???");
 			}
 		}
-		else if((horizontalInput > 0 && m_Rigidbody2D.velocity.x < 0) || (horizontalInput < 0 && m_Rigidbody2D.velocity.x > 0))
+		else if((horizontalInput > 0 && pVel.x < 0) || (horizontalInput < 0 && pVel.x > 0))
 		{//if pressing button opposite of move direction, slow to zero exponentially.
 			if(rawSpeed > tractionChangeThreshold )
 			{
 				//print("LinDecel");
-				m_Rigidbody2D.velocity = ChangeSpeedLinear (m_Rigidbody2D.velocity, -m_LinearStopRate);
+				pVel = ChangeSpeedLinear (pVel, -m_LinearStopRate);
 			}
 			else
 			{
@@ -878,15 +879,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 				float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
-				m_Rigidbody2D.velocity = (m_Rigidbody2D.velocity.normalized)*(rawSpeed-2*addedSpeed);
+				pVel = (pVel.normalized)*(rawSpeed-2*addedSpeed);
 			}
 
-			//float modifier = Mathf.Abs(m_Rigidbody2D.velocity.x/m_Rigidbody2D.velocity.y);
+			//float modifier = Mathf.Abs(pVel.x/pVel.y);
 			//print("SLOPE MODIFIER: " + modifier);
-			//m_Rigidbody2D.velocity = m_Rigidbody2D.velocity/(1.25f);
+			//pVel = pVel/(1.25f);
 		}
 
-		Vector2 downSlope = m_Rigidbody2D.velocity.normalized; // Normal vector pointing down the current slope!
+		Vector2 downSlope = pVel.normalized; // Normal vector pointing down the current slope!
 		if (downSlope.y > 0) //Make sure the vector is descending.
 		{
 			downSlope *= -1;
@@ -899,9 +900,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 			downSlope = Vector2.down;
 		}
 
-		m_Rigidbody2D.velocity += downSlope*m_SlippingAcceleration*slopeMultiplier;
-			//ChangeSpeedLinear(m_Rigidbody2D.velocity, );
-		//print("PostTraction velocity: "+m_Rigidbody2D.velocity);
+		pVel += downSlope*m_SlippingAcceleration*slopeMultiplier;
+			//ChangeSpeedLinear(pVel, );
+		//print("PostTraction velocity: "+pVel);
 	}
 
 	private void ToLeftWall(RaycastHit2D leftCheck) 
@@ -937,8 +938,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("Reflected back into the air!");
 			//print("Transform position: " + this.transform.position);
 			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + m_Rigidbody2D.velocity);
-			//print("Speed : " + m_Rigidbody2D.velocity.magnitude);
+			//print("Velocity : " + pVel);
+			//print("Speed : " + pVel.magnitude);
 			//print(" ");
 			//print(" ");	
 			m_LeftWalled = false;
@@ -946,9 +947,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(leftCheck.normal.y == 0f)
 		{//If vertical surface
-			if(m_Rigidbody2D.velocity.x < 0)
+			if(pVel.x < 0)
 			{
-				m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
+				pVel = new Vector2(0, pVel.y);
 			}
 			//throw new Exception("Existence is suffering");
 			print("LEFT VERTICAL");
@@ -997,8 +998,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("Reflected back into the air!");
 			//print("Transform position: " + this.transform.position);
 			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + m_Rigidbody2D.velocity);
-			//print("Speed : " + m_Rigidbody2D.velocity.magnitude);
+			//print("Velocity : " + pVel);
+			//print("Speed : " + pVel.magnitude);
 			//print(" ");
 			//print(" ");	
 			m_RightWalled = false;
@@ -1006,9 +1007,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(rightCheck.normal.y == 0f)
 		{//If vertical surface
-			if(m_Rigidbody2D.velocity.x > 0)
+			if(pVel.x > 0)
 			{
-				m_Rigidbody2D.velocity = new Vector2(0, m_Rigidbody2D.velocity.y);
+				pVel = new Vector2(0, pVel.y);
 			}
 			//throw new Exception("Existence is suffering");
 			print("LEFT VERTICAL");
@@ -1027,12 +1028,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Collision");
 		Vector2 ceilingPosition;
 
-		if(m_Rigidbody2D.velocity.x < 0)
+		if(pVel.x < 0)
 		{
 			//print("              MOVING LEFT!");
 			ceilingPosition.x = m_CeilingFoot.position.x;
 		}
-		else if(m_Rigidbody2D.velocity.x > 0)
+		else if(pVel.x > 0)
 		{
 			//print("              MOVING RIGHT!");
 			ceilingPosition.x = m_CeilingFoot.position.x;
@@ -1045,17 +1046,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//ceilingPosition.x = m_CeilingFoot.position.x;
 		ceilingPosition.y = m_CeilingFoot.position.y;
-		//Vector2 futureMove = m_Rigidbody2D.velocity*Time.fixedDeltaTime
+		//Vector2 futureMove = pVel*Time.fixedDeltaTime
 		//futureColliderPos.x += futureMove
 
-		RaycastHit2D ceilingCheck = Physics2D.Raycast(ceilingPosition, m_Rigidbody2D.velocity, m_Rigidbody2D.velocity.magnitude*Time.fixedDeltaTime, mask);
+		RaycastHit2D ceilingCheck = Physics2D.Raycast(ceilingPosition, pVel, pVel.magnitude*Time.fixedDeltaTime, mask);
 		//print("Collision normal: "+ ceilingCheck.normal);
 
 
 		if(ceilingCheck.collider != null)
 		{
 			//print("Head collision.");
-			//print("Original Velocity: "+ m_Rigidbody2D.velocity);
+			//print("Original Velocity: "+ pVel);
 			//print("Original location: "+ ceilingPosition);
 			//print("Predicted location: "+ ceilingCheck.point);
 			//print("Struck object: " + ceilingCheck.collider.transform.gameObject);
@@ -1066,7 +1067,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			float hOffset = 0;
 			float vOffset = -m_CeilingFootLength;
 
-			if(m_Rigidbody2D.velocity.y != 0)
+			if(pVel.y != 0)
 			{
 				vOffset = vOffset - m_MinEmbed;
 			}
@@ -1076,12 +1077,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 
 
-			if(m_Rigidbody2D.velocity.x < 0)
+			if(pVel.x < 0)
 			{
 				//print("HOFFSET NEG VELO");
 				hOffset = -m_MinEmbed;
 			}
-			else if(m_Rigidbody2D.velocity.x > 0)
+			else if(pVel.x > 0)
 			{
 				//print("HOFFSET POS VELO");
 				hOffset = m_MinEmbed;
@@ -1091,12 +1092,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{//If hitting a vertical wall.
 				print("HITING WALL WITH HEAD INSTEAD OF SIDE!!");
 
-				if(m_Rigidbody2D.velocity.x < 0)
+				if(pVel.x < 0)
 				{
 					m_LeftWalled = true;
 					this.transform.position =  new Vector2(ceilingCheck.point.x+(m_LeftSideLength-m_MinEmbed), ceilingCheck.point.y-m_CeilingFootLength);
 				}
-				else if(m_Rigidbody2D.velocity.x > 0)
+				else if(pVel.x > 0)
 				{
 					m_RightWalled = true;
 					this.transform.position =  new Vector2(ceilingCheck.point.x-(m_RightSideLength-m_MinEmbed), ceilingCheck.point.y-m_CeilingFootLength);
@@ -1105,7 +1106,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					print("Hit a wall without moving horizontally, somehow.");
 				}
-				m_Rigidbody2D.velocity = new Vector2(0f, m_Rigidbody2D.velocity.y);
+				pVel = new Vector2(0f, pVel.y);
 			}
 			else
 			{//If hitting a downward facing surface
@@ -1144,7 +1145,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 
 			//this.transform.position =  new Vector2(ceilingCheck.point.x+m_MinEmbed, ceilingCheck.point.y+0.2f);
-			//m_Rigidbody2D.velocity = new Vector2(0f, m_Rigidbody2D.velocity.y);
+			//pVel = new Vector2(0f, pVel.y);
 			//Debug.Break();
 			return true;
 		}
@@ -1214,8 +1215,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("Reflected back into the air!");
 			//print("Transform position: " + this.transform.position);
 			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + m_Rigidbody2D.velocity);
-			//print("Speed : " + m_Rigidbody2D.velocity.magnitude);
+			//print("Velocity : " + pVel);
+			//print("Speed : " + pVel.magnitude);
 			//print(" ");
 			//print(" ");	
 			m_Grounded = false;
@@ -1236,7 +1237,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void AirToGround(RaycastHit2D groundCheck)
 	{
 		//print("AirToGround");
-		//print ("Starting velocity:  " + m_Rigidbody2D.velocity);
+		//print ("Starting velocity:  " + pVel);
 
 		Vector2 setCharPos = groundCheck.point;
 		setCharPos.y += m_FloorFootLength-m_MinEmbed;
@@ -1260,7 +1261,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print ("GroundCheck2=null!");
 		}
 		//AirToCeiling();
-		//print ("A2G Vel:  " + m_Rigidbody2D.velocity);
+		//print ("A2G Vel:  " + pVel);
 		groundNormal = groundCheck.normal;
 		//DirectionChange(groundNormal);
 		//print ("Final Position2:  " + this.transform.position);
@@ -1269,11 +1270,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void DirectionChange(Vector2 newNormal)
 	{
 		//print("DirectionChange");
-		Vector2 initialDirection = m_Rigidbody2D.velocity.normalized;
+		Vector2 initialDirection = pVel.normalized;
 
 
-		float initialSpeed = m_Rigidbody2D.velocity.magnitude;
-		//print("Speed before : " + m_Rigidbody2D.velocity.magnitude);
+		float initialSpeed = pVel.magnitude;
+		//print("Speed before : " + pVel.magnitude);
 		float testNumber = newNormal.y/newNormal.x;
 		if(float.IsNaN(testNumber))
 		{
@@ -1336,22 +1337,22 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			projectionVal = Vector2.Dot(m_Rigidbody2D.velocity, newPerp)/newPerp.sqrMagnitude;
+			projectionVal = Vector2.Dot(pVel, newPerp)/newPerp.sqrMagnitude;
 		}
 		//print("P"+projectionVal);
 		AdjustedVel = newPerp * projectionVal;
 		//	print("A"+AdjustedVel);
 
-		if(m_Rigidbody2D.velocity == Vector2.zero)
+		if(pVel == Vector2.zero)
 		{
-			//m_Rigidbody2D.velocity = new Vector2(h, m_Rigidbody2D.velocity.y);
+			//pVel = new Vector2(h, pVel.y);
 		}
 		else
 		{
-			//m_Rigidbody2D.velocity = AdjustedVel + AdjustedVel.normalized*h;
+			//pVel = AdjustedVel + AdjustedVel.normalized*h;
 			try
 			{
-				m_Rigidbody2D.velocity = AdjustedVel;
+				pVel = AdjustedVel;
 			}
 			catch(Exception e)
 			{
@@ -1385,14 +1386,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		//print("SPLMLT " + speedLossMult);
-		m_Rigidbody2D.velocity = SetSpeed(m_Rigidbody2D.velocity , initialSpeed*speedLossMult);
+		pVel = SetSpeed(pVel , initialSpeed*speedLossMult);
 
-		//print ("GT Vel:  " + m_Rigidbody2D.velocity);
+		//print ("GT Vel:  " + pVel);
 	}
 
 	private void CameraControl()
 	{
-		cameraZoom = Mathf.Lerp(cameraZoom, m_Rigidbody2D.velocity.magnitude, 0.1f);
+		cameraZoom = Mathf.Lerp(cameraZoom, pVel.magnitude, 0.1f);
 		m_MainCamera.orthographicSize = 5f+(0.15f*cameraZoom);
 	}
 
@@ -1447,10 +1448,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(cPerp.y > 0)
 		{
-			if(m_Rigidbody2D.velocity.x > 0)
+			if(pVel.x > 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
-				m_Rigidbody2D.velocity = new Vector2(0f, 0f);
+				pVel = new Vector2(0f, 0f);
 				m_RightWalled = true;
 				//print("Right wedge!");
 				//print("cPerp: "+cPerp);
@@ -1459,14 +1460,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else if(cPerp.y < 0)
 		{
-			if(m_Rigidbody2D.velocity.x < 0)
+			if(pVel.x < 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
 				//print("Left wedge!");
 				//print("cPerp: "+cPerp);
 				//print("gPerp: "+gPerp);
 				m_LeftWalled = true;
-				m_Rigidbody2D.velocity = new Vector2(0f, 0f);
+				pVel = new Vector2(0f, 0f);
 			}
 		}
 		else
@@ -1809,7 +1810,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Adding the movement: ("+ X +", "+Y+").");
 		return new Vector2(X,Y); // Returns the distance the object must move to resolve wedging.
 	}
-							
+
 	private void Jump(float horizontalInput)
 	{
 		if(m_Grounded&&m_Ceilinged)
@@ -1818,26 +1819,26 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else if(m_Grounded)
 		{
-			if(m_Rigidbody2D.velocity.y >= 0)
+			if(pVel.y >= 0)
 			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x+(m_HJumpForce*horizontalInput), m_Rigidbody2D.velocity.y+m_VJumpForce);
+				pVel = new Vector2(pVel.x+(m_HJumpForce*horizontalInput), pVel.y+m_VJumpForce);
 			}
 			else
 			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
+				pVel = new Vector2(pVel.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
 			}
 			m_Jump = false;
 			m_Grounded = false;
 		}
 		else if(m_Ceilinged)
 		{
-			if(m_Rigidbody2D.velocity.y <= 0)
+			if(pVel.y <= 0)
 			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x+(m_HJumpForce*horizontalInput), m_Rigidbody2D.velocity.y -m_VJumpForce);
+				pVel = new Vector2(pVel.x+(m_HJumpForce*horizontalInput), pVel.y -m_VJumpForce);
 			}
 			else
 			{
-				m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
+				pVel = new Vector2(pVel.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
 			}
 
 			m_Jump = false;
