@@ -82,19 +82,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	[Header("Player State:")]
 
+	[SerializeField][ReadOnlyAttribute]private float remainingVelMult;
 	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
-	[SerializeField][ReadOnlyAttribute]private Vector2 movementThisFrame;
+	[SerializeField][ReadOnlyAttribute]private Vector2 pVelPerFrame;
+	[SerializeField][ReadOnlyAttribute]private Vector2 remainingMovement;
+
 	[SerializeField][ReadOnlyAttribute]private bool leftFootContact;
-	[SerializeField][ReadOnlyAttribute]private bool floorContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightFootContact;
+	[SerializeField][ReadOnlyAttribute]private bool floorContact;
 	[SerializeField][ReadOnlyAttribute]private bool ceilingContact;
 	[SerializeField][ReadOnlyAttribute]private bool leftSideContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightSideContact;
 	[Space(10)]
 	[SerializeField][ReadOnlyAttribute]private bool m_Grounded;
-	[SerializeField][ReadOnlyAttribute]private bool m_NearGround; 
 	[SerializeField][ReadOnlyAttribute]private bool m_Ceilinged; 
-	[SerializeField][ReadOnlyAttribute]private bool m_NearCeiling; 
 	[SerializeField][ReadOnlyAttribute]private bool m_LeftWalled; 
 	[SerializeField][ReadOnlyAttribute]private bool m_RightWalled; 
 	[SerializeField][ReadOnlyAttribute]private int m_CurrentTraverse; 
@@ -183,6 +184,9 @@ public class PlatformerCharacter2D : MonoBehaviour
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
 		m_SpriteRenderer = m_PlayerSprite.GetComponent<SpriteRenderer>();
 
+		remainingMovement = new Vector2(0,0);
+		remainingVelMult = 1f;
+		//print(remainingMovement);
 
 		if(!showContactIndicators)
 		{
@@ -199,14 +203,16 @@ public class PlatformerCharacter2D : MonoBehaviour
 
     private void FixedUpdate()
 	{
-		print("Initial Pos: " + this.transform.position);
-		print("Initial Vel: " +  pVel*Time.fixedDeltaTime);
 
-		Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
+
+
+		Vector2 finalPos = new Vector2(this.transform.position.x+remainingMovement.x, this.transform.position.y+remainingMovement.y);
 		this.transform.position = finalPos;
 
-		movementThisFrame = pVel*Time.fixedDeltaTime;
-		Vector2 startingPos = this.transform.position;
+		//m_Rigidbody2D.MovePosition(finalPos);
+		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVelPerFrame.x), this.transform.position.y+(pVelPerFrame.y));
+		//print("Initial Pos: " + startingPos);
+		//print("Initial Vel: " +  pVel);
 
 		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
 		//print("LEFT="+m_KeyLeft);
@@ -249,8 +255,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			Jump(CtrlH);
 		}
 
-		//print("Per frame velocity before traction: "+pVel*Time.fixedDeltaTime);
-
 		if(m_Grounded)
 		{//Locomotion!
 			Traction(CtrlH);
@@ -260,27 +264,41 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_Ceilinged = false;
 		}
 			
-		//print("Per frame velocity at end of Traction "+pVel*Time.fixedDeltaTime);
-
 		errorDetectingRecursionCount = 0; //Used for Collision();
 
 		//print("Velocity before Collision: "+pVel);
 		//print("Position before Collision: "+this.transform.position);
 
+		pVelPerFrame = pVel*Time.fixedDeltaTime;
+		remainingVelMult = 1f;
+		remainingMovement = pVelPerFrame;
+		Vector2 startingPos = this.transform.position;
+
 		Collision();
 	
-		//print("Per frame velocity at end of Collision() "+pVel*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of Collision() "+pVelPerFrame);
 
 		//UpdateContactNormals(true);
 	
-		//print("Per frame velocity at end of updatecontactnormals "+pVel*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of updatecontactnormals "+pVelPerFrame);
 
 		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
-		print("Distance moved to complete collision: "+distanceTravelled);
-		print("movementThisFrame: "+movementThisFrame);
+		//print("Distance moved to complete collision: "+distanceTravelled);
+		//print("remainingMovement: "+remainingMovement);
 
-		movementThisFrame -= distanceTravelled;
-		print("movement after distance travelled: "+movementThisFrame);
+		remainingMovement -= distanceTravelled;
+
+		if(pVelPerFrame.magnitude>0)
+		{
+			remainingVelMult = (pVelPerFrame.magnitude-distanceTravelled.magnitude)/pVelPerFrame.magnitude;
+		}
+		else
+		{
+			remainingVelMult = 1f;
+		}
+		//print("remainingVelMult: "+remainingVelMult);
+
+		//print("movement after distance travelled: "+remainingMovement);
 
 		if(m_LeftWalled)
 		{
@@ -322,7 +340,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				}
 				else
 				{
-					DirectionChange(groundNormal);
+					DirectionChange(leftNormal);
 				}
 			}
 			else
@@ -374,7 +392,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 				}
 				else
 				{
-					DirectionChange(groundNormal);
+					print("this is the path I think is going to execute");
+					DirectionChange(rightNormal);
 				}
 			}
 			else
@@ -401,7 +420,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//print("Speed this frame: "+pVel.magnitude);
 	
-		//print("Per frame velocity at end of physics frame: "+pVel*Time.fixedDeltaTime);
+		//print("Per frame velocity at end of physics frame: "+pVelPerFrame);
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
@@ -409,12 +428,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("FinaL Vel: " + pVel);
 		//print("Speed at end of frame: " + pVel.magnitude);
 
-
-
-
-		//Vector2 finalPos = new Vector2(this.transform.position.x+movementThisFrame.x, this.transform.position.y+movementThisFrame.y);
-		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
-		//m_Rigidbody2D.MovePosition(finalPos);
 
 		#region Animator Controls
 
@@ -465,7 +478,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		/*
-		Vector2 debugLineVector = ((pVel*Time.fixedDeltaTime));
+		Vector2 debugLineVector = ((pVelPerFrame));
 		debugLineVector.y -= (m_FloorFootLength-m_MaxEmbed);
 		m_DebugLine.SetPosition(1, debugLineVector);
 		*/
@@ -479,13 +492,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 		debugLineVector[1].y = -(m_FloorFootLength-m_MaxEmbed);
 		debugLineVector[1].z = 0f;
 
-		//Vector2 debugLineVector[2] = distanceTravelled+movementThisFrame;
-		//debugLineVector[2].x = (pVel.x*Time.fixedDeltaTime);
-		//debugLineVector[2].y = (pVel.y*Time.fixedDeltaTime)-(m_FloorFootLength-m_MaxEmbed);
+		//Vector2 debugLineVector[2] = distanceTravelled+remainingMovement;
+		//debugLineVector[2].x = (pVelPerFrame.x);
+		//debugLineVector[2].y = (pVelPerFrame.y)-(m_FloorFootLength-m_MaxEmbed);
 		//debugLineVector[2].z = 0f;
 
-		debugLineVector[2].x = movementThisFrame.x;
-		debugLineVector[2].y = (movementThisFrame.y)-(m_FloorFootLength-m_MaxEmbed);
+		debugLineVector[2].x = remainingMovement.x;
+		debugLineVector[2].y = (remainingMovement.y)-(m_FloorFootLength-m_MaxEmbed);
 		debugLineVector[2].z = 0f;
 
 		m_DebugLine.SetPositions(debugLineVector);
@@ -552,7 +565,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void Collision()
 	{
-		float crntSpeed = pVel.magnitude*Time.fixedDeltaTime; //Current speed.
+		float crntSpeed = pVelPerFrame.magnitude; //Current speed.
 		//print("DC Executing");
 		errorDetectingRecursionCount++;
 
@@ -705,7 +718,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			case -1:
 			{
-				//print("No collision!");
+				print("No collision!");
 				break;
 			}
 			case 0://Ground collision with feet
@@ -735,13 +748,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				invertedImpactNormal.x = -predictedLoc[0].normal.x; //Inverting the normal.
 				invertedImpactNormal.y = -predictedLoc[0].normal.y; //Inverting the normal.
 
-				if(predictedLoc[1].collider != null)
-				{// If player hits something with their head.
-					print("A2G");
-					AirToCeiling(); //ATTEND TO THIS! SHOULD BYPASS A2C AND GO STRAIGHT TO WEDGE!
-					return;
-				}
-				else if (predictedLoc[0].collider == null) 
+				if (predictedLoc[0].collider == null) 
 				{ // If player is airborne beforehand.
 					print("A2G");
 					AirToGround(predictedLoc[0]);
@@ -979,22 +986,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print(" ");	
 			m_LeftWalled = false;
 		}
-
-		if(leftCheck.normal.y == 0f)
-		{//If vertical surface
-			if(pVel.x < 0)
-			{
-				pVel = new Vector2(0, pVel.y);
-			}
-			//throw new Exception("Existence is suffering");
-			print("LEFT VERTICAL");
-		}
+			
 		//groundNormal = groundCheck2.normal;
 		//roundNormal = groundCheck.normal;
 
 
 		leftNormal = leftCheck2.normal;
-		//DirectionChange(leftNormal);
+
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -1008,7 +1006,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RightWalled = true;
 		Vector2 setCharPos = rightCheck.point;
 		setCharPos.x -= m_RightSideLength-m_MinEmbed; //Embed slightly in wall to ensure raycasts still hit wall.
-		setCharPos.y -= m_MinEmbed;  //Embed slightly in floor to ensure raycasts still hit floor.
+		//setCharPos.y -= m_MinEmbed;  //Embed slightly in floor to ensure raycasts still hit floor.
 
 		//print("Sent to Pos:" + setCharPos);
 		//print("Sent to normal:" + groundCheck.normal);
@@ -1040,6 +1038,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_RightWalled = false;
 		}
 
+		/*
 		if(rightCheck.normal.y == 0f)
 		{//If vertical surface
 			if(pVel.x > 0)
@@ -1049,12 +1048,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//throw new Exception("Existence is suffering");
 			print("LEFT VERTICAL");
 		}
+		*/
+
 		//groundNormal = groundCheck2.normal;
 		//roundNormal = groundCheck.normal;
 
 
 		rightNormal = rightCheck2.normal;
-		//DirectionChange(rightNormal);
 		//print ("Final Position2:  " + this.transform.position);
 	}
 		
@@ -1081,10 +1081,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//ceilingPosition.x = m_CeilingFoot.position.x;
 		ceilingPosition.y = m_CeilingFoot.position.y;
-		//Vector2 futureMove = pVel*Time.fixedDeltaTime
+		//Vector2 futureMove = pVelPerFrame
 		//futureColliderPos.x += futureMove
 
-		RaycastHit2D ceilingCheck = Physics2D.Raycast(ceilingPosition, pVel, pVel.magnitude*Time.fixedDeltaTime, mask);
+		RaycastHit2D ceilingCheck = Physics2D.Raycast(ceilingPosition, pVel, pVelPerFrame.magnitude, mask);
 		//print("Collision normal: "+ ceilingCheck.normal);
 
 
@@ -1296,7 +1296,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//AirToCeiling();
 		//print ("A2G Vel:  " + pVel);
 		groundNormal = groundCheck.normal;
-		//DirectionChange(groundNormal);
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -1304,22 +1303,21 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		//print("DirectionChange");
 		Vector2 initialDirection = pVel.normalized;
-
+		Vector2 newPerp = Perp(newNormal);
+		Vector2 AdjustedVel;
 
 		float initialSpeed = pVel.magnitude;
-		//print("Speed before : " + pVel.magnitude);
-		float testNumber = newNormal.y/newNormal.x;
+		print("Speed before : " + initialSpeed);
+		float testNumber = newPerp.y/newPerp.x;
+		//print(testNumber);
+		print("newNormal="+newNormal);
 		if(float.IsNaN(testNumber))
 		{
-			//print("IT'S NaN BRO LoLoLOL XD");
-			throw new Exception("NaN value.");
+			print("IT'S NaN BRO LoLoLOL XD");
+			//throw new Exception("NaN value.");
 			//print("X = "+ newNormal.x +", Y = " + newNormal.y);
 		}
 
-
-
-		Vector2 newPerp = Perp(newNormal);
-		Vector2 AdjustedVel;
 
 		//newPerp.x = newNormal.y;
 		//newPerp.y = -newNormal.x;
@@ -1420,7 +1418,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//print("SPLMLT " + speedLossMult);
 		pVel = SetSpeed(pVel , initialSpeed*speedLossMult);
-
+		remainingMovement = pVel*remainingVelMult*Time.fixedDeltaTime;
 		//print ("GT Vel:  " + pVel);
 	}
 
