@@ -83,6 +83,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Header("Player State:")]
 
 	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
+	[SerializeField][ReadOnlyAttribute]private Vector2 movementThisFrame;
 	[SerializeField][ReadOnlyAttribute]private bool leftFootContact;
 	[SerializeField][ReadOnlyAttribute]private bool floorContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightFootContact;
@@ -198,8 +199,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 
     private void FixedUpdate()
 	{
-		//print("Initial Pos: " + this.transform.position);
-		//print("Initial Vel: " + pVel);
+		print("Initial Pos: " + this.transform.position);
+		print("Initial Vel: " +  pVel*Time.fixedDeltaTime);
+
+		Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
+		this.transform.position = finalPos;
+
+		movementThisFrame = pVel*Time.fixedDeltaTime;
+		Vector2 startingPos = this.transform.position;
 
 		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
 		//print("LEFT="+m_KeyLeft);
@@ -264,9 +271,16 @@ public class PlatformerCharacter2D : MonoBehaviour
 	
 		//print("Per frame velocity at end of Collision() "+pVel*Time.fixedDeltaTime);
 
-		//UpdateContactNormals(false);
+		//UpdateContactNormals(true);
 	
 		//print("Per frame velocity at end of updatecontactnormals "+pVel*Time.fixedDeltaTime);
+
+		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
+		print("Distance moved to complete collision: "+distanceTravelled);
+		print("movementThisFrame: "+movementThisFrame);
+
+		movementThisFrame -= distanceTravelled;
+		print("movement after distance travelled: "+movementThisFrame);
 
 		if(m_LeftWalled)
 		{
@@ -391,7 +405,16 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
+		//print("FinaL Pos: " + this.transform.position);
+		//print("FinaL Vel: " + pVel);
+		//print("Speed at end of frame: " + pVel.magnitude);
 
+
+
+
+		//Vector2 finalPos = new Vector2(this.transform.position.x+movementThisFrame.x, this.transform.position.y+movementThisFrame.y);
+		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
+		//m_Rigidbody2D.MovePosition(finalPos);
 
 		#region Animator Controls
 
@@ -440,10 +463,32 @@ public class PlatformerCharacter2D : MonoBehaviour
 				m_Anim.SetBool("Crouch", false);
 			}
 		}
-			
+
+		/*
 		Vector2 debugLineVector = ((pVel*Time.fixedDeltaTime));
-		debugLineVector.y -= m_FloorFootLength-m_MaxEmbed;
+		debugLineVector.y -= (m_FloorFootLength-m_MaxEmbed);
 		m_DebugLine.SetPosition(1, debugLineVector);
+		*/
+		Vector3[] debugLineVector = new Vector3[3];
+
+		debugLineVector[0].x = -distanceTravelled.x;
+		debugLineVector[0].y = -(distanceTravelled.y+(m_FloorFootLength-m_MaxEmbed));
+		debugLineVector[0].z = 0f;
+
+		debugLineVector[1].x = 0f;
+		debugLineVector[1].y = -(m_FloorFootLength-m_MaxEmbed);
+		debugLineVector[1].z = 0f;
+
+		//Vector2 debugLineVector[2] = distanceTravelled+movementThisFrame;
+		//debugLineVector[2].x = (pVel.x*Time.fixedDeltaTime);
+		//debugLineVector[2].y = (pVel.y*Time.fixedDeltaTime)-(m_FloorFootLength-m_MaxEmbed);
+		//debugLineVector[2].z = 0f;
+
+		debugLineVector[2].x = movementThisFrame.x;
+		debugLineVector[2].y = (movementThisFrame.y)-(m_FloorFootLength-m_MaxEmbed);
+		debugLineVector[2].z = 0f;
+
+		m_DebugLine.SetPositions(debugLineVector);
 
 		m_Anim.SetFloat("Speed", pVel.magnitude);
 
@@ -478,11 +523,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		#endregion
 
 
-		//print("FinaL Pos: " + this.transform.position);
-		//print("FinaL Vel: " + pVel);
-		//print("Speed at end of frame: " + pVel.magnitude);
-		Vector2 finalPos = new Vector2(this.transform.position.x+(pVel.x*Time.fixedDeltaTime), this.transform.position.y+(pVel.y*Time.fixedDeltaTime));
-		m_Rigidbody2D.MovePosition(finalPos);
+
     }
 
 	private void Update()
@@ -521,13 +562,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 			return;
 		}
 			
-		if(pVel.x > 0)
+		if(pVel.x > 0.001f)
 		{
-			print("leftwalled removed during col");
 			m_LeftWalled = false;
 		}
 
-		if(pVel.x < 0)
+		if(pVel.x < -0.001f)
 		{
 			m_RightWalled = false;
 		}
@@ -675,7 +715,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 				Vector2 testperp = Perp(predictedLoc[0].normal);
 				float steepnessAngle = Vector2.Angle(Vector2.right,testperp);
 
-
 				#region collision debug
 				//print("groundAngle:"+steepnessAngle);
 				//GameObject collisionPoint = new GameObject("Impact");
@@ -691,8 +730,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				//print("Velocity before impact: "+pVel);
 				Vector2 moveDirectionNormal = Perp(pVel.normalized);
-				//moveDirectionNormal.x = pVel.normalized.y;
-				//moveDirectionNormal.y = -pVel.normalized.x;
 
 				Vector2 invertedImpactNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
 				invertedImpactNormal.x = -predictedLoc[0].normal.x; //Inverting the normal.
@@ -775,8 +812,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			groundPerp *= -1;
 		}
 
-
-
 		float steepnessAngle = Vector2.Angle(Vector2.left,groundPerp);
 		//print("SteepnessAngle:"+steepnessAngle);
 
@@ -845,7 +880,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				else if(rawSpeed == 0)
 				{
 					pVel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
-					print("Starting motion. Adding " + m_Acceleration);
+					//print("Starting motion. Adding " + m_Acceleration);
 				}
 				else
 				{
@@ -1225,12 +1260,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if(groundCheck.normal.y == 0f)
 		{//If vertical surface
 			//throw new Exception("Existence is suffering");
-			//print("GtG VERTICAL :O");
+			print("GtG VERTICAL :O");
 		}
-		//groundNormal = groundCheck2.normal;
-		//roundNormal = groundCheck.normal;
+
 		groundNormal = groundCheck2.normal;
-		//DirectionChange(groundNormal);
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -1488,7 +1521,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		return output;
 	}		
 
-	private void UpdateContactNormals(bool correctPos)
+	private void UpdateContactNormals(bool posCorrection)
 	{
 		m_Grounded = false;
 		m_Ceilinged = false;
@@ -1516,6 +1549,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
+
 		RaycastHit2D leftSideHit = Physics2D.Raycast (this.transform.position, Vector2.left, m_LeftSideLength, mask);
 		if (leftSideHit.collider != null)
 		{
@@ -1532,7 +1566,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if (leftSideContact) 
 		{
 			//print ("leftSideContact" + leftSideHit.normal);
-			if(!rightSideContact && antiTunneling && correctPos && ((m_LeftSideLength-leftSideHit.distance)>=0.01f))
+			if(!rightSideContact && antiTunneling && posCorrection && ((m_LeftSideLength-leftSideHit.distance)>=0.011f))
 			{
 
 				Vector2 surfacePosition = leftSideHit.point;
@@ -1567,7 +1601,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if (rightSideContact) 
 		{
 			//print ("leftSideContact" + leftSideHit.normal);
-			if(!leftSideContact && antiTunneling && correctPos && ((m_RightSideLength-rightSideHit.distance)>=0.01f))
+			if(!leftSideContact && antiTunneling && posCorrection && ((m_RightSideLength-rightSideHit.distance)>=0.011f))
 			{
 				Vector2 surfacePosition = rightSideHit.point;
 				surfacePosition.x -= ((m_RightSideLength)-m_MinEmbed);
@@ -1582,20 +1616,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			m_RightWalled = false;
 		}
-
-		RaycastHit2D LeftFootHit = Physics2D.Raycast (this.transform.position, Vector2.down, m_LeftFootLength, mask);
-		if (LeftFootHit.collider != null)
-		{
-			leftFootContact = true;
-			m_LeftLine.endColor = Color.green;
-			m_LeftLine.startColor = Color.green;
-		} 
-		else
-		{
-			leftFootContact = false;
-		}
-
+			
 		RaycastHit2D floorHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
+
+		//print("Floormal="+Perp(floorHit.normal).y);
+		//print("pVel.n.y="+pVel.normalized.y);
+		//searchkey: neotokyo
+
+
 		if (floorHit.collider != null) 
 		{
 			//m_Grounded = true;
@@ -1611,13 +1639,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (floorContact) 
 		{
-			if(!ceilingContact && antiTunneling && correctPos)
+			if(!ceilingContact && antiTunneling && posCorrection && ((m_FloorFootLength-floorHit.distance)>=0.011f))
 			{
 				Vector2 surfacePosition = floorHit.point;
 				surfacePosition.y += (m_FloorFootLength-m_MinEmbed);
 				this.transform.position = surfacePosition;
 				//print ("floorHit NORMAL INITIAL:    " + floorHit.normal);
-				//print ("ANTIFLOORING " + this.transform.position.y);
+				//print ("ANTIFLOORING " + (m_FloorFootLength-floorHit.distance));
 			}
 			m_Grounded = true;
 		}
@@ -1626,17 +1654,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_Grounded = false;
 		}
 
-		RaycastHit2D RightFootHit = Physics2D.Raycast (this.transform.position, Vector2.down,  m_RightFootLength, mask);
-		if (RightFootHit.collider != null) 
-		{
-			rightFootContact = true;
-			m_RightLine.endColor = Color.green;
-			m_RightLine.startColor = Color.green;
-		} 
-		else 
-		{
-			rightFootContact = false;
-		}
 
 		RaycastHit2D ceilingHit = Physics2D.Raycast (this.transform.position, Vector2.up,  m_CeilingFootLength, mask);
 		if (ceilingHit.collider != null) 
@@ -1655,7 +1672,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (ceilingContact) 
 		{
-			if(!floorContact && antiTunneling && correctPos)
+			if(!floorContact && antiTunneling && posCorrection && ((m_CeilingFootLength-ceilingHit.distance)>=0.011f))
 			{
 				Vector2 surfacePosition = ceilingHit.point;
 				surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
@@ -1667,6 +1684,30 @@ public class PlatformerCharacter2D : MonoBehaviour
 		else 
 		{
 			m_Ceilinged = false;
+		}
+
+		RaycastHit2D RightFootHit = Physics2D.Raycast (this.transform.position, Vector2.down,  m_RightFootLength, mask);
+		if (RightFootHit.collider != null) 
+		{
+			rightFootContact = true;
+			m_RightLine.endColor = Color.green;
+			m_RightLine.startColor = Color.green;
+		} 
+		else 
+		{
+			rightFootContact = false;
+		}
+
+		RaycastHit2D LeftFootHit = Physics2D.Raycast (this.transform.position, Vector2.down, m_LeftFootLength, mask);
+		if (LeftFootHit.collider != null)
+		{
+			leftFootContact = true;
+			m_LeftLine.endColor = Color.green;
+			m_LeftLine.startColor = Color.green;
+		} 
+		else
+		{
+			leftFootContact = false;
 		}
 
 	}
