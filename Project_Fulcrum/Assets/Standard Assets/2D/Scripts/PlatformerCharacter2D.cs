@@ -266,10 +266,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_Ceilinged = false;
 		}
 			
-		errorDetectingRecursionCount = 0; //Used for Collision();
+		errorDetectingRecursionCount = 0; //Used for Colli sion();
 
-		//print("Velocity before Collision: "+pVel);
-		//print("Position before Collision: "+this.transform.position);
+		//print("Velocity before Coll ision: "+pVel);
+		//print("Position before Coll ision: "+this.transform.position);
 
 		pVelPerFrame = pVel*Time.fixedDeltaTime;
 		remainingVelMult = 1f;
@@ -278,14 +278,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		Collision();
 	
-		//print("Per frame velocity at end of Collision() "+pVelPerFrame);
+		//print("Per frame velocity at end of Coll ision() "+pVelPerFrame);
 
 		//UpdateContactNormals(true);
 	
 		//print("Per frame velocity at end of updatecontactnormals "+pVelPerFrame);
 
 		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
-		//print("Distance moved to complete collision: "+distanceTravelled);
+		//print("Distance moved to complete colli sion: "+distanceTravelled);
 		//print("remainingMovement: "+remainingMovement);
 
 		remainingMovement -= distanceTravelled;
