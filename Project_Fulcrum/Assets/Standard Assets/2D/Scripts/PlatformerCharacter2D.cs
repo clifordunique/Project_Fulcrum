@@ -50,17 +50,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 	#region PHYSICS&RAYCASTING
 	[SerializeField] private LayerMask mask; // A mask determining what is ground to the character
 
-	private Transform m_LeftFoot; // Floor collider, left.
+	private Transform m_LeftFoot; // Ground collider, left.
 	private Vector2 m_LeftFootOffset;
 	private float m_LeftFootLength;
 
-	private Transform m_RightFoot; // Floor collider, right.
+	private Transform m_RightFoot; // Ground collider, right.
 	private Vector2 m_RightFootOffset;
 	private float m_RightFootLength;
 
-	private Transform m_FloorFoot; // Floor collider, middle.
-	private Vector2 m_FloorFootOffset; 
-	private float m_FloorFootLength;
+	private Transform m_GroundFoot; // Ground collider, middle.
+	private Vector2 m_GroundFootOffset; 
+	private float m_GroundFootLength;
 
 	private Transform m_CeilingFoot; // Ceiling collider, middle.
 	private Vector2 m_CeilingFootOffset;
@@ -87,7 +87,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField][ReadOnlyAttribute]private Vector2 remainingMovement;
 	[SerializeField][ReadOnlyAttribute]private bool leftFootContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightFootContact;
-	[SerializeField][ReadOnlyAttribute]private bool floorContact;
+	[SerializeField][ReadOnlyAttribute]private bool groundContact;
 	[SerializeField][ReadOnlyAttribute]private bool ceilingContact;
 	[SerializeField][ReadOnlyAttribute]private bool leftSideContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightSideContact;
@@ -127,7 +127,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField] private bool showContactIndicators;
 	private LineRenderer m_DebugLine; // Shows Velocity.
 	private LineRenderer m_LeftLine; 
-	private LineRenderer m_FloorLine;
+	private LineRenderer m_GroundLine;
 	private LineRenderer m_RightLine;
 	private LineRenderer m_CeilingLine;
 	private LineRenderer m_LeftSideLine;
@@ -157,11 +157,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RightFootOffset.y = m_RightFoot.position.y-playerOrigin.y;
 		m_RightFootLength = m_RightFootOffset.y; // Cheaty way of getting only their vertical length, since the sidefoot offset is technically diagonal.
 
-		m_FloorFoot = transform.Find("MidFoot");
-		m_FloorLine = m_FloorFoot.GetComponent<LineRenderer>();
-		m_FloorFootOffset.x = m_FloorFoot.position.x-playerOrigin.x;
-		m_FloorFootOffset.y = m_FloorFoot.position.y-playerOrigin.y;
-		m_FloorFootLength = m_FloorFootOffset.magnitude;
+		m_GroundFoot = transform.Find("MidFoot");
+		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
+		m_GroundFootOffset.x = m_GroundFoot.position.x-playerOrigin.x;
+		m_GroundFootOffset.y = m_GroundFoot.position.y-playerOrigin.y;
+		m_GroundFootLength = m_GroundFootOffset.magnitude;
 
 		m_CeilingFoot = transform.Find("CeilingFoot");
 		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
@@ -194,7 +194,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			m_CeilingLine.enabled = false;
 			m_LeftLine.enabled = false;
-			m_FloorLine.enabled = false;
+			m_GroundLine.enabled = false;
 			m_RightLine.enabled = false;
 			m_RightSideLine.enabled = false;
 			m_LeftSideLine.enabled = false;
@@ -205,9 +205,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 
     private void FixedUpdate()
 	{
-
-
-
 		Vector2 finalPos = new Vector2(this.transform.position.x+remainingMovement.x, this.transform.position.y+remainingMovement.y);
 		this.transform.position = finalPos;
 
@@ -239,6 +236,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 			CtrlH = 1;
 		}
 			
+		if (CtrlH < 0) 
+		{
+			facingDirection = false; //true means right (the direction), false means left.
+		} 
+		else if (CtrlH > 0)
+		{
+			facingDirection = true; //true means right (the direction), false means left.
+		}
+
 		//print("CTRLH=" + CtrlH);
 
 		UpdateContactNormals(true);
@@ -480,26 +486,26 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		/*
 		Vector2 debugLineVector = ((pVelPerFrame));
-		debugLineVector.y -= (m_FloorFootLength-m_MaxEmbed);
+		debugLineVector.y -= (m_GroundFootLength-m_MaxEmbed);
 		m_DebugLine.SetPosition(1, debugLineVector);
 		*/
 		Vector3[] debugLineVector = new Vector3[3];
 
 		debugLineVector[0].x = -distanceTravelled.x;
-		debugLineVector[0].y = -(distanceTravelled.y+(m_FloorFootLength-m_MaxEmbed));
+		debugLineVector[0].y = -(distanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
 		debugLineVector[0].z = 0f;
 
 		debugLineVector[1].x = 0f;
-		debugLineVector[1].y = -(m_FloorFootLength-m_MaxEmbed);
+		debugLineVector[1].y = -(m_GroundFootLength-m_MaxEmbed);
 		debugLineVector[1].z = 0f;
 
 		//Vector2 debugLineVector[2] = distanceTravelled+remainingMovement;
 		//debugLineVector[2].x = (pVelPerFrame.x);
-		//debugLineVector[2].y = (pVelPerFrame.y)-(m_FloorFootLength-m_MaxEmbed);
+		//debugLineVector[2].y = (pVelPerFrame.y)-(m_GroundFootLength-m_MaxEmbed);
 		//debugLineVector[2].z = 0f;
 
 		debugLineVector[2].x = remainingMovement.x;
-		debugLineVector[2].y = (remainingMovement.y)-(m_FloorFootLength-m_MaxEmbed);
+		debugLineVector[2].y = (remainingMovement.y)-(m_GroundFootLength-m_MaxEmbed);
 		debugLineVector[2].z = 0f;
 
 		m_DebugLine.SetPositions(debugLineVector);
@@ -590,7 +596,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	
 		#region collision raytesting
 
-		Vector2 adjustedBot = m_FloorFoot.position; // AdjustedBot marks the end of the floor raycast, but 0.02 shorter.
+		Vector2 adjustedBot = m_GroundFoot.position; // AdjustedBot marks the end of the ground raycast, but 0.02 shorter.
 		adjustedBot.y += m_MaxEmbed;
 
 		Vector2 adjustedTop = m_CeilingFoot.position; // AdjustedTop marks the end of the ceiling raycast, but 0.02 shorter.
@@ -602,7 +608,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		Vector2 adjustedRight = m_RightSide.position; // AdjustedRight marks the end of the right wall raycast, but 0.02 shorter.
 		adjustedRight.x -= m_MaxEmbed;
 
-		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
+		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
 
 		predictedLoc[0] = Physics2D.Raycast(adjustedBot, pVel, crntSpeed, mask); 	// Ground
@@ -742,7 +748,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				//print ("velocity:  " + pVel);
 				#endregion
 
-				//ceilingCheck = Physics2D.Raycast(adjustedTop, pVel, groundCheck.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the floor for an obstacle.
+				//ceilingCheck = Physics2D.Raycast(adjustedTop, pVel, groundCheck.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the ground for an obstacle.
 
 				//print("Velocity before impact: "+pVel);
 				Vector2 moveDirectionNormal = Perp(pVel.normalized);
@@ -754,13 +760,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if (predictedLoc[0].collider == null) 
 				{ // If player is airborne beforehand.
 					print("A2G");
-					GroundToGround(predictedLoc[0]);
+					ToGround(predictedLoc[0]);
 					return;
 				} 
 				else if ((moveDirectionNormal != predictedLoc[0].normal) && (moveDirectionNormal != invertedImpactNormal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					print("G2G");
-					GroundToGround(predictedLoc[0]);
+					ToGround(predictedLoc[0]);
 					return;
 				}
 				else 
@@ -779,7 +785,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			case 1:
 			{
 				print("CEILING_IMPACT");
-				AirToCeiling();
+				ToCeiling(predictedLoc[1]);
 				break;
 			}
 			case 2:
@@ -1013,7 +1019,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RightWalled = true;
 		Vector2 setCharPos = rightCheck.point;
 		setCharPos.x -= m_RightSideLength-m_MinEmbed; //Embed slightly in wall to ensure raycasts still hit wall.
-		//setCharPos.y -= m_MinEmbed;  //Embed slightly in floor to ensure raycasts still hit floor.
+		//setCharPos.y -= m_MinEmbed;  //Embed slightly in ground to ensure raycasts still hit ground.
 
 		//print("Sent to Pos:" + setCharPos);
 		//print("Sent to normal:" + groundCheck.normal);
@@ -1065,138 +1071,106 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print ("Final Position2:  " + this.transform.position);
 	}
 		
-	private bool AirToCeiling()
-	{
-		//print("Collision");
-		Vector2 ceilingPosition;
+	private void ToGround(RaycastHit2D groundCheck) 
+	{ //Sets the new position of the player and their ground normal.
 
-		if(pVel.x < 0)
+		//float testNumber = groundCheck.normal.y/groundCheck.normal.x;
+		//print(testNumber);
+		//print ("We've hit slope, sir!!");
+		//print ("groundCheck.normal=" + groundCheck.normal);
+
+		m_Grounded = true;
+		Vector2 setCharPos = groundCheck.point;
+		setCharPos.y = setCharPos.y+m_GroundFootLength-m_MinEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
+		this.transform.position = setCharPos;
+
+		//print("Sent to Pos:" + setCharPos);
+		//print("Sent to normal:" + groundCheck.normal);
+
+
+		//print ("Final Position:  " + this.transform.position);
+
+		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
+		if (groundCheck2.collider != null) 
 		{
-			//print("              MOVING LEFT!");
-			ceilingPosition.x = m_CeilingFoot.position.x;
-		}
-		else if(pVel.x > 0)
-		{
-			//print("              MOVING RIGHT!");
-			ceilingPosition.x = m_CeilingFoot.position.x;
-		}
-		else
-		{
-			//print("alternate");
-			ceilingPosition.x = m_CeilingFoot.position.x;
-		}
-
-		//ceilingPosition.x = m_CeilingFoot.position.x;
-		ceilingPosition.y = m_CeilingFoot.position.y;
-		//Vector2 futureMove = pVelPerFrame
-		//futureColliderPos.x += futureMove
-
-		RaycastHit2D ceilingCheck = Physics2D.Raycast(ceilingPosition, pVel, pVelPerFrame.magnitude, mask);
-		//print("Collision normal: "+ ceilingCheck.normal);
-
-
-		if(ceilingCheck.collider != null)
-		{
-			//print("Head collision.");
-			//print("Original Velocity: "+ pVel);
-			//print("Original location: "+ ceilingPosition);
-			//print("Predicted location: "+ ceilingCheck.point);
-			//print("Struck object: " + ceilingCheck.collider.transform.gameObject);
-			//ceilingCheck.collider.transform.gameObject.SetActive(false);
-
-			Vector2 originalPos = this.transform.position;
-
-			float hOffset = 0;
-			float vOffset = -m_CeilingFootLength;
-
-			if(pVel.y != 0)
-			{
-				vOffset = vOffset - m_MinEmbed;
+			if(antiTunneling){
+				Vector2 surfacePosition = groundCheck2.point;
+				surfacePosition.y += m_GroundFootLength-m_MinEmbed;
+				this.transform.position = surfacePosition;
 			}
-			else
-			{
-				vOffset = vOffset - m_MinEmbed;
-			}
-
-
-			if(pVel.x < 0)
-			{
-				//print("HOFFSET NEG VELO");
-				hOffset = -m_MinEmbed;
-			}
-			else if(pVel.x > 0)
-			{
-				//print("HOFFSET POS VELO");
-				hOffset = m_MinEmbed;
-			}
-
-			if(ceilingCheck.normal.y == 0)
-			{//If hitting a vertical wall.
-
-				print("Head hit wall. Ow!");
-				return false;
-
-				if(pVel.x < 0)
-				{
-					m_LeftWalled = true;
-					this.transform.position =  new Vector2(ceilingCheck.point.x+(m_LeftSideLength-m_MinEmbed), ceilingCheck.point.y-m_CeilingFootLength);
-				}
-				else if(pVel.x > 0)
-				{
-					m_RightWalled = true;
-					this.transform.position =  new Vector2(ceilingCheck.point.x-(m_RightSideLength-m_MinEmbed), ceilingCheck.point.y-m_CeilingFootLength);
-				}
-				else
-				{
-					print("Hit a wall without moving horizontally, somehow.");
-				}
-				pVel = new Vector2(0f, pVel.y);
-			}
-			else
-			{//If hitting a downward facing surface
-				this.transform.position = new Vector2(ceilingCheck.point.x+hOffset, ceilingCheck.point.y+vOffset);//+vOffset);
-				//print("normal.y != 0");
-
-				//Vector2 adjustedTop = m_CeilingFoot.position; // AdjustedBot marks the top of the middle ceiling raycast.
-				//adjustedTop.y -= m_MaxEmbed;
-
-				m_Ceilinged = true;
-				ceilingNormal = ceilingCheck.normal;
-				if(m_Grounded)
-				{
-					Wedged();
-				}
-
-				//print("After collision, Ceilinged = true, Grounded = " + m_Grounded);
-
-				/*
-				RaycastHit2D ceilingCheck2 = Physics2D.Raycast(adjustedBot, Vector2.up, 0.42f, mask);
-				if (ceilingCheck2.collider != null) {
-					print("THIS CODE RUNS I GUESS HEH");
-					m_Ceilinged = true;
-					//print ("ceilingCheck2.normal=" + ceilingCheck2.normal);
-					//print ("ceilingCheck2.collider=" + ceilingCheck2.transform.gameObject);
-					ceilingNormal  = ceilingCheck2.normal;
-					//Traction(CtrlH);
-					//Collision();
-				} 
-				else 
-				{
-					m_Ceilinged = false;
-					//print ("GroundCheck2=null!");
-				}
-				*/
-			}
-
-			//this.transform.position =  new Vector2(ceilingCheck.point.x+m_MinEmbed, ceilingCheck.point.y+0.2f);
-			//pVel = new Vector2(0f, pVel.y);
-			//Debug.Break();
-			return true;
 		}
 		else
 		{
-			return false;
+			//print ("Impact Pos:  " + groundCheck.point);
+			//print("Reflected back into the air!");
+			//print("Transform position: " + this.transform.position);
+			//print("RB2D position: " + m_Rigidbody2D.position);
+			//print("Velocity : " + pVel);
+			//print("Speed : " + pVel.magnitude);
+			//print(" ");
+			//print(" ");	
+			m_Grounded = false;
 		}
+
+		if(groundCheck.normal.y == 0f)
+		{//If vertical surface
+			//throw new Exception("Existence is suffering");
+			print("GtG VERTICAL :O");
+		}
+
+		groundNormal = groundCheck2.normal;
+		//print ("Final Position2:  " + this.transform.position);
+	}
+
+	private void ToCeiling(RaycastHit2D ceilingCheck) 
+	{ //Sets the new position of the player when they hit the ceiling.
+
+		//float testNumber = ceilingCheck.normal.y/ceilingCheck.normal.x;
+		//print(testNumber);
+		//print ("We've hit slope, sir!!");
+		//print ("ceilingCheck.normal=" + ceilingCheck.normal);
+
+		m_Ceilinged = true;
+		Vector2 setCharPos = ceilingCheck.point;
+		setCharPos.y -= (m_GroundFootLength-m_MinEmbed); //Embed slightly in ceiling to ensure raycasts still hit ceiling.
+		this.transform.position = setCharPos;
+
+		//print("Sent to Pos:" + setCharPos);
+		//print("Sent to normal:" + ceilingCheck.normal);
+
+
+		//print ("Final Position:  " + this.transform.position);
+
+		RaycastHit2D ceilingCheck2 = Physics2D.Raycast(this.transform.position, Vector2.up, m_GroundFootLength, mask);
+		if (ceilingCheck2.collider != null) 
+		{
+			if(antiTunneling){
+				Vector2 surfacePosition = ceilingCheck2.point;
+				surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
+				this.transform.position = surfacePosition;
+			}
+		}
+		else
+		{
+			//print ("Impact Pos:  " + ceilingCheck.point);
+			//print("Reflected back into the air!");
+			//print("Transform position: " + this.transform.position);
+			//print("RB2D position: " + m_Rigidbody2D.position);
+			//print("Velocity : " + pVel);
+			//print("Speed : " + pVel.magnitude);
+			//print(" ");
+			//print(" ");	
+			m_Ceilinged = false;
+		}
+
+		if(ceilingCheck.normal.y == 0f)
+		{//If vertical surface
+			//throw new Exception("Existence is suffering");
+			print("GtG VERTICAL :O");
+		}
+
+		ceilingNormal = ceilingCheck2.normal;
+		//print ("Final Position2:  " + this.transform.position);
 	}
 
 	private Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)
@@ -1224,57 +1198,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		Vector2 direction = inputVelocity.normalized;
 		newVelocity = direction * speed;
 		return newVelocity;
-	}
-
-	private void GroundToGround(RaycastHit2D groundCheck) 
-	{ //Sets the new position of the player and their ground normal.
-		
-		//float testNumber = groundCheck.normal.y/groundCheck.normal.x;
-		//print(testNumber);
-		//print ("We've hit slope, sir!!");
-		//print ("groundCheck.normal=" + groundCheck.normal);
-
-		m_Grounded = true;
-		Vector2 setCharPos = groundCheck.point;
-		setCharPos.y = setCharPos.y+m_FloorFootLength-m_MinEmbed; //Embed slightly in floor to ensure raycasts still hit floor.
-		this.transform.position = setCharPos;
-
-		//print("Sent to Pos:" + setCharPos);
-		//print("Sent to normal:" + groundCheck.normal);
-
-	
-		//print ("Final Position:  " + this.transform.position);
-
-		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
-		if (groundCheck2.collider != null) 
-		{
-			if(antiTunneling){
-				Vector2 surfacePosition = groundCheck2.point;
-				surfacePosition.y += m_FloorFootLength-m_MinEmbed;
-				this.transform.position = surfacePosition;
-			}
-		}
-		else
-		{
-			//print ("Impact Pos:  " + groundCheck.point);
-			//print("Reflected back into the air!");
-			//print("Transform position: " + this.transform.position);
-			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + pVel);
-			//print("Speed : " + pVel.magnitude);
-			//print(" ");
-			//print(" ");	
-			m_Grounded = false;
-		}
-
-		if(groundCheck.normal.y == 0f)
-		{//If vertical surface
-			//throw new Exception("Existence is suffering");
-			print("GtG VERTICAL :O");
-		}
-
-		groundNormal = groundCheck2.normal;
-		//print ("Final Position2:  " + this.transform.position);
 	}
 
 	private void DirectionChange(Vector2 newNormal)
@@ -1399,13 +1322,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		print("Wedged!");
 		RaycastHit2D ceilingHit;
-		RaycastHit2D floorHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
+		RaycastHit2D groundHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 		float embedDepth;
 		Vector2 gPerp;
 		Vector2 cPerp;
 		Vector2 moveAmount = new Vector2(0,0);
 
-		if(floorHit.collider == null)
+		if(groundHit.collider == null)
 		{
 			//print("Bottom not wedged, using newNormal!");
 			gPerp.x = groundNormal.x;
@@ -1413,11 +1336,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			gPerp.x = floorHit.normal.y;
-			gPerp.y = -floorHit.normal.x;
-			Vector2 floorPosition = floorHit.point;
-			floorPosition.y += m_FloorFootLength-m_MinEmbed;
-			this.transform.position = floorPosition;
+			gPerp.x = groundHit.normal.y;
+			gPerp.y = -groundHit.normal.x;
+			Vector2 groundPosition = groundHit.point;
+			groundPosition.y += m_GroundFootLength-m_MinEmbed;
+			this.transform.position = groundPosition;
 			//print("Hitting bottom, shifting up!");
 		}
 
@@ -1487,14 +1410,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		m_Grounded = false;
 		m_Ceilinged = false;
+		m_LeftWalled = false;
+		m_RightWalled = false;
 
-		//m_SpriteRenderer.color = Color.white;
 		m_LeftLine.endColor = Color.red;
 		m_LeftLine.startColor = Color.red;
 		m_RightLine.endColor = Color.red;
 		m_RightLine.startColor = Color.red;
-		m_FloorLine.endColor = Color.red;
-		m_FloorLine.startColor = Color.red;
+		m_GroundLine.endColor = Color.red;
+		m_GroundLine.startColor = Color.red;
 		m_CeilingLine.endColor = Color.red;
 		m_CeilingLine.startColor = Color.red;
 		m_LeftSideLine.endColor = Color.red;
@@ -1502,20 +1426,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RightSideLine.endColor = Color.red;
 		m_RightSideLine.startColor = Color.red;
 
-		if (CtrlH < 0) 
-		{
-			facingDirection = false; //true means right (the direction), false means left.
-		} 
-		else if (CtrlH > 0)
-		{
-			facingDirection = true; //true means right (the direction), false means left.
-		}
+		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
+		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask); 	// Ground
+		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);  	// Ceiling
+		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask); 	// Left
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);	// Right  
 
-
-		RaycastHit2D leftSideHit = Physics2D.Raycast (this.transform.position, Vector2.left, m_LeftSideLength, mask);
-		if (leftSideHit.collider != null)
+		if (directionContacts[2].collider != null)
 		{
-			leftNormal = leftSideHit.normal;
+			leftNormal = directionContacts[2].normal;
 			leftSideContact = true;
 			m_LeftSideLine.endColor = Color.green;
 			m_LeftSideLine.startColor = Color.green;
@@ -1527,30 +1446,22 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (leftSideContact) 
 		{
-			//print ("leftSideContact" + leftSideHit.normal);
-			if(!rightSideContact && antiTunneling && posCorrection && ((m_LeftSideLength-leftSideHit.distance)>=0.011f))
+			//print ("leftSideContact" + directionContacts[2].normal);
+			/*
+			if(!rightSideContact && antiTunneling && posCorrection && ((m_LeftSideLength-directionContacts[2].distance)>=0.011f))
 			{
-
-				Vector2 surfacePosition = leftSideHit.point;
+				Vector2 surfacePosition = directionContacts[2].point;
 				surfacePosition.x += ((m_LeftSideLength)-m_MinEmbed);
 				this.transform.position = surfacePosition;
-				//print("DISTANCE TO HIT:"+leftSideHit.distance);
-				//print("Remaining distance:" + (m_LeftSideLength-leftSideHit.distance));
-				//print ("ANTIWALLING " + this.transform.position.y);
-				//print ("ANTIWALLING " + this.transform.position.x);
 			}
+			*/
 			print("leftwalled added");
 			m_LeftWalled = true;
 		}
-		else 
+			
+		if (directionContacts[3].collider != null)
 		{
-			m_LeftWalled = false;
-		}
-
-		RaycastHit2D rightSideHit = Physics2D.Raycast (this.transform.position, Vector2.right, m_RightSideLength, mask);
-		if (rightSideHit.collider != null)
-		{
-			rightNormal = rightSideHit.normal;
+			rightNormal = directionContacts[3].normal;
 			rightSideContact = true;
 			m_RightSideLine.endColor = Color.green;
 			m_RightSideLine.startColor = Color.green;
@@ -1562,90 +1473,70 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (rightSideContact) 
 		{
-			//print ("leftSideContact" + leftSideHit.normal);
-			if(!leftSideContact && antiTunneling && posCorrection && ((m_RightSideLength-rightSideHit.distance)>=0.011f))
+			//print ("leftSideContact" + directionContacts[2].normal);
+			/*
+			if(!leftSideContact && antiTunneling && posCorrection && ((m_RightSideLength-directionContacts[3].distance)>=0.011f))
 			{
-				Vector2 surfacePosition = rightSideHit.point;
+				Vector2 surfacePosition = directionContacts[3].point;
 				surfacePosition.x -= ((m_RightSideLength)-m_MinEmbed);
 				surfacePosition.y -= m_MinEmbed;
 				this.transform.position = surfacePosition;
-
-				//print ("ANTIWALLING " + (2*m_RightSideLength));
 			}
+			*/
 			m_RightWalled = true;
 		}
-		else 
-		{
-			m_RightWalled = false;
-		}
 			
-		RaycastHit2D floorHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_FloorFootLength, mask);
-
-		//print("Floormal="+Perp(floorHit.normal).y);
-		//print("pVel.n.y="+pVel.normalized.y);
-		//searchkey: neotokyo
-
-
-		if (floorHit.collider != null) 
+		if (directionContacts[0].collider != null) 
 		{
-			//m_Grounded = true;
-			floorContact = true;
-			m_FloorLine.endColor = Color.green;
-			m_FloorLine.startColor = Color.green;
-			groundNormal = floorHit.normal;
+			groundContact = true;
+			m_GroundLine.endColor = Color.green;
+			m_GroundLine.startColor = Color.green;
+			groundNormal = directionContacts[0].normal;
 		} 
 		else 
 		{
-			floorContact = false;
+			groundContact = false;
 		}
 
-		if (floorContact) 
+		if (groundContact) 
 		{
-			if(!ceilingContact && antiTunneling && posCorrection && ((m_FloorFootLength-floorHit.distance)>=0.011f))
+			/*
+			if(!ceilingContact && antiTunneling && posCorrection && ((m_GroundFootLength-directionContacts[0].distance)>=0.011f))
 			{
-				Vector2 surfacePosition = floorHit.point;
-				surfacePosition.y += (m_FloorFootLength-m_MinEmbed);
+				Vector2 surfacePosition = directionContacts[0].point;
+				surfacePosition.y += (m_GroundFootLength-m_MinEmbed);
 				this.transform.position = surfacePosition;
-				//print ("floorHit NORMAL INITIAL:    " + floorHit.normal);
-				//print ("ANTIFLOORING " + (m_FloorFootLength-floorHit.distance));
+				//print ("directionContacts[0] NORMAL INITIAL:    " + directionContacts[0].normal);
+				//print ("ANTIGROUNDING " + (m_GroundFootLength-directionContacts[0].distance));
 			}
+			*/
 			m_Grounded = true;
 		}
-		else 
+			
+		if (directionContacts[1].collider != null) 
 		{
-			m_Grounded = false;
-		}
-
-
-		RaycastHit2D ceilingHit = Physics2D.Raycast (this.transform.position, Vector2.up,  m_CeilingFootLength, mask);
-		if (ceilingHit.collider != null) 
-		{
-			//m_Ceilinged = true;
 			ceilingContact = true;
 			m_CeilingLine.endColor = Color.green;
 			m_CeilingLine.startColor = Color.green;
-			ceilingNormal = ceilingHit.normal;
+			ceilingNormal = directionContacts[1].normal;
 		} 
 		else 
 		{
-			//m_Ceilinged = false;
 			ceilingContact = false;
 		}
 
 		if (ceilingContact) 
 		{
-			if(!floorContact && antiTunneling && posCorrection && ((m_CeilingFootLength-ceilingHit.distance)>=0.011f))
+			/*
+			if(!groundContact && antiTunneling && posCorrection && ((m_CeilingFootLength-directionContacts[1].distance)>=0.011f))
 			{
-				Vector2 surfacePosition = ceilingHit.point;
+				Vector2 surfacePosition = directionContacts[1].point;
 				surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
 				this.transform.position = surfacePosition;
-				//print ("HEAD IMPACTED IN SURFACE " + ceilingHit.normal);
+				//print ("HEAD IMPACTED IN SURFACE " + directionContacts[1].normal);
 			}
+			*/
 			m_Ceilinged = true;
-		}
-		else 
-		{
-			m_Ceilinged = false;
 		}
 
 		RaycastHit2D RightFootHit = Physics2D.Raycast (this.transform.position, Vector2.down,  m_RightFootLength, mask);
@@ -1672,6 +1563,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 			leftFootContact = false;
 		}
 
+	}
+
+	private void AntiTunneling(RaycastHit2D[] direction)
+	{
+		
 	}
 
 	private Vector2 SuperUnwedger(Vector2 cPerp, Vector2 gPerp, bool cornerIsLeft, float embedDistance)
@@ -1705,7 +1601,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the bottom vector so that its x = -1.
 				if(gPerp.x == 0)
 				{
-					throw new Exception("Your floor has no horizontality. What are you even doing?");
+					throw new Exception("Your ground has no horizontality. What are you even doing?");
 				}
 				else
 				{
@@ -1743,7 +1639,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the bottom vector so that its x = -1.
 				if(gPerp.x == 0)
 				{
-					throw new Exception("Your floor has no horizontality. What are you even doing?");
+					throw new Exception("Your ground has no horizontality. What are you even doing?");
 				}
 				else
 				{
