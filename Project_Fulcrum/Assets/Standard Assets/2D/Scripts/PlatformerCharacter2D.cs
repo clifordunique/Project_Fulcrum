@@ -77,7 +77,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	[SerializeField][ReadOnlyAttribute]private float remainingVelMult;
 	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
-	[SerializeField][ReadOnlyAttribute]private Vector2 pVelPerFrame;
 	[SerializeField][ReadOnlyAttribute]private Vector2 remainingMovement;
 	[SerializeField][ReadOnlyAttribute]private bool groundContact;
 	[SerializeField][ReadOnlyAttribute]private bool ceilingContact;
@@ -185,7 +184,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		this.transform.position = finalPos;
 
 		//m_Rigidbody2D.MovePosition(finalPos);
-		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVelPerFrame.x), this.transform.position.y+(pVelPerFrame.y));
+		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVel*Time.fixedDeltaTime.x), this.transform.position.y+(pVel*Time.fixedDeltaTime.y));
 		//print("Initial Pos: " + startingPos);
 		//print("Initial Vel: " +  pVel);
 
@@ -225,16 +224,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		UpdateContactNormals(true);
 
-		/*
-		if(m_Ceilinged&&m_Grounded)
-		{
-			if(pVel.magnitude != 0)
-			{
-				VertWedged();
-			}
-			m_Ceilinged = false; // Remove when safe
-		}
-		*/	
 		if(m_Jump)
 		{
 			Jump(CtrlH);
@@ -243,7 +232,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if(m_Grounded)
 		{//Locomotion!
 			Traction(CtrlH);
-		}else
+		}
+		//else if(m_RightWalled || m_LeftWalled)
+		//{//Wallsliding!
+		//	Traction(CtrlH);
+		//}
+		else
 		{//Gravity!
 			pVel = new Vector2 (pVel.x, pVel.y - 1);
 			m_Ceilinged = false;
@@ -254,33 +248,39 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Velocity before Coll ision: "+pVel);
 		//print("Position before Coll ision: "+this.transform.position);
 
-		pVelPerFrame = pVel*Time.fixedDeltaTime;
 		remainingVelMult = 1f;
-		remainingMovement = pVelPerFrame;
+		remainingMovement = pVel*Time.fixedDeltaTime;
 		Vector2 startingPos = this.transform.position;
+
+		//print("remainingMovement before collision: "+remainingMovement);
 
 		Collision();
 	
-		//print("Per frame velocity at end of Coll ision() "+pVelPerFrame);
+		//print("Per frame velocity at end of Collizion() "+pVel*Time.fixedDeltaTime);
 
 		//UpdateContactNormals(true);
 	
-		//print("Per frame velocity at end of updatecontactnormals "+pVelPerFrame);
+		//print("Per frame velocity at end of updatecontactnormals "+pVel*Time.fixedDeltaTime);
+
+		//print("remainingMovement after collision: "+remainingMovement);
 
 		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
-		//print("Distance moved to complete colli sion: "+distanceTravelled);
+		//print("distanceTravelled: "+distanceTravelled);
 		//print("remainingMovement: "+remainingMovement);
 
 		remainingMovement -= distanceTravelled;
 
-		if(pVelPerFrame.magnitude>0)
+		//print("remainingMovement after removing distancetravelled: "+remainingMovement);
+
+		if(pVel.magnitude*Time.fixedDeltaTime>0)
 		{
-			remainingVelMult = (pVelPerFrame.magnitude-distanceTravelled.magnitude)/pVelPerFrame.magnitude;
+			remainingVelMult = ((pVel.magnitude*Time.fixedDeltaTime)-distanceTravelled.magnitude)/(pVel.magnitude*Time.fixedDeltaTime);
 		}
 		else
 		{
 			remainingVelMult = 1f;
 		}
+
 		//print("remainingVelMult: "+remainingVelMult);
 
 		//print("movement after distance travelled: "+remainingMovement);
@@ -290,13 +290,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			if(m_Grounded)
 			{
 				//print("Both!");
-				if(pVel.y > 0)
+				if(pVel.x >= 0)
 				{
 					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
 					//print("LS="+leftSteepness);
 					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
 					//print("GS="+groundSteepness);
-					if(leftSteepness >= groundSteepness)
+					if(leftSteepness <= groundSteepness)
 					{
 						DirectionChange(leftNormal);
 					}
@@ -305,14 +305,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 						DirectionChange(groundNormal);
 					}
 				}
-				else if(pVel.y < 0)
+				else if(pVel.x < 0)
 				{
 					//print("DESCENDING IMPACT");
 					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
 					//print("LS="+leftSteepness);
 					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
 					//print("GS="+groundSteepness);
-					if(leftSteepness <= groundSteepness)
+					if(leftSteepness >= groundSteepness)
 					{
 						//print("Chose left");
 						DirectionChange(leftNormal);
@@ -385,11 +385,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			if(m_Grounded)
 			{
-				//print("Both!");
-				if(pVel.y > 0)
+				if(pVel.x > 0) //If moving right, use the steepest angle colliding surface.
 				{
 					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
-					//print("LS="+rightSteepness);
+					//print("RS="+rightSteepness);
 					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
 					//print("GS="+groundSteepness);
 					if(rightSteepness >= groundSteepness)
@@ -401,21 +400,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 						DirectionChange(groundNormal);
 					}
 				}
-				else if(pVel.y < 0)
+				else if(pVel.x <= 0) //If moving left or down, use the shallowest angle colliding surface.
 				{
-					//print("DESCENDING IMPACT");
 					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
-					//print("LS="+rightSteepness);
+					print("RS="+rightSteepness);
 					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
-					//print("GS="+groundSteepness);
+					print("GS="+groundSteepness);
 					if(rightSteepness <= groundSteepness)
 					{
-						//print("Chose right");
+						print("Chose right");
 						DirectionChange(rightNormal);
 					}
 					else
 					{
-						//print("Chose ground");
+						print("Chose ground");
 						DirectionChange(groundNormal);
 					}
 				}
@@ -477,7 +475,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//DirectionChange(rightNormal);
 		}
 
-		if(m_Ceilinged&&!m_RightWalled&&!m_LeftWalled)
+		if(m_Ceilinged&&!m_RightWalled&&!m_LeftWalled&&!m_Grounded)
 		{
 			//print("CeilingMovement");
 			DirectionChange(ceilingNormal);
@@ -486,13 +484,29 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if (m_Grounded&&!m_RightWalled&&!m_LeftWalled) //Handles velocity along ground surface.
 		{
 			//print("GroundMovement");
-			DirectionChange(groundNormal);
+
+			if(m_Ceilinged)
+			{
+				if(pVel.y > 0) //If moving up, use the ceiling surface
+				{
+					DirectionChange(ceilingNormal);
+				}
+				else if(pVel.y <= 0) //If moving down or horiz, use the ground colliding surface.
+				{
+					DirectionChange(groundNormal);
+				}
+			}
+			else
+			{
+				DirectionChange(groundNormal);
+			}
 		}
 
 
 		//print("Speed this frame: "+pVel.magnitude);
-	
-		//print("Per frame velocity at end of physics frame: "+pVelPerFrame);
+		remainingMovement = pVel*remainingVelMult*Time.fixedDeltaTime;
+		//print("Per frame velocity at end of physics frame: "+pVel*Time.fixedDeltaTime);
+		//print("remainingMovement at end of physics frame: "+remainingMovement);
 		//print("Pos at end of physics frame: "+this.transform.position);
 		//print("##############################################################################################");
 
@@ -550,7 +564,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		/*
-		Vector2 debugLineVector = ((pVelPerFrame));
+		Vector2 debugLineVector = ((pVel*Time.fixedDeltaTime));
 		debugLineVector.y -= (m_GroundFootLength-m_MaxEmbed);
 		m_DebugLine.SetPosition(1, debugLineVector);
 		*/
@@ -563,11 +577,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		debugLineVector[1].x = 0f;
 		debugLineVector[1].y = -(m_GroundFootLength-m_MaxEmbed);
 		debugLineVector[1].z = 0f;
-
-		//Vector2 debugLineVector[2] = distanceTravelled+remainingMovement;
-		//debugLineVector[2].x = (pVelPerFrame.x);
-		//debugLineVector[2].y = (pVelPerFrame.y)-(m_GroundFootLength-m_MaxEmbed);
-		//debugLineVector[2].z = 0f;
 
 		debugLineVector[2].x = remainingMovement.x;
 		debugLineVector[2].y = (remainingMovement.y)-(m_GroundFootLength-m_MaxEmbed);
@@ -637,7 +646,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void Collision()
 	{
-		float crntSpeed = pVelPerFrame.magnitude; //Current speed.
+		float crntSpeed = pVel.magnitude*Time.fixedDeltaTime; //Current speed.
 		//print("DC Executing");
 		errorDetectingRecursionCount++;
 
@@ -649,13 +658,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			
 		if(pVel.x > 0.001f)
 		{
-			m_LeftWalled = false;
+			//m_LeftWalled = false;
 			m_LeftWallBlocked = false;
 		}
 
 		if(pVel.x < -0.001f)
 		{
-			m_RightWalled = false;
+			//m_RightWalled = false;
 			m_RightWallBlocked = false;
 		}
 	
@@ -783,10 +792,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(collisionNum>0)
 		{
-			print("TOTAL COLLISIONS: "+collisionNum);
+			//print("TOTAL COLLISIONS: "+collisionNum);
 		}
 
 		#endregion
+
+		Vector2 moveDirectionNormal = Perp(pVel.normalized);
+		Vector2 invertedDirectionNormal = -moveDirectionNormal;//This is made in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
 
 		switch (shortestRaycast)
 		{
@@ -799,81 +811,78 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				//If you're going to hit something with your feet.
 				print("FOOT_IMPACT");
-				Vector2 testperp = Perp(predictedLoc[0].normal);
-				float steepnessAngle = Vector2.Angle(Vector2.right,testperp);
-
-				#region collision debug
-				//print("groundAngle:"+steepnessAngle);
-				//GameObject collisionPoint = new GameObject("Impact");
-				//collisionPoint.transform.position = new Vector2(groundCheck.point.x, groundCheck.point.y);
-				//GameObject rayStartPoint = new GameObject("Ray");
-				//rayStartPoint.transform.position = new Vector2(adjustedBot.x, adjustedBot.y);
-				//print("Impact!");
-				//print ("Player Pos:  " + this.transform.position);
-				//print ("velocity:  " + pVel);
-				#endregion
-
-				//ceilingCheck = Physics2D.Raycast(adjustedTop, pVel, groundCheck.distance, mask); //Collider checks go only as far as the first angle correction, so they don't mistake the slope of the ground for an obstacle.
-
 				//print("Velocity before impact: "+pVel);
-				Vector2 moveDirectionNormal = Perp(pVel.normalized);
-
-				Vector2 invertedImpactNormal;//This is done in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
-				invertedImpactNormal.x = -predictedLoc[0].normal.x; //Inverting the normal.
-				invertedImpactNormal.y = -predictedLoc[0].normal.y; //Inverting the normal.
-
-				if (predictedLoc[0].collider == null) 
-				{ // If player is airborne beforehand.
-					print("A2G");
-					ToGround(predictedLoc[0]);
-					return;
-				} 
-				else if ((moveDirectionNormal != predictedLoc[0].normal) && (moveDirectionNormal != invertedImpactNormal)) 
+				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					print("G2G");
 					ToGround(predictedLoc[0]);
 					return;
 				}
 				else 
 				{
-					if(moveDirectionNormal == invertedImpactNormal)
+					if(invertedDirectionNormal == predictedLoc[0].normal)
 					{
-						print("INVERTED GROUND IMPACT NORMAL DETECTED!");
+						throw new Exception("INVERTED GROUND IMPACT NORMAL DETECTED!");
 					}
-					//print ("("+moveDirectionNormal+")!=("+predictedLoc[0].normal+")");
-					//print ("("+moveDirectionNormal+")!=("+invertedImpactNormal+")");
-					//print ("Same surface, no trajectory change needed");
 					return;
 				}
 				break;
 			}
 			case 1:
 			{
-				print("CEILING_IMPACT");
-				ToCeiling(predictedLoc[1]);
+
+				if ((moveDirectionNormal != predictedLoc[1].normal) && (invertedDirectionNormal != predictedLoc[1].normal)) 
+				{ // If the slope you're hitting is different than your current slope.
+					print("CEILING_IMPACT");
+					ToCeiling(predictedLoc[1]);
+					return;
+				}
+				else 
+				{
+					if(invertedDirectionNormal == predictedLoc[1].normal)
+					{
+						throw new Exception("INVERTED CEILING IMPACT NORMAL DETECTED!");
+					}
+					return;
+				}
 				break;
 			}
 			case 2:
 			{
-				print("LEFT_IMPACT");
-				if(predictedLoc[0]) //If hitting wall and ground.
-				{
+				if ((moveDirectionNormal != predictedLoc[2].normal) && (invertedDirectionNormal != predictedLoc[2].normal)) 
+				{ // If the slope you're hitting is different than your current slope.
+					print("LEFT_IMPACT");
 					ToLeftWall(predictedLoc[2]);
+					return;
 				}
-				else if(predictedLoc[1]) //If hitting wall and ceiling.
+				else 
 				{
-					ToLeftWall(predictedLoc[2]);
-				}
-				else  //If simply hitting wall.
-				{
-					ToLeftWall(predictedLoc[2]);
+					if(invertedDirectionNormal == predictedLoc[2].normal)
+					{
+						throw new Exception("INVERTED LEFT IMPACT NORMAL DETECTED!");
+					}
+					return;
 				}
 				break;
 			}
 			case 3:
 			{
-				print("RIGHT_IMPACT");
-				ToRightWall(predictedLoc[3]);
+				if ((moveDirectionNormal != predictedLoc[3].normal) && (invertedDirectionNormal != predictedLoc[3].normal)) 
+				{ // If the slope you're hitting is different than your current slope.
+					print("RIGHT_IMPACT");
+					//print("predictedLoc[3].normal=("+predictedLoc[3].normal.x+","+predictedLoc[3].normal.y+")");
+					//print("moveDirectionNormal=("+moveDirectionNormal.x+","+moveDirectionNormal.y+")");
+					//print("moveDirectionNormal="+moveDirectionNormal);
+					ToRightWall(predictedLoc[3]);
+					return;
+				}
+				else 
+				{
+					if(invertedDirectionNormal == predictedLoc[3].normal)
+					{
+						throw new Exception("INVERTED RIGHT IMPACT NORMAL DETECTED!");
+					}
+					return;
+				}
 				break;
 			}
 			default:
@@ -911,21 +920,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("Traction");
 		if( ((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)) )
 		{// If running at an obstruction you're up against.
-			print("Running against a wall.");
+			//print("Running against a wall.");
 			horizontalInput = 0;
 		}
-		/*else
-		{
-			if((m_LeftWalled)&&(horizontalInput > 0))
-			{
-				//print("leftwalled removed from traction");
-				m_LeftWalled = false;
-			}
-			if((m_RightWalled)&&(horizontalInput < 0))
-			{
-				m_RightWalled = false;
-			}
-		}*/
 
 		//print("Traction executing");
 		float rawSpeed = pVel.magnitude;
@@ -1054,22 +1051,29 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			//print ("Impact Pos:  " + groundCheck.point);
-			//print("Reflected back into the air!");
-			//print("Transform position: " + this.transform.position);
-			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + pVel);
-			//print("Speed : " + pVel.magnitude);
-			//print(" ");
-			//print(" ");	
 			m_LeftWalled = false;
 		}
-			
-		//groundNormal = groundCheck2.normal;
-		//roundNormal = groundCheck.normal;
 
 
 		leftNormal = leftCheck2.normal;
+
+		if(m_Grounded)
+		{
+			print("LeftGroundWedge detected during left collision.");
+			OmniWedge(0,2);
+		}
+
+		if(m_Ceilinged)
+		{
+			print("LeftCeilingWedge detected during left collision.");
+			OmniWedge(2,1);
+		}
+
+		if(m_RightWalled)
+		{
+			print("THERE'S PROBLEMS.");
+			//OmniWedge(2,3);
+		}
 
 		//print ("Final Position2:  " + this.transform.position);
 	}
@@ -1117,24 +1121,27 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_RightWalled = false;
 		}
 
-		/*
-		if(rightCheck.normal.y == 0f)
-		{//If vertical surface
-			if(pVel.x > 0)
-			{
-				pVel = new Vector2(0, pVel.y);
-			}
-			//throw new Exception("Existence is suffering");
-			print("LEFT VERTICAL");
-		}
-		*/
-
-		//groundNormal = groundCheck2.normal;
-		//roundNormal = groundCheck.normal;
-
-
 		rightNormal = rightCheck2.normal;
 		//print ("Final Position2:  " + this.transform.position);
+
+		if(m_Grounded)
+		{
+			print("RightGroundWedge detected during right collision.");
+			OmniWedge(0,3);
+		}
+
+		if(m_LeftWalled)
+		{
+			print("THERE'S PROBLEMS.");
+			//OmniWedge(2,3);
+		}
+
+		if(m_Ceilinged)
+		{
+			print("RightCeilingWedge detected during right collision.");
+			OmniWedge(3,1);
+		}
+
 	}
 		
 	private void ToGround(RaycastHit2D groundCheck) 
@@ -1185,6 +1192,25 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		groundNormal = groundCheck2.normal;
+
+		if(m_Ceilinged)
+		{
+			print("CeilGroundWedge detected during ground collision.");
+			OmniWedge(0,1);
+		}
+
+		if(m_LeftWalled)
+		{
+			print("LeftGroundWedge detected during ground collision.");
+			OmniWedge(0,2);
+		}
+
+		if(m_RightWalled)
+		{
+			print("RightGroundWedge detected during groundcollision.");
+			OmniWedge(0,3);
+		}
+
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -1193,19 +1219,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		//float testNumber = ceilingCheck.normal.y/ceilingCheck.normal.x;
 		//print(testNumber);
-		//print ("We've hit slope, sir!!");
+		//print ("We've hit ceiling, sir!!");
 		//print ("ceilingCheck.normal=" + ceilingCheck.normal);
 
 		m_Ceilinged = true;
 		Vector2 setCharPos = ceilingCheck.point;
 		setCharPos.y -= (m_GroundFootLength-m_MinEmbed); //Embed slightly in ceiling to ensure raycasts still hit ceiling.
 		this.transform.position = setCharPos;
-
-		//print("Sent to Pos:" + setCharPos);
-		//print("Sent to normal:" + ceilingCheck.normal);
-
-
-		//print ("Final Position:  " + this.transform.position);
 
 		RaycastHit2D ceilingCheck2 = Physics2D.Raycast(this.transform.position, Vector2.up, m_GroundFootLength, mask);
 		if (ceilingCheck2.collider != null) 
@@ -1218,24 +1238,35 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			//print ("Impact Pos:  " + ceilingCheck.point);
-			//print("Reflected back into the air!");
-			//print("Transform position: " + this.transform.position);
-			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + pVel);
-			//print("Speed : " + pVel.magnitude);
-			//print(" ");
-			//print(" ");	
+			print("Ceilinged = false?");
 			m_Ceilinged = false;
 		}
 
 		if(ceilingCheck.normal.y == 0f)
 		{//If vertical surface
 			//throw new Exception("Existence is suffering");
-			print("GtG VERTICAL :O");
+			print("CEILING VERTICAL :O");
 		}
 
 		ceilingNormal = ceilingCheck2.normal;
+
+		if(m_Grounded)
+		{
+			print("CeilGroundWedge detected during ceiling collision.");
+			OmniWedge(0,1);
+		}
+
+		if(m_LeftWalled)
+		{
+			print("LeftCeilWedge detected during ceiling collision.");
+			OmniWedge(2,1);
+		}
+
+		if(m_RightWalled)
+		{
+			print("RightGroundWedge detected during ceiling collision.");
+			OmniWedge(3,1);
+		}
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
@@ -1369,9 +1400,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		//print("SPLMLT " + speedLossMult);
-		pVel = SetSpeed(pVel , initialSpeed*speedLossMult);
-		remainingMovement = pVel*remainingVelMult*Time.fixedDeltaTime;
-		//print ("GT Vel:  " + pVel);
+		pVel = SetSpeed(pVel, initialSpeed*speedLossMult);
+
+		//print ("DirChange Vel:  " + pVel);
 	}
 
 	private void CameraControl()
@@ -1380,95 +1411,53 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_MainCamera.orthographicSize = 5f+(0.15f*cameraZoom);
 	}
 
-	private void VertWedged()
-	{//Executes when the player is moving into a corner and there isn't enough headroom to go any further. It halts the player's momentum and sets off a wall-touching flag.
-
-		print("VertWedged!");
-		RaycastHit2D ceilingHit;
-		RaycastHit2D groundHit = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
-		float embedDepth;
-		Vector2 gPerp;
-		Vector2 cPerp;
-		Vector2 moveAmount = new Vector2(0,0);
-
-		if(groundHit.collider == null)
-		{
-			//print("Bottom not wedged, using newNormal!");
-			gPerp.x = groundNormal.x;
-			gPerp.y = groundNormal.y;
-		}
-		else
-		{
-			gPerp.x = groundHit.normal.y;
-			gPerp.y = -groundHit.normal.x;
-			Vector2 groundPosition = groundHit.point;
-			groundPosition.y += m_GroundFootLength-m_MinEmbed;
-			this.transform.position = groundPosition;
-			//print("Hitting bottom, shifting up!");
-		}
-
-		ceilingHit = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);
-
-		if(ceilingHit.collider == null)
-		{
-			//throw new Exception("Top not wedged!");
-			return;
-		}
-		else
-		{
-			//print("Hitting top, superunwedging..."); 
-			cPerp.x = ceilingHit.normal.y;
-			cPerp.y = -ceilingHit.normal.x;
-		}
-			
-		embedDepth = m_CeilingFootLength-ceilingHit.distance;
-		//print("Embedded ("+embedDepth+") units into the ceiling");
-
-		//print("Ground Perp = " + gPerp);
-		//print("Ceiling Perp = " + cPerp);
-
-		if(cPerp.y > 0)
-		{
-			if(pVel.x > 0)
-			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
-				pVel = new Vector2(0f, 0f);
-				m_RightWallBlocked = true;
-				//print("Right wedge!");
-				//print("cPerp: "+cPerp);
-				//print("gPerp: "+gPerp);
-			}
-		}
-		else if(cPerp.y < 0)
-		{
-			if(pVel.x < 0)
-			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				//print("Left wedge!");
-				//print("cPerp: "+cPerp);
-				//print("gPerp: "+gPerp);
-				m_LeftWallBlocked = true;
-				pVel = new Vector2(0f, 0f);
-			}
-		}
-		else
-		{
-			//throw new Exception("Ceiling is vertical! CEILINGS CAN'T BE VERTICAL!");
-		}
-
-		this.transform.position = new Vector2((this.transform.position.x + moveAmount.x), (this.transform.position.y + moveAmount.y));
-		//m_Ceilinged = false;
-
-	}
-
-	private void OmniWedged(RaycastHit2D[] contacts, int lowerContact, int upperContact)
+	private void OmniWedge(int lowerContact, int upperContact)
 	{//Executes when the player is moving into a corner and there isn't enough room to fit them. It halts the player's momentum and sets off a blocked-direction flag.
 
-		print("OmniWedged!");
-		RaycastHit2D upperHit;
-		RaycastHit2D lowerHit = contacts[lowerContact];
+		print("OmniWedge!");
 
-		//Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask)
+		RaycastHit2D lowerHit;
+		Vector2 lowerDirection = Vector2.down;
+		float lowerLength = m_GroundFootLength;
+
+		RaycastHit2D upperHit;
+		Vector2 upperDirection = Vector2.up;
+		float upperLength = m_CeilingFootLength;
+
+
+		switch(lowerContact)
+		{
+		case 0: //lowercontact is ground
+			{
+				lowerDirection = Vector2.down;
+				lowerLength = m_GroundFootLength;
+				break;
+			}
+		case 1: //lowercontact is ceiling
+			{
+				throw new Exception("ERROR: Ceiling cannot be lower contact.");
+				break;
+			}
+		case 2: //lowercontact is left
+			{
+				lowerDirection = Vector2.left;
+				lowerLength = m_LeftSideLength;
+				break;
+			}
+		case 3: //lowercontact is right
+			{
+				lowerDirection = Vector2.right;
+				lowerLength = m_RightSideLength;
+				break;
+			}
+		default:
+			{
+				throw new Exception("ERROR: DEFAULTED ON LOWERHIT.");
+				break;
+			}
+		}
+
+		lowerHit = Physics2D.Raycast(this.transform.position, lowerDirection, lowerLength, mask);
 
 		float embedDepth;
 		Vector2 gPerp; //lowerperp, aka groundperp
@@ -1485,8 +1474,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			gPerp.x = lowerHit.normal.y;
-			gPerp.y = -lowerHit.normal.x;
+			gPerp = Perp(lowerHit.normal);
 			Vector2 groundPosition = lowerHit.point;
 			if(lowerContact == 0) //ground contact
 			{
@@ -1498,94 +1486,120 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 			else if(lowerContact == 2) //left contact
 			{
-				groundPosition.x -= (m_LeftSideLength-m_MinEmbed);
+				groundPosition.x += (m_LeftSideLength-m_MinEmbed);
 			}
 			else if(lowerContact == 3) //right contact
 			{
-				groundPosition.x += (m_RightSideLength-m_MinEmbed);
+				groundPosition.x -= (m_RightSideLength-m_MinEmbed);
 			}
 
 			this.transform.position = groundPosition;
 			//print("Hitting bottom, shifting up!");
 		}
 
-		if(upperContact == 0) //ground contact
+		switch(upperContact)
 		{
-			throw new Exception("FLOORCOLLIDER CAN'T BE UPPER CONTACT");
+		case 0: //uppercontact is ground
+			{
+				throw new Exception("FLOORCOLLIDER CAN'T BE UPPER CONTACT");
+				break;
+			}
+		case 1: //uppercontact is ceiling
+			{
+				upperDirection = Vector2.up;
+				upperLength = m_CeilingFootLength;
+				break;
+			}
+		case 2: //uppercontact is left
+			{
+				upperDirection = Vector2.left;
+				upperLength = m_LeftSideLength;
+				break;
+			}
+		case 3: //uppercontact is right
+			{
+				upperDirection = Vector2.right;
+				upperLength = m_RightSideLength;
+				break;
+			}
+		default:
+			{
+				throw new Exception("ERROR: DEFAULTED ON UPPERHIT.");
+				break;
+			}
 		}
-		else if(upperContact == 1) //ceiling contact
-		{
-			upperHit = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);
-			embedDepth = m_CeilingFootLength-upperHit.distance;
-		}
-		else if(upperContact == 2) //left contact
-		{
-			upperHit = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask);
-			embedDepth = m_LeftSideLength-upperHit.distance;
-		}
-		else if(upperContact == 3) //right contact
-		{
-			upperHit = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);
-			embedDepth = m_RightSideLength-upperHit.distance;
-		}
-		else
-		{
-			upperHit = contacts[upperContact];
-			throw new Exception("Top not wedged!");
-		}
+
+		upperHit = Physics2D.Raycast(this.transform.position, upperDirection, upperLength, mask);
+		embedDepth = upperLength-upperHit.distance;
 
 		if(!upperHit)
 		{
 			//throw new Exception("Top not wedged!");
-			cPerp.x = upperHit.normal.y;
-			cPerp.y = -upperHit.normal.x;
+			cPerp = Perp(upperHit.normal);
 			print("Top not wedged!");
 			return;
 		}
 		else
 		{
 			//print("Hitting top, superunwedging..."); 
-			cPerp.x = ceilingNormal.y;
-			cPerp.y = -ceilingNormal.x;
+			cPerp = Perp(upperHit.normal);
 		}
 			
 		//print("Embedded ("+embedDepth+") units into the ceiling");
 
-		//print("Ground Perp = " + gPerp);
-		//print("Ceiling Perp = " + cPerp);
+		float cornerAngle = Vector2.Angle(cPerp,gPerp);
 
-		if(cPerp.y > 0)
+		print("Ground Perp = " + gPerp);
+		print("Ceiling Perp = " + cPerp);
+		print("cornerAngle = " + cornerAngle);
+		bool convergingLeft = false;
+
+		Vector2 cPerpTest = cPerp;
+		Vector2 gPerpTest = gPerp;
+
+		if(cPerpTest.x < 0)
 		{
-			if(pVel.x > 0)
-			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
-				pVel = new Vector2(0f, 0f);
-				m_RightWallBlocked = true;
-				//print("Right wedge!");
-				//print("cPerp: "+cPerp);
-				//print("gPerp: "+gPerp);
-			}
+			cPerpTest *= -1;
 		}
-		else if(cPerp.y < 0)
+		if(gPerpTest.x < 0)
 		{
-			if(pVel.x < 0)
+			gPerpTest *= -1;
+		}
+
+		print("gPerpTest = " + gPerpTest);
+		print("cPerpTest= " + cPerpTest);
+
+		float convergenceValue = cPerpTest.y-gPerpTest.y;
+
+		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;};
+		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;};
+
+		if(cornerAngle > 90f)
+		{
+			if(convergenceValue > 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				//print("Left wedge!");
-				//print("cPerp: "+cPerp);
-				//print("gPerp: "+gPerp);
+				print("Left wedge!");
 				m_LeftWallBlocked = true;
-				pVel = new Vector2(0f, 0f);
 			}
+			else if(convergenceValue < 0)
+			{
+				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
+				print("Right wedge!");
+				m_RightWallBlocked = true;
+			}
+			else
+			{
+				throw new Exception("CONVERGENCE VALUE OF ZERO ON CORNER!");
+			}
+			pVel = new Vector2(0f, 0f);
 		}
 		else
 		{
-			//throw new Exception("Ceiling is vertical! CEILINGS CAN'T BE VERTICAL!");
+			moveAmount = (upperDirection*(-embedDepth));
 		}
-		print("OMNIWEDGE HAS SUCCESSFULLY EXECUTED :)");
+			
 		this.transform.position = new Vector2((this.transform.position.x + moveAmount.x), (this.transform.position.y + moveAmount.y));
-		//m_Ceilinged = false;
-
 	}
 
 
@@ -1632,21 +1646,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			groundNormal = directionContacts[0].normal;
 			m_Grounded = true;
 		} 
-
-		if (groundContact) 
-		{
-			/*
-			if(!ceilingContact && antiTunneling && posCorrection && ((m_GroundFootLength-directionContacts[0].distance)>=0.011f))
-			{
-				Vector2 surfacePosition = directionContacts[0].point;
-				surfacePosition.y += (m_GroundFootLength-m_MinEmbed);
-				this.transform.position = surfacePosition;
-				//print ("directionContacts[0] NORMAL INITIAL:    " + directionContacts[0].normal);
-				//print ("ANTIGROUNDING " + (m_GroundFootLength-directionContacts[0].distance));
-			}
-			*/
-		}
-
+			
 		if (directionContacts[1].collider != null) 
 		{
 			ceilingContact = true;
@@ -1655,19 +1655,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			ceilingNormal = directionContacts[1].normal;
 			m_Ceilinged = true;
 		} 
-			
-		if (ceilingContact) 
-		{
-			/*
-			if(!groundContact && antiTunneling && posCorrection && ((m_CeilingFootLength-directionContacts[1].distance)>=0.011f))
-			{
-				Vector2 surfacePosition = directionContacts[1].point;
-				surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
-				this.transform.position = surfacePosition;
-				//print ("HEAD IMPACTED IN SURFACE " + directionContacts[1].normal);
-			}
-			*/
-		}
+
 
 		if (directionContacts[2].collider != null)
 		{
@@ -1677,20 +1665,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_LeftSideLine.startColor = Color.green;
 			m_LeftWalled = true;
 		} 
-			
-		if (leftSideContact) 
-		{
-			//print ("leftSideContact" + directionContacts[2].normal);
-			/*
-			if(!rightSideContact && antiTunneling && posCorrection && ((m_LeftSideLength-directionContacts[2].distance)>=0.011f))
-			{
-				Vector2 surfacePosition = directionContacts[2].point;
-				surfacePosition.x += ((m_LeftSideLength)-m_MinEmbed);
-				this.transform.position = surfacePosition;
-			}
-			*/
-		}
-			
+
 		if (directionContacts[3].collider != null)
 		{
 			rightNormal = directionContacts[3].normal;
@@ -1699,20 +1674,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_RightSideLine.startColor = Color.green;
 			m_RightWalled = true;
 		} 
-
-		if (rightSideContact) 
-		{
-			//print ("leftSideContact" + directionContacts[2].normal);
-			/*
-			if(!leftSideContact && antiTunneling && posCorrection && ((m_RightSideLength-directionContacts[3].distance)>=0.011f))
-			{
-				Vector2 surfacePosition = directionContacts[3].point;
-				surfacePosition.x -= ((m_RightSideLength)-m_MinEmbed);
-				surfacePosition.y -= m_MinEmbed;
-				this.transform.position = surfacePosition;
-			}
-			*/
-		}
 
 		if(antiTunneling&&posCorrection)
 		{
@@ -1723,17 +1684,23 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void AntiTunneler(RaycastHit2D[] contacts)
 	{
 		bool[] isEmbedded = {false, false, false, false};
-		int contactNum = 0;
-		if(groundContact && ((m_GroundFootLength-contacts[0].distance)>=0.011f))	{contactNum++; isEmbedded[0]=true;} //If embedded too deep in this surface.
-		if(ceilingContact && ((m_CeilingFootLength-contacts[1].distance)>=0.011f))	{contactNum++; isEmbedded[1]=true;} //If embedded too deep in this surface.
-		if(leftSideContact && ((m_LeftSideLength-contacts[2].distance)>=0.011f))	{contactNum++; isEmbedded[2]=true;} //If embedded too deep in this surface.
-		if(rightSideContact && ((m_RightSideLength-contacts[3].distance)>=0.011f))	{contactNum++; isEmbedded[3]=true;} //If embedded too deep in this surface.
+		int contactCount = 0;
+		if(groundContact){contactCount++;}
+		if(ceilingContact){contactCount++;}
+		if(leftSideContact){contactCount++;}
+		if(rightSideContact){contactCount++;}
 
-		switch(contactNum)
+		int embedCount = 0;
+		if(groundContact && ((m_GroundFootLength-contacts[0].distance)>=0.011f))	{isEmbedded[0]=true; embedCount++;} //If embedded too deep in this surface.
+		if(ceilingContact && ((m_CeilingFootLength-contacts[1].distance)>=0.011f))	{isEmbedded[1]=true; embedCount++;} //If embedded too deep in this surface.
+		if(leftSideContact && ((m_LeftSideLength-contacts[2].distance)>=0.011f))	{isEmbedded[2]=true; embedCount++;} //If embedded too deep in this surface.
+		if(rightSideContact && ((m_RightSideLength-contacts[3].distance)>=0.011f))	{isEmbedded[3]=true; embedCount++;} //If embedded too deep in this surface.
+
+		switch(contactCount)
 		{
 			case 0: //No embedded contacts. Save this position as the most recent valid one and move on.
 			{
-				print("No embedding! :)");
+				//print("No embedding! :)");
 				lastSafePosition = this.transform.position;
 				break;
 			}
@@ -1765,15 +1732,48 @@ public class PlatformerCharacter2D : MonoBehaviour
 				}
 				break;
 			}
-			case 2: //Two sides are embedded. Use the unwedging algorithm to resolve.
+			case 2: //Two sides are touching. Use the 2-point unwedging algorithm to resolve.
 			{
-				if(isEmbedded[0]&&isEmbedded[1])
+				if(groundContact&&ceilingContact)
 				{
-					OmniWedged(contacts,0,1);
+					//if(groundNormal != ceilingNormal)
+					{
+					print("Antitunneling omniwedge executed");
+						OmniWedge(0,1);
+					}
 				}
-				else if(isEmbedded[3]&&isEmbedded[1])
+				else if(groundContact&&leftSideContact)
 				{
-					OmniWedged(contacts,3,1);
+					//if(groundNormal != leftNormal)
+					{
+						OmniWedge(0,2);
+					}
+				}
+				else if(groundContact&&rightSideContact)
+				{
+					//if(groundNormal != rightNormal)
+					{
+						OmniWedge(0,3);
+					}
+				}
+				else if(ceilingContact&&leftSideContact)
+				{
+					//if(ceilingNormal != leftNormal)
+					{
+						OmniWedge(2,1);
+					}
+				}
+				else if(ceilingContact&&rightSideContact)
+				{
+					//if(ceilingNormal != rightNormal)
+					{
+						OmniWedge(3,1);
+					}
+				}
+				else if(leftSideContact&&rightSideContact)
+				{
+					throw new Exception("Unhandled horizontal wedge detected.");
+					//OmniWedge(0,2);
 				}
 				break;
 			}
@@ -1784,7 +1784,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			case 4:
 			{
 				print("FULL embedding! :C");
-				this.transform.position = lastSafePosition;
+				//this.transform.position = lastSafePosition;
 				break;
 			}
 			default:
