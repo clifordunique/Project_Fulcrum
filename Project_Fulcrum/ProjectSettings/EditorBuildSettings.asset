@@ -9,5 +9,5 @@ EditorBuildSettings:
     path: Assets/Social2.unity
   - enabled: 0
     path: Assets/GAF/Examples/Scenes/Demo.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/wut.unity

@@ -12,11 +12,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 	#region HANDLINGCHARACTERISTICS
 	[Header("Movement Tuning:")]
 	[SerializeField] private float m_MinSpeed = 10f; 							// The instant starting speed while moving
-	[SerializeField] private float maxRunSpeed;									// The fastest the player can travel in the x axis.
+	[SerializeField] private float maxRunSpeed;									// The fastest the player can travel along land.
 	[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    			// Speed the player accelerates at
 	[SerializeField] private float m_VJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
 	[SerializeField] private float m_HJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
-	[SerializeField] private float tractionChangeThreshold = 20f;				// Threshold where movement changes from exponential to linear acceleration.  
+	[SerializeField] private float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the player walljumps.
+	[SerializeField] private float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the player walljumps.
+	[SerializeField] private float m_TractionChangeThreshold = 20f;				// Threshold where movement changes from exponential to linear acceleration.  
+	[SerializeField] private float m_WallTractionThreshold = 20f;				// Speed threshold at which wallsliding traction changes.
 	[Range(0,1)][SerializeField] private float m_LinearStopRate = 1f; 			// How fast the player decelerates when changing direction.
 	[Range(0,1)][SerializeField] private float m_LinearSlideRate = 0.20f;		// How fast the player decelerates with no input.
 	[Range(0,1)][SerializeField] private float m_LinearAccelRate = 0.35f;		// How fast the player accelerates with input.
@@ -25,7 +28,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Range(1,89)][SerializeField] private float m_AngleSpeedLossMax = 80f; 		// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_AngleSpeedLossMin!!
 	[Range(1,89)][SerializeField] private float m_TractionLossAngle = 45f; 		// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default equates to 45 degrees.
 	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  
-	[Range(0.5f,3)][SerializeField] private float m_SteepSurfaceHangTime = 1f; 	// How long the player can cling to walls before gravity takes over.
+	[Range(0.5f,3)][SerializeField] private float m_SurfaceClingTime = 1f; 		// How long the player can cling to walls before gravity takes over.
 	private float timeSpentHanging = 0f;										// Amount of time the player has been in walljump stance.
 	[Range(0,0.5f)][SerializeField] private float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
 	[Range(0.01f,0.4f)][SerializeField] private float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
@@ -50,7 +53,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	#region PHYSICS&RAYCASTING
 	[SerializeField] private LayerMask mask; // A mask determining what is ground to the character
 
-	private Vector3 lastSafePosition; //Used to revert player position if they get totally stuck in something.
+
 
 	private Transform m_GroundFoot; // Ground collider, middle.
 	private Vector2 m_GroundFootOffset; 
@@ -74,7 +77,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private Vector2 rightNormal;
 
 	[Header("Player State:")]
-
+	private Vector3 lastSafePosition;									//Used to revert player position if they get totally stuck in something.
+	[SerializeField][ReadOnlyAttribute]private float m_IGF; 			 //"Instant G-Force" of the impact this frame.
+	[SerializeField][ReadOnlyAttribute]private float m_CGF; 			//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]private float remainingVelMult;
 	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
 	[SerializeField][ReadOnlyAttribute]private Vector2 remainingMovement;
@@ -101,7 +106,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private bool m_Jump;
 	private bool m_KeyLeft;
 	private bool m_KeyRight;
-	private int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
+	private bool m_KeyUp;
+	private bool m_KeyDown;
+	private int CtrlH; 		// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
+	private int CtrlV; 		// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
 	private bool facingDirection; 		// true means right (the direction), false means left.
 	#endregion
 	//############################################################################################################################################################################################################
@@ -163,6 +171,7 @@ public class PlatformerCharacter2D : MonoBehaviour
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
 		m_SpriteRenderer = m_PlayerSprite.GetComponent<SpriteRenderer>();
 
+		lastSafePosition = new Vector2(0,0);
 		remainingMovement = new Vector2(0,0);
 		remainingVelMult = 1f;
 		//print(remainingMovement);
@@ -182,16 +191,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		Vector2 finalPos = new Vector2(this.transform.position.x+remainingMovement.x, this.transform.position.y+remainingMovement.y);
 		this.transform.position = finalPos;
+		UpdateContactNormals(true);
+
+		Vector2 initialVel = pVel;
 
 		//m_Rigidbody2D.MovePosition(finalPos);
 		//Vector2 finalPos = new Vector2(this.transform.position.x+(pVel*Time.fixedDeltaTime.x), this.transform.position.y+(pVel*Time.fixedDeltaTime.y));
 		//print("Initial Pos: " + startingPos);
 		//print("Initial Vel: " +  pVel);
 
-		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
-		//print("LEFT="+m_KeyLeft);
-		m_KeyRight = CrossPlatformInputManager.GetButton("Right");
-		//print("RIGHT="+m_KeyRight);
+		#region playerinput
+
 		if((!m_KeyLeft && !m_KeyRight) || (m_KeyLeft && m_KeyRight))
 		{
 			//print("BOTH/NEITHER");
@@ -220,23 +230,40 @@ public class PlatformerCharacter2D : MonoBehaviour
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
-		//print("CTRLH=" + CtrlH);
+		if((!m_KeyUp && !m_KeyDown) || (m_KeyUp && m_KeyDown))
+		{
+			CtrlV = 0;
+		}
+		else if(m_KeyUp)
+		{
+			CtrlV = 1;
+		}
+		else
+		{
+			CtrlV = -1;
+		}
 
-		UpdateContactNormals(true);
+		//print("CTRLH=" + CtrlH);
 
 		if(m_Jump)
 		{
 			Jump(CtrlH);
 		}
 
+		#endregion
+
 		if(m_Grounded)
 		{//Locomotion!
 			Traction(CtrlH);
 		}
-		//else if(m_RightWalled || m_LeftWalled)
-		//{//Wallsliding!
-		//	Traction(CtrlH);
-		//}
+		else if(m_RightWalled)
+		{//Wallsliding!
+			WallTraction(CtrlH,rightNormal);
+		}
+		else if(m_LeftWalled)
+		{
+			WallTraction(CtrlH,leftNormal);
+		}
 		else
 		{//Gravity!
 			pVel = new Vector2 (pVel.x, pVel.y - 1);
@@ -284,7 +311,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("remainingVelMult: "+remainingVelMult);
 
 		//print("movement after distance travelled: "+remainingMovement);
+		int contactPoints = 0;
+		if(m_LeftWalled){contactPoints++;}
+		if(m_RightWalled){contactPoints++;}
+		if(m_Ceilinged){contactPoints++;}
+		if(m_Grounded){contactPoints++;}
 
+		/*
 		if(m_LeftWalled)
 		{
 			if(m_Grounded)
@@ -501,10 +534,243 @@ public class PlatformerCharacter2D : MonoBehaviour
 				DirectionChange(groundNormal);
 			}
 		}
+		*/
 
+		/*
+		if(m_LeftWalled)
+		{
+			if(m_Grounded)
+			{
+				//print("Both!");
+				if(pVel.x >= 0)
+				{
+					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
+					//print("LS="+leftSteepness);
+					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
+					//print("GS="+groundSteepness);
+					if(leftSteepness <= groundSteepness)
+					{
+						DirectionChange(leftNormal);
+					}
+					else
+					{
+						DirectionChange(groundNormal);
+					}
+				}
+				else if(pVel.x < 0)
+				{
+					//print("DESCENDING IMPACT");
+					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
+					//print("LS="+leftSteepness);
+					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
+					//print("GS="+groundSteepness);
+					if(leftSteepness >= groundSteepness)
+					{
+						//print("Chose left");
+						DirectionChange(leftNormal);
+					}
+					else
+					{
+						//print("Chose ground");
+						DirectionChange(groundNormal);
+					}
+				}
+				else
+				{
+					DirectionChange(leftNormal);
+				}
+			}
+			else if(m_Ceilinged)
+			{
+				//print("Both!");
+				if(pVel.y > 0)
+				{
+					print("ASCENDING IMPACT");
+					float leftSteepness = Vector2.Angle(Vector2.left, Perp(leftNormal));
+					print("LS="+leftSteepness);
+					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
+					print("CS="+ceilingSteepness);
+					if(leftSteepness <= ceilingSteepness)
+					{
+						print("Chose left");
+						DirectionChange(leftNormal);
+					}
+					else
+					{
+						print("Chose ceiling");
+						DirectionChange(ceilingNormal);
+					}
+				}
+				else if(pVel.y < 0)
+				{
+					print("DESCENDING IMPACT");
+					float leftSteepness = Vector2.Angle(Vector2.left, Perp(leftNormal));
+					print("LS="+leftSteepness);
+					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
+					print("CS="+ceilingSteepness);
+					if(leftSteepness >= ceilingSteepness)
+					{
+						print("Chose left");
+						DirectionChange(leftNormal);
+					}
+					else
+					{
+						print("Chose ceiling");
+						DirectionChange(ceilingNormal);
+					}
+				}
+				else
+				{
+					DirectionChange(leftNormal);
+				}
+			}
+			else
+			{
+				DirectionChange(leftNormal);
+			}
+
+			//print("LeftWallMovement");
+			//DirectionChange(leftNormal);
+		}
+
+		if(m_RightWalled)
+		{
+			if(m_Grounded)
+			{
+				if(pVel.x > 0) //If moving right, use the steepest angle colliding surface.
+				{
+					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
+					//print("RS="+rightSteepness);
+					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
+					//print("GS="+groundSteepness);
+					if(rightSteepness >= groundSteepness)
+					{
+						DirectionChange(rightNormal);
+					}
+					else
+					{
+						DirectionChange(groundNormal);
+					}
+				}
+				else if(pVel.x <= 0) //If moving left or down, use the shallowest angle colliding surface.
+				{
+					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
+					print("RS="+rightSteepness);
+					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
+					print("GS="+groundSteepness);
+					if(rightSteepness <= groundSteepness)
+					{
+						print("Chose right");
+						DirectionChange(rightNormal);
+					}
+					else
+					{
+						print("Chose ground");
+						DirectionChange(groundNormal);
+					}
+				}
+				else
+				{
+					DirectionChange(rightNormal);
+				}
+			}
+			else if(m_Ceilinged)
+			{
+				//print("Both!");
+				if(pVel.y > 0)
+				{
+					print("ASCENDING IMPACT");
+					float rightSteepness = Vector2.Angle(Vector2.left, Perp(rightNormal));
+					print("RS="+rightSteepness);
+					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
+					print("CS="+ceilingSteepness);
+					if(rightSteepness <= ceilingSteepness)
+					{
+						print("Chose right");
+						DirectionChange(rightNormal);
+					}
+					else
+					{
+						print("Chose ceiling");
+						DirectionChange(ceilingNormal);
+					}
+				}
+				else if(pVel.y < 0)
+				{
+					print("DESCENDING IMPACT");
+					float rightSteepness = Vector2.Angle(Vector2.left, Perp(rightNormal));
+					print("RS="+rightSteepness);
+					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
+					print("CS="+ceilingSteepness);
+					if(rightSteepness >= ceilingSteepness)
+					{
+						print("Chose right");
+						DirectionChange(rightNormal);
+					}
+					else
+					{
+						print("Chose ceiling");
+						DirectionChange(ceilingNormal);
+					}
+				}
+				else
+				{
+					DirectionChange(rightNormal);
+				}
+			}
+			else
+			{
+				DirectionChange(rightNormal);
+			}
+
+			//print("rightWallMovement");
+			//DirectionChange(rightNormal);
+		}
+
+		if(m_Ceilinged&&!m_RightWalled&&!m_LeftWalled&&!m_Grounded)
+		{
+			//print("CeilingMovement");
+			DirectionChange(ceilingNormal);
+		}
+
+		if (m_Grounded&&!m_RightWalled&&!m_LeftWalled) //Handles velocity along ground surface.
+		{
+			//print("GroundMovement");
+
+			if(m_Ceilinged)
+			{
+				if(pVel.y > 0) //If moving up, use the ceiling surface
+				{
+					DirectionChange(ceilingNormal);
+				}
+				else if(pVel.y <= 0) //If moving down or horiz, use the ground colliding surface.
+				{
+					DirectionChange(groundNormal);
+				}
+			}
+			else
+			{
+				DirectionChange(groundNormal);
+			}
+		}
+		*/
 
 		//print("Speed this frame: "+pVel.magnitude);
 		remainingMovement = pVel*remainingVelMult*Time.fixedDeltaTime;
+
+		Vector2 finalVel = pVel;
+
+		Vector2 deltaV = finalVel-initialVel;
+		m_IGF = deltaV.magnitude;
+		m_CGF += m_IGF;
+		if(m_CGF>=2){m_CGF -= 2;}
+
+		if(m_CGF>=200)
+		{
+			m_CGF = 0f;
+			print("m_CGF over limit!!");	
+		}
+
 		//print("Per frame velocity at end of physics frame: "+pVel*Time.fixedDeltaTime);
 		//print("remainingMovement at end of physics frame: "+remainingMovement);
 		//print("Pos at end of physics frame: "+this.transform.position);
@@ -513,7 +779,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("FinaL Pos: " + this.transform.position);
 		//print("FinaL Vel: " + pVel);
 		//print("Speed at end of frame: " + pVel.magnitude);
-
 
 		#region Animator Controls
 
@@ -527,12 +792,19 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			m_Anim.SetBool("Walled", true);
 			facingDirection = false;
+			m_PlayerSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
 		}
 
 		if(m_RightWalled&&!m_Grounded)
 		{
 			m_Anim.SetBool("Walled", true);
 			facingDirection = true;
+			m_PlayerSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
+		}
+
+		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
+		{
+			m_PlayerSprite.transform.localPosition = new Vector3(0f,0f,0f);
 		}
 
 		if (!facingDirection) //If facing left
@@ -586,7 +858,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		m_Anim.SetFloat("Speed", pVel.magnitude);
 
-		if(pVel.magnitude >= tractionChangeThreshold )
+		if(pVel.magnitude >= m_TractionChangeThreshold )
 		{
 			m_DebugLine.endColor = Color.white;
 			m_DebugLine.startColor = Color.white;
@@ -616,19 +888,23 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		#endregion
 
-
-
     }
 
 	private void Update()
 	{
+
+		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
+		m_KeyRight = CrossPlatformInputManager.GetButton("Right");
+		m_KeyUp = CrossPlatformInputManager.GetButton("Up");
+		m_KeyDown = CrossPlatformInputManager.GetButton("Down");
+
 		m_Speedometer.text = ""+Math.Round(pVel.magnitude,0);
-		if (!m_Jump && (m_Grounded||m_Ceilinged))
+		if (!m_Jump && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{
 			// Read the jump input in Update so button presses aren't missed.
 
 			m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-			if(autoJump&&m_Grounded)
+			if(autoJump)
 			{
 				m_Jump = true;
 			}
@@ -652,7 +928,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(errorDetectingRecursionCount >= 5)
 		{
-			throw new Exception("Your recursion code is fucked!");
+			throw new Exception("Your recursion code is not working!");
 			return;
 		}
 			
@@ -815,6 +1091,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					ToGround(predictedLoc[0]);
+					DirectionChange(groundNormal);
 					return;
 				}
 				else 
@@ -834,6 +1111,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{ // If the slope you're hitting is different than your current slope.
 					print("CEILING_IMPACT");
 					ToCeiling(predictedLoc[1]);
+					DirectionChange(ceilingNormal);
 					return;
 				}
 				else 
@@ -852,6 +1130,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{ // If the slope you're hitting is different than your current slope.
 					print("LEFT_IMPACT");
 					ToLeftWall(predictedLoc[2]);
+					DirectionChange(leftNormal);
 					return;
 				}
 				else 
@@ -873,6 +1152,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 					//print("moveDirectionNormal=("+moveDirectionNormal.x+","+moveDirectionNormal.y+")");
 					//print("moveDirectionNormal="+moveDirectionNormal);
 					ToRightWall(predictedLoc[3]);
+					DirectionChange(rightNormal);
 					return;
 				}
 				else 
@@ -945,7 +1225,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			if(rawSpeed <= maxRunSpeed)
 			{
 				//print("Rawspeed("+rawSpeed+") less than max");
-				if(rawSpeed > tractionChangeThreshold )
+				if(rawSpeed > m_TractionChangeThreshold )
 				{
 					//print("LinAccel-> " + rawSpeed);
 					if(pVel.y > 0)
@@ -965,7 +1245,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				else
 				{
 					//print("ExpAccel-> " + rawSpeed);
-					float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
+					float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
 					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 
 					float addedSpeed = curveMultiplier*(m_Acceleration);
@@ -985,7 +1265,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else if((horizontalInput > 0 && pVel.x < 0) || (horizontalInput < 0 && pVel.x > 0))
 		{//if pressing button opposite of move direction, slow to zero exponentially.
-			if(rawSpeed > tractionChangeThreshold )
+			if(rawSpeed > m_TractionChangeThreshold )
 			{
 				//print("LinDecel");
 				pVel = ChangeSpeedLinear (pVel, -m_LinearStopRate);
@@ -993,7 +1273,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			else
 			{
 				//print("Decelerating");
-				float eqnX = (1+Mathf.Abs((1/tractionChangeThreshold )*rawSpeed));
+				float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
 				pVel = (pVel.normalized)*(rawSpeed-2*addedSpeed);
@@ -1022,6 +1302,155 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//print("PostTraction velocity: "+pVel);
 	}
 
+	private void WallTraction(float horizontalInput, Vector2 wallSurface)
+	{
+		Vector2 wallPerp = Perp(wallSurface);
+
+		print("horizontalInput="+horizontalInput);
+
+		if(wallPerp.x > 0)
+		{
+			wallPerp *= -1;
+		}
+
+		float steepnessAngle = Vector2.Angle(Vector2.up,wallPerp);
+		print("Wall Steepness Angle:"+steepnessAngle);
+
+		float slopeMultiplier = 0;
+
+		if(pVel.y > 0)
+		{
+			pVel = ChangeSpeedLinear(pVel,-0.8f);
+		}
+
+		if(pVel.y <= 0)
+		{
+			if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) )
+			{
+				pVel.y -= 0.1f;
+			}
+			else
+			{
+				pVel.y -= 1f;
+			}
+
+		}
+
+//		if(steepnessAngle > m_TractionLossAngle)
+//		{
+//			slopeMultiplier = ((steepnessAngle-m_TractionLossAngle)/(90f-m_TractionLossAngle));
+//
+//			//print("slopeMultiplier: "+ slopeMultiplier);
+//			//print("wallPerpY: "+wallPerpY+", slopeThreshold: "+slopeThreshold);
+//		}
+
+		//print("Traction");
+//		if( ((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)) )
+//		{// If running at an obstruction you're up against.
+//			//print("Running against a wall.");
+//			horizontalInput = 0;
+//		}
+
+		/*
+		//print("Traction executing");
+		float rawSpeed = pVel.magnitude;
+		//print("pVel.magnitude"+pVel.magnitude);
+		if (horizontalInput == 0) 
+		{//if not pressing any move direction, slow to zero linearly.
+			//print("No input, slowing...");
+			if(rawSpeed <= 1)
+			{
+				pVel = Vector2.zero;	
+			}
+			else
+			{
+				pVel = ChangeSpeedLinear (pVel, -m_LinearSlideRate);
+			}
+		}
+		else if((horizontalInput > 0 && pVel.x >= 0) || (horizontalInput < 0 && pVel.x <= 0))
+		{//if pressing same button as move direction, move to MAXSPEED.
+			//print("Moving with keypress");
+			if(rawSpeed <= maxRunSpeed)
+			{
+				//print("Rawspeed("+rawSpeed+") less than max");
+				if(rawSpeed > m_TractionChangeThreshold )
+				{
+					//print("LinAccel-> " + rawSpeed);
+					if(pVel.y > 0)
+					{ 	// If climbing, recieve uphill movement penalty.
+						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate*(1-slopeMultiplier));
+					}
+					else
+					{
+						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate);
+					}
+				}
+				else if(rawSpeed < 0.001)
+				{
+					pVel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+					//print("Starting motion. Adding " + m_Acceleration);
+				}
+				else
+				{
+					//print("ExpAccel-> " + rawSpeed);
+					float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
+					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
+
+					float addedSpeed = curveMultiplier*(m_Acceleration);
+					if(pVel.y > 0)
+					{ // If climbing, recieve uphill movement penalty.
+						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
+					}
+					//print("Addedspeed:"+addedSpeed);
+					pVel = (pVel.normalized)*(rawSpeed+addedSpeed);
+					//print("pVel:"+pVel);
+				}
+			}
+			else
+			{
+				print("Rawspeed("+rawSpeed+") more than max???");
+			}
+		}
+		else if((horizontalInput > 0 && pVel.x < 0) || (horizontalInput < 0 && pVel.x > 0))
+		{//if pressing button opposite of move direction, slow to zero exponentially.
+			if(rawSpeed > m_TractionChangeThreshold )
+			{
+				//print("LinDecel");
+				pVel = ChangeSpeedLinear (pVel, -m_LinearStopRate);
+			}
+			else
+			{
+				//print("Decelerating");
+				float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
+				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
+				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
+				pVel = (pVel.normalized)*(rawSpeed-2*addedSpeed);
+			}
+
+			//float modifier = Mathf.Abs(pVel.x/pVel.y);
+			//print("SLOPE MODIFIER: " + modifier);
+			//pVel = pVel/(1.25f);
+		}
+
+		Vector2 downSlope = pVel.normalized; // Normal vector pointing down the current slope!
+		if (downSlope.y > 0) //Make sure the vector is descending.
+		{
+			downSlope *= -1;
+		}
+
+
+
+		if(downSlope == Vector2.zero)
+		{
+			downSlope = Vector2.down;
+		}
+		pVel += downSlope*m_SlippingAcceleration*slopeMultiplier;
+		*/
+
+		//ChangeSpeedLinear(pVel, );
+		//print("PostTraction velocity: "+pVel);
+	}
+		
 	private void ToLeftWall(RaycastHit2D leftCheck) 
 	{ //Sets the new position of the player and their leftNormal.
 
@@ -1110,14 +1539,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			//print ("Impact Pos:  " + groundCheck.point);
-			//print("Reflected back into the air!");
-			//print("Transform position: " + this.transform.position);
-			//print("RB2D position: " + m_Rigidbody2D.position);
-			//print("Velocity : " + pVel);
-			//print("Speed : " + pVel.magnitude);
-			//print(" ");
-			//print(" ");	
 			m_RightWalled = false;
 		}
 
@@ -1318,12 +1739,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if((initialDirection == newPerp)||initialDirection == Vector2.zero)
 		{
-			//print("same angle BITCH");
+			//print("same angle");
 			return;
-		}
-		else
-		{
-			//print("Different lul. Init: "+initialDirection+", gPerp: "+newPerp+".");
 		}
 
 		//print("InitialDirection: "+initialDirection);
@@ -1414,7 +1831,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void OmniWedge(int lowerContact, int upperContact)
 	{//Executes when the player is moving into a corner and there isn't enough room to fit them. It halts the player's momentum and sets off a blocked-direction flag.
 
-		print("OmniWedge!");
+		//print("OmniWedge!");
 
 		RaycastHit2D lowerHit;
 		Vector2 lowerDirection = Vector2.down;
@@ -1466,7 +1883,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if(!lowerHit)
 		{
-			throw new Exception("Bottom not wedged!");
+			//throw new Exception("Bottom not wedged!");
 			print("Bottom not wedged!");
 			gPerp.x = groundNormal.x;
 			gPerp.y = groundNormal.y;
@@ -1549,9 +1966,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		float cornerAngle = Vector2.Angle(cPerp,gPerp);
 
-		print("Ground Perp = " + gPerp);
-		print("Ceiling Perp = " + cPerp);
-		print("cornerAngle = " + cornerAngle);
+		//print("Ground Perp = " + gPerp);
+		//print("Ceiling Perp = " + cPerp);
+		//print("cornerAngle = " + cornerAngle);
 		bool convergingLeft = false;
 
 		Vector2 cPerpTest = cPerp;
@@ -1566,26 +1983,26 @@ public class PlatformerCharacter2D : MonoBehaviour
 			gPerpTest *= -1;
 		}
 
-		print("gPerpTest = " + gPerpTest);
-		print("cPerpTest= " + cPerpTest);
+		//print("gPerpTest = " + gPerpTest);
+		//print("cPerpTest= " + cPerpTest);
 
 		float convergenceValue = cPerpTest.y-gPerpTest.y;
 
-		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;};
-		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;};
+		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // THIS IS BAD, PLACEHOLDER CODE!
+		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // THIS IS BAD, PLACEHOLDER CODE!
 
 		if(cornerAngle > 90f)
 		{
 			if(convergenceValue > 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				print("Left wedge!");
+				//print("Left wedge!");
 				m_LeftWallBlocked = true;
 			}
 			else if(convergenceValue < 0)
 			{
 				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
-				print("Right wedge!");
+				//print("Right wedge!");
 				m_RightWallBlocked = true;
 			}
 			else
@@ -1675,6 +2092,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 			m_RightWalled = true;
 		} 
 
+		if(!(m_Grounded&&m_Ceilinged))
+		{
+			if(!m_RightWalled)
+			{
+				m_RightWallBlocked = false;
+			}
+			if(!m_LeftWalled)
+			{
+				m_LeftWallBlocked = false;
+			}
+		}
+
 		if(antiTunneling&&posCorrection)
 		{
 			AntiTunneler(directionContacts);
@@ -1730,6 +2159,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 					surfacePosition.x -= ((m_RightSideLength)-m_MinEmbed);
 					this.transform.position = surfacePosition;
 				}
+				else
+				{
+					lastSafePosition = this.transform.position;
+				}
 				break;
 			}
 			case 2: //Two sides are touching. Use the 2-point unwedging algorithm to resolve.
@@ -1784,7 +2217,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			case 4:
 			{
 				print("FULL embedding! :C");
-				//this.transform.position = lastSafePosition;
+				this.transform.position = lastSafePosition;
 				break;
 			}
 			default:
@@ -1815,7 +2248,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the top vector so that its x = -1.
 				if(cPerp.x == 0)
 				{
-					throw new Exception("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
+					//print("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
+					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
@@ -1827,7 +2261,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the bottom vector so that its x = -1.
 				if(gPerp.x == 0)
 				{
-					throw new Exception("Your ground has no horizontality. What are you even doing?");
+					//throw new Exception("Your ground has no horizontality. What are you even doing?");
+					return new Vector2(0, embedDistance);
 				}
 				else
 				{
@@ -1853,7 +2288,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the top vector so that its x = -1.
 				if(cPerp.x == 0)
 				{
-					throw new Exception("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
+					//throw new Exception("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
+					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
@@ -1865,7 +2301,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{// Multiply/Divide the bottom vector so that its x = -1.
 				if(gPerp.x == 0)
 				{
-					throw new Exception("Your ground has no horizontality. What are you even doing?");
+					//throw new Exception("Your ground has no horizontality. What are you even doing?");
+					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
@@ -1954,6 +2391,45 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 			m_Jump = false;
 			m_Grounded = false;
+		}
+		else if(m_LeftWalled)
+		{
+			print("Leftwalljumping!");
+			if(pVel.y < 0)
+			{
+				pVel = new Vector2(m_WallHJumpForce, m_WallVJumpForce);
+			}
+			else if(pVel.y <= (2*m_WallVJumpForce))
+			{
+				pVel = new Vector2(m_WallHJumpForce, pVel.y+m_WallVJumpForce);
+			}
+			else
+			{
+				pVel = new Vector2(m_WallHJumpForce, pVel.y);
+			}
+
+			m_Jump = false;
+			m_LeftWalled = false;
+		}
+		else if(m_RightWalled)
+		{
+			print("Rightwalljumping!");
+			if(pVel.y < 0)
+			{
+				pVel = new Vector2(-m_WallHJumpForce, m_WallVJumpForce);
+			}
+			else if(pVel.y <= m_WallVJumpForce)
+			{
+				pVel = new Vector2(-m_WallHJumpForce, pVel.y+m_WallVJumpForce);
+			}
+			else
+			{
+				pVel = new Vector2(-m_WallHJumpForce, pVel.y);
+			}
+
+
+			m_Jump = false;
+			m_RightWalled = false;
 		}
 		else if(m_Ceilinged)
 		{

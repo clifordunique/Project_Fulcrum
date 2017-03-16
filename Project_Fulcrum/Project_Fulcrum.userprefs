@@ -2,12 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs">
     <Files>
-      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="907" Column="23" />
+      <File FileName="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" Line="2288" Column="29" />
       <File FileName="Assets\ShaderTest.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\SceneManager.cs" Line="1" Column="1" />
       <File FileName="Assets\ShaderTests\Test.shader" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CameraController.cs" Line="1" Column="1" />
       <File FileName="Assets\Standard Assets\2D\Scripts\Camera2DFollow.cs" Line="1" Column="1" />
+      <File FileName="Assets\Actor.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
