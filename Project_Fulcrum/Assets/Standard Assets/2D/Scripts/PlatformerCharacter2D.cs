@@ -27,9 +27,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Range(1,89)][SerializeField] private float m_AngleSpeedLossMin = 20f; 		// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_AngleSpeedLossMax.
 	[Range(1,89)][SerializeField] private float m_AngleSpeedLossMax = 80f; 		// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_AngleSpeedLossMin!!
 	[Range(1,89)][SerializeField] private float m_TractionLossAngle = 45f; 		// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default equates to 45 degrees.
-	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  
+	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  	// Changes how fast the player slides down overly steep slopes.
 	[Range(0.5f,3)][SerializeField] private float m_SurfaceClingTime = 1f; 		// How long the player can cling to walls before gravity takes over.
-	private float timeSpentHanging = 0f;										// Amount of time the player has been in walljump stance.
+	[Range(20,70)][SerializeField] private float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
+	private Vector2 expiredNormal;												// This is the normal of the last surface clung to, to make sure the player doesn't repeatedly cling the same surface after clingtime expires.
+	private float timeSpentHanging = 0f;										// Amount of time the player has been clung to a wall.
+	private float maxTimeHanging = 0f;											// Max time the player can cling to current wall.
 	[Range(0,0.5f)][SerializeField] private float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
 	[Range(0.01f,0.4f)][SerializeField] private float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
 
@@ -88,6 +91,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField][ReadOnlyAttribute]private bool leftSideContact;
 	[SerializeField][ReadOnlyAttribute]private bool rightSideContact;
 	[Space(10)]
+	[SerializeField][ReadOnlyAttribute]private bool m_SurfaceCling;
 	[SerializeField][ReadOnlyAttribute]private bool m_Grounded;
 	[SerializeField][ReadOnlyAttribute]private bool m_Ceilinged; 
 	[SerializeField][ReadOnlyAttribute]private bool m_LeftWalled; 
@@ -536,225 +540,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		*/
 
-		/*
-		if(m_LeftWalled)
-		{
-			if(m_Grounded)
-			{
-				//print("Both!");
-				if(pVel.x >= 0)
-				{
-					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
-					//print("LS="+leftSteepness);
-					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
-					//print("GS="+groundSteepness);
-					if(leftSteepness <= groundSteepness)
-					{
-						DirectionChange(leftNormal);
-					}
-					else
-					{
-						DirectionChange(groundNormal);
-					}
-				}
-				else if(pVel.x < 0)
-				{
-					//print("DESCENDING IMPACT");
-					float leftSteepness = Vector2.Angle(Vector2.right, Perp(leftNormal));
-					//print("LS="+leftSteepness);
-					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
-					//print("GS="+groundSteepness);
-					if(leftSteepness >= groundSteepness)
-					{
-						//print("Chose left");
-						DirectionChange(leftNormal);
-					}
-					else
-					{
-						//print("Chose ground");
-						DirectionChange(groundNormal);
-					}
-				}
-				else
-				{
-					DirectionChange(leftNormal);
-				}
-			}
-			else if(m_Ceilinged)
-			{
-				//print("Both!");
-				if(pVel.y > 0)
-				{
-					print("ASCENDING IMPACT");
-					float leftSteepness = Vector2.Angle(Vector2.left, Perp(leftNormal));
-					print("LS="+leftSteepness);
-					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
-					print("CS="+ceilingSteepness);
-					if(leftSteepness <= ceilingSteepness)
-					{
-						print("Chose left");
-						DirectionChange(leftNormal);
-					}
-					else
-					{
-						print("Chose ceiling");
-						DirectionChange(ceilingNormal);
-					}
-				}
-				else if(pVel.y < 0)
-				{
-					print("DESCENDING IMPACT");
-					float leftSteepness = Vector2.Angle(Vector2.left, Perp(leftNormal));
-					print("LS="+leftSteepness);
-					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
-					print("CS="+ceilingSteepness);
-					if(leftSteepness >= ceilingSteepness)
-					{
-						print("Chose left");
-						DirectionChange(leftNormal);
-					}
-					else
-					{
-						print("Chose ceiling");
-						DirectionChange(ceilingNormal);
-					}
-				}
-				else
-				{
-					DirectionChange(leftNormal);
-				}
-			}
-			else
-			{
-				DirectionChange(leftNormal);
-			}
-
-			//print("LeftWallMovement");
-			//DirectionChange(leftNormal);
-		}
-
-		if(m_RightWalled)
-		{
-			if(m_Grounded)
-			{
-				if(pVel.x > 0) //If moving right, use the steepest angle colliding surface.
-				{
-					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
-					//print("RS="+rightSteepness);
-					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
-					//print("GS="+groundSteepness);
-					if(rightSteepness >= groundSteepness)
-					{
-						DirectionChange(rightNormal);
-					}
-					else
-					{
-						DirectionChange(groundNormal);
-					}
-				}
-				else if(pVel.x <= 0) //If moving left or down, use the shallowest angle colliding surface.
-				{
-					float rightSteepness = Vector2.Angle(Vector2.right, Perp(rightNormal));
-					print("RS="+rightSteepness);
-					float groundSteepness = Vector2.Angle(Vector2.right, Perp(groundNormal));
-					print("GS="+groundSteepness);
-					if(rightSteepness <= groundSteepness)
-					{
-						print("Chose right");
-						DirectionChange(rightNormal);
-					}
-					else
-					{
-						print("Chose ground");
-						DirectionChange(groundNormal);
-					}
-				}
-				else
-				{
-					DirectionChange(rightNormal);
-				}
-			}
-			else if(m_Ceilinged)
-			{
-				//print("Both!");
-				if(pVel.y > 0)
-				{
-					print("ASCENDING IMPACT");
-					float rightSteepness = Vector2.Angle(Vector2.left, Perp(rightNormal));
-					print("RS="+rightSteepness);
-					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
-					print("CS="+ceilingSteepness);
-					if(rightSteepness <= ceilingSteepness)
-					{
-						print("Chose right");
-						DirectionChange(rightNormal);
-					}
-					else
-					{
-						print("Chose ceiling");
-						DirectionChange(ceilingNormal);
-					}
-				}
-				else if(pVel.y < 0)
-				{
-					print("DESCENDING IMPACT");
-					float rightSteepness = Vector2.Angle(Vector2.left, Perp(rightNormal));
-					print("RS="+rightSteepness);
-					float ceilingSteepness = Vector2.Angle(Vector2.left, Perp(ceilingNormal));
-					print("CS="+ceilingSteepness);
-					if(rightSteepness >= ceilingSteepness)
-					{
-						print("Chose right");
-						DirectionChange(rightNormal);
-					}
-					else
-					{
-						print("Chose ceiling");
-						DirectionChange(ceilingNormal);
-					}
-				}
-				else
-				{
-					DirectionChange(rightNormal);
-				}
-			}
-			else
-			{
-				DirectionChange(rightNormal);
-			}
-
-			//print("rightWallMovement");
-			//DirectionChange(rightNormal);
-		}
-
-		if(m_Ceilinged&&!m_RightWalled&&!m_LeftWalled&&!m_Grounded)
-		{
-			//print("CeilingMovement");
-			DirectionChange(ceilingNormal);
-		}
-
-		if (m_Grounded&&!m_RightWalled&&!m_LeftWalled) //Handles velocity along ground surface.
-		{
-			//print("GroundMovement");
-
-			if(m_Ceilinged)
-			{
-				if(pVel.y > 0) //If moving up, use the ceiling surface
-				{
-					DirectionChange(ceilingNormal);
-				}
-				else if(pVel.y <= 0) //If moving down or horiz, use the ground colliding surface.
-				{
-					DirectionChange(groundNormal);
-				}
-			}
-			else
-			{
-				DirectionChange(groundNormal);
-			}
-		}
-		*/
-
 		//print("Speed this frame: "+pVel.magnitude);
 		remainingMovement = pVel*remainingVelMult*Time.fixedDeltaTime;
 
@@ -763,11 +548,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 		Vector2 deltaV = finalVel-initialVel;
 		m_IGF = deltaV.magnitude;
 		m_CGF += m_IGF;
-		if(m_CGF>=2){m_CGF -= 2;}
+		if(m_CGF>=1){m_CGF --;}
+		if(m_CGF>=10){m_CGF -= (m_CGF/10);}
 
 		if(m_CGF>=200)
 		{
-			m_CGF = 0f;
+			//m_CGF = 0f;
 			print("m_CGF over limit!!");	
 		}
 
@@ -1086,7 +872,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			case 0://Ground collision with feet
 			{
 				//If you're going to hit something with your feet.
-				print("FOOT_IMPACT");
+				//print("FOOT_IMPACT");
 				//print("Velocity before impact: "+pVel);
 				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
@@ -1109,7 +895,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				if ((moveDirectionNormal != predictedLoc[1].normal) && (invertedDirectionNormal != predictedLoc[1].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					print("CEILING_IMPACT");
+					//print("CEILING_IMPACT");
 					ToCeiling(predictedLoc[1]);
 					DirectionChange(ceilingNormal);
 					return;
@@ -1128,7 +914,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if ((moveDirectionNormal != predictedLoc[2].normal) && (invertedDirectionNormal != predictedLoc[2].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					print("LEFT_IMPACT");
+					//print("LEFT_IMPACT");
 					ToLeftWall(predictedLoc[2]);
 					DirectionChange(leftNormal);
 					return;
@@ -1147,7 +933,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if ((moveDirectionNormal != predictedLoc[3].normal) && (invertedDirectionNormal != predictedLoc[3].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					print("RIGHT_IMPACT");
+					//print("RIGHT_IMPACT");
 					//print("predictedLoc[3].normal=("+predictedLoc[3].normal.x+","+predictedLoc[3].normal.y+")");
 					//print("moveDirectionNormal=("+moveDirectionNormal.x+","+moveDirectionNormal.y+")");
 					//print("moveDirectionNormal="+moveDirectionNormal);
@@ -1306,7 +1092,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		Vector2 wallPerp = Perp(wallSurface);
 
-		print("horizontalInput="+horizontalInput);
+		//print("horizontalInput="+horizontalInput);
 
 		if(wallPerp.x > 0)
 		{
@@ -1314,141 +1100,106 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 
 		float steepnessAngle = Vector2.Angle(Vector2.up,wallPerp);
-		print("Wall Steepness Angle:"+steepnessAngle);
 
-		float slopeMultiplier = 0;
-
-		if(pVel.y > 0)
+		if(m_RightWalled)
 		{
-			pVel = ChangeSpeedLinear(pVel,-0.8f);
+			steepnessAngle = 180f - steepnessAngle;
 		}
 
-		if(pVel.y <= 0)
+		if(steepnessAngle == 180)
 		{
-			if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) )
-			{
-				pVel.y -= 0.1f;
-			}
-			else
-			{
-				pVel.y -= 1f;
-			}
-
+			steepnessAngle=0;
 		}
 
-//		if(steepnessAngle > m_TractionLossAngle)
-//		{
-//			slopeMultiplier = ((steepnessAngle-m_TractionLossAngle)/(90f-m_TractionLossAngle));
-//
-//			//print("slopeMultiplier: "+ slopeMultiplier);
-//			//print("wallPerpY: "+wallPerpY+", slopeThreshold: "+slopeThreshold);
-//		}
-
-		//print("Traction");
-//		if( ((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)) )
-//		{// If running at an obstruction you're up against.
-//			//print("Running against a wall.");
-//			horizontalInput = 0;
-//		}
-
-		/*
-		//print("Traction executing");
-		float rawSpeed = pVel.magnitude;
-		//print("pVel.magnitude"+pVel.magnitude);
-		if (horizontalInput == 0) 
-		{//if not pressing any move direction, slow to zero linearly.
-			//print("No input, slowing...");
-			if(rawSpeed <= 1)
+		if(steepnessAngle > 90 && (wallSurface != expiredNormal)) //If the sliding surface is upside down, and hasn't already been clung to.
+		{
+			if(!m_SurfaceCling)
 			{
-				pVel = Vector2.zero;	
-			}
-			else
-			{
-				pVel = ChangeSpeedLinear (pVel, -m_LinearSlideRate);
-			}
-		}
-		else if((horizontalInput > 0 && pVel.x >= 0) || (horizontalInput < 0 && pVel.x <= 0))
-		{//if pressing same button as move direction, move to MAXSPEED.
-			//print("Moving with keypress");
-			if(rawSpeed <= maxRunSpeed)
-			{
-				//print("Rawspeed("+rawSpeed+") less than max");
-				if(rawSpeed > m_TractionChangeThreshold )
+				timeSpentHanging = 0;
+				maxTimeHanging = 0;
+				m_SurfaceCling = true;
+				if(m_CGF >= m_ClingReqGForce)
 				{
-					//print("LinAccel-> " + rawSpeed);
-					if(pVel.y > 0)
-					{ 	// If climbing, recieve uphill movement penalty.
-						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate*(1-slopeMultiplier));
-					}
-					else
-					{
-						pVel = ChangeSpeedLinear(pVel, m_LinearAccelRate);
-					}
-				}
-				else if(rawSpeed < 0.001)
-				{
-					pVel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
-					//print("Starting motion. Adding " + m_Acceleration);
+					maxTimeHanging = m_SurfaceClingTime;
 				}
 				else
 				{
-					//print("ExpAccel-> " + rawSpeed);
-					float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
-					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-
-					float addedSpeed = curveMultiplier*(m_Acceleration);
-					if(pVel.y > 0)
-					{ // If climbing, recieve uphill movement penalty.
-						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
-					}
-					//print("Addedspeed:"+addedSpeed);
-					pVel = (pVel.normalized)*(rawSpeed+addedSpeed);
-					//print("pVel:"+pVel);
+					maxTimeHanging = m_SurfaceClingTime*(m_CGF/m_ClingReqGForce);
+				}
+				print("maxTimeHanging="+maxTimeHanging);
+			}
+			else
+			{
+				timeSpentHanging += Time.fixedDeltaTime;
+				print("time=("+timeSpentHanging+"/"+maxTimeHanging+")");
+				if(timeSpentHanging>=maxTimeHanging)
+				{
+					m_SurfaceCling = false;
+					expiredNormal = wallSurface;
+					print("EXPIRED!");
 				}
 			}
-			else
-			{
-				print("Rawspeed("+rawSpeed+") more than max???");
-			}
 		}
-		else if((horizontalInput > 0 && pVel.x < 0) || (horizontalInput < 0 && pVel.x > 0))
-		{//if pressing button opposite of move direction, slow to zero exponentially.
-			if(rawSpeed > m_TractionChangeThreshold )
-			{
-				//print("LinDecel");
-				pVel = ChangeSpeedLinear (pVel, -m_LinearStopRate);
-			}
-			else
-			{
-				//print("Decelerating");
-				float eqnX = (1+Mathf.Abs((1/m_TractionChangeThreshold )*rawSpeed));
-				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
-				pVel = (pVel.normalized)*(rawSpeed-2*addedSpeed);
-			}
-
-			//float modifier = Mathf.Abs(pVel.x/pVel.y);
-			//print("SLOPE MODIFIER: " + modifier);
-			//pVel = pVel/(1.25f);
-		}
-
-		Vector2 downSlope = pVel.normalized; // Normal vector pointing down the current slope!
-		if (downSlope.y > 0) //Make sure the vector is descending.
+		else
 		{
-			downSlope *= -1;
+			m_SurfaceCling = false;
+			timeSpentHanging = 0;
+			maxTimeHanging = 0;
 		}
 
+		//print("Wall Steepness Angle:"+steepnessAngle);
 
-
-		if(downSlope == Vector2.zero)
+		if(m_SurfaceCling)
 		{
-			downSlope = Vector2.down;
+			if(pVel.y > 0)
+			{
+				pVel = ChangeSpeedLinear(pVel,-0.8f);
+			}
+			else if(pVel.y <= 0)
+			{
+				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) )
+				{
+					pVel = ChangeSpeedLinear(pVel,0.1f);
+				}
+				else
+				{
+					pVel = ChangeSpeedLinear(pVel,1f);
+				}
+			}
 		}
-		pVel += downSlope*m_SlippingAcceleration*slopeMultiplier;
-		*/
-
-		//ChangeSpeedLinear(pVel, );
-		//print("PostTraction velocity: "+pVel);
+		else
+		{
+			if(pVel.y > 0)
+			{
+				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+				{
+					pVel.y -= 0.8f; //Decelerate slower.
+				}
+				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+				{
+					pVel.y -= 1.2f; //Decelerate faster.
+				}
+				else // If no input.
+				{
+					pVel.y -= 1f; 	//Decelerate.
+				}
+			}
+			else if(pVel.y <= 0)
+			{
+				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+				{
+					pVel.y -= 0.1f; //Accelerate downward slower.
+				}
+				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+				{
+					pVel.y -= 1.2f; //Accelerate downward faster.
+				}
+				else // If no input.
+				{
+					pVel.y -= 1f; 	//Accelerate downward.
+				}
+			}
+		}
 	}
 		
 	private void ToLeftWall(RaycastHit2D leftCheck) 
@@ -1721,6 +1472,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private void DirectionChange(Vector2 newNormal)
 	{
 		//print("DirectionChange");
+		expiredNormal = new Vector2(0,0); //Used for wallslides. This resets the surface normal that wallcling is set to ignore.
+
 		Vector2 initialDirection = pVel.normalized;
 		Vector2 newPerp = Perp(newNormal);
 		Vector2 AdjustedVel;
@@ -2447,7 +2200,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else
 		{
-			print("Can't jump, airborne!");
+			//print("Can't jump, airborne!");
 		}
 	}
 }

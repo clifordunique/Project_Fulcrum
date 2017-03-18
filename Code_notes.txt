@@ -4,3 +4,4 @@ Invert colour shader might be better!
 
 CHANGE ALL REFERENCES OF CHAINS AND SUCH TO ID REFS INSTEAD OF DIRECT POINTERS //This is referring to dialogue code
 
+cling time in seconds = g-forces

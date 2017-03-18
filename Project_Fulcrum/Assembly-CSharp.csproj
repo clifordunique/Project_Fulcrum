@@ -89,7 +89,6 @@
      <Compile Include="Assets\Scripts\JSONDialogue.cs" />
      <Compile Include="Assets\Scripts\MenuChoicePrefab.cs" />
      <Compile Include="Assets\Scripts\NeutralButton.cs" />
-     <Compile Include="Assets\Scripts\NewBehaviourScript.cs" />
      <Compile Include="Assets\Scripts\ParallaxLayer.cs" />
      <Compile Include="Assets\Scripts\ParallaxOption.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
@@ -97,6 +96,7 @@
      <Compile Include="Assets\Scripts\WorldTileManager.cs" />
      <Compile Include="Assets\Scripts\WorldTile_backup.cs" />
      <Compile Include="Assets\ShaderTest.cs" />
+     <Compile Include="Assets\Spooler.cs" />
      <Compile Include="Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\TextFieldModder.cs" />
      <Compile Include="Assets\asd.cs" />
@@ -185,6 +185,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
+     <None Include="Assets\ShaderTests\SpoolTest.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\ShaderTests\Test.shader" />

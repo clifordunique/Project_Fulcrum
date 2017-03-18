@@ -62,7 +62,7 @@
 				//float4 colour = tex2D(_MainTex, i.uv);
 				//float4 colour = float4(colour.r*i.uv.x,colour.g*i.uv.y,0,colour.a);
 				//float4 colour = float4(1-colour.r, 1-colour.g, 1-colour.b, colour.a);
-				float4 colour = tex2D(_MainTex, i.uv);
+				float4 colour = tex2D(_MainTex, i.uv);  //i.uv + disp + waveOffset
 				//colour *= _Color;
 				return colour;
 			}
