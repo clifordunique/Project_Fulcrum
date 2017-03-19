@@ -1,7 +1,7 @@
 ﻿Shader "Custom/SpoolTest" {
 	
 	Properties {
-		_Color("Color", Color) = (1,1,1,1)
+		_Color("_Color", Color) = (1,1,1,1)
 		_MainTex("Texture", 2D) = "white" {}
 		_DisplaceTex ("Displacement Texture", 2D) = "white" {}
 		_Radius("_Radius", Range(0,1)) = 1

@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4957385652168484}
   - component: {fileID: 212082868518186606}
+  - component: {fileID: 114224447615555590}
   m_Layer: 5
   m_Name: SpoolRingPrefab
   m_TagString: Untagged
@@ -39,7 +40,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 174.242}
+--- !u!114 &114224447615555590
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1490407522407120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d3746c0849ac2b42a6aa4bdca4173f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {x: 1, y: 1, z: 1, w: 1}
+  rotation: 0
+  radius: 0.05
+  thickness: 0.01
+  fillAmount: 5.37
+  depth: 0
+  renderer: {fileID: 212082868518186606}
 --- !u!212 &212082868518186606
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -70,7 +89,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: ad2e768a4054b0749ae9cdfb7103c883, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
