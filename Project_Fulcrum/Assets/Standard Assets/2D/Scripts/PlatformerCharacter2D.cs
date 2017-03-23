@@ -84,7 +84,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField][ReadOnlyAttribute]private float m_IGF; 			 //"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]private float m_CGF; 			//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]private float remainingVelMult;
-	[SerializeField][ReadOnlyAttribute]private Vector2 pVel;
+	[SerializeField][ReadOnlyAttribute]public Vector2 pVel;
 	[SerializeField][ReadOnlyAttribute]private Vector2 remainingMovement;
 	[SerializeField][ReadOnlyAttribute]private bool groundContact;
 	[SerializeField][ReadOnlyAttribute]private bool ceilingContact;

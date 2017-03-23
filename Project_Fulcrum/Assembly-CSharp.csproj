@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Actor.cs" />
      <Compile Include="Assets\ActorAnimator.cs" />
+     <Compile Include="Assets\CharacterAudio.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
