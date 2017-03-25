@@ -6549,6 +6549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   emoteAnimator: {fileID: 95540672510498992}
   positionAnimator: {fileID: 95500421766620320}
+  actorID: 0
 --- !u!114 &114619289112856814
 MonoBehaviour:
   m_ObjectHideFlags: 1

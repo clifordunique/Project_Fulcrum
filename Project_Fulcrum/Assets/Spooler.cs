@@ -267,6 +267,10 @@ public class Spooler : MonoBehaviour
 		
 	private void Reset()
 	{
+		if(!r_Active)
+		{
+			return;
+		}
 		r_Paused = true;
 		r_CurTime = 0;
 		r_RingNum = -1;
@@ -274,6 +278,7 @@ public class Spooler : MonoBehaviour
 		r_Rotation = 0;
 		r_TotalPower = 0;
 		r_Accuracy = 0;
+		r_TooEarly = false;
 
 		o_FeedbackText.text = "";
 
@@ -288,6 +293,7 @@ public class Spooler : MonoBehaviour
 				Destroy(theRing.gameObject);
 			}
 		}
+		r_Active = false;
 	}
 
 	private void StartSpool()
@@ -326,6 +332,7 @@ public class Spooler : MonoBehaviour
 
 		r_OuterRadius = r_CoreSize+r_BufferZone;
 		AddRing();
+		r_Active = true;
 	}
 
 	private void DevEndScore()
