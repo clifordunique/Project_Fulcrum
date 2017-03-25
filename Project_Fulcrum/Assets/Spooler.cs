@@ -1,13 +1,12 @@
 ﻿using UnityEngine.UI;
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class Spooler : MonoBehaviour 
 {
 	#region OBJECT REFERENCES
 	[SerializeField]private GameObject o_SpoolRingPrefab;
-	[SerializeField]private GameObject o_Player;
+	[SerializeField]private PlatformerCharacter2D o_Player;
 	[SerializeField]private Text o_FeedbackText;
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
@@ -20,11 +19,11 @@ public class Spooler : MonoBehaviour
 	[SerializeField][Range(0,0.02f)] private float r_RingGap;		// Static gap between rings.
 	[SerializeField][Range(0,0.02f)] private float r_BufferZone;		// Distance from core.
 	[SerializeField][Range(0,0.02f)] private float r_CoreSize;		// Core size. Keep this lower than r_BufferZone.
-	[SerializeField][Range(0,0.5f)] private float r_LimitRadius; // Max radius before overload occurs.
+	[SerializeField][Range(0,0.5f)] private float r_LimitRadius; 	// Max radius before overload occurs.
 	[SerializeField][Range(0,0.02f)] private float r_LimitThickness; // Thickness of outer bound ring.
 	[SerializeField][Range(0,10f)] private float r_MaxTime;			// Time per full rotation of ring.
 	[SerializeField][ReadOnlyAttribute] private float r_CurTime;	// Amount of time since rotation started.
-	[SerializeField][ReadOnlyAttribute] private float r_TotalPower;	// Amount of total power amassed. Max of 1 per ring.
+	[SerializeField][ReadOnlyAttribute] private int r_TotalPower;	// Amount of total power amassed. Max of 1 per ring.
 	[SerializeField][ReadOnlyAttribute] private float r_OuterRadius;// Radius of the current outer ring.
 	[SerializeField][ReadOnlyAttribute] private float r_MinRadius;	// Minimum radius of the current outer ring.
 	[SerializeField][ReadOnlyAttribute] private float r_Rotation;   // Orientation of current ring.
@@ -37,13 +36,8 @@ public class Spooler : MonoBehaviour
 	#endregion
 
 	#region PLAYERINPUT
-	private bool i_Jump;
-	private bool i_KeyLeft;	
-	private bool i_KeyRight;
-	private bool i_KeyUp;
-	private bool i_KeyDown;
-	private bool i_Spool;
-	private bool i_Reset;
+	private bool i_ZonKey;
+	private bool i_IntKey;
 
 	private int CtrlH; 				// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	private int CtrlV; 				// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
@@ -65,19 +59,16 @@ public class Spooler : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		i_KeyLeft = CrossPlatformInputManager.GetButton("Left");
-		i_KeyRight = CrossPlatformInputManager.GetButton("Right");
-		i_KeyUp = CrossPlatformInputManager.GetButton("Up");
-		i_KeyDown = CrossPlatformInputManager.GetButton("Down");
-		i_Spool = CrossPlatformInputManager.GetButtonDown("Spooling");
-		i_Reset = CrossPlatformInputManager.GetButtonDown("Interact");
 
-		if(i_Reset)
+		i_ZonKey = Input.GetButtonDown("Spooling");
+		i_IntKey = Input.GetButtonDown("Interact");
+
+		if(i_IntKey)
 		{
 			Reset();
 		}
 
-		if(i_Spool)
+		if(i_ZonKey)
 		{
 			if(r_RingNum < o_Rings.Length && r_OuterRadius < r_LimitRadius)
 			{
@@ -204,20 +195,20 @@ public class Spooler : MonoBehaviour
 		if(thePercent>1)
 		{
 			r_Accuracy += 2-thePercent;
-			print("This frame " +(int)((2-thePercent)*100));
-			print("r_Accuracy: " + (int)(r_Accuracy*100/(r_TotalPower)));
+			//print("This frame " +(int)((2-thePercent)*100));
+			//print("r_Accuracy: " + (int)(r_Accuracy*100/(r_TotalPower)));
 		}
 		else
 		{
 			r_Accuracy += thePercent;
-			print("This frame: " + (int)(thePercent*100));
-			print("r_Accuracy: " + (int)(r_Accuracy*100));
-			print("True accuracy: " + (int)(r_Accuracy*100/(r_TotalPower)));
+			//print("This frame: " + (int)(thePercent*100));
+			//print("r_Accuracy: " + (int)(r_Accuracy*100));
+			//print("True accuracy: " + (int)(r_Accuracy*100/(r_TotalPower)));
 			thePercent = 1;
 		}
 			
 		r_OuterRadius = r_MinRadius*thePercent;
-		print("r_OuterRadius="+r_OuterRadius);
+		//print("r_OuterRadius="+r_OuterRadius);
 
 		float degrees = (thePercent*360);
 		r_Rotation += degrees;
@@ -235,17 +226,17 @@ public class Spooler : MonoBehaviour
 
 		if(thePercent < 1)
 		{
-			print("TOO SMALL!");
+			//print("TOO SMALL!");
 			o_Rings[r_RingNum].radius = r_OuterRadius;
 		}
 		else
 		{
-			print("Proper size!");
+			//print("Proper size!");
 			o_Rings[r_RingNum].radius = r_OuterRadius;
 			//r_Accuracy += 2-thePercent;
 
 		}
-		print("END RING ####################");	
+		//print("END RING ####################");	
 	}
 
 	private void Contract()
@@ -271,6 +262,9 @@ public class Spooler : MonoBehaviour
 		{
 			return;
 		}
+
+		o_Player.SetZonLevel(r_TotalPower);
+
 		r_Paused = true;
 		r_CurTime = 0;
 		r_RingNum = -1;
@@ -298,6 +292,12 @@ public class Spooler : MonoBehaviour
 
 	private void StartSpool()
 	{
+
+		if(o_Player.GetZonLevel() > 0)
+		{
+			return;
+		}
+
 		r_CurTime = 0;
 		r_RingNum = -1;
 		r_Rotation = 0;

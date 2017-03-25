@@ -441,7 +441,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1695942328881188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 124.6, y: -292.1, z: 0}
+  m_LocalPosition: {x: -212.1, y: 103, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4451397308939896}
@@ -737,8 +737,8 @@ Light:
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 2
-  m_Color: {r: 0.8588236, g: 0.48235297, b: 0.4901961, a: 1}
-  m_Intensity: 4
+  m_Color: {r: 1, g: 1, b: 0, a: 1}
+  m_Intensity: 1.08
   m_Range: 30
   m_SpotAngle: 53.9
   m_CookieSize: 10
@@ -851,13 +851,14 @@ MonoBehaviour:
   m_ImpactDecelMinAngle: 20
   m_ImpactDecelMaxAngle: 80
   m_TractionLossMinAngle: 45
-  m_TractionLossMaxAngle: 90
+  m_TractionLossMaxAngle: 78
   m_SlippingAcceleration: 1
   m_SurfaceClingTime: 1
   m_ClingReqGForce: 50
   m_MaxEmbed: 0.02
   m_MinEmbed: 0.01
   o_Speedometer: {fileID: 0}
+  o_TempLight: {fileID: 108693648367988064}
   o_MainCamera: {fileID: 20560279664619884}
   o_CharSprite: {fileID: 1741813426393122}
   o_CharAudio: {fileID: 114552374237860170}
@@ -885,7 +886,8 @@ MonoBehaviour:
   m_SurfaceCling: 0
   m_Airborne: 0
   m_Landing: 0
-  autoSprint: 1
+  autoRunLeft: 0
+  autoRunRight: 0
   autoJump: 0
   antiTunneling: 1
   noGravity: 0
@@ -893,6 +895,9 @@ MonoBehaviour:
   showContactIndicators: 1
   recoverFromFullEmbed: 0
   v_ReversingSlideT: 5
+  v_CameraZoom: 0
+  v_PlayerGlow: 0
+  g_ZonLevel: 0
 --- !u!114 &114719832742648658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -918,7 +923,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   o_SpoolRingPrefab: {fileID: 1490407522407120, guid: ef406ec911ba8a147b508370b25c8a54,
     type: 2}
-  o_Player: {fileID: 1695942328881188}
+  o_Player: {fileID: 114677142598850056}
   o_FeedbackText: {fileID: 0}
   o_Rings:
   - {fileID: 0}

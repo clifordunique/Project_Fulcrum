@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 /*
  * AUTHOR'S NOTES:
@@ -52,6 +51,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[ReadOnlyAttribute]private float m_MaxTimeHanging = 0f;						// Max time the player can cling to current wall.
 	[Range(0,0.5f)][SerializeField] private float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
 	[Range(0.01f,0.4f)][SerializeField] private float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
+	[Space(10)]
+	[SerializeField] private float m_ZonJumpForcePerCharge = 10f; 				// How much force does each Zon Charge add to the jump power?
+	[SerializeField] private float m_ZonJumpForceBase = 40f; 					// How much force does a no-power ZSon jump have?
+
 
 	#endregion
 	//############################################################################################################################################################################################################
@@ -61,6 +64,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[Header("Player Components:")]
 
 	[SerializeField] private Text o_Speedometer;      		// Reference to the speed indicator (dev tool).
+	[SerializeField] private Light o_TempLight;      		// Reference to a spotlight attached to the character.
 	[SerializeField] private Camera o_MainCamera;			// Reference to the main camera.
 	[SerializeField] private GameObject o_CharSprite;		// Reference to the character's sprite.
 	[SerializeField] public CharacterAudio o_CharAudio;		// Reference to the character's audio handler.
@@ -121,50 +125,65 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField][ReadOnlyAttribute]private bool m_SurfaceCling;
 	[SerializeField][ReadOnlyAttribute]private bool m_Airborne;
 	[SerializeField][ReadOnlyAttribute]private bool m_Landing;
+	[SerializeField][ReadOnlyAttribute]private bool m_Kneeling;
 
 	#endregion
 	//##########################################################################################################################################################################
 	// PLAYER INPUT VARIABLES
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
-	private bool m_Jump;
-	private bool m_KeyLeft;
-	private bool m_KeyRight;
-	private bool m_KeyUp;
-	private bool m_KeyDown;
-	private int CtrlH; 				// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
-	private int CtrlV; 				// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-	private bool facingDirection; 	// true means right, false means left.
+	private bool i_JumpKey;
+	private bool i_LeftClick;
+	private bool i_LeftKey;
+	private bool i_RightKey;
+	private bool i_UpKey;
+	private bool i_DownKey;
+	private bool i_ZonKey;
+	private int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
+	private int CtrlV; 					// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
+	private bool facingDirection; 		// True means right, false means left.
+	private Vector2 i_MouseWorldPos;	// Mouse position in world coordinates.
+	private Vector2 i_PlayerMouseVector;// Vector pointing from the player to their mouse position.
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
 	//##########################################################################################################################################################################
 	#region DEBUGGING
-	private int errorDetectingRecursionCount; 		//Iterates each time recursive trajectory correction executes on the current frame.
+	private int errorDetectingRecursionCount; 				//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
 	[Header("Debug:")]
-	[SerializeField] private bool autoRunLeft; 		// When set to true, the player will behave as if the left key is pressed.
-	[SerializeField] private bool autoRunRight; 	// When set to true, the player will behave as if the right key is pressed.
-	[SerializeField] private bool autoJump;
-	[SerializeField] private bool antiTunneling; 	// When set to true, the player will be pushed up out of objects they are stuck in.
-	[SerializeField] private bool noGravity; 
-	[SerializeField] private bool showVelocityIndicator;
-	[SerializeField] private bool showContactIndicators;
-	[SerializeField] private bool recoverFromFullEmbed;
-	private LineRenderer m_DebugLine; // Shows Velocity. 
-	private LineRenderer m_GroundLine;
-	private LineRenderer m_CeilingLine;
-	private LineRenderer m_LeftSideLine;
-	private LineRenderer m_RightSideLine;
+	[SerializeField] private bool autoRunLeft; 				// When true, player will behave as if the left key is pressed.
+	[SerializeField] private bool autoRunRight; 			// When true, player will behave as if the right key is pressed.
+	[SerializeField] private bool autoJump;					// When true, player jumps instantly on every surface.
+	[SerializeField] private bool antiTunneling; 			// When true, player will be pushed out of objects they are stuck in.
+	[SerializeField] private bool noGravity;				// Disable gravity.
+	[SerializeField] private bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
+	[SerializeField] private bool showContactIndicators;	// Shows player's surface-contact raycasts, which turn green when touching something.
+	[SerializeField] private bool recoverFromFullEmbed;		// When true and the player is fully stuck in something, teleports player to last good position.
+	[SerializeField] private bool d_ClickToKnockPlayer;		// When true and you left click, the player is propelled toward where you clicked.
+	[SerializeField] private bool d_DevMode;				// Turns on all dev cheats.
+	private LineRenderer m_DebugLine; 						// Part of above indicators.
+	private LineRenderer m_GroundLine;						// Part of above indicators.		
+	private LineRenderer m_CeilingLine;						// Part of above indicators.		
+	private LineRenderer m_LeftSideLine;					// Part of above indicators.		
+	private LineRenderer m_RightSideLine;					// Part of above indicators.		
 	#endregion
 	//############################################################################################################################################################################################################
 	// VISUAL&SOUND VARIABLES
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
-	[SerializeField][Range(0,10)]private float v_ReversingSlideT;
-	private float cameraZoom;
+	[SerializeField][Range(0,10)]private float v_ReversingSlideT; 	// How fast the player must be going to go into a slide posture when changing directions.
+	[SerializeField]private float v_CameraZoom; 					// Amount of camera zoom.
+	[SerializeField][Range(0,3)]private int v_PlayerGlow;			// Amount of player "energy glow" effect.
 	#endregion 
-
+	//############################################################################################################################################################################################################
+	// GAMEPLAY VARIABLES
+	//###########################################################################################################################################################################
+	#region GAMEPLAY VARIABLES
+	[Header("Gameplay:")]
+	[SerializeField]private int g_ZonLevel;		//	Level of player Zon Power.
+	[SerializeField]private int g_ZonJumpCharge;	//	Level of power channelled into current jump.
+	#endregion 
 
 
 	//########################################################################################################################################
@@ -175,9 +194,6 @@ public class PlatformerCharacter2D : MonoBehaviour
     {
 		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
-		if(!showVelocityIndicator){
-			m_DebugLine.enabled = false;
-		}
 
 		m_GroundFoot = transform.Find("MidFoot");
 		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
@@ -213,7 +229,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_RemainingVelM = 1f;
 		//print(m_RemainingMovement);
 
-		if(!showContactIndicators)
+
+		if(!(showVelocityIndicator||d_DevMode)){
+			m_DebugLine.enabled = false;
+		}
+
+		if(!(showContactIndicators||d_DevMode))
 		{
 			m_CeilingLine.enabled = false;
 			m_GroundLine.enabled = false;
@@ -226,20 +247,19 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 		this.transform.position = finalPos;
+
 		UpdateContactNormals(true);
 
 		Vector2 initialVel = m_Vel;
-
-
+		i_PlayerMouseVector =  i_MouseWorldPos-Vec2(this.transform.position);
 		m_Landing = false;
-		//o_Rigidbody2D.MovePosition(finalPos);
-		//Vector2 finalPos = new Vector2(this.transform.position.x+(m_Vel*Time.fixedDeltaTime.x), this.transform.position.y+(m_Vel*Time.fixedDeltaTime.y));
+		m_Kneeling = false;
 		//print("Initial Pos: " + startingPos);
 		//print("Initial Vel: " +  m_Vel);
 
 		#region playerinput
 
-		if(!(m_KeyLeft||m_KeyRight) || (m_KeyLeft && m_KeyRight))
+		if(!(i_LeftKey||i_RightKey) || (i_LeftKey && i_RightKey))
 		{
 			//print("BOTH OR NEITHER");
 			if(!(autoRunLeft||autoRunRight))
@@ -255,7 +275,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				CtrlH = 1;
 			}
 		}
-		else if(m_KeyLeft)
+		else if(i_LeftKey)
 		{
 			//print("LEFT");
 			CtrlH = -1;
@@ -265,8 +285,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("RIGHT");
 			CtrlH = 1;
 		}
-
-
 			
 		if (CtrlH < 0) 
 		{
@@ -277,25 +295,40 @@ public class PlatformerCharacter2D : MonoBehaviour
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
-		if((!m_KeyUp && !m_KeyDown) || (m_KeyUp && m_KeyDown))
+		//print("CTRLH=" + CtrlH);
+		if(i_DownKey&&m_Grounded)
 		{
-			CtrlV = 0;
-		}
-		else if(m_KeyUp)
-		{
-			CtrlV = 1;
+			m_Kneeling = true;
+			CtrlH = 0;
+			if(i_ZonKey&&g_ZonLevel>0)
+			{
+				g_ZonJumpCharge++;
+				g_ZonLevel--;
+			}
 		}
 		else
 		{
-			CtrlV = -1;
+			g_ZonJumpCharge=0;
 		}
 
-		//print("CTRLH=" + CtrlH);
-
-		if(m_Jump)
+		if(i_JumpKey)
 		{
-			Jump(CtrlH);
+			if(m_Kneeling)
+			{
+				ZonJump(i_PlayerMouseVector.normalized);
+			}
+			else
+			{
+				Jump(CtrlH);
+			}
 		}
+
+		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		{
+			m_Vel += i_PlayerMouseVector*10;
+			print("Leftclick detected");
+			i_LeftClick = false;
+		}	
 
 		#endregion
 
@@ -332,11 +365,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	
 		//print("Per frame velocity at end of Collizion() "+m_Vel*Time.fixedDeltaTime);
 		//print("Velocity at end of Collizion() "+m_Vel);
-
-		//UpdateContactNormals(true);
-	
 		//print("Per frame velocity at end of updatecontactnormals "+m_Vel*Time.fixedDeltaTime);
-
 		//print("m_RemainingMovement after collision: "+m_RemainingMovement);
 
 		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
@@ -632,6 +661,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 		//Animator Controls
 		//
 
+		v_PlayerGlow = g_ZonLevel;
+		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
+
+		if(v_PlayerGlow>1)
+		{
+			o_TempLight.intensity = (v_PlayerGlow)+(UnityEngine.Random.Range(-1f,1f));
+		}
+		else
+		{
+			o_TempLight.intensity = 0;
+		}
+
 		o_Anim.SetBool("Walled", false);
 
 		if(m_LeftWalled&&!m_Grounded)
@@ -681,6 +722,22 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 		}
 			
+		if(m_Kneeling)
+		{
+			o_Anim.SetBool("Crouch", true);
+
+			if((i_MouseWorldPos.x-this.transform.position.x)<0)
+			{
+				facingDirection = false;
+				o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			}
+			else
+			{
+				facingDirection = true;
+				o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			}
+		}
+
 		Vector3[] debugLineVector = new Vector3[3];
 
 		debugLineVector[0].x = -distanceTravelled.x;
@@ -729,25 +786,40 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		#endregion
 
+		i_LeftClick = false;
+		i_ZonKey = false;
+
     }
 
 	private void Update()
 	{
+		if(Input.GetMouseButtonDown(0))
+		{
+			i_LeftClick = true;
+		}
 
-		m_KeyLeft = CrossPlatformInputManager.GetButton("Left");
-		m_KeyRight = CrossPlatformInputManager.GetButton("Right");
-		m_KeyUp = CrossPlatformInputManager.GetButton("Up");
-		m_KeyDown = CrossPlatformInputManager.GetButton("Down");
+		if(Input.GetButtonDown("Spooling"))
+		{
+			i_ZonKey = true;				
+		}
+
+		Vector3 clickPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		i_MouseWorldPos = Vec2(clickPoint);
+
+		i_LeftKey = Input.GetButton("Left");
+		i_RightKey = Input.GetButton("Right");
+		i_UpKey = Input.GetButton("Up");
+		i_DownKey = Input.GetButton("Down");
 
 		o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
-		if (!m_Jump && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if (!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{
 			// Read the jump input in Update so button presses aren't missed.
 
-			m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+			i_JumpKey = Input.GetButtonDown("Jump");
 			if(autoJump)
 			{
-				m_Jump = true;
+				i_JumpKey = true;
 			}
 		}
 	}
@@ -761,6 +833,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	private Vector2 Vec2(Vector3 inputVector)
+	{
+		return new Vector2(inputVector.x, inputVector.y);
+	}
+
 	private void Collision()
 	{
 
@@ -877,12 +955,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 		}
 		else if(shortestVertical >= 0)
 		{
-			print("Shortest is vertical="+shortestVertical);
+			//print("Shortest is vertical="+shortestVertical);
 			shortestRaycast = shortestVertical;
 		}
 		else if(shortestHorizontal >= 0)
 		{
-			print("Shortest is horizontal="+shortestHorizontal);
+			//print("Shortest is horizontal="+shortestHorizontal);
 			shortestRaycast = shortestHorizontal;
 		}
 		else
@@ -1224,17 +1302,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					m_MaxTimeHanging = m_SurfaceClingTime*(m_CGF/m_ClingReqGForce);
 				}
-				print("m_MaxTimeHanging="+m_MaxTimeHanging);
+				//print("m_MaxTimeHanging="+m_MaxTimeHanging);
 			}
 			else
 			{
 				m_TimeSpentHanging += Time.fixedDeltaTime;
-				print("time=("+m_TimeSpentHanging+"/"+m_MaxTimeHanging+")");
+				//print("time=("+m_TimeSpentHanging+"/"+m_MaxTimeHanging+")");
 				if(m_TimeSpentHanging>=m_MaxTimeHanging)
 				{
 					m_SurfaceCling = false;
 					m_ExpiredNormal = wallSurface;
-					print("EXPIRED!");
+					//print("EXPIRED!");
 				}
 			}
 		}
@@ -1710,8 +1788,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private void CameraControl()
 	{
-		cameraZoom = Mathf.Lerp(cameraZoom, m_Vel.magnitude, 0.1f);
-		o_MainCamera.orthographicSize = 5f+(0.15f*cameraZoom);
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, m_Vel.magnitude, 0.1f);
+		o_MainCamera.orthographicSize = 5f+(0.15f*v_CameraZoom);
 	}
 
 	private void OmniWedge(int lowerContact, int upperContact)
@@ -2291,7 +2369,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if(m_Grounded&&m_Ceilinged)
 		{
 			print("Grounded and Ceilinged, nowhere to jump!");
-			m_Jump = false;
+			i_JumpKey = false;
 		}
 		else if(m_Grounded)
 		{
@@ -2303,7 +2381,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
 			}
-			m_Jump = false;
+			i_JumpKey = false;
 		}
 		else if(m_LeftWalled)
 		{
@@ -2321,7 +2399,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				m_Vel = new Vector2(m_WallHJumpForce, m_Vel.y);
 			}
 
-			m_Jump = false;
+			i_JumpKey = false;
 			m_LeftWalled = false;
 		}
 		else if(m_RightWalled)
@@ -2341,7 +2419,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 
 
-			m_Jump = false;
+			i_JumpKey = false;
 			m_RightWalled = false;
 		}
 		else if(m_Ceilinged)
@@ -2355,7 +2433,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
 			}
 
-			m_Jump = false;
+			i_JumpKey = false;
 			m_Ceilinged = false;
 		}
 		else
@@ -2363,6 +2441,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 			//print("Can't jump, airborne!");
 		}
 	}
+
+	private void ZonJump(Vector2 jumpNormal)
+	{
+		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
+		g_ZonJumpCharge = 0;		
+		i_JumpKey = false;
+	}
+
 	#endregion
 	//###################################################################################################################################
 	// PUBLIC FUNCTIONS
@@ -2387,5 +2473,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 		return m_Spd;
 	}
+
+	public void SetZonLevel(int zonLevel)
+	{
+		g_ZonLevel = zonLevel;
+	}
+
+	public int GetZonLevel()
+	{
+		return g_ZonLevel;
+	}
+
+
 	#endregion
 }

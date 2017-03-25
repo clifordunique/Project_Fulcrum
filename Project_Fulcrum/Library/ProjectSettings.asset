@@ -12,7 +12,7 @@ PlayerSettings:
   accelerometerFrequency: 60
   companyName: Sean McFarlane
   productName: Project Fulcrum
-  defaultCursor: {fileID: 0}
+  defaultCursor: {fileID: 2800000, guid: 9703715b056ff9d4b847a2dd9f00ba1e, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShowUnitySplashScreen: 1
