@@ -46,10 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Actor.cs" />
-     <Compile Include="Assets\ActorAnimator.cs" />
-     <Compile Include="Assets\CharacterAudio.cs" />
-     <Compile Include="Assets\ClickTestScript.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
@@ -57,6 +53,15 @@
      <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeByDistance.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnKeyPress.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnTrigger.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Demo\ShakeDemo.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Scripts\CameraShakeInstance.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Scripts\CameraShakePresets.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Scripts\CameraShaker.cs" />
+     <Compile Include="Assets\EZ Camera Shake\Scripts\Utilities\CameraUtilities.cs" />
+     <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomStaticResourceLoader.cs" />
@@ -78,15 +83,19 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\Ring.cs" />
-     <Compile Include="Assets\Scene.cs" />
+     <Compile Include="Assets\Scripts\Actor.cs" />
+     <Compile Include="Assets\Scripts\ActorAnimator.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
-     <Compile Include="Assets\Scripts\Character\Camera2DFollow.cs" />
-     <Compile Include="Assets\Scripts\Character\CameraFollow.cs" />
-     <Compile Include="Assets\Scripts\Character\Platformer2DUserControl.cs" />
-     <Compile Include="Assets\Scripts\Character\PlatformerCharacter2D.cs" />
+     <Compile Include="Assets\Scripts\CharacterAudio.cs" />
      <Compile Include="Assets\Scripts\ParallaxLayer.cs" />
      <Compile Include="Assets\Scripts\ParallaxOption.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Camera2DFollow.cs" />
+     <Compile Include="Assets\Scripts\Platformer\CameraFollow.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Platformer2DUserControl.cs" />
+     <Compile Include="Assets\Scripts\Platformer\PlatformerCharacter2D.cs" />
+     <Compile Include="Assets\Scripts\Ring.cs" />
+     <Compile Include="Assets\Scripts\Scene.cs" />
+     <Compile Include="Assets\Scripts\ShaderTest.cs" />
      <Compile Include="Assets\Scripts\Social\Choice.cs" />
      <Compile Include="Assets\Scripts\Social\ChoicePrefabScript.cs" />
      <Compile Include="Assets\Scripts\Social\DNode.cs" />
@@ -98,11 +107,8 @@
      <Compile Include="Assets\Scripts\Social\MenuChoicePrefab.cs" />
      <Compile Include="Assets\Scripts\Social\NeutralButton.cs" />
      <Compile Include="Assets\Scripts\Social\SceneManager.cs" />
-     <Compile Include="Assets\ShaderTest.cs" />
-     <Compile Include="Assets\Spooler.cs" />
-     <Compile Include="Assets\Test_Gaf_Controller.cs" />
-     <Compile Include="Assets\TextFieldModder.cs" />
-     <Compile Include="Assets\asd.cs" />
+     <Compile Include="Assets\Scripts\Spooler.cs" />
+     <Compile Include="Assets\Scripts\TextFieldModder.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
@@ -188,16 +194,19 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
-     <None Include="Assets\ShaderTests\SpoolTest.shader" />
+     <None Include="Assets\Images\ShaderTests\SpoolTest.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
-     <None Include="Assets\ShaderTests\Test.shader" />
+     <None Include="Assets\Images\ShaderTests\Test.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA3Console.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAAPreset2.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\GAF\Docs\Readme.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
+ <Reference Include="UnityEngine.Advertisements">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -212,6 +221,9 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Purchasing">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>

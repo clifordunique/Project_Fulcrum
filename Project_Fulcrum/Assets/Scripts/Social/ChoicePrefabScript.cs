@@ -55,17 +55,17 @@ public class ChoicePrefabScript : MonoBehaviour {
 
     public void NeutralClick()
 	{
-		if (mySceneManager.activeChoicePrefab != this)
+		if (mySceneManager.p_ActiveChoicePrefab != this)
 		{
-			if (mySceneManager.activeChoicePrefab == null)
+			if (mySceneManager.p_ActiveChoicePrefab == null)
 			{
-				mySceneManager.activeChoicePrefab = this;
+				mySceneManager.p_ActiveChoicePrefab = this;
 			}
 			else
 			{
 				//print("IT'S NOT THIS");
-				mySceneManager.activeChoicePrefab.neutralButton.SetActive(true);
-				mySceneManager.activeChoicePrefab = this;
+				mySceneManager.p_ActiveChoicePrefab.neutralButton.SetActive(true);
+				mySceneManager.p_ActiveChoicePrefab = this;
 			}
 		}
 		else
