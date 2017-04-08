@@ -83,19 +83,20 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\Scripts\Actor.cs" />
-     <Compile Include="Assets\Scripts\ActorAnimator.cs" />
-     <Compile Include="Assets\Scripts\CameraController.cs" />
-     <Compile Include="Assets\Scripts\CharacterAudio.cs" />
-     <Compile Include="Assets\Scripts\ParallaxLayer.cs" />
-     <Compile Include="Assets\Scripts\ParallaxOption.cs" />
-     <Compile Include="Assets\Scripts\Platformer\Camera2DFollow.cs" />
-     <Compile Include="Assets\Scripts\Platformer\CameraFollow.cs" />
-     <Compile Include="Assets\Scripts\Platformer\Platformer2DUserControl.cs" />
-     <Compile Include="Assets\Scripts\Platformer\PlatformerCharacter2D.cs" />
-     <Compile Include="Assets\Scripts\Ring.cs" />
-     <Compile Include="Assets\Scripts\Scene.cs" />
-     <Compile Include="Assets\Scripts\ShaderTest.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\CameraFollow.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\CharacterAudio.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\Healthbar.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\PlatformerCharacter2D.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\Ring.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\Spooler.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\GodModeBox.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Visual\ShaderTest.cs" />
+     <Compile Include="Assets\Scripts\Social\Actor.cs" />
+     <Compile Include="Assets\Scripts\Social\ActorAnimator.cs" />
      <Compile Include="Assets\Scripts\Social\Choice.cs" />
      <Compile Include="Assets\Scripts\Social\ChoicePrefabScript.cs" />
      <Compile Include="Assets\Scripts\Social\DNode.cs" />
@@ -106,9 +107,9 @@
      <Compile Include="Assets\Scripts\Social\JSONDialogue.cs" />
      <Compile Include="Assets\Scripts\Social\MenuChoicePrefab.cs" />
      <Compile Include="Assets\Scripts\Social\NeutralButton.cs" />
+     <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SceneManager.cs" />
-     <Compile Include="Assets\Scripts\Spooler.cs" />
-     <Compile Include="Assets\Scripts\TextFieldModder.cs" />
+     <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
@@ -117,7 +118,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFShaderBase.cginc" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SunShaftsComposite.shader" />
-     <None Include="Assets\Scripts\TestShader.shader" />
+     <None Include="Assets\Scripts\Platformer\Visual\TestShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionCurves.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFObjectsGroup.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceAmbientObscurance.shader" />
@@ -204,9 +205,6 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
      <None Include="Assets\GAF\Docs\Readme.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
- <Reference Include="UnityEngine.Advertisements">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/UnityEngine.Advertisements.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -221,9 +219,6 @@
  </Reference>
  <Reference Include="UnityEngine.HoloLens">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
- </Reference>
- <Reference Include="UnityEngine.Purchasing">
- <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityPurchasing/UnityEngine.Purchasing.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>

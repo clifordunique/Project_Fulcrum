@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="body_dirt4_data" version="1.3.0" audacityversion="2.1.3" sel0="0.0040000000" sel1="0.0040000000" vpos="0" h="0.0000000000" zoom="932.9921786922" rate="44100.0" snapto="on" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="body_dirt4" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="17948">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000533.au" len="14244" min="-1.800794" max="1.858895" rms="0.609515"/>
+				</waveblock>
+				<waveblock start="14244">
+					<simpleblockfile filename="e000025c.au" len="3704" min="-0.781586" max="0.993834" rms="0.234903"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="body_dirt4" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="44100" gain="1.0" pan="0.0">
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="17948">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000dea.au" len="14244" min="-1.794908" max="1.860927" rms="0.604651"/>
+				</waveblock>
+				<waveblock start="14244">
+					<simpleblockfile filename="e0000b62.au" len="3704" min="-0.770149" max="0.976753" rms="0.231317"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>
