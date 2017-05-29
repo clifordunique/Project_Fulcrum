@@ -29,7 +29,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	#region MOVEMENT HANDLING
 	[Header("Movement Tuning:")]
 	[SerializeField] private float m_MinSpeed = 10f; 							// The instant starting speed while moving
-	[SerializeField] private float m_MaxRunSpeed;									// The fastest the player can travel along land.
+	[SerializeField] private float m_MaxRunSpeed;								// The fastest the player can travel along land.
 	[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    			// Speed the player accelerates at
 	[SerializeField] private float m_VJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
 	[SerializeField] private float m_HJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
