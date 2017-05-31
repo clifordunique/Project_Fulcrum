@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using EZCameraShake;
+using UnityEngine.Networking;
 
 /*
  * AUTHOR'S NOTES:
@@ -50,16 +51,6 @@ public class Player : FighterChar
 	// PLAYER INPUT VARIABLES
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
-	private bool i_JumpKey;
-	private bool i_LeftClick;
-	private bool i_RightClick;
-	private bool i_LeftKey;
-	private bool i_RightKey;
-	private bool i_UpKey;
-	private bool i_DownKey;
-	private bool i_ZonKey;
-	private Vector2 i_MouseWorldPos;	// Mouse position in world coordinates.
-	private Vector2 i_PlayerMouseVector;// Vector pointing from the player to their mouse position.
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
@@ -83,11 +74,28 @@ public class Player : FighterChar
 	// CORE FUNCTIONS
 	//########################################################################################################################################
 	#region CORE FUNCTIONS
+	private void Awake()
+	{
+		FighterAwake();
+	}
+
+	private void Start()
+	{
+		if(!isLocalPlayer){return;}
+		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		o_MainCamera.transform.parent.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
+		o_MainCamera.transform.parent.SetParent(this.transform);
+
+		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
+
+	}
+
 	private void FixedUpdate()
 	{
+		Vector2 distanceTravelled = Vector3.zero;
+		if(!isLocalPlayer){return;}
 		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 		this.transform.position = finalPos;
-		print("fixedupdate on fighterchar activating!");
 		UpdateContactNormals(true);
 
 		Vector2 initialVel = m_Vel;
@@ -229,7 +237,7 @@ public class Player : FighterChar
 		//print("Per frame velocity at end of updatecontactnormals "+m_Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement after collision: "+m_RemainingMovement);
 
-		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
+		distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
 		//print("distanceTravelled: "+distanceTravelled);
 		//print("m_RemainingMovement: "+m_RemainingMovement);
 		//print("m_RemainingMovement after removing distancetravelled: "+m_RemainingMovement);
@@ -280,6 +288,15 @@ public class Player : FighterChar
 				o_FighterAudio.LandingSound(m_IGF);
 			}
 		}
+
+		if(m_Grounded)
+		{
+			this.GetComponent<NetworkTransform>().grounded = true;
+		}
+		else
+		{
+			this.GetComponent<NetworkTransform>().grounded = false;
+		}
 		//print("Per frame velocity at end of physics frame: "+m_Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
 		//print("Pos at end of physics frame: "+this.transform.position);
@@ -294,6 +311,7 @@ public class Player : FighterChar
 		//			o_FighterAudio.LandingSound(m_IGF); // Makes a landing sound when the player hits ground, using the impact force to determine loudness.
 		//		}
 		//		#endregion
+	
 
 		#region Animator
 
@@ -380,7 +398,7 @@ public class Player : FighterChar
 				o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			}
 		}
-
+			
 		Vector3[] debugLineVector = new Vector3[3];
 
 		debugLineVector[0].x = -distanceTravelled.x;
@@ -432,12 +450,14 @@ public class Player : FighterChar
 		i_RightClick = false;
 		i_LeftClick = false;
 		i_ZonKey = false;
-
 	}
 
 	private void Update()
 	{
-
+		if(!isLocalPlayer)
+		{
+			return;
+		}
 		if(Input.GetMouseButtonDown(0))
 		{
 			i_LeftClick = true;
@@ -481,7 +501,10 @@ public class Player : FighterChar
 
 	private void LateUpdate()
 	{
-		CameraControl();
+		if(isLocalPlayer)
+		{
+			CameraControl();
+		}
 	}
 	#endregion
 	//###################################################################################################################################

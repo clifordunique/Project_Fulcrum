@@ -1,17 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\Player.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\RegionLocker.cs">
     <Files>
-      <File FileName="Assets\Scripts\Social\SceneManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\Healthbar.cs" Line="33" Column="88" />
-      <File FileName="Assets\Scripts\Platformer\Character\PlatformerCharacter2D.cs" Line="26" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\CharacterAudio.cs" Line="29" Column="32" />
-      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="5" Column="31" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="432" Column="5" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="154" Column="2" />
       <File FileName="Assets\Scripts\Platformer\Character\Spooler.cs" Line="68" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="11" Column="53" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="26" Column="1" />
+      <File FileName="Assets\Scripts\Social\SceneManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Healthbar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\PlatformerCharacter2D.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\CharacterAudio.cs" Line="29" Column="32" />
+      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="93" Column="30" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="732" Column="34" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\RegionLocker.cs" Line="9" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

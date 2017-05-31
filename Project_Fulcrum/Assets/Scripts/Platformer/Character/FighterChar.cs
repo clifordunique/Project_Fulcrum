@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using EZCameraShake;
+using UnityEngine.Networking;
 
 /*
  * AUTHOR'S NOTES:
@@ -21,7 +22,7 @@ using EZCameraShake;
 */
 
 [System.Serializable]
-public class FighterChar : MonoBehaviour
+public class FighterChar : NetworkBehaviour
 {        	
 	//############################################################################################################################################################################################################
 	// HANDLING VARIABLES
@@ -212,62 +213,13 @@ public class FighterChar : MonoBehaviour
 	#region CORE FUNCTIONS
 	protected void Awake()
 	{
-		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
-		m_DebugLine = GetComponent<LineRenderer>();
-
-		m_GroundFoot = transform.Find("MidFoot");
-		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
-		m_GroundFootOffset.x = m_GroundFoot.position.x-playerOrigin.x;
-		m_GroundFootOffset.y = m_GroundFoot.position.y-playerOrigin.y;
-		m_GroundFootLength = m_GroundFootOffset.magnitude;
-
-		m_CeilingFoot = transform.Find("CeilingFoot");
-		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
-		m_CeilingFootOffset.x = m_CeilingFoot.position.x-playerOrigin.x;
-		m_CeilingFootOffset.y = m_CeilingFoot.position.y-playerOrigin.y;
-		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
-
-		m_LeftSide = transform.Find("LeftSide");
-		m_LeftSideLine = m_LeftSide.GetComponent<LineRenderer>();
-		m_LeftSideOffset.x = m_LeftSide.position.x-playerOrigin.x;
-		m_LeftSideOffset.y = m_LeftSide.position.y-playerOrigin.y;
-		m_LeftSideLength = m_LeftSideOffset.magnitude;
-
-		m_RightSide = transform.Find("RightSide");
-		m_RightSideLine = m_RightSide.GetComponent<LineRenderer>();
-		m_RightSideOffset.x = m_RightSide.position.x-playerOrigin.x;
-		m_RightSideOffset.y = m_RightSide.position.y-playerOrigin.y;
-		m_RightSideLength = m_RightSideOffset.magnitude;
-
-
-		o_Anim = o_CharSprite.GetComponent<Animator>();
-		o_Rigidbody2D = GetComponent<Rigidbody2D>();
-		o_SpriteRenderer = o_CharSprite.GetComponent<SpriteRenderer>();
-
-		lastSafePosition = new Vector2(0,0);
-		m_RemainingMovement = new Vector2(0,0);
-		m_RemainingVelM = 1f;
-		//print(m_RemainingMovement);
-
-
-		if(!(showVelocityIndicator||d_DevMode)){
-			m_DebugLine.enabled = false;
-		}
-
-		if(!(showContactIndicators||d_DevMode))
-		{
-			m_CeilingLine.enabled = false;
-			m_GroundLine.enabled = false;
-			m_RightSideLine.enabled = false;
-			m_LeftSideLine.enabled = false;
-		}
+		FighterAwake();
 	}
 
 	protected void FixedUpdate()
 	{
 		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 		this.transform.position = finalPos;
-		print("fixedupdate on fighterchar activating!");
 		UpdateContactNormals(true);
 
 		Vector2 initialVel = m_Vel;
@@ -670,6 +622,59 @@ public class FighterChar : MonoBehaviour
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	protected void FighterAwake()
+	{
+		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
+		m_DebugLine = GetComponent<LineRenderer>();
+
+		m_GroundFoot = transform.Find("MidFoot");
+		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
+		m_GroundFootOffset.x = m_GroundFoot.position.x-playerOrigin.x;
+		m_GroundFootOffset.y = m_GroundFoot.position.y-playerOrigin.y;
+		m_GroundFootLength = m_GroundFootOffset.magnitude;
+
+		m_CeilingFoot = transform.Find("CeilingFoot");
+		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
+		m_CeilingFootOffset.x = m_CeilingFoot.position.x-playerOrigin.x;
+		m_CeilingFootOffset.y = m_CeilingFoot.position.y-playerOrigin.y;
+		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
+
+		m_LeftSide = transform.Find("LeftSide");
+		m_LeftSideLine = m_LeftSide.GetComponent<LineRenderer>();
+		m_LeftSideOffset.x = m_LeftSide.position.x-playerOrigin.x;
+		m_LeftSideOffset.y = m_LeftSide.position.y-playerOrigin.y;
+		m_LeftSideLength = m_LeftSideOffset.magnitude;
+
+		m_RightSide = transform.Find("RightSide");
+		m_RightSideLine = m_RightSide.GetComponent<LineRenderer>();
+		m_RightSideOffset.x = m_RightSide.position.x-playerOrigin.x;
+		m_RightSideOffset.y = m_RightSide.position.y-playerOrigin.y;
+		m_RightSideLength = m_RightSideOffset.magnitude;
+
+
+		o_Anim = o_CharSprite.GetComponent<Animator>();
+		o_Rigidbody2D = GetComponent<Rigidbody2D>();
+		o_SpriteRenderer = o_CharSprite.GetComponent<SpriteRenderer>();
+
+		lastSafePosition = new Vector2(0,0);
+		m_RemainingMovement = new Vector2(0,0);
+		m_RemainingVelM = 1f;
+		//print(m_RemainingMovement);
+
+
+		if(!(showVelocityIndicator||d_DevMode)){
+			m_DebugLine.enabled = false;
+		}
+
+		if(!(showContactIndicators||d_DevMode))
+		{
+			m_CeilingLine.enabled = false;
+			m_GroundLine.enabled = false;
+			m_RightSideLine.enabled = false;
+			m_LeftSideLine.enabled = false;
+		}
+	}
 
 	protected Vector2 Vec2(Vector3 inputVector)
 	{
@@ -1375,7 +1380,7 @@ public class FighterChar : MonoBehaviour
 
 		if(m_Grounded)
 		{
-			print("RightGroundWedge detected during right collision.");
+			//print("RightGroundWedge detected during right collision.");
 			OmniWedge(0,3);
 		}
 
@@ -1387,7 +1392,7 @@ public class FighterChar : MonoBehaviour
 
 		if(m_Ceilinged)
 		{
-			print("RightCeilingWedge detected during right collision.");
+			//print("RightCeilingWedge detected during right collision.");
 			OmniWedge(3,1);
 		}
 
@@ -1395,11 +1400,11 @@ public class FighterChar : MonoBehaviour
 
 	protected void ToGround(RaycastHit2D groundCheck) 
 	{ //Sets the new position of the player and their ground normal.
-		print ("m_Grounded=" + m_Grounded);
+		//print ("m_Grounded=" + m_Grounded);
 
 		if (m_Airborne)
 		{
-			print("Airborne before impact.");
+			//print("Airborne before impact.");
 			m_Impact = true;
 			//m_Landing = true;
 		}

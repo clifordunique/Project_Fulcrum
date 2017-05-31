@@ -2,15 +2,16 @@
 using System;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Networking;
 
-public class Spooler : MonoBehaviour 
+public class Spooler : NetworkBehaviour
 {
 	#region OBJECT REFERENCES
 	[SerializeField]private GameObject p_SpoolRingPrefab;
 	[SerializeField]private AudioSource o_SpoolAudio;
 	[SerializeField]private AudioMixer o_SpoolMixer;
 	[SerializeField]private AudioClip[] s_SpoolUp;
-	[SerializeField]private PlatformerCharacter2D o_Player;
+	[SerializeField]private FighterChar o_Player;
 	[SerializeField]private Text o_FeedbackText;
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
@@ -48,6 +49,11 @@ public class Spooler : MonoBehaviour
 	private bool facingDirection; 	// True means Right (the direction), false means Left.
 	#endregion
 
+	void OnStartLocalPlayer()
+	{
+		NetworkServer.Spawn(this.gameObject);
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -59,11 +65,21 @@ public class Spooler : MonoBehaviour
 		r_Rotation = 0;
 		r_TotalPower = 0;
 		r_Accuracy = 0;
+
+		if(isClient)
+		{
+			o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		if(!isClient)
+		{
+			//print("NOT CLIENT");
+			return;
+		}
 		i_GoodStance = false;
 		if(o_Player.GetZonStance() >= 0)
 		{
@@ -294,8 +310,11 @@ public class Spooler : MonoBehaviour
 		r_Accuracy = 0;
 		r_TooEarly = false;
 
-		o_FeedbackText.text = "";
-
+		if(isClient)
+		{
+			o_FeedbackText.text = "";
+		}
+		
 		Destroy(o_Core.gameObject);
 
 		Destroy(o_Limit.gameObject);
@@ -353,8 +372,12 @@ public class Spooler : MonoBehaviour
 	{
 		r_Paused = true;
 		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
-		o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
-		o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
+
+		if(isClient)
+		{
+			o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
+			o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
+		}
 	}
 
 	//###################################################################################################################################

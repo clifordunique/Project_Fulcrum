@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class FighterAudio : MonoBehaviour {
+public class FighterAudio : NetworkBehaviour {
 
 	[SerializeField]private AudioSource charAudioSource;
 	[SerializeField]private AudioSource windSource;
-	//private 
 	[SerializeField]private AudioClip[] jumpSounds;
 	[SerializeField]private AudioClip[] footstepSounds;
 	[SerializeField]private AudioClip[] landingSounds;
@@ -32,8 +32,42 @@ public class FighterAudio : MonoBehaviour {
 		//charAudioSource = this.gameObject.GetComponent<AudioSource>();
 	}
 
+
 	public void StepSound()
 	{
+		print("EXECUTING STEPSOUND");
+		CmdStepSound();
+		//RpcStepSound();
+//		if(muteFootsteps){return;}
+//		float speed = theCharacter.GetSpeed();
+//		float volume = stepVolM;
+//		if(speed <= 30)
+//		{
+//			volume = stepVolM*(speed/30);
+//		}
+//		int whichSound = (int)Random.Range(0,4);
+//		//volume *= volumeM;
+//		charAudioSource.PlayOneShot(footstepSounds[1], volume);
+	}
+
+	[Command] public void CmdStepSound()
+	{
+		print("EXECUTING CMDSTEPSOUND");
+		if(muteFootsteps){return;}
+		float speed = theCharacter.GetSpeed();
+		float volume = stepVolM;
+		if(speed <= 30)
+		{
+			volume = stepVolM*(speed/30);
+		}
+		int whichSound = (int)Random.Range(0,4);
+		//volume *= volumeM;
+		charAudioSource.PlayOneShot(footstepSounds[1], volume);
+	}
+
+	[ClientRpc] public void RpcStepSound()
+	{
+		print("EXECUTING RPCSTEPSOUND");
 		if(muteFootsteps){return;}
 		float speed = theCharacter.GetSpeed();
 		float volume = stepVolM;
@@ -72,6 +106,7 @@ public class FighterAudio : MonoBehaviour {
 		//volume *= volumeM;
 		charAudioSource.PlayOneShot(landingSounds[whichSound], volume);
 	}
+
 
 	public void SlamSound(float impactGForce, float minT, float maxT)
 	{
