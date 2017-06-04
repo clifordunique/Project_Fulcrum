@@ -1,4 +1,6 @@
-﻿Shader "Custom/SpoolTest" {
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Custom/SpoolTest" {
 	
 	Properties {
 		_Color("_Color", Color) = (1,1,1,1)
@@ -50,7 +52,7 @@
 			v2f vert(appdata v)
 			{
 				v2f o;
-				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				//o.uv = v.uv;
 
 				o.uv = v.uv.xy - fixed2(0.5,0.5);

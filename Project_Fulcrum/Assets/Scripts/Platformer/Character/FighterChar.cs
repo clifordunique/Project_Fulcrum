@@ -71,18 +71,14 @@ public class FighterChar : NetworkBehaviour
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
 
-	//[SerializeField] protected Text o_Speedometer;      		// Reference to the speed indicator (dev tool).
 	[SerializeField] protected Light o_TempLight;      		// Reference to a spotlight attached to the character.
 	//[SerializeField] protected Camera o_MainCamera;			// Reference to the main camera.
 	//[SerializeField] protected CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
-	[SerializeField] protected GameObject o_CharSprite;		// Reference to the character's sprite.
 	[SerializeField] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
-	//[SerializeField] public Spooler o_Spooler;				// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField] public GameObject p_DebugMarker;		// Reference to a sprite prefab used to mark locations ingame during development.
-	//[SerializeField] public Healthbar o_Healthbar;			// Reference to the Healthbar UI element.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
-	protected SpriteRenderer o_SpriteRenderer;				// Reference to the character's sprite renderer.
+	[SerializeField] protected SpriteRenderer o_SpriteRenderer;				// Reference to the character's sprite renderer.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -235,92 +231,13 @@ public class FighterChar : NetworkBehaviour
 
 
 		#region playerinput
-		/*
-		if(!(i_LeftKey||i_RightKey) || (i_LeftKey && i_RightKey))
-		{
-			//print("BOTH OR NEITHER");
-			if(!(autoRunLeft||autoRunRight))
-			{
-				CtrlH = 0;
-			}
-			else if(autoRunLeft)
-			{
-				CtrlH = -1;
-			}
-			else
-			{
-				CtrlH = 1;
-			}
-		}
-		else if(i_LeftKey)
-		{
-			//print("LEFT");
-			CtrlH = -1;
-		}
-		else
-		{
-			//print("RIGHT");
-			CtrlH = 1;
-		}
-
-		if (CtrlH < 0) 
-		{
-			facingDirection = false; //true means right (the direction), false means left.
-		} 
-		else if (CtrlH > 0)
-		{
-			facingDirection = true; //true means right (the direction), false means left.
-		}
-
-		//print("CTRLH=" + CtrlH);
-		if(i_DownKey&&m_Grounded)
-		{
-			m_Kneeling = true;
-			CtrlH = 0;
-			g_ZonStance = 0; // Kneeling stance.
-		}
-		else
-		{
-			g_ZonJumpCharge=0;
-		}
-
-		if(0==1)//(i_JumpKey)
-		{
-			if(m_Kneeling)
-			{
-				ZonJump(i_PlayerMouseVector.normalized);
-			}
-			else
-			{
-				Jump(CtrlH);
-			}
-		}
-		*/
+	
 		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
 		{
 			m_Vel += i_PlayerMouseVector*10;
 			print("Leftclick detected");
 			i_LeftClick = false;
 		}	
-//
-//		if(i_RightClick&&(d_DevMode))
-//		{
-//			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
-//			//newMarker.name = "DebugMarker";
-//			//newMarker.transform.position = i_MouseWorldPos;
-//			i_RightClick = false;
-//			float Magnitude = 2f;
-//			//float Magnitude = 0.5f;
-//			float Roughness = 10f;
-//			//float FadeOutTime = 0.6f;
-//			float FadeOutTime = 5f;
-//			float FadeInTime = 0f;
-//			//Vector3 RotInfluence = new Vector3(0,0,0);
-//			//Vector3 PosInfluence = new Vector3(1,1,0);
-//			Vector3 RotInfluence = new Vector3(1,1,1);
-//			Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
-//			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
-//		}	
 
 		#endregion
 
@@ -341,8 +258,7 @@ public class FighterChar : NetworkBehaviour
 		{//Gravity!
 			m_Vel = new Vector2 (m_Vel.x, m_Vel.y - 1);
 			m_Ceilinged = false;
-		}
-
+		}	
 
 		errorDetectingRecursionCount = 0; //Used for Collizion();
 
@@ -421,19 +337,78 @@ public class FighterChar : NetworkBehaviour
 		//print("FinaL Vel: " + m_Vel);
 		//print("Speed at end of frame: " + m_Vel.magnitude);
 
-		//		#region audio
-		//		if(m_Landing)
-		//		{
-		//			o_FighterAudio.LandingSound(m_IGF); // Makes a landing sound when the player hits ground, using the impact force to determine loudness.
-		//		}
-		//		#endregion
-
 		#region Animator
 
 		//
 		//Animator Controls
 		//
 
+		Animate(distanceTravelled);
+	
+		#endregion
+
+		i_RightClick = false;
+		i_LeftClick = false;
+		//i_ZonKey = false;
+
+	}
+
+	protected void Update()
+	{
+		
+		if(Input.GetMouseButtonDown(0))
+		{
+			i_LeftClick = true;
+		}
+
+		if(Input.GetMouseButtonDown(1))
+		{
+			//i_RightClick = true;
+		}
+		/*
+		if(Input.GetButtonDown("Spooling"))
+		{
+			//i_ZonKey = true;				
+		}
+		*/
+		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		i_MouseWorldPos = Vec2(mousePoint);
+		/*
+		//i_LeftKey = Input.GetButton("Left");
+		i_RightKey = Input.GetButton("Right");
+		i_UpKey = Input.GetButton("Up");
+		i_DownKey = Input.GetButton("Down");
+
+		if(o_Speedometer != null)
+		{
+			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
+		}
+
+		if(0==1) //(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		{
+			// Read the jump input in Update so button presses aren't missed.
+
+			//i_JumpKey = Input.GetButtonDown("Jump");
+			if(autoJump)
+			{
+				//i_JumpKey = true;
+			}
+		}
+		*/
+	}
+
+	protected void LateUpdate()
+	{
+		//CameraControl();
+	}
+	#endregion
+	//###################################################################################################################################
+	// CUSTOM FUNCTIONS
+	//###################################################################################################################################
+	#region CUSTOM FUNCTIONS
+
+	protected void Animate(Vector2 distanceTravelled)
+	{
 		v_PlayerGlow = v_ZonLevel;
 		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
 
@@ -454,25 +429,26 @@ public class FighterChar : NetworkBehaviour
 		{
 			o_Anim.SetBool("Walled", true);
 			facingDirection = false;
-			o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
+			//o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
 		}
 
 		if(m_RightWalled&&!m_Grounded)
 		{
 			o_Anim.SetBool("Walled", true);
 			facingDirection = true;
-			o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
+			//o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
 		}
 
 		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
 		{
-			o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
+			//o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
 		}
 
 		if (!facingDirection) //If facing left
 		{
 			//print("FACING LEFT!   "+h)
-			o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			o_SpriteRenderer.flipX = true;
 			if(m_Vel.x > 0 && m_Spd >= v_ReversingSlideT)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -486,7 +462,8 @@ public class FighterChar : NetworkBehaviour
 		{
 			//print("FACING RIGHT!   "+h);
 
-			o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			o_SpriteRenderer.flipX = false;
 			if(m_Vel.x < 0 && m_Spd >= v_ReversingSlideT)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -561,67 +538,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			o_Anim.SetBool("Ground", true);
 		}
-		#endregion
-
-		i_RightClick = false;
-		i_LeftClick = false;
-		//i_ZonKey = false;
-
 	}
-
-	protected void Update()
-	{
-		
-		if(Input.GetMouseButtonDown(0))
-		{
-			i_LeftClick = true;
-		}
-
-		if(Input.GetMouseButtonDown(1))
-		{
-			//i_RightClick = true;
-		}
-		/*
-		if(Input.GetButtonDown("Spooling"))
-		{
-			//i_ZonKey = true;				
-		}
-		*/
-		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		i_MouseWorldPos = Vec2(mousePoint);
-		/*
-		//i_LeftKey = Input.GetButton("Left");
-		i_RightKey = Input.GetButton("Right");
-		i_UpKey = Input.GetButton("Up");
-		i_DownKey = Input.GetButton("Down");
-
-		if(o_Speedometer != null)
-		{
-			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
-		}
-
-		if(0==1) //(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
-		{
-			// Read the jump input in Update so button presses aren't missed.
-
-			//i_JumpKey = Input.GetButtonDown("Jump");
-			if(autoJump)
-			{
-				//i_JumpKey = true;
-			}
-		}
-		*/
-	}
-
-	protected void LateUpdate()
-	{
-		//CameraControl();
-	}
-	#endregion
-	//###################################################################################################################################
-	// CUSTOM FUNCTIONS
-	//###################################################################################################################################
-	#region CUSTOM FUNCTIONS
 
 	protected void FighterAwake()
 	{
@@ -653,9 +570,9 @@ public class FighterChar : NetworkBehaviour
 		m_RightSideLength = m_RightSideOffset.magnitude;
 
 
-		o_Anim = o_CharSprite.GetComponent<Animator>();
+		o_Anim = this.GetComponent<Animator>();
 		o_Rigidbody2D = GetComponent<Rigidbody2D>();
-		o_SpriteRenderer = o_CharSprite.GetComponent<SpriteRenderer>();
+		//o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
 
 		lastSafePosition = new Vector2(0,0);
 		m_RemainingMovement = new Vector2(0,0);

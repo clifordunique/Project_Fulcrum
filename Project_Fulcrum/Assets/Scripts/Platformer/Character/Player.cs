@@ -93,7 +93,18 @@ public class Player : FighterChar
 	private void FixedUpdate()
 	{
 		Vector2 distanceTravelled = Vector3.zero;
-		if(!isLocalPlayer){return;}
+		if(!isLocalPlayer)
+		{
+//			if(o_Anim.GetBool("FacingRight"))
+//			{
+//				o_SpriteRenderer.flipX = false;
+//			}
+//			else
+//			{
+//				o_SpriteRenderer.flipX = true;
+//			}
+			return;
+		}
 		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 		this.transform.position = finalPos;
 		UpdateContactNormals(true);
@@ -178,24 +189,24 @@ public class Player : FighterChar
 			i_LeftClick = false;
 		}	
 		
-				if(i_RightClick&&(d_DevMode))
-				{
-					//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
-					//newMarker.name = "DebugMarker";
-					//newMarker.transform.position = i_MouseWorldPos;
-					i_RightClick = false;
-					float Magnitude = 2f;
-					//float Magnitude = 0.5f;
-					float Roughness = 10f;
-					//float FadeOutTime = 0.6f;
-					float FadeOutTime = 5f;
-					float FadeInTime = 0f;
-					//Vector3 RotInfluence = new Vector3(0,0,0);
-					//Vector3 PosInfluence = new Vector3(1,1,0);
-					Vector3 RotInfluence = new Vector3(1,1,1);
-					Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
-					CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
-				}	
+		if(i_RightClick&&(d_DevMode))
+		{
+			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
+			//newMarker.name = "DebugMarker";
+			//newMarker.transform.position = i_MouseWorldPos;
+			i_RightClick = false;
+			float Magnitude = 2f;
+			//float Magnitude = 0.5f;
+			float Roughness = 10f;
+			//float FadeOutTime = 0.6f;
+			float FadeOutTime = 5f;
+			float FadeInTime = 0f;
+			//Vector3 RotInfluence = new Vector3(0,0,0);
+			//Vector3 PosInfluence = new Vector3(1,1,0);
+			Vector3 RotInfluence = new Vector3(1,1,1);
+			Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
+			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
+		}	
 
 		#endregion
 
@@ -338,26 +349,28 @@ public class Player : FighterChar
 		if(m_LeftWalled&&!m_Grounded)
 		{
 			o_Anim.SetBool("Walled", true);
-			facingDirection = false;
-			o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
+			facingDirection = true;
+			//o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
 		}
 
 		if(m_RightWalled&&!m_Grounded)
 		{
 			o_Anim.SetBool("Walled", true);
-			facingDirection = true;
-			o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
+			facingDirection = false;
+			//o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
 		}
 
 		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
 		{
-			o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
+			//o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
 		}
 
 		if (!facingDirection) //If facing left
 		{
-			//print("FACING LEFT!   "+h)
-			o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			//print("FACING LEFT!");
+			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+			o_SpriteRenderer.flipX = true;
+			//print(o_SpriteRenderer.flipX);
 			if(m_Vel.x > 0 && m_Spd >= v_ReversingSlideT)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -369,9 +382,11 @@ public class Player : FighterChar
 		} 
 		else //If facing right
 		{
-			//print("FACING RIGHT!   "+h);
+			//print("FACING RIGHT!");
 
-			o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+			o_SpriteRenderer.flipX = false;
+			//print(o_SpriteRenderer.flipX);
 			if(m_Vel.x < 0 && m_Spd >= v_ReversingSlideT)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -390,12 +405,12 @@ public class Player : FighterChar
 			if((i_MouseWorldPos.x-this.transform.position.x)<0)
 			{
 				facingDirection = false;
-				o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
+				//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			}
 			else
 			{
 				facingDirection = true;
-				o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
+				//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			}
 		}
 			
@@ -445,6 +460,9 @@ public class Player : FighterChar
 		{
 			o_Anim.SetBool("Ground", true);
 		}
+
+		CmdSetFacingDirection(facingDirection);
+		//o_Anim.SetBool("FacingRight", facingDirection);
 		#endregion
 
 		i_RightClick = false;
@@ -454,6 +472,7 @@ public class Player : FighterChar
 
 	private void Update()
 	{
+
 		if(!isLocalPlayer)
 		{
 			return;
@@ -511,6 +530,25 @@ public class Player : FighterChar
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	[Command]private void CmdSetFacingDirection(bool isFacingRight)
+	{
+		RpcSetFacingDirection(isFacingRight);
+	}
+
+
+	[ClientRpc]private void RpcSetFacingDirection(bool isFacingRight)
+	{
+		if(!isLocalPlayer)
+		{
+			o_SpriteRenderer.flipX = !isFacingRight;
+			facingDirection = isFacingRight;
+		}
+		else
+		{
+			//print("DID NOT CHANGE FACING ON LOCAL PLAYER!");
+		}
+	}
 
 	private void CameraControl()
 	{

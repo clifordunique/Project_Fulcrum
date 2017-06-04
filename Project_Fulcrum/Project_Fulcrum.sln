@@ -1,13 +1,13 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{53AE14D5-B7ED-38FB-C3A8-545D525595C8}") = "Project_Fulcrum", "Assembly-CSharp-firstpass.csproj", "{50D804C8-5513-A419-C6A9-F390EE55FD1F}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_Fulcrum", "Assembly-CSharp-firstpass.csproj", "{50D804C8-5513-A419-C6A9-F390EE55FD1F}"
 EndProject
-Project("{53AE14D5-B7ED-38FB-C3A8-545D525595C8}") = "Project_Fulcrum", "Assembly-CSharp.csproj", "{612EBBF6-0547-7685-1FC2-6729D17B080D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_Fulcrum", "Assembly-CSharp.csproj", "{612EBBF6-0547-7685-1FC2-6729D17B080D}"
 EndProject
-Project("{53AE14D5-B7ED-38FB-C3A8-545D525595C8}") = "Project_Fulcrum", "Assembly-CSharp-Editor-firstpass.csproj", "{38821393-B2F7-B8BE-4C00-9D528A94AF26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_Fulcrum", "Assembly-CSharp-Editor-firstpass.csproj", "{38821393-B2F7-B8BE-4C00-9D528A94AF26}"
 EndProject
-Project("{53AE14D5-B7ED-38FB-C3A8-545D525595C8}") = "Project_Fulcrum", "Assembly-CSharp-Editor.csproj", "{2B9DE329-3951-C3B0-886A-43F884009B02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_Fulcrum", "Assembly-CSharp-Editor.csproj", "{2B9DE329-3951-C3B0-886A-43F884009B02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
