@@ -173,7 +173,7 @@ public class FighterAudio : NetworkBehaviour {
 			}
 		}
 		windSource.volume = windVolume;
-		//CmdWindSound(windVolume);
+		CmdWindSound(windVolume);
 		//windSource.pitch = 1 + windVolume*0.2f;
 	}
 }

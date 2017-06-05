@@ -108,17 +108,20 @@ public class FighterChar : NetworkBehaviour
 	protected Vector2 m_RightNormal;			// Vector with slope of RightWall.
 
 	[Header("Player State:")]
-	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
-	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 				//"Instant G-Force" of the impact this frame.
-	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 				//"Continuous G-Force" over time.
-	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
-	[SerializeField][ReadOnlyAttribute]public float m_Spd;					//Current speed.
-	[SerializeField][ReadOnlyAttribute]public Vector2 m_Vel;				//Current (x,y) velocity.
-	[SerializeField][ReadOnlyAttribute]protected Vector2 m_RemainingMovement; //Remaining (x,y) movement after impact.
+	protected Vector3 lastSafePosition;											//Used to revert player position if they get totally stuck in something.
+	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
+	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
+	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;			//Remaining velocity proportion after an impact. Range: 0-1.
+	[SerializeField][ReadOnlyAttribute]public float m_Spd;						//Current speed.
+	[SerializeField][ReadOnlyAttribute]public Vector2 m_Vel;					//Current (x,y) velocity.
+	[SerializeField][ReadOnlyAttribute]public Vector2 finalPos;					//The final position of the character at the end of the physics frame.
+	[SerializeField][ReadOnlyAttribute]protected Vector2 initialVel;			//Velocity at the start of the physics frame.
+	[SerializeField][ReadOnlyAttribute]protected Vector2 m_DistanceTravelled;	//(x,y) distance travelled on current frame. Inversely proportional to m_RemainingMovement.
+	[SerializeField][ReadOnlyAttribute]protected Vector2 m_RemainingMovement; 	//Remaining (x,y) movement after impact.
 	[SerializeField][ReadOnlyAttribute]protected bool groundContact;			//True when touching surface.
 	[SerializeField][ReadOnlyAttribute]protected bool ceilingContact;			//True when touching surface.
-	[SerializeField][ReadOnlyAttribute]protected bool leftSideContact;		//True when touching surface.
-	[SerializeField][ReadOnlyAttribute]protected bool rightSideContact;		
+	[SerializeField][ReadOnlyAttribute]protected bool leftSideContact;			//True when touching surface.
+	[SerializeField][ReadOnlyAttribute]protected bool rightSideContact;			//True when touching surface.
 	[Space(10)]
 	[SerializeField][ReadOnlyAttribute]protected bool m_Grounded;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Ceilinged; 
@@ -141,14 +144,15 @@ public class FighterChar : NetworkBehaviour
 	// PLAYER INPUT VARIABLES
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
-	protected bool i_JumpKey;
-	protected bool i_LeftClick;
-	protected bool i_RightClick;
-	protected bool i_LeftKey;
-	protected bool i_RightKey;
-	protected bool i_UpKey;
-	protected bool i_DownKey;
-	protected bool i_ZonKey;
+	[Header("Input:")]
+	[SerializeField][ReadOnlyAttribute]protected bool i_JumpKey;
+	[SerializeField][ReadOnlyAttribute]protected bool i_LeftClick;
+	[SerializeField][ReadOnlyAttribute]protected bool i_RightClick;
+	[SerializeField][ReadOnlyAttribute]protected bool i_LeftKey;
+	[SerializeField][ReadOnlyAttribute]protected bool i_RightKey;
+	[SerializeField][ReadOnlyAttribute]protected bool i_UpKey;
+	[SerializeField][ReadOnlyAttribute]protected bool i_DownKey;
+	[SerializeField][ReadOnlyAttribute]protected bool i_ZonKey;
 	protected int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	protected int CtrlV; 					// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
 	protected bool facingDirection; 		// True means right, false means left.
@@ -207,40 +211,45 @@ public class FighterChar : NetworkBehaviour
 	// CORE FUNCTIONS
 	//########################################################################################################################################
 	#region CORE FUNCTIONS
-	protected void Awake()
+	protected virtual void Awake()
 	{
 		FighterAwake();
 	}
 
-	protected void FixedUpdate()
+	protected virtual void FixedUpdate()
 	{
-		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+		FixedUpdateInput();
+		FixedUpdatePhysics();
+		FixedUpdateAnimation();
+
+		i_RightClick = false;
+		i_LeftClick = false;
+		i_ZonKey = false;
+
+	}
+
+	protected virtual void Update()
+	{
+		UpdateInput();
+	}
+
+	protected virtual void LateUpdate()
+	{
+		//CameraControl();
+	}
+	#endregion
+	//###################################################################################################################################
+	// CUSTOM FUNCTIONS
+	//###################################################################################################################################
+	#region CUSTOM FUNCTIONS
+
+	protected virtual void FixedUpdatePhysics()
+	{
+		finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 		this.transform.position = finalPos;
 		UpdateContactNormals(true);
-
-		Vector2 initialVel = m_Vel;
-		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
-
-		m_Impact = false;
-		m_Landing = false;
-		m_Kneeling = false;
-		g_ZonStance = -1;
-
-		//print("Initial Pos: " + startingPos);
-		//print("Initial Vel: " +  m_Vel);
-
-
-		#region playerinput
-	
-		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
-		{
-			m_Vel += i_PlayerMouseVector*10;
-			print("Leftclick detected");
-			i_LeftClick = false;
-		}	
-
-		#endregion
-
+		m_DistanceTravelled = Vector2.zero;
+		initialVel = m_Vel;
 
 		if(m_Grounded)
 		{//Locomotion!
@@ -278,14 +287,14 @@ public class FighterChar : NetworkBehaviour
 		//print("Per frame velocity at end of updatecontactnormals "+m_Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement after collision: "+m_RemainingMovement);
 
-		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
-		//print("distanceTravelled: "+distanceTravelled);
+		m_DistanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
+		//print("m_DistanceTravelled: "+m_DistanceTravelled);
 		//print("m_RemainingMovement: "+m_RemainingMovement);
-		//print("m_RemainingMovement after removing distancetravelled: "+m_RemainingMovement);
+		//print("m_RemainingMovement after removing m_DistanceTravelled: "+m_RemainingMovement);
 
 		if(initialVel.magnitude>0)
 		{
-			m_RemainingVelM = (((initialVel.magnitude*Time.fixedDeltaTime)-distanceTravelled.magnitude)/(initialVel.magnitude*Time.fixedDeltaTime));
+			m_RemainingVelM = (((initialVel.magnitude*Time.fixedDeltaTime)-m_DistanceTravelled.magnitude)/(initialVel.magnitude*Time.fixedDeltaTime));
 		}
 		else
 		{
@@ -337,77 +346,25 @@ public class FighterChar : NetworkBehaviour
 		//print("FinaL Vel: " + m_Vel);
 		//print("Speed at end of frame: " + m_Vel.magnitude);
 
-		#region Animator
-
-		//
-		//Animator Controls
-		//
-
-		Animate(distanceTravelled);
-	
-		#endregion
-
-		i_RightClick = false;
-		i_LeftClick = false;
-		//i_ZonKey = false;
-
 	}
 
-	protected void Update()
+	protected virtual void FixedUpdateInput()
 	{
+		m_Impact = false;
+		m_Landing = false;
+		m_Kneeling = false;
+		g_ZonStance = -1;
+
+		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
+		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		{
+			m_Vel += i_PlayerMouseVector*10;
+			print("Leftclick detected");
+			i_LeftClick = false;
+		}	
+	}
 		
-		if(Input.GetMouseButtonDown(0))
-		{
-			i_LeftClick = true;
-		}
-
-		if(Input.GetMouseButtonDown(1))
-		{
-			//i_RightClick = true;
-		}
-		/*
-		if(Input.GetButtonDown("Spooling"))
-		{
-			//i_ZonKey = true;				
-		}
-		*/
-		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		i_MouseWorldPos = Vec2(mousePoint);
-		/*
-		//i_LeftKey = Input.GetButton("Left");
-		i_RightKey = Input.GetButton("Right");
-		i_UpKey = Input.GetButton("Up");
-		i_DownKey = Input.GetButton("Down");
-
-		if(o_Speedometer != null)
-		{
-			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
-		}
-
-		if(0==1) //(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
-		{
-			// Read the jump input in Update so button presses aren't missed.
-
-			//i_JumpKey = Input.GetButtonDown("Jump");
-			if(autoJump)
-			{
-				//i_JumpKey = true;
-			}
-		}
-		*/
-	}
-
-	protected void LateUpdate()
-	{
-		//CameraControl();
-	}
-	#endregion
-	//###################################################################################################################################
-	// CUSTOM FUNCTIONS
-	//###################################################################################################################################
-	#region CUSTOM FUNCTIONS
-
-	protected void Animate(Vector2 distanceTravelled)
+	protected virtual void FixedUpdateAnimation()
 	{
 		v_PlayerGlow = v_ZonLevel;
 		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
@@ -429,19 +386,12 @@ public class FighterChar : NetworkBehaviour
 		{
 			o_Anim.SetBool("Walled", true);
 			facingDirection = false;
-			//o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
 		}
 
 		if(m_RightWalled&&!m_Grounded)
 		{
 			o_Anim.SetBool("Walled", true);
 			facingDirection = true;
-			//o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
-		}
-
-		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
-		{
-			//o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
 		}
 
 		if (!facingDirection) //If facing left
@@ -494,8 +444,8 @@ public class FighterChar : NetworkBehaviour
 
 		Vector3[] debugLineVector = new Vector3[3];
 
-		debugLineVector[0].x = -distanceTravelled.x;
-		debugLineVector[0].y = -(distanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
+		debugLineVector[0].x = -m_DistanceTravelled.x;
+		debugLineVector[0].y = -(m_DistanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
 		debugLineVector[0].z = 0f;
 
 		debugLineVector[1].x = 0f;
@@ -540,7 +490,23 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected void FighterAwake()
+	protected virtual void UpdateInput()
+	{
+		if(Input.GetMouseButtonDown(0))
+		{
+			i_LeftClick = true;
+		}
+
+		if(Input.GetMouseButtonDown(1))
+		{
+			//i_RightClick = true;
+		}
+
+		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		i_MouseWorldPos = Vec2(mousePoint);
+	}
+
+	protected virtual void FighterAwake()
 	{
 		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
@@ -645,7 +611,6 @@ public class FighterChar : NetworkBehaviour
 
 	protected void Collision()	// Handles all collisions with terrain geometry.
 	{
-
 		//print ("Collision->m_Grounded=" + m_Grounded);
 		float crntSpeed = m_Vel.magnitude*Time.fixedDeltaTime; //Current speed.
 		//print("DC Executing");

@@ -34,7 +34,6 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
-
 	[SerializeField] private Text o_Speedometer;      		// Reference to the speed indicator (dev tool).
 	[SerializeField] private Camera o_MainCamera;			// Reference to the main camera.
 	[SerializeField] private CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
@@ -74,54 +73,73 @@ public class Player : FighterChar
 	// CORE FUNCTIONS
 	//########################################################################################################################################
 	#region CORE FUNCTIONS
-	private void Awake()
-	{
-		FighterAwake();
-	}
 
-	private void Start()
+	protected void Start()
 	{
 		if(!isLocalPlayer){return;}
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		o_MainCamera.transform.parent.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 		o_MainCamera.transform.parent.SetParent(this.transform);
-
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
-
 	}
 
-	private void FixedUpdate()
+	protected override void FixedUpdate()
 	{
-		Vector2 distanceTravelled = Vector3.zero;
+		if(isLocalPlayer)
+		{
+			FixedUpdateInput();
+			FixedUpdatePhysics();
+			i_RightClick = false;
+			i_LeftClick = false;
+			i_ZonKey = false;
+			FixedUpdateAnimation();
+		}
+	}
+
+	protected override void Update()
+	{
+		UpdateInput();
+	}
+
+	private void LateUpdate()
+	{
+		if(isLocalPlayer)
+		{
+			CameraControl();
+		}
+	}
+
+	#endregion
+	//###################################################################################################################################
+	// CUSTOM FUNCTIONS
+	//###################################################################################################################################
+	#region CUSTOM FUNCTIONS
+
+	[Command]protected void CmdSetFacingDirection(bool isFacingRight)
+	{
+		RpcSetFacingDirection(isFacingRight);
+	}
+	[ClientRpc]protected void RpcSetFacingDirection(bool isFacingRight)
+	{
 		if(!isLocalPlayer)
 		{
-//			if(o_Anim.GetBool("FacingRight"))
-//			{
-//				o_SpriteRenderer.flipX = false;
-//			}
-//			else
-//			{
-//				o_SpriteRenderer.flipX = true;
-//			}
-			return;
+			o_SpriteRenderer.flipX = !isFacingRight;
+			facingDirection = isFacingRight;
 		}
-		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
-		this.transform.position = finalPos;
-		UpdateContactNormals(true);
+		else
+		{
+			//print("DID NOT CHANGE FACING ON LOCAL PLAYER!");
+		}
+	}
 
-		Vector2 initialVel = m_Vel;
-		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
-
+	protected override void FixedUpdateInput()
+	{
 		m_Impact = false;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
 
-		//print("Initial Pos: " + startingPos);
-		//print("Initial Vel: " +  m_Vel);
-
-
-		#region playerinput
+		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
 		if(!(i_LeftKey||i_RightKey) || (i_LeftKey && i_RightKey))
 		{
 			//print("BOTH OR NEITHER");
@@ -181,14 +199,14 @@ public class Player : FighterChar
 				Jump(CtrlH);
 			}
 		}
-	
+
 		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
 		{
 			m_Vel += i_PlayerMouseVector*10;
 			print("Leftclick detected");
 			i_LeftClick = false;
 		}	
-		
+
 		if(i_RightClick&&(d_DevMode))
 		{
 			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
@@ -208,128 +226,56 @@ public class Player : FighterChar
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		#endregion
+	}
 
-
-		if(m_Grounded)
-		{//Locomotion!
-			Traction(CtrlH);
-		}
-		else if(m_RightWalled)
-		{//Wallsliding!
-			WallTraction(CtrlH,m_RightNormal);
-		}
-		else if(m_LeftWalled)
+	protected override void UpdateInput()
+	{
+		if(!isLocalPlayer)
 		{
-			WallTraction(CtrlH,m_LeftNormal);
+			return;
 		}
-		else if(!noGravity)
-		{//Gravity!
-			m_Vel = new Vector2 (m_Vel.x, m_Vel.y - 1);
-			m_Ceilinged = false;
-		}
-
-
-		errorDetectingRecursionCount = 0; //Used for Collizion();
-
-		//print("Velocity before Coll ision: "+m_Vel);
-		//print("Position before Coll ision: "+this.transform.position);
-
-		m_RemainingVelM = 1f;
-		m_RemainingMovement = m_Vel*Time.fixedDeltaTime;
-		Vector2 startingPos = this.transform.position;
-
-		//print("m_RemainingMovement before collision: "+m_RemainingMovement);
-
-		Collision();
-
-		//print("Per frame velocity at end of Collizion() "+m_Vel*Time.fixedDeltaTime);
-		//print("Velocity at end of Collizion() "+m_Vel);
-		//print("Per frame velocity at end of updatecontactnormals "+m_Vel*Time.fixedDeltaTime);
-		//print("m_RemainingMovement after collision: "+m_RemainingMovement);
-
-		distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
-		//print("distanceTravelled: "+distanceTravelled);
-		//print("m_RemainingMovement: "+m_RemainingMovement);
-		//print("m_RemainingMovement after removing distancetravelled: "+m_RemainingMovement);
-
-		if(initialVel.magnitude>0)
+		if(Input.GetMouseButtonDown(0))
 		{
-			m_RemainingVelM = (((initialVel.magnitude*Time.fixedDeltaTime)-distanceTravelled.magnitude)/(initialVel.magnitude*Time.fixedDeltaTime));
+			i_LeftClick = true;
 		}
-		else
+
+		if(Input.GetMouseButtonDown(1))
 		{
-			m_RemainingVelM = 1f;
+			i_RightClick = true;
 		}
 
-		//print("m_RemainingVelM: "+m_RemainingVelM);
-		//print("movement after distance travelled: "+m_RemainingMovement);
-		//print("Speed this frame: "+m_Vel.magnitude);
-
-		m_RemainingMovement = m_Vel*m_RemainingVelM*Time.fixedDeltaTime;
-
-		//print("Corrected remaining movement: "+m_RemainingMovement);
-
-		m_Spd = m_Vel.magnitude;
-
-		Vector2 deltaV = m_Vel-initialVel;
-		m_IGF = deltaV.magnitude;
-		m_CGF += m_IGF;
-		if(m_CGF>=1){m_CGF --;}
-		if(m_CGF>=10){m_CGF -= (m_CGF/10);}
-
-		//if(m_CGF>=200)
-		//{
-		//	//m_CGF = 0f;
-		//	print("m_CGF over limit!!");	
-		//}
-
-		if(m_Impact)
+		if(Input.GetButtonDown("Spooling"))
 		{
-			if(m_IGF >= m_CraterT)
-			{
-				Crater();
-			}
-			else if(m_IGF >= m_SlamT)
-			{
-				Slam();
-			}
-			else
-			{
-				o_FighterAudio.LandingSound(m_IGF);
-			}
+			i_ZonKey = true;				
 		}
 
-		if(m_Grounded)
-		{
-			this.GetComponent<NetworkTransform>().grounded = true;
-		}
-		else
-		{
-			this.GetComponent<NetworkTransform>().grounded = false;
-		}
-		//print("Per frame velocity at end of physics frame: "+m_Vel*Time.fixedDeltaTime);
-		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
-		//print("Pos at end of physics frame: "+this.transform.position);
-		//print("##############################################################################################");
-		//print("FinaL Pos: " + this.transform.position);
-		//print("FinaL Vel: " + m_Vel);
-		//print("Speed at end of frame: " + m_Vel.magnitude);
+		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		i_MouseWorldPos = Vec2(mousePoint);
 
-		//		#region audio
-		//		if(m_Landing)
-		//		{
-		//			o_FighterAudio.LandingSound(m_IGF); // Makes a landing sound when the player hits ground, using the impact force to determine loudness.
-		//		}
-		//		#endregion
+		i_LeftKey = Input.GetButton("Left");
+		i_RightKey = Input.GetButton("Right");
+		i_UpKey = Input.GetButton("Up");
+		i_DownKey = Input.GetButton("Down");
 	
+		if(o_Speedometer != null)
+		{
+			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
+		}
 
-		#region Animator
+		if(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		{
+			// Read the jump input in Update so button presses aren't missed.
 
-		//
-		//Animator Controls
-		//
+			i_JumpKey = Input.GetButtonDown("Jump");
+			if(autoJump)
+			{
+				i_JumpKey = true;
+			}
+		}
+	}
 
+	protected override void FixedUpdateAnimation()
+	{
 		v_PlayerGlow = v_ZonLevel;
 		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
 
@@ -401,23 +347,20 @@ public class Player : FighterChar
 		{
 			o_Anim.SetBool("Crouch", true);
 
-		
 			if((i_MouseWorldPos.x-this.transform.position.x)<0)
 			{
 				facingDirection = false;
-				//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			}
 			else
 			{
 				facingDirection = true;
-				//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			}
 		}
-			
+
 		Vector3[] debugLineVector = new Vector3[3];
 
-		debugLineVector[0].x = -distanceTravelled.x;
-		debugLineVector[0].y = -(distanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
+		debugLineVector[0].x = -m_DistanceTravelled.x;
+		debugLineVector[0].y = -(m_DistanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
 		debugLineVector[0].z = 0f;
 
 		debugLineVector[1].x = 0f;
@@ -462,95 +405,9 @@ public class Player : FighterChar
 		}
 
 		CmdSetFacingDirection(facingDirection);
-		//o_Anim.SetBool("FacingRight", facingDirection);
-		#endregion
-
-		i_RightClick = false;
-		i_LeftClick = false;
-		i_ZonKey = false;
 	}
 
-	private void Update()
-	{
-
-		if(!isLocalPlayer)
-		{
-			return;
-		}
-		if(Input.GetMouseButtonDown(0))
-		{
-			i_LeftClick = true;
-		}
-
-		if(Input.GetMouseButtonDown(1))
-		{
-			i_RightClick = true;
-		}
-
-		if(Input.GetButtonDown("Spooling"))
-		{
-			i_ZonKey = true;				
-		}
-
-		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		i_MouseWorldPos = Vec2(mousePoint);
-
-		i_LeftKey = Input.GetButton("Left");
-		i_RightKey = Input.GetButton("Right");
-		i_UpKey = Input.GetButton("Up");
-		i_DownKey = Input.GetButton("Down");
-
-		if(o_Speedometer != null)
-		{
-			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
-		}
-
-		if(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
-		{
-			// Read the jump input in Update so button presses aren't missed.
-
-			i_JumpKey = Input.GetButtonDown("Jump");
-			if(autoJump)
-			{
-				i_JumpKey = true;
-			}
-		}
-
-	}
-
-	private void LateUpdate()
-	{
-		if(isLocalPlayer)
-		{
-			CameraControl();
-		}
-	}
-	#endregion
-	//###################################################################################################################################
-	// CUSTOM FUNCTIONS
-	//###################################################################################################################################
-	#region CUSTOM FUNCTIONS
-
-	[Command]private void CmdSetFacingDirection(bool isFacingRight)
-	{
-		RpcSetFacingDirection(isFacingRight);
-	}
-
-
-	[ClientRpc]private void RpcSetFacingDirection(bool isFacingRight)
-	{
-		if(!isLocalPlayer)
-		{
-			o_SpriteRenderer.flipX = !isFacingRight;
-			facingDirection = isFacingRight;
-		}
-		else
-		{
-			//print("DID NOT CHANGE FACING ON LOCAL PLAYER!");
-		}
-	}
-
-	private void CameraControl()
+	protected void CameraControl()
 	{
 		#region zoom
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, m_Vel.magnitude, 0.1f);
@@ -574,7 +431,7 @@ public class Player : FighterChar
 		#endregion
 	}
 		
-	private void ZonJump(Vector2 jumpNormal)
+	protected void ZonJump(Vector2 jumpNormal)
 	{
 		g_ZonJumpCharge = o_Spooler.GetTotalPower();
 		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
