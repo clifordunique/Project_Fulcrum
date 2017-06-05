@@ -19,10 +19,10 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField][Range(0,1f)]private float windVolM;		// Wind volume
 	[SerializeField][Range(0,1f)]private float stepVolM;		// Footstep volume
 	[Space(10)]												    
-	[SerializeField][Range(100f,500f)]private float windMinT;		// Speed at which wind sound becomes audible
-	[SerializeField][Range(100f,500f)]private float windMaxT;		// Speed at which wind sound is loudest
-
-
+	[SerializeField][Range(100f,500f)]private float windMinT;						// Speed at which wind sound becomes audible
+	[SerializeField][Range(100f,500f)]private float windMaxT;						// Speed at which wind sound is loudest
+	[SerializeField][ReadOnlyAttribute] private float curWindIntensity = 0;			// Wind loudness based on speed. Lerps toward destWindIntensity		
+	[SerializeField][ReadOnlyAttribute] private float destWindIntensity = 0;		// Goal wind loudness
 
 	[SerializeField]private bool muteFootsteps;
 
@@ -35,7 +35,8 @@ public class FighterAudio : NetworkBehaviour {
 
 	public void StepSound()
 	{
-		if(!isLocalPlayer){return;}
+		//if(!isClient){return;}
+		//print("lermp");
 		if(muteFootsteps){return;}
 		float speed = theCharacter.GetSpeed();
 		float volume = stepVolM;
@@ -45,23 +46,39 @@ public class FighterAudio : NetworkBehaviour {
 		}
 		//int whichSound = (int)Random.Range(0,4);
 		//volume *= volumeM;
-		charAudioSource.PlayOneShot(footstepSounds[1], volume);
-		CmdStepSound(volume);
+		if(isLocalPlayer)
+		{
+			print("Step Played on localplayer at volume: "+volume);
+			charAudioSource.PlayOneShot(footstepSounds[1], volume);
+		}
+		if(isServer)
+		{
+			print("SERVER EXECUTING RPC of volume "+volume);
+			RpcStepSound(volume);
+		}
+		//CmdStepSound(volume);
 	}
-	[Command] public void CmdStepSound(float vol)
+	[Command] public void CmdStepSound(float volume)
 	{
-		RpcStepSound(vol);
+		RpcStepSound(volume);
 	}
-	[ClientRpc] public void RpcStepSound(float vol)
+	[ClientRpc] public void RpcStepSound(float theVolume)
 	{
-		if(isLocalPlayer){return;}
-		print("EXECUTING RPCSTEPSOUND");
-		if(muteFootsteps){return;}
-		float volume = vol;
-		//int whichSound = (int)Random.Range(0,4);
-		charAudioSource.PlayOneShot(footstepSounds[1], volume);
-	}
+		print("RPCSTEPSOUND ACTIVATED");
+		//if(isLocalPlayer){return;}
+		if(isLocalPlayer)
+		{
+			return;
+		}
+		if(isClient)
+		{
+			print("Step Played on client with volume "+theVolume);
+			charAudioSource.PlayOneShot(footstepSounds[1], theVolume);
+		}
 
+
+	}
+		
 	public void LandingSound(float impactGForce)
 	{
 		int whichSound = 1;
@@ -159,20 +176,34 @@ public class FighterAudio : NetworkBehaviour {
 	// Update is called once per frame
 	void Update() 
 	{
+		if(!isLocalPlayer)
+		{
+			return;
+		}
 		float windVolume = 0;
 		if(theCharacter.m_Spd > windMinT)
 		{
 			if(theCharacter.m_Spd < windMaxT)
 			{
 				windVolume = (theCharacter.m_Spd-windMinT)/(windMaxT-windMinT);
-				windVolume *= 1f;
+
+				windVolume *= windVolM;
 			}
 			else
 			{
-				windVolume = 1f;
+				windVolume = windVolM;
 			}
 		}
-		windSource.volume = windVolume;
+		destWindIntensity = windVolume;
+		if(curWindIntensity>destWindIntensity)
+		{
+			curWindIntensity = Mathf.Lerp(curWindIntensity, destWindIntensity, 0.05f);
+		}
+		else
+		{
+			curWindIntensity = destWindIntensity;
+		}
+		windSource.volume = curWindIntensity;
 		CmdWindSound(windVolume);
 		//windSource.pitch = 1 + windVolume*0.2f;
 	}

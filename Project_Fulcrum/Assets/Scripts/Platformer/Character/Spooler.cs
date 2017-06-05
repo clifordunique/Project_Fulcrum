@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
 
-public class Spooler : NetworkBehaviour
+public class Spooler : MonoBehaviour
 {
 	#region OBJECT REFERENCES
 	[SerializeField]private GameObject p_SpoolRingPrefab;
@@ -66,20 +66,20 @@ public class Spooler : NetworkBehaviour
 		r_TotalPower = 0;
 		r_Accuracy = 0;
 
-		if(isClient)
-		{
-			o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
-		}
+//		if(isClient)
+//		{
+		o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
+//		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if(!isClient)
-		{
-			//print("NOT CLIENT");
-			return;
-		}
+//		if(!isClient)
+//		{
+//			//print("NOT CLIENT");
+//			return;
+//		}
 		i_GoodStance = false;
 		if(o_Player.GetZonStance() >= 0)
 		{
@@ -310,10 +310,10 @@ public class Spooler : NetworkBehaviour
 		r_Accuracy = 0;
 		r_TooEarly = false;
 
-		if(isClient)
-		{
+		//if(isClient)
+		//{
 			o_FeedbackText.text = "";
-		}
+		//}
 		
 		Destroy(o_Core.gameObject);
 
@@ -373,11 +373,11 @@ public class Spooler : NetworkBehaviour
 		r_Paused = true;
 		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
 
-		if(isClient)
-		{
+//		if(isClient)
+//		{
 			o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
 			o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
-		}
+//		}
 	}
 
 	//###################################################################################################################################

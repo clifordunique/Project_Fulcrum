@@ -112,9 +112,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;			//Remaining velocity proportion after an impact. Range: 0-1.
-	[SerializeField][ReadOnlyAttribute]public float m_Spd;						//Current speed.
-	[SerializeField][ReadOnlyAttribute]public Vector2 m_Vel;					//Current (x,y) velocity.
-	[SerializeField][ReadOnlyAttribute]public Vector2 finalPos;					//The final position of the character at the end of the physics frame.
+	[SerializeField][ReadOnlyAttribute][SyncVar] public float m_Spd;			//Current speed.
+	[SerializeField][ReadOnlyAttribute][SyncVar] public Vector2 m_Vel;			//Current (x,y) velocity.
+	[SerializeField][ReadOnlyAttribute][SyncVar] public Vector2 finalPos;		//The final position of the character at the end of the physics frame.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 initialVel;			//Velocity at the start of the physics frame.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_DistanceTravelled;	//(x,y) distance travelled on current frame. Inversely proportional to m_RemainingMovement.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_RemainingMovement; 	//Remaining (x,y) movement after impact.
@@ -218,9 +218,18 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-		FixedUpdateInput();
-		FixedUpdatePhysics();
-		FixedUpdateAnimation();
+		if(isLocalPlayer)
+		{
+			FixedUpdateInput();
+		//}
+		//if(isServer)
+		//{
+			FixedUpdatePhysics();
+		//}
+		//if(isLocalPlayer||isClient)
+		//{
+			FixedUpdateAnimation();
+		}
 
 		i_RightClick = false;
 		i_LeftClick = false;
@@ -1556,36 +1565,6 @@ public class FighterChar : NetworkBehaviour
 		//print ("DirChange Vel:  " + m_Vel);
 	}
 
-	/*
-	protected void CameraControl()
-	{
-		#region zoom
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, m_Vel.magnitude, 0.1f);
-		//v_CameraZoom = m_Vel.magnitude;
-		float zoomChange = 0;
-		if((0.15f*v_CameraZoom)>=5f)
-		{
-			zoomChange = (0.15f*v_CameraZoom)-5f;
-		}
-		//o_MainCamera.orthographicSize = 5f+(0.15f*v_CameraZoom);
-		if(8f+zoomChange >= 50f)
-		{
-			o_MainCamera.orthographicSize = 50f;
-		}
-		else
-		{
-			o_MainCamera.orthographicSize = 8f+zoomChange;
-		}
-		//o_MainCamera.orthographicSize = 25f;
-
-		#endregion
-
-		#region position
-
-		#endregion
-	}
-	*/
-
 	protected void OmniWedge(int lowerContact, int upperContact)
 	{//Executes when the player is moving into a corner and there isn't enough room to fit them. It halts the player's momentum and sets off a blocked-direction flag.
 
@@ -2232,16 +2211,16 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected void ZonJump(Vector2 jumpNormal)
-	{
-		//g_ZonJumpCharge = o_Spooler.GetTotalPower();
-		//m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
-		//g_ZonJumpCharge = 0;		
-		//i_JumpKey = false;
-		//o_FighterAudio.JumpSound();
-		//o_Spooler.Reset();
-	}
-
+//	protected void ZonJump(Vector2 jumpNormal)
+//	{
+//		g_ZonJumpCharge = o_Spooler.GetTotalPower();
+//		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
+//		g_ZonJumpCharge = 0;		
+//		i_JumpKey = false;
+//		o_FighterAudio.JumpSound();
+//		o_Spooler.Reset();
+//	}
+//
 
 
 	#endregion

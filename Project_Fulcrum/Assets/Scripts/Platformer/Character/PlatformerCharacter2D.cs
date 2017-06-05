@@ -915,7 +915,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 					}
 					return;
 				}
-				break;
 			}
 			case 1:
 			{
@@ -954,7 +953,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 					}
 					return;
 				}
-				break;
 			}
 			case 3:
 			{
@@ -976,7 +974,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 					}
 					return;
 				}
-				break;
 			}
 			default:
 			{
