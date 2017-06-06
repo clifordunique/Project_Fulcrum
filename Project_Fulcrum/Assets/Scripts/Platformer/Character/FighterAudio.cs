@@ -44,6 +44,11 @@ public class FighterAudio : NetworkBehaviour {
 		{
 			volume = stepVolM*(speed/30);
 		}
+		if(isServer)
+		{
+			print("Serverside modulated volume ="+volume);
+			print("Serverside speed ="+speed);
+		}
 		//int whichSound = (int)Random.Range(0,4);
 		//volume *= volumeM;
 		if(isLocalPlayer)

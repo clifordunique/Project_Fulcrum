@@ -108,13 +108,13 @@ public class FighterChar : NetworkBehaviour
 	protected Vector2 m_RightNormal;			// Vector with slope of RightWall.
 
 	[Header("Player State:")]
-	protected Vector3 lastSafePosition;											//Used to revert player position if they get totally stuck in something.
+	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
-	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;			//Remaining velocity proportion after an impact. Range: 0-1.
-	[SerializeField][ReadOnlyAttribute][SyncVar] public float m_Spd;			//Current speed.
-	[SerializeField][ReadOnlyAttribute][SyncVar] public Vector2 m_Vel;			//Current (x,y) velocity.
-	[SerializeField][ReadOnlyAttribute][SyncVar] public Vector2 finalPos;		//The final position of the character at the end of the physics frame.
+	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
+	[SerializeField][ReadOnlyAttribute]public float m_Spd;			//Current speed.
+	[SerializeField][ReadOnlyAttribute]public Vector2 m_Vel;			//Current (x,y) velocity.
+	[SerializeField][ReadOnlyAttribute]public Vector2 finalPos;		//The final position of the character at the end of the physics frame.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 initialVel;			//Velocity at the start of the physics frame.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_DistanceTravelled;	//(x,y) distance travelled on current frame. Inversely proportional to m_RemainingMovement.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_RemainingMovement; 	//Remaining (x,y) movement after impact.
@@ -123,21 +123,21 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected bool leftSideContact;			//True when touching surface.
 	[SerializeField][ReadOnlyAttribute]protected bool rightSideContact;			//True when touching surface.
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute]protected bool m_Grounded;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Ceilinged; 
-	[SerializeField][ReadOnlyAttribute]protected bool m_LeftWalled; 
-	[SerializeField][ReadOnlyAttribute]protected bool m_RightWalled;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Grounded;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Ceilinged; 
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_LeftWalled; 
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_RightWalled;
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute]protected bool m_GroundBlocked;
-	[SerializeField][ReadOnlyAttribute]protected bool m_CeilingBlocked; 
-	[SerializeField][ReadOnlyAttribute]protected bool m_LeftWallBlocked; 
-	[SerializeField][ReadOnlyAttribute]protected bool m_RightWallBlocked; 
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_GroundBlocked;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_CeilingBlocked; 
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_LeftWallBlocked; 
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_RightWallBlocked; 
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute]protected bool m_SurfaceCling;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Airborne;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Landing;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Kneeling;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Impact;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_SurfaceCling;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Airborne;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Landing;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Kneeling;
+	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Impact;
 
 	#endregion
 	//##########################################################################################################################################################################

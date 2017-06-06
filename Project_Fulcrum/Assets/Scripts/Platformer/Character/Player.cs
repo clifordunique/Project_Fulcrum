@@ -82,15 +82,12 @@ public class Player : FighterChar
 
 	protected override void FixedUpdate()
 	{
-		if(isLocalPlayer)
-		{
-			FixedUpdateInput();
-			FixedUpdatePhysics();
-			i_RightClick = false;
-			i_LeftClick = false;
-			i_ZonKey = false;
-			FixedUpdateAnimation();
-		}
+		FixedUpdateInput();
+		FixedUpdatePhysics();
+		i_RightClick = false;
+		i_LeftClick = false;
+		i_ZonKey = false;
+		FixedUpdateAnimation();
 	}
 
 	protected override void Update()
