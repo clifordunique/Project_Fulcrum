@@ -10,6 +10,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AudioClip[] jumpSounds;
 	[SerializeField]private AudioClip[] footstepSounds;
 	[SerializeField]private AudioClip[] landingSounds;
+	[SerializeField]private AudioClip[] punchSounds;
 	[SerializeField]private AudioClip 	windSound;
 	[SerializeField]private FighterChar theCharacter;
 	[SerializeField][Range(0,1f)]private float jumpVolM;		// Jump volume
@@ -18,6 +19,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField][Range(0,1f)]private float crtrVolM;		// Crater volume
 	[SerializeField][Range(0,1f)]private float windVolM;		// Wind volume
 	[SerializeField][Range(0,1f)]private float stepVolM;		// Footstep volume
+	[SerializeField][Range(0,1f)]private float punchVolM;		// Punch volume
 	[Space(10)]												    
 	[SerializeField][Range(100f,500f)]private float windMinT;						// Speed at which wind sound becomes audible
 	[SerializeField][Range(100f,500f)]private float windMaxT;						// Speed at which wind sound is loudest
@@ -84,6 +86,15 @@ public class FighterAudio : NetworkBehaviour {
 
 	}
 		
+	public void PunchSound()
+	{
+		int whichSound = 0;
+		float volume = punchVolM;
+		whichSound = (int)Random.Range(0,4);
+		charAudioSource.PlayOneShot(punchSounds[whichSound], volume);
+		//CmdLandingSound(volume);
+	}
+
 	public void LandingSound(float impactGForce)
 	{
 		int whichSound = 1;

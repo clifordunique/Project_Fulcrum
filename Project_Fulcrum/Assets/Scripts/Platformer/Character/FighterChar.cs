@@ -69,16 +69,13 @@ public class FighterChar : NetworkBehaviour
 	// OBJECT REFERENCES
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
-	[Header("Player Components:")]
-
-	[SerializeField] protected Light o_TempLight;      		// Reference to a spotlight attached to the character.
-	//[SerializeField] protected Camera o_MainCamera;			// Reference to the main camera.
-	//[SerializeField] protected CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
+	[Header("Character Components:")]
+	[SerializeField] protected Light o_TempLight;      			// Reference to a spotlight attached to the character.
 	[SerializeField] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
-	[SerializeField] public GameObject p_DebugMarker;		// Reference to a sprite prefab used to mark locations ingame during development.
+	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
-	[SerializeField] protected SpriteRenderer o_SpriteRenderer;				// Reference to the character's sprite renderer.
+	[SerializeField] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING

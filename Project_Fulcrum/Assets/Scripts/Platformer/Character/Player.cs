@@ -39,6 +39,7 @@ public class Player : FighterChar
 	[SerializeField] private CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
 	[SerializeField] public Spooler o_Spooler;				// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField] public Healthbar o_Healthbar;			// Reference to the Healthbar UI element.
+	[SerializeField] public GameObject p_AirPunchPrefab;	// Reference to the air punch prefab.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -108,6 +109,41 @@ public class Player : FighterChar
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	protected void ThrowPunch(Vector2 aimDirection)
+	{
+		float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float xTransform = 1f;
+		float yTransform = 1f;
+
+		if(aimDirection.x<0)
+		{
+			facingDirection = false;
+			xTransform = -1f;
+		}
+		else
+		{
+			facingDirection = true;
+		}
+
+		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
+		punchAngle.x = 0;
+		punchAngle.y = 0;
+		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle,this.transform);
+
+		if(randomness1>0)
+		{
+			yTransform = -1f;
+			newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
+		}
+
+		newAirPunch.transform.localScale = new Vector3 (xTransform, yTransform, 1f);
+		newAirPunch.transform.Translate(new Vector3(randomness1,randomness2, 0));
+		newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+
+		o_FighterAudio.PunchSound();
+	}
 
 	[Command]protected void CmdSetFacingDirection(bool isFacingRight)
 	{
@@ -197,6 +233,16 @@ public class Player : FighterChar
 		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
 		{
 			m_Vel += i_PlayerMouseVector*10;
+			print("Leftclick detected");
+			i_LeftClick = false;
+		}	
+
+		if(i_LeftClick&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
+		{
+			if(!(i_LeftKey&&(i_PlayerMouseVector.normalized.x>0))&&!(i_RightKey&&(i_PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			{
+				ThrowPunch(i_PlayerMouseVector.normalized);
+			}
 			print("Leftclick detected");
 			i_LeftClick = false;
 		}	
