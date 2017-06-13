@@ -5,12 +5,14 @@ using UnityEngine;
 public class NPC : FighterChar {
 
 	// Use this for initialization
-	void Start () {
+	protected void Start () 
+	{
 		
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () 
+	{
 		
 	}
 }

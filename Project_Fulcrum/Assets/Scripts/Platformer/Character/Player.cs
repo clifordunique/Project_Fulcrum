@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using EZCameraShake;
 using UnityEngine.Networking;
+using System.Collections.Generic;
 
 /*
  * AUTHOR'S NOTES:
@@ -51,6 +52,8 @@ public class Player : FighterChar
 	// PLAYER INPUT VARIABLES
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
+	public int inputBufferSize = 2;
+	[SerializeField] public Queue<FighterInput> inputBuffer;
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
@@ -72,6 +75,12 @@ public class Player : FighterChar
 	// CORE FUNCTIONS
 	//########################################################################################################################################
 	#region CORE FUNCTIONS
+	protected void Awake()
+	{
+		inputBuffer = new Queue<FighterInput>();
+		FighterAwake();
+	}
+
 	protected void Start()
 	{
 		if(!isLocalPlayer){return;}
@@ -83,20 +92,42 @@ public class Player : FighterChar
 
 	protected override void FixedUpdate()
 	{
-		FixedUpdateInput();
-		FixedUpdatePhysics();
-		i_RightClick = false;
-		i_LeftClick = false;
-		i_ZonKey = false;
+		if(isLocalPlayer)
+		{
+			inputBuffer.Enqueue(fighterInput);
+			if(inputBuffer.Count >= inputBufferSize)
+			{
+				CmdSendInput(inputBuffer.ToArray());
+				//print("Sending...");
+				inputBuffer.Clear();
+			}
+		}
+		else
+		{
+			if(inputBuffer.Count > 0)
+			{
+				fighterInput = inputBuffer.Dequeue();
+				print("Inputbuffer count  = "+inputBuffer.Count);
+				//print("Jumpkey state  = "+fighterInput.JumpKey);
+			}
+		}
+
+		FixedUpdateProcessInput();
+		FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
 		FixedUpdateAnimation();
+		fighterInput.RightClick = false;
+		fighterInput.LeftClick = false;
+		fighterInput.ZonKey = false;
+		fighterInput.JumpKey = false;
 	}
 
 	protected override void Update()
 	{
+		if(!isLocalPlayer){return;}
 		UpdateInput();
 	}
 
-	private void LateUpdate()
+	protected override void LateUpdate()
 	{
 		if(isLocalPlayer)
 		{
@@ -112,6 +143,7 @@ public class Player : FighterChar
 
 	protected void ThrowPunch(Vector2 aimDirection)
 	{
+		if(!isLocalPlayer){return;}
 		float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
 		float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
 		float xTransform = 1f;
@@ -130,7 +162,7 @@ public class Player : FighterChar
 		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
 		punchAngle.x = 0;
 		punchAngle.y = 0;
-		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle,this.transform);
+		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle, this.transform);
 
 		if(randomness1>0)
 		{
@@ -138,12 +170,125 @@ public class Player : FighterChar
 			newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
 		}
 
-		newAirPunch.transform.localScale = new Vector3 (xTransform, yTransform, 1f);
-		newAirPunch.transform.Translate(new Vector3(randomness1,randomness2, 0));
+		Vector3 theLocalScale = new Vector3 (xTransform, yTransform, 1f);
+		Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
+
+		newAirPunch.transform.localScale = theLocalScale;
+		newAirPunch.transform.Translate(theLocalTranslate);
 		newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+
+		CmdThrowPunch(aimDirection);
 
 		o_FighterAudio.PunchSound();
 	}
+
+	[Command]protected void CmdThrowPunch(Vector2 aimDirection)
+	{
+		if(isServer&&!isLocalPlayer)
+		{
+			float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
+			float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
+			float xTransform = 1f;
+			float yTransform = 1f;
+
+			if(aimDirection.x<0)
+			{
+				facingDirection = false;
+				xTransform = -1f;
+			}
+			else
+			{
+				facingDirection = true;
+			}
+
+			Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
+			punchAngle.x = 0;
+			punchAngle.y = 0;
+			GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle, this.transform);
+
+			//NetworkServer.Spawn(newAirPunch);
+			if(randomness1>0)
+			{
+				yTransform = -1f;
+				newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
+			}
+
+			Vector3 theLocalScale = new Vector3 (xTransform, yTransform, 1f);
+			Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
+
+			newAirPunch.transform.localScale = theLocalScale;
+			newAirPunch.transform.Translate(theLocalTranslate);
+			newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+		}
+		//RpcThrowPunch(newAirPunch, theLocalScale, theLocalTranslate);
+		RpcThrowPunch(aimDirection);
+	}
+
+	[ClientRpc]protected void RpcThrowPunch(Vector2 aimDirection)
+	{
+		if(isLocalPlayer){return;}
+		float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float xTransform = 1f;
+		float yTransform = 1f;
+
+		if(aimDirection.x<0)
+		{
+			facingDirection = false;
+			xTransform = -1f;
+		}
+		else
+		{
+			facingDirection = true;
+		}
+
+		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
+		punchAngle.x = 0;
+		punchAngle.y = 0;
+		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle, this.transform);
+
+		//NetworkServer.Spawn(newAirPunch);
+		if(randomness1>0)
+		{
+			yTransform = -1f;
+			newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
+		}
+
+		Vector3 theLocalScale = new Vector3 (xTransform, yTransform, 1f);
+		Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
+
+		newAirPunch.transform.localScale = theLocalScale;
+		newAirPunch.transform.Translate(theLocalTranslate);
+		newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+	}
+
+	[Command(channel=1)]protected void CmdSendInput(FighterInput[] theInput)
+	{
+//		if(!isLocalPlayer)
+//		{
+//			//this.fighterInput = theInput[0];
+//			//this.inputBuffer.Clear();
+//			foreach (FighterInput i in theInput)
+//			{
+//				this.inputBuffer.Enqueue(i);
+//			}
+//		}
+		RpcSendInput(theInput);
+	}
+
+	[ClientRpc(channel=1)]protected void RpcSendInput(FighterInput[]  theInput)
+	{
+		if(!isLocalPlayer)
+		{
+			//this.inputBuffer.Clear();
+			foreach (FighterInput i in theInput)
+			{
+				this.inputBuffer.Enqueue(i);
+			}
+			//this.fighterInput = theInput;
+		}
+	}
+
 
 	[Command]protected void CmdSetFacingDirection(bool isFacingRight)
 	{
@@ -162,15 +307,15 @@ public class Player : FighterChar
 		}
 	}
 
-	protected override void FixedUpdateInput()
+	protected override void FixedUpdateProcessInput()
 	{
 		m_Impact = false;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
 
-		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
-		if(!(i_LeftKey||i_RightKey) || (i_LeftKey && i_RightKey))
+		fighterInput.PlayerMouseVector = fighterInput.MouseWorldPos-Vec2(this.transform.position);
+		if(!(fighterInput.LeftKey||fighterInput.RightKey) || (fighterInput.LeftKey && fighterInput.RightKey))
 		{
 			//print("BOTH OR NEITHER");
 			if(!(autoRunLeft||autoRunRight))
@@ -186,7 +331,7 @@ public class Player : FighterChar
 				CtrlH = 1;
 			}
 		}
-		else if(i_LeftKey)
+		else if(fighterInput.LeftKey)
 		{
 			//print("LEFT");
 			CtrlH = -1;
@@ -207,7 +352,7 @@ public class Player : FighterChar
 		}
 
 		//print("CTRLH=" + CtrlH);
-		if(i_DownKey&&m_Grounded)
+		if(fighterInput.DownKey&&m_Grounded)
 		{
 			m_Kneeling = true;
 			CtrlH = 0;
@@ -217,12 +362,12 @@ public class Player : FighterChar
 		{
 			g_ZonJumpCharge=0;
 		}
-
-		if(i_JumpKey)
+			
+		if(fighterInput.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{
 			if(m_Kneeling)
 			{
-				ZonJump(i_PlayerMouseVector.normalized);
+				ZonJump(fighterInput.PlayerMouseVector.normalized);
 			}
 			else
 			{
@@ -230,29 +375,29 @@ public class Player : FighterChar
 			}
 		}
 
-		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		if(fighterInput.LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
 		{
-			m_Vel += i_PlayerMouseVector*10;
-			print("Leftclick detected");
-			i_LeftClick = false;
+			m_Vel += fighterInput.PlayerMouseVector*10;
+			//print("Leftclick detected");
+			fighterInput.LeftClick = false;
 		}	
 
-		if(i_LeftClick&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
+		if(fighterInput.LeftClick&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
 		{
-			if(!(i_LeftKey&&(i_PlayerMouseVector.normalized.x>0))&&!(i_RightKey&&(i_PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			if(!(fighterInput.LeftKey&&(fighterInput.PlayerMouseVector.normalized.x>0))&&!(fighterInput.RightKey&&(fighterInput.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
-				ThrowPunch(i_PlayerMouseVector.normalized);
+				ThrowPunch(fighterInput.PlayerMouseVector.normalized);
 			}
-			print("Leftclick detected");
-			i_LeftClick = false;
+			//print("Leftclick detected");
+			fighterInput.LeftClick = false;
 		}	
 
-		if(i_RightClick&&(d_DevMode))
+		if(fighterInput.RightClick&&(d_DevMode))
 		{
 			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
 			//newMarker.name = "DebugMarker";
-			//newMarker.transform.position = i_MouseWorldPos;
-			i_RightClick = false;
+			//newMarker.transform.position = fighterInput.MouseWorldPos;
+			fighterInput.RightClick = false;
 			float Magnitude = 2f;
 			//float Magnitude = 0.5f;
 			float Roughness = 10f;
@@ -276,42 +421,52 @@ public class Player : FighterChar
 		}
 		if(Input.GetMouseButtonDown(0))
 		{
-			i_LeftClick = true;
+			fighterInput.LeftClick = true;
 		}
 
 		if(Input.GetMouseButtonDown(1))
 		{
-			i_RightClick = true;
+			fighterInput.RightClick = true;
 		}
 
 		if(Input.GetButtonDown("Spooling"))
 		{
-			i_ZonKey = true;				
+			fighterInput.ZonKey = true;				
+		}
+
+		if(Input.GetButtonDown("Jump"))
+		{
+			fighterInput.JumpKey = true;				
+		}
+		if(autoJump)
+		{
+			fighterInput.JumpKey = true;
 		}
 
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		i_MouseWorldPos = Vec2(mousePoint);
+		fighterInput.MouseWorldPos = Vec2(mousePoint);
 
-		i_LeftKey = Input.GetButton("Left");
-		i_RightKey = Input.GetButton("Right");
-		i_UpKey = Input.GetButton("Up");
-		i_DownKey = Input.GetButton("Down");
-	
+		fighterInput.LeftKey = Input.GetButton("Left");
+		fighterInput.RightKey = Input.GetButton("Right");
+		fighterInput.UpKey = Input.GetButton("Up");
+		fighterInput.DownKey = Input.GetButton("Down");
+
+
 		if(o_Speedometer != null)
 		{
 			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
 		}
 
-		if(!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
-		{
-			// Read the jump input in Update so button presses aren't missed.
-
-			i_JumpKey = Input.GetButtonDown("Jump");
-			if(autoJump)
-			{
-				i_JumpKey = true;
-			}
-		}
+//		if(!fighterInput.JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+//		{
+//			// Read the jump input in Update so button presses aren't missed.
+//
+//			fighterInput.JumpKey = Input.GetButtonDown("Jump");
+//			if(autoJump)
+//			{
+//				fighterInput.JumpKey = true;
+//			}
+//		}
 	}
 
 	protected override void FixedUpdateAnimation()
@@ -387,7 +542,7 @@ public class Player : FighterChar
 		{
 			o_Anim.SetBool("Crouch", true);
 
-			if((i_MouseWorldPos.x-this.transform.position.x)<0)
+			if((fighterInput.MouseWorldPos.x-this.transform.position.x)<0)
 			{
 				facingDirection = false;
 			}
@@ -444,7 +599,7 @@ public class Player : FighterChar
 			o_Anim.SetBool("Ground", true);
 		}
 
-		CmdSetFacingDirection(facingDirection);
+		//CmdSetFacingDirection(facingDirection);
 	}
 
 	protected void CameraControl()
@@ -476,7 +631,7 @@ public class Player : FighterChar
 		g_ZonJumpCharge = o_Spooler.GetTotalPower();
 		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
 		g_ZonJumpCharge = 0;		
-		i_JumpKey = false;
+		fighterInput.JumpKey = false;
 		o_FighterAudio.JumpSound();
 		o_Spooler.Reset();
 	}

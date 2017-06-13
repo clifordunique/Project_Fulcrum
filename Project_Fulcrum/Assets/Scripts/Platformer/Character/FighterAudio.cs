@@ -48,19 +48,19 @@ public class FighterAudio : NetworkBehaviour {
 		}
 		if(isServer)
 		{
-			print("Serverside modulated volume ="+volume);
-			print("Serverside speed ="+speed);
+			//print("Serverside modulated volume ="+volume);
+			//print("Serverside speed ="+speed);
 		}
 		//int whichSound = (int)Random.Range(0,4);
 		//volume *= volumeM;
 		if(isLocalPlayer)
 		{
-			print("Step Played on localplayer at volume: "+volume);
+			//print("Step Played on localplayer at volume: "+volume);
 			charAudioSource.PlayOneShot(footstepSounds[1], volume);
 		}
 		if(isServer)
 		{
-			print("SERVER EXECUTING RPC of volume "+volume);
+			//print("SERVER EXECUTING RPC of volume "+volume);
 			RpcStepSound(volume);
 		}
 		//CmdStepSound(volume);
@@ -71,7 +71,7 @@ public class FighterAudio : NetworkBehaviour {
 	}
 	[ClientRpc] public void RpcStepSound(float theVolume)
 	{
-		print("RPCSTEPSOUND ACTIVATED");
+		//print("RPCSTEPSOUND ACTIVATED");
 		//if(isLocalPlayer){return;}
 		if(isLocalPlayer)
 		{
@@ -79,7 +79,7 @@ public class FighterAudio : NetworkBehaviour {
 		}
 		if(isClient)
 		{
-			print("Step Played on client with volume "+theVolume);
+			//print("Step Played on client with volume "+theVolume);
 			charAudioSource.PlayOneShot(footstepSounds[1], theVolume);
 		}
 
@@ -92,8 +92,29 @@ public class FighterAudio : NetworkBehaviour {
 		float volume = punchVolM;
 		whichSound = (int)Random.Range(0,4);
 		charAudioSource.PlayOneShot(punchSounds[whichSound], volume);
-		//CmdLandingSound(volume);
+		CmdPunchSound(volume);
 	}
+	[Command] public void CmdPunchSound(float theVolume)
+	{
+		RpcPunchSound(theVolume);
+	}
+	[ClientRpc] public void RpcPunchSound(float theVolume)
+	{
+		//print("RPCSTEPSOUND ACTIVATED");
+		//if(isLocalPlayer){return;}
+		if(isLocalPlayer)
+		{
+			return;
+		}
+		if(isClient)
+		{
+			int whichSound = 0;
+			float volume = punchVolM;
+			whichSound = (int)Random.Range(0,4);
+			charAudioSource.PlayOneShot(punchSounds[whichSound], theVolume);
+		}
+	}
+
 
 	public void LandingSound(float impactGForce)
 	{

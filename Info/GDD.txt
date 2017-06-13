@@ -73,7 +73,7 @@ CHARACTERS ############################################
 	"Quote"
 	
 		Home Province: Cerobos
-		He was named after the first electrical component he selected from a box, as is tradition in Cerobos.
+		He was named after the first electrical component he selected from a box, as is common tradition in Cerobos.
 		Not particularly smart, especially by Cerobos standards. He thinks in unorthodox ways, however, leading to breakthroughs unconcievable by common researchers.
 		Classified by the Cerobos Academic Command as 'Divergent Type', because of his usefully unique mindset. He is considered quite valuable despite his generally poor performance.
 	

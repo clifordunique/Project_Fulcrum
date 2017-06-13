@@ -105,7 +105,6 @@ public class FighterChar : NetworkBehaviour
 	protected Vector2 m_RightNormal;			// Vector with slope of RightWall.
 
 	[Header("Player State:")]
-	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
@@ -120,21 +119,22 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected bool leftSideContact;			//True when touching surface.
 	[SerializeField][ReadOnlyAttribute]protected bool rightSideContact;			//True when touching surface.
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Grounded;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Ceilinged; 
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_LeftWalled; 
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_RightWalled;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Grounded;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Ceilinged; 
+	[SerializeField][ReadOnlyAttribute]protected bool m_LeftWalled; 
+	[SerializeField][ReadOnlyAttribute]protected bool m_RightWalled;
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_GroundBlocked;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_CeilingBlocked; 
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_LeftWallBlocked; 
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_RightWallBlocked; 
+	[SerializeField][ReadOnlyAttribute]protected bool m_GroundBlocked;
+	[SerializeField][ReadOnlyAttribute]protected bool m_CeilingBlocked; 
+	[SerializeField][ReadOnlyAttribute]protected bool m_LeftWallBlocked; 
+	[SerializeField][ReadOnlyAttribute]protected bool m_RightWallBlocked; 
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_SurfaceCling;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Airborne;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Landing;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Kneeling;
-	[SerializeField][ReadOnlyAttribute][SyncVar]protected bool m_Impact;
+	[SerializeField][ReadOnlyAttribute]protected bool m_SurfaceCling;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Airborne;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Landing;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Kneeling;
+	[SerializeField][ReadOnlyAttribute]protected bool m_Impact;
+	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
 
 	#endregion
 	//##########################################################################################################################################################################
@@ -142,39 +142,31 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
 	[Header("Input:")]
-	[SerializeField][ReadOnlyAttribute]protected bool i_JumpKey;
-	[SerializeField][ReadOnlyAttribute]protected bool i_LeftClick;
-	[SerializeField][ReadOnlyAttribute]protected bool i_RightClick;
-	[SerializeField][ReadOnlyAttribute]protected bool i_LeftKey;
-	[SerializeField][ReadOnlyAttribute]protected bool i_RightKey;
-	[SerializeField][ReadOnlyAttribute]protected bool i_UpKey;
-	[SerializeField][ReadOnlyAttribute]protected bool i_DownKey;
-	[SerializeField][ReadOnlyAttribute]protected bool i_ZonKey;
-	protected int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
-	protected int CtrlV; 					// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-	protected bool facingDirection; 		// True means right, false means left.
-	protected Vector2 i_MouseWorldPos;	// Mouse position in world coordinates.
-	protected Vector2 i_PlayerMouseVector;// Vector pointing from the player to their mouse position.
+	[SerializeField][ReadOnlyAttribute] protected FighterInput fighterInput; 			// Struct holding all input.
+	protected int CtrlH; 							// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
+	protected int CtrlV; 							// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
+	protected bool facingDirection; 				// True means right, false means left.
+
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
 	//##########################################################################################################################################################################
 	#region DEBUGGING
-	protected int errorDetectingRecursionCount; 				//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
+	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
 	[Header("Debug:")]
-	[SerializeField] protected bool autoRunLeft; 				// When true, player will behave as if the left key is pressed.
+	[SerializeField] protected bool autoRunLeft; 			// When true, player will behave as if the left key is pressed.
 	[SerializeField] protected bool autoRunRight; 			// When true, player will behave as if the right key is pressed.
-	[SerializeField] protected bool autoJump;					// When true, player jumps instantly on every surface.
-	[SerializeField] protected bool antiTunneling = true;		// When true, player will be pushed out of objects they are stuck in.
+	[SerializeField] protected bool autoJump;				// When true, player jumps instantly on every surface.
+	[SerializeField] protected bool antiTunneling = true;	// When true, player will be pushed out of objects they are stuck in.
 	[SerializeField] protected bool noGravity;				// Disable gravity.
 	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
 	[SerializeField] protected bool showContactIndicators;	// Shows player's surface-contact raycasts, which turn green when touching something.
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the player is fully stuck in something, teleports player to last good position.
-	[SerializeField] protected bool d_ClickToKnockPlayer;		// When true and you left click, the player is propelled toward where you clicked.
+	[SerializeField] protected bool d_ClickToKnockPlayer;	// When true and you left click, the player is propelled toward where you clicked.
 	[SerializeField] public  bool d_DevMode;				// Turns on all dev cheats.
-	protected LineRenderer m_DebugLine; 						// Part of above indicators.
-	protected LineRenderer m_GroundLine;						// Part of above indicators.		
-	protected LineRenderer m_CeilingLine;						// Part of above indicators.		
+	protected LineRenderer m_DebugLine; 					// Part of above indicators.
+	protected LineRenderer m_GroundLine;					// Part of above indicators.		
+	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
 	protected LineRenderer m_LeftSideLine;					// Part of above indicators.		
 	protected LineRenderer m_RightSideLine;					// Part of above indicators.		
 	#endregion
@@ -183,18 +175,18 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
-	[SerializeField]protected int v_ZonLevel;							//	Level of player Zon Power.
-	[SerializeField][Range(0,10)]protected float v_ReversingSlideT =5;// How fast the player must be going to go into a slide posture when changing directions.
+	[SerializeField]protected int v_ZonLevel;							// Level of player Zon Power.
+	[SerializeField][Range(0,10)]protected float v_ReversingSlideT =5;	// How fast the player must be going to go into a slide posture when changing directions.
 	//[SerializeField]protected float v_CameraZoom; 					// Amount of camera zoom.
-	[SerializeField][Range(0,3)]protected int v_PlayerGlow;			// Amount of player "energy glow" effect.
+	[SerializeField][Range(0,3)]protected int v_PlayerGlow;				// Amount of player "energy glow" effect.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
 	[Header("Gameplay:")]
-	[SerializeField]protected int g_ZonJumpCharge;					//	Level of power channelled into current jump.
-	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the player in? -1 = no stance.
+	[SerializeField]protected int g_ZonJumpCharge;						// Level of power channelled into current jump.
+	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;		// Which stance is the player in? -1 = no stance.
 	[SerializeField] protected int g_CurHealth = 100;					// Current health.
 	[SerializeField] protected int g_MaxHealth = 100;					// Max health.
 	[SerializeField] protected int g_MinSlamDMG = 5;					// Min damage a slam impact can deal.
@@ -217,20 +209,14 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(isLocalPlayer)
 		{
-			FixedUpdateInput();
-		//}
-		//if(isServer)
-		//{
+			FixedUpdateProcessInput();
 			FixedUpdatePhysics();
-		//}
-		//if(isLocalPlayer||isClient)
-		//{
 			FixedUpdateAnimation();
 		}
 
-		i_RightClick = false;
-		i_LeftClick = false;
-		i_ZonKey = false;
+		fighterInput.RightClick = false;
+		fighterInput.LeftClick = false;
+		fighterInput.ZonKey = false;
 
 	}
 
@@ -354,19 +340,19 @@ public class FighterChar : NetworkBehaviour
 
 	}
 
-	protected virtual void FixedUpdateInput()
+	protected virtual void FixedUpdateProcessInput()
 	{
 		m_Impact = false;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
 
-		i_PlayerMouseVector = i_MouseWorldPos-Vec2(this.transform.position);
-		if(i_LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		fighterInput.PlayerMouseVector = fighterInput.MouseWorldPos-Vec2(this.transform.position);
+		if(fighterInput.LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
 		{
-			m_Vel += i_PlayerMouseVector*10;
+			m_Vel += fighterInput.PlayerMouseVector*10;
 			print("Leftclick detected");
-			i_LeftClick = false;
+			fighterInput.LeftClick = false;
 		}	
 	}
 		
@@ -435,7 +421,7 @@ public class FighterChar : NetworkBehaviour
 			o_Anim.SetBool("Crouch", true);
 
 			/*
-			if((i_MouseWorldPos.x-this.transform.position.x)<0)
+			if((fighterInput.MouseWorldPos.x-this.transform.position.x)<0)
 			{
 				facingDirection = false;
 				o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
@@ -500,16 +486,16 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(Input.GetMouseButtonDown(0))
 		{
-			i_LeftClick = true;
+			fighterInput.LeftClick = true;
 		}
 
 		if(Input.GetMouseButtonDown(1))
 		{
-			//i_RightClick = true;
+			//fighterInput.RightClick = true;
 		}
 
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		i_MouseWorldPos = Vec2(mousePoint);
+		fighterInput.MouseWorldPos = Vec2(mousePoint);
 	}
 
 	protected virtual void FighterAwake()
@@ -789,7 +775,7 @@ public class FighterChar : NetworkBehaviour
 		case 0://Ground collision with feet
 			{
 				//If you're going to hit something with your feet.
-				print("FOOT_IMPACT");
+				//print("FOOT_IMPACT");
 				//print("Velocity before impact: "+m_Vel);
 
 				//print("GroundDist"+predictedLoc[0].distance);
@@ -835,7 +821,7 @@ public class FighterChar : NetworkBehaviour
 			{
 				if ((moveDirectionNormal != predictedLoc[2].normal) && (invertedDirectionNormal != predictedLoc[2].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					print("LEFT_IMPACT");
+					//print("LEFT_IMPACT");
 					ToLeftWall(predictedLoc[2]);
 					DirectionChange(m_LeftNormal);
 					return;
@@ -2134,7 +2120,7 @@ public class FighterChar : NetworkBehaviour
 		if(m_Grounded&&m_Ceilinged)
 		{
 			print("Grounded and Ceilinged, nowhere to jump!");
-			i_JumpKey = false;
+			//fighterInput.JumpKey = false;
 		}
 		else if(m_Grounded)
 		{
@@ -2147,7 +2133,7 @@ public class FighterChar : NetworkBehaviour
 				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
 			}
 			o_FighterAudio.JumpSound();
-			i_JumpKey = false;
+			//fighterInput.JumpKey = false;
 		}
 		else if(m_LeftWalled)
 		{
@@ -2165,7 +2151,7 @@ public class FighterChar : NetworkBehaviour
 				m_Vel = new Vector2(m_WallHJumpForce, m_Vel.y);
 			}
 			o_FighterAudio.JumpSound();
-			i_JumpKey = false;
+			//fighterInput.JumpKey = false;
 			m_LeftWalled = false;
 		}
 		else if(m_RightWalled)
@@ -2185,7 +2171,7 @@ public class FighterChar : NetworkBehaviour
 			}
 
 			o_FighterAudio.JumpSound();
-			i_JumpKey = false;
+			//fighterInput.JumpKey = false;
 			m_RightWalled = false;
 		}
 		else if(m_Ceilinged)
@@ -2199,7 +2185,7 @@ public class FighterChar : NetworkBehaviour
 				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
 			}
 			o_FighterAudio.JumpSound();
-			i_JumpKey = false;
+			//fighterInput.JumpKey = false;
 			m_Ceilinged = false;
 		}
 		else
@@ -2207,18 +2193,6 @@ public class FighterChar : NetworkBehaviour
 			//print("Can't jump, airborne!");
 		}
 	}
-
-//	protected void ZonJump(Vector2 jumpNormal)
-//	{
-//		g_ZonJumpCharge = o_Spooler.GetTotalPower();
-//		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
-//		g_ZonJumpCharge = 0;		
-//		i_JumpKey = false;
-//		o_FighterAudio.JumpSound();
-//		o_Spooler.Reset();
-//	}
-//
-
 
 	#endregion
 	//###################################################################################################################################
@@ -2266,4 +2240,18 @@ public class FighterChar : NetworkBehaviour
 	}
 
 	#endregion
+}
+
+[System.Serializable] public struct FighterInput
+{
+	[SerializeField][ReadOnlyAttribute]public bool JumpKey;
+	[SerializeField][ReadOnlyAttribute]public bool LeftClick;
+	[SerializeField][ReadOnlyAttribute]public bool RightClick;
+	[SerializeField][ReadOnlyAttribute]public bool LeftKey;
+	[SerializeField][ReadOnlyAttribute]public bool RightKey;
+	[SerializeField][ReadOnlyAttribute]public bool UpKey;
+	[SerializeField][ReadOnlyAttribute]public bool DownKey;
+	[SerializeField][ReadOnlyAttribute]public bool ZonKey;
+	[SerializeField][ReadOnlyAttribute]public Vector2 MouseWorldPos;				// Mouse position in world coordinates.
+	[SerializeField][ReadOnlyAttribute]public Vector2 PlayerMouseVector;			// Vector pointing from the player to their mouse position.
 }
