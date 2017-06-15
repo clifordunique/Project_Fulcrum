@@ -649,7 +649,7 @@ public class Player : FighterChar
 		{
 			g_ZonLevel--;
 		}
-		FighterState.Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge)));
 		g_ZonJumpCharge = 0;		
 		FighterState.JumpKey = false;
 		o_FighterAudio.JumpSound();

@@ -46,7 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AirPunch.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
@@ -84,7 +83,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\RegionLocker.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraFollow.cs" />
@@ -98,6 +97,8 @@
      <Compile Include="Assets\Scripts\Platformer\Character\Ring.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Spooler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\GodModeBox.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\IndoorFader.cs" />
+     <Compile Include="Assets\Scripts\Platformer\RegionLocker.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ShaderTest.cs" />
