@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class AirPunch : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () 
+	public Vector2 aimDirection = Vector2.zero;
+	public FighterChar punchThrower;
+
+	void OnTriggerEnter2D(Collider2D theObject)
 	{
-		
-	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
+		if(theObject.gameObject != null)
+		{
+			punchThrower.PunchConnect(theObject.gameObject, aimDirection);
+		}
+		//print(theObject.gameObject);
+		//FighterChar theChar = theObject.gameObject.GetComponent<FighterChar>();
+
+//		if(theChar != null)
+//		{
+//			Debug.Log("HIT!");
+//			//theChar.CmdGotHitBy(this.transform.parent.gameObject);
+//			//theChar.CmdGotHit(aimDirection);
+//			punchThrower.PunchConnect(theChar, aimDirection);
+//		}
 	}
 
 	public void Complete()

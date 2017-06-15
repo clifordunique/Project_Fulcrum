@@ -91,7 +91,7 @@ public class Spooler : MonoBehaviour
 
 		if((!i_GoodStance)&&(r_Active))
 		{
-			o_Player.DissipateZon();
+			//o_Player.DissipateZon();
 			Reset();
 		}
 
@@ -299,8 +299,6 @@ public class Spooler : MonoBehaviour
 			return;
 		}
 
-		o_Player.SetZonLevel(0);
-
 		r_Paused = true;
 		r_CurTime = 0;
 		r_RingNum = -1;
@@ -336,6 +334,7 @@ public class Spooler : MonoBehaviour
 		r_Rotation = 0;
 		r_TotalPower = 0;
 		r_Accuracy = 0;
+		o_Player.SetZonLevel(0);
 
 		r_Paused = false;
 

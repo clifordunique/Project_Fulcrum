@@ -8,7 +8,7 @@ public class GodModeBox : MonoBehaviour
 	{
 		Debug.Log("TEST SUCCESS!");
 		print(theObject.gameObject); //.GetComponent<PlatformerCharacter2D>().d_DevMode = true;
-		PlatformerCharacter2D thePlayer = theObject.gameObject.GetComponent<PlatformerCharacter2D>();
+		FighterChar thePlayer = theObject.gameObject.GetComponent<FighterChar>();
 
 		if(thePlayer != null)
 		{

@@ -11,6 +11,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AudioClip[] footstepSounds;
 	[SerializeField]private AudioClip[] landingSounds;
 	[SerializeField]private AudioClip[] punchSounds;
+	[SerializeField]private AudioClip[] punchHitSounds;
 	[SerializeField]private AudioClip 	windSound;
 	[SerializeField]private FighterChar theCharacter;
 	[SerializeField][Range(0,1f)]private float jumpVolM;		// Jump volume
@@ -20,6 +21,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField][Range(0,1f)]private float windVolM;		// Wind volume
 	[SerializeField][Range(0,1f)]private float stepVolM;		// Footstep volume
 	[SerializeField][Range(0,1f)]private float punchVolM;		// Punch volume
+	[SerializeField][Range(0,1f)]private float punchHitVolM;	// Punch hit volume
 	[Space(10)]												    
 	[SerializeField][Range(100f,500f)]private float windMinT;						// Speed at which wind sound becomes audible
 	[SerializeField][Range(100f,500f)]private float windMaxT;						// Speed at which wind sound is loudest
@@ -88,12 +90,25 @@ public class FighterAudio : NetworkBehaviour {
 		
 	public void PunchSound()
 	{
+		//print("Punchsound played locally");
 		int whichSound = 0;
 		float volume = punchVolM;
 		whichSound = (int)Random.Range(0,4);
 		charAudioSource.PlayOneShot(punchSounds[whichSound], volume);
-		CmdPunchSound(volume);
+		//CmdPunchSound(volume);
 	}
+
+	public void PunchHitSound()
+	{
+		//print("PunchHitsound played locally");
+		print("PunchHitsound played locally");
+
+		int whichSound = 0;
+		float volume = punchVolM;
+		whichSound = (int)Random.Range(0,4);
+		charAudioSource.PlayOneShot(punchHitSounds[whichSound], volume);
+	}
+
 	[Command] public void CmdPunchSound(float theVolume)
 	{
 		RpcPunchSound(theVolume);
