@@ -336,6 +336,8 @@ public class Player : FighterChar
 
 		if(IsDisabled())
 		{
+			FighterState.RightClick = false;
+			FighterState.LeftClick = false;
 			FighterState.UpKey = false;
 			FighterState.LeftKey = false;
 			FighterState.DownKey = false;

@@ -24,9 +24,9 @@ public class IndoorFader : MonoBehaviour {
 			transitionTime -= Time.deltaTime;
 		}
 
-		if(transitionTime<0){transitionTime = 0;}
-
 		if(transitionTime == 0){return;}
+
+		if(transitionTime<0){transitionTime = 0;}
 
 		if(isPlayerIndoors)
 		{

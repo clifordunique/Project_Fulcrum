@@ -55,38 +55,38 @@ public class FighterAudio : NetworkBehaviour {
 		}
 		//int whichSound = (int)Random.Range(0,4);
 		//volume *= volumeM;
-		if(isLocalPlayer)
-		{
+		//if(isLocalPlayer)
+		//{
 			//print("Step Played on localplayer at volume: "+volume);
 			charAudioSource.PlayOneShot(footstepSounds[1], volume);
-		}
+		//}
 		if(isServer)
 		{
 			//print("SERVER EXECUTING RPC of volume "+volume);
-			RpcStepSound(volume);
+			//RpcStepSound(volume);
 		}
 		//CmdStepSound(volume);
 	}
-	[Command] public void CmdStepSound(float volume)
-	{
-		RpcStepSound(volume);
-	}
-	[ClientRpc] public void RpcStepSound(float theVolume)
-	{
-		//print("RPCSTEPSOUND ACTIVATED");
-		//if(isLocalPlayer){return;}
-		if(isLocalPlayer)
-		{
-			return;
-		}
-		if(isClient)
-		{
-			//print("Step Played on client with volume "+theVolume);
-			charAudioSource.PlayOneShot(footstepSounds[1], theVolume);
-		}
-
-
-	}
+//	[Command] public void CmdStepSound(float volume)
+//	{
+//		RpcStepSound(volume);
+//	}
+//	[ClientRpc] public void RpcStepSound(float theVolume)
+//	{
+//		//print("RPCSTEPSOUND ACTIVATED");
+//		//if(isLocalPlayer){return;}
+//		if(isLocalPlayer)
+//		{
+//			return;
+//		}
+//		if(isClient)
+//		{
+//			//print("Step Played on client with volume "+theVolume);
+//			charAudioSource.PlayOneShot(footstepSounds[1], theVolume);
+//		}
+//
+//
+//	}
 		
 	public void PunchSound()
 	{
@@ -100,35 +100,34 @@ public class FighterAudio : NetworkBehaviour {
 
 	public void PunchHitSound()
 	{
-		//print("PunchHitsound played locally");
 		print("PunchHitsound played locally");
 
 		int whichSound = 0;
-		float volume = punchVolM;
+		float volume = punchHitVolM;
 		whichSound = (int)Random.Range(0,4);
 		charAudioSource.PlayOneShot(punchHitSounds[whichSound], volume);
 	}
 
-	[Command] public void CmdPunchSound(float theVolume)
-	{
-		RpcPunchSound(theVolume);
-	}
-	[ClientRpc] public void RpcPunchSound(float theVolume)
-	{
-		//print("RPCSTEPSOUND ACTIVATED");
-		//if(isLocalPlayer){return;}
-		if(isLocalPlayer)
-		{
-			return;
-		}
-		if(isClient)
-		{
-			int whichSound = 0;
-			float volume = punchVolM;
-			whichSound = (int)Random.Range(0,4);
-			charAudioSource.PlayOneShot(punchSounds[whichSound], theVolume);
-		}
-	}
+//	[Command] public void CmdPunchSound(float theVolume)
+//	{
+//		RpcPunchSound(theVolume);
+//	}
+//	[ClientRpc] public void RpcPunchSound(float theVolume)
+//	{
+//		//print("RPCSTEPSOUND ACTIVATED");
+//		//if(isLocalPlayer){return;}
+//		if(isLocalPlayer)
+//		{
+//			return;
+//		}
+//		if(isClient)
+//		{
+//			int whichSound = 0;
+//			float volume = punchVolM;
+//			whichSound = (int)Random.Range(0,4);
+//			charAudioSource.PlayOneShot(punchSounds[whichSound], theVolume);
+//		}
+//	}
 
 
 	public void LandingSound(float impactGForce)
@@ -140,22 +139,22 @@ public class FighterAudio : NetworkBehaviour {
 			volume = landVolM*(impactGForce/30);
 		}
 		charAudioSource.PlayOneShot(landingSounds[whichSound], volume);
-		CmdLandingSound(volume);
+		//CmdLandingSound(volume);
 	}
-	[Command] public void CmdLandingSound(float volume)
-	{
-		RpcLandingSound(volume);
-	}
-	[ClientRpc] public void RpcLandingSound(float volume)
-	{
-		if(isLocalPlayer){return;}
-		charAudioSource.PlayOneShot(landingSounds[1], volume);
-	}
-
+//	[Command] public void CmdLandingSound(float volume)
+//	{
+//		RpcLandingSound(volume);
+//	}
+//	[ClientRpc] public void RpcLandingSound(float volume)
+//	{
+//		if(isLocalPlayer){return;}
+//		charAudioSource.PlayOneShot(landingSounds[1], volume);
+//	}
+//
 
 	public void SlamSound(float impactGForce, float minT, float maxT)
 	{
-		if(!isLocalPlayer){return;}
+		//if(!isLocalPlayer){return;}
 		float volume = slamVolM;
 		//if(impactGForce <= 150)
 		//{
@@ -163,22 +162,22 @@ public class FighterAudio : NetworkBehaviour {
 		//}
 
 		volume = slamVolM+((slamVolM/10)*((impactGForce-minT)/(maxT-minT)));
-		CmdSlamSound(volume);
+		//CmdSlamSound(volume);
 		charAudioSource.PlayOneShot(landingSounds[2], volume);
 	}
-	[Command] public void CmdSlamSound(float volume)
-	{
-		RpcSlamSound(volume);
-	}
-	[ClientRpc] public void RpcSlamSound(float volume)
-	{
-		if(isLocalPlayer){return;}
-		charAudioSource.PlayOneShot(landingSounds[2], volume);
-	}
+//	[Command] public void CmdSlamSound(float volume)
+//	{
+//		RpcSlamSound(volume);
+//	}
+//	[ClientRpc] public void RpcSlamSound(float volume)
+//	{
+//		if(isLocalPlayer){return;}
+//		charAudioSource.PlayOneShot(landingSounds[2], volume);
+//	}
 
 	public void CraterSound(float impactGForce, float minT, float maxT)
 	{
-		if(!isLocalPlayer){return;}
+		//if(!isLocalPlayer){return;}
 		float volume = crtrVolM;
 		volume = crtrVolM+((crtrVolM/10)*((impactGForce-minT)/(maxT-minT)));
 //		print("Volume: "+volume);
@@ -187,17 +186,17 @@ public class FighterAudio : NetworkBehaviour {
 //		print("maxT: "+maxT);
 //		print("(impactGForce-minT)/(maxT-minT)="+(impactGForce-minT)/(maxT-minT));
 		charAudioSource.PlayOneShot(landingSounds[4], volume);
-		CmdCraterSound(volume);
+		//CmdCraterSound(volume);
 	}
-	[Command] public void CmdCraterSound(float volume)
-	{
-		RpcCraterSound(volume);
-	}
-	[ClientRpc] public void RpcCraterSound(float volume)
-	{
-		charAudioSource.PlayOneShot(landingSounds[4], volume);
-	}
-
+//	[Command] public void CmdCraterSound(float volume)
+//	{
+//		RpcCraterSound(volume);
+//	}
+//	[ClientRpc] public void RpcCraterSound(float volume)
+//	{
+//		charAudioSource.PlayOneShot(landingSounds[4], volume);
+//	}
+//
 
 	public void JumpSound()
 	{
@@ -215,23 +214,19 @@ public class FighterAudio : NetworkBehaviour {
 		charAudioSource.PlayOneShot(jumpSounds[0], volume);
 	}
 
-	[Command] public void CmdWindSound(float volume)
-	{
-		RpcWindSound(volume);
-	}
-	[ClientRpc] public void RpcWindSound(float volume)
-	{
-		if(isLocalPlayer){return;}
-		windSource.volume = volume;
-	}
+//	[Command] public void CmdWindSound(float volume)
+//	{
+//		RpcWindSound(volume);
+//	}
+//	[ClientRpc] public void RpcWindSound(float volume)
+//	{
+//		if(isLocalPlayer){return;}
+//		windSource.volume = volume;
+//	}
 
 	// Update is called once per frame
 	void Update() 
 	{
-		if(!isLocalPlayer)
-		{
-			return;
-		}
 		float windVolume = 0;
 		if(theCharacter.m_Spd > windMinT)
 		{
@@ -256,7 +251,7 @@ public class FighterAudio : NetworkBehaviour {
 			curWindIntensity = destWindIntensity;
 		}
 		windSource.volume = curWindIntensity;
-		CmdWindSound(windVolume);
+		//CmdWindSound(windVolume);
 		//windSource.pitch = 1 + windVolume*0.2f;
 	}
 }
