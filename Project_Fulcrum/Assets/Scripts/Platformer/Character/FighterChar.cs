@@ -73,6 +73,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected Light o_TempLight;      			// Reference to a spotlight attached to the character.
 	[SerializeField] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
+	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to a sprite prefab used to mark locations ingame during development.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
 	[SerializeField] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
@@ -161,6 +162,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool showContactIndicators;	// Shows player's surface-contact raycasts, which turn green when touching something.
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the player is fully stuck in something, teleports player to last good position.
 	[SerializeField] protected bool d_ClickToKnockPlayer;	// When true and you left click, the player is propelled toward where you clicked.
+	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection.
 	[SerializeField] public  bool d_DevMode;				// Turns on all dev cheats.
 	protected LineRenderer m_DebugLine; 					// Part of above indicators.
 	protected LineRenderer m_GroundLine;					// Part of above indicators.		
@@ -182,8 +184,9 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
 	[Header("Gameplay:")]
-	[SerializeField]protected int g_ZonLevel;							// Level of player Zon Power.
-	[SerializeField]protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
+	[SerializeField] protected int g_ZonLevel;						// Level of player Zon Power.
+	[SerializeField] protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
+	[SerializeField] protected bool g_VelocityPunching;				// True when player is channeling a velocity fuelled punch.
 	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the player in? -1 = no stance.
 	[SerializeField] protected int g_CurHealth = 100;				// Current health.
 	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
@@ -532,6 +535,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
+		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
 
 		m_GroundFoot = transform.Find("MidFoot");
 		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
@@ -823,7 +827,7 @@ public class FighterChar : NetworkBehaviour
 				}
 				else 
 				{
-					if(invertedDirectionNormal == predictedLoc[0].normal)
+					if(invertedDirectionNormal == predictedLoc[0].normal&&d_SendCollisionMessages)
 					{
 						throw new Exception("INVERTED GROUND IMPACT NORMAL DETECTED!");
 					}
@@ -842,7 +846,7 @@ public class FighterChar : NetworkBehaviour
 				}
 				else 
 				{
-					if(invertedDirectionNormal == predictedLoc[1].normal)
+					if(invertedDirectionNormal == predictedLoc[1].normal&&d_SendCollisionMessages)
 					{
 						throw new Exception("INVERTED CEILING IMPACT NORMAL DETECTED!");
 					}
@@ -860,7 +864,7 @@ public class FighterChar : NetworkBehaviour
 				}
 				else 
 				{
-					if(invertedDirectionNormal == predictedLoc[2].normal)
+					if(invertedDirectionNormal == predictedLoc[2].normal&&d_SendCollisionMessages)
 					{
 						throw new Exception("INVERTED LEFT IMPACT NORMAL DETECTED!");
 					}
@@ -875,13 +879,15 @@ public class FighterChar : NetworkBehaviour
 					//print("predictedLoc[3].normal=("+predictedLoc[3].normal.x+","+predictedLoc[3].normal.y+")");
 					//print("moveDirectionNormal=("+moveDirectionNormal.x+","+moveDirectionNormal.y+")");
 					//print("moveDirectionNormal="+moveDirectionNormal);
-					ToRightWall(predictedLoc[3]);
-					DirectionChange(m_RightNormal);
+					if(ToRightWall(predictedLoc[3])) // If you hit something on the rightwall, change direction.
+					{
+						DirectionChange(m_RightNormal);
+					}
 					return;
 				}
 				else 
 				{
-					if(invertedDirectionNormal == predictedLoc[3].normal)
+					if(invertedDirectionNormal == predictedLoc[3].normal&&d_SendCollisionMessages)
 					{
 						throw new Exception("INVERTED RIGHT IMPACT NORMAL DETECTED!");
 					}
@@ -998,7 +1004,7 @@ public class FighterChar : NetworkBehaviour
 				if(rawSpeed < m_MaxRunSpeed+1)
 				{
 					rawSpeed = m_MaxRunSpeed;
-					FighterState.Vel = SetSpeed(FighterState.Vel,m_MaxRunSpeed);
+					SetSpeed(FighterState.Vel,m_MaxRunSpeed);
 				}
 				else
 				{
@@ -1173,7 +1179,7 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected void ToLeftWall(RaycastHit2D leftCheck) 
+	protected bool ToLeftWall(RaycastHit2D leftCheck) 
 	{ //Sets the new position of the player and their m_LeftNormal.
 
 		//print ("We've hit LeftWall, sir!!");
@@ -1182,9 +1188,20 @@ public class FighterChar : NetworkBehaviour
 
 		if (m_Airborne)
 		{
-			print("Airborne before impact.");
+			if(d_SendCollisionMessages)
+			{
+				print("Airborne before impact.");
+			}
 			m_Impact = true;
 			//m_Landing = true;
+		}
+
+		Breakable hitBreakable = leftCheck.collider.transform.GetComponent<Breakable>();
+
+		if(hitBreakable!=null&&m_Spd > 3)
+		{
+			print("hit a hitbreakable!");
+			if(hitBreakable.RecieveHit(this)){return false;}
 		}
 
 		//m_Impact = true;
@@ -1212,26 +1229,35 @@ public class FighterChar : NetworkBehaviour
 
 		if(m_Grounded)
 		{
-			print("LeftGroundWedge detected during left collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("LeftGroundWedge detected during left collision.");
+			}
 			OmniWedge(0,2);
 		}
 
 		if(m_Ceilinged)
 		{
-			print("LeftCeilingWedge detected during left collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("LeftCeilingWedge detected during left collision.");
+			}
 			OmniWedge(2,1);
 		}
 
 		if(m_RightWalled)
 		{
-			print("THERE'S PROBLEMS.");
+			if(d_SendCollisionMessages)
+			{
+				print("THERE'S PROBLEMS.");
+			}
 			//OmniWedge(2,3);
 		}
-
+		return true;
 		//print ("Final Position2:  " + this.transform.position);
 	}
 
-	protected void ToRightWall(RaycastHit2D rightCheck) 
+	protected bool ToRightWall(RaycastHit2D rightCheck) 
 	{ //Sets the new position of the player and their m_RightNormal.
 
 		print ("We've hit RightWall, sir!!");
@@ -1240,12 +1266,21 @@ public class FighterChar : NetworkBehaviour
 
 		if (m_Airborne)
 		{
-			print("Airborne before impact.");
+			if(d_SendCollisionMessages)
+			{
+				print("Airborne before impact.");
+			}
 			m_Impact = true;
-			//m_Landing = true;
 		}
 
-		//m_Impact = true;
+		Breakable hitBreakable = rightCheck.collider.transform.GetComponent<Breakable>();
+
+		if(hitBreakable!=null&&m_Spd > 3)
+		{
+			print("hit a hitbreakable!");
+			if(hitBreakable.RecieveHit(this)){return false;}
+		}
+			
 		rightSideContact = true;
 		m_RightWalled = true;
 		Vector2 setCharPos = rightCheck.point;
@@ -1289,10 +1324,10 @@ public class FighterChar : NetworkBehaviour
 			//print("RightCeilingWedge detected during right collision.");
 			OmniWedge(3,1);
 		}
-
+		return true;
 	}
 
-	protected void ToGround(RaycastHit2D groundCheck) 
+	protected bool ToGround(RaycastHit2D groundCheck) 
 	{ //Sets the new position of the player and their ground normal.
 		//print ("m_Grounded=" + m_Grounded);
 
@@ -1301,6 +1336,14 @@ public class FighterChar : NetworkBehaviour
 			//print("Airborne before impact.");
 			m_Impact = true;
 			//m_Landing = true;
+		}
+
+		Breakable hitBreakable = groundCheck.collider.transform.GetComponent<Breakable>();
+
+		if(hitBreakable!=null&&m_Spd > 3)
+		{
+			print("hit a hitbreakable!");
+			if(hitBreakable.RecieveHit(this)){return false;}
 		}
 
 		//m_Impact = true;
@@ -1338,33 +1381,46 @@ public class FighterChar : NetworkBehaviour
 		if(groundCheck.normal.y == 0f)
 		{//If vertical surface
 			//throw new Exception("Existence is suffering");
-			print("GtG VERTICAL :O");
+			if(d_SendCollisionMessages)
+			{
+				print("GtG VERTICAL :O");
+			}
 		}
 
 		m_GroundNormal = groundCheck2.normal;
 
 		if(m_Ceilinged)
 		{
-			print("CeilGroundWedge detected during ground collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("CeilGroundWedge detected during ground collision.");
+			}
 			OmniWedge(0,1);
 		}
 
 		if(m_LeftWalled)
 		{
-			print("LeftGroundWedge detected during ground collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("LeftGroundWedge detected during ground collision.");
+			}
 			OmniWedge(0,2);
 		}
 
 		if(m_RightWalled)
 		{
-			print("RightGroundWedge detected during groundcollision.");
+			if(d_SendCollisionMessages)
+			{
+				print("RightGroundWedge detected during groundcollision.");
+			}
 			OmniWedge(0,3);
 		}
 
 		//print ("Final Position2:  " + this.transform.position);
+		return true;
 	}
 
-	protected void ToCeiling(RaycastHit2D ceilingCheck) 
+	protected bool ToCeiling(RaycastHit2D ceilingCheck) 
 	{ //Sets the new position of the player when they hit the ceiling.
 
 		//float testNumber = ceilingCheck.normal.y/ceilingCheck.normal.x;
@@ -1374,9 +1430,21 @@ public class FighterChar : NetworkBehaviour
 
 		if (m_Airborne)
 		{
-			print("Airborne before impact.");
+			if(d_SendCollisionMessages)
+			{
+				print("Airborne before impact.");
+			}
 			//			m_Landing = true;
 			m_Impact = true;
+		}
+
+
+		Breakable hitBreakable = ceilingCheck.collider.transform.GetComponent<Breakable>();
+
+		if(hitBreakable!=null&&m_Spd > 3)
+		{
+			print("hit a hitbreakable!");
+			if(hitBreakable.RecieveHit(this)){return false;}
 		}
 
 		//m_Impact = true;
@@ -1396,36 +1464,52 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			print("Ceilinged = false?");
+			if(d_SendCollisionMessages)
+			{
+				print("Ceilinged = false?");
+			}
 			m_Ceilinged = false;
 		}
 
 		if(ceilingCheck.normal.y == 0f)
 		{//If vertical surface
 			//throw new Exception("Existence is suffering");
-			print("CEILING VERTICAL :O");
+			if(d_SendCollisionMessages)
+			{
+				print("CEILING VERTICAL :O");
+			}
 		}
 
 		m_CeilingNormal = ceilingCheck2.normal;
 
 		if(m_Grounded)
 		{
-			print("CeilGroundWedge detected during ceiling collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("CeilGroundWedge detected during ceiling collision.");
+			}
 			OmniWedge(0,1);
 		}
 
 		if(m_LeftWalled)
 		{
-			print("LeftCeilWedge detected during ceiling collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("LeftCeilWedge detected during ceiling collision.");
+			}
 			OmniWedge(2,1);
 		}
 
 		if(m_RightWalled)
 		{
-			print("RightGroundWedge detected during ceiling collision.");
+			if(d_SendCollisionMessages)
+			{
+				print("RightGroundWedge detected during ceiling collision.");
+			}
 			OmniWedge(3,1);
 		}
 		//print ("Final Position2:  " + this.transform.position);
+		return true;
 	}
 
 	protected Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)
@@ -1445,16 +1529,7 @@ public class FighterChar : NetworkBehaviour
 		newVelocity = direction * speed;
 		return newVelocity;
 	}
-
-	protected Vector2 SetSpeed(Vector2 inputVelocity, float speed)
-	{
-		//print("SetSpeed");
-		Vector2 newVelocity;
-		Vector2 direction = inputVelocity.normalized;
-		newVelocity = direction * speed;
-		return newVelocity;
-	}
-
+		
 	protected void DirectionChange(Vector2 newNormal)
 	{
 		//print("DirectionChange");
@@ -1563,7 +1638,7 @@ public class FighterChar : NetworkBehaviour
 
 		//print("SPLMLT " + speedLossMult);
 
-		FighterState.Vel = SetSpeed(FighterState.Vel, initialSpeed*speedLossMult);
+		SetSpeed(FighterState.Vel, initialSpeed*speedLossMult);
 		//print("Final Vel " + FighterState.Vel);
 		//print ("DirChange Vel:  " + FighterState.Vel);
 	}
@@ -1689,7 +1764,10 @@ public class FighterChar : NetworkBehaviour
 		{
 			//throw new Exception("Top not wedged!");
 			cPerp = Perp(upperHit.normal);
-			print("Top not wedged!");
+			if(d_SendCollisionMessages)
+			{
+				print("Top not wedged!");
+			}
 			return;
 		}
 		else
@@ -1911,7 +1989,10 @@ public class FighterChar : NetworkBehaviour
 				{
 					//if(m_GroundNormal != m_CeilingNormal)
 					{
-						print("Antitunneling omniwedge executed");			
+						if(d_SendCollisionMessages)
+						{
+							print("Antitunneling omniwedge executed");		
+						}
 						OmniWedge(0,1);
 					}
 				}
@@ -1966,12 +2047,18 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 3: //Three sides are embedded. Not sure how to handle this yet besides reverting.
 			{
-				print("Triple Embed.");
+				if(d_SendCollisionMessages)
+				{
+					print("Triple Embed.");
+				}
 				break;
 			}
 		case 4:
 			{
-				print("FULL embedding! :C");
+				if(d_SendCollisionMessages)
+				{
+					print("FULL embedding!");
+				}
 				if(recoverFromFullEmbed)
 				{
 					this.transform.position = lastSafePosition;
@@ -1980,7 +2067,10 @@ public class FighterChar : NetworkBehaviour
 			}
 		default:
 			{
-				print("ERROR: DEFAULTED.");
+				if(d_SendCollisionMessages)
+				{
+					print("ERROR: DEFAULTED ON ANTITUNNELER.");
+				}
 				break;
 			}
 		}
@@ -2135,7 +2225,10 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(m_Grounded&&m_Ceilinged)
 		{
-			print("Grounded and Ceilinged, nowhere to jump!");
+			if(d_SendCollisionMessages)
+			{
+				print("Grounded and Ceilinged, nowhere to jump!");
+			}
 			//FighterState.JumpKey = false;
 		}
 		else if(m_Grounded)
@@ -2153,7 +2246,10 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_LeftWalled)
 		{
-			print("Leftwalljumping!");
+			if(d_SendCollisionMessages)
+			{
+				print("Leftwalljumping!");
+			}
 			if(FighterState.Vel.y < 0)
 			{
 				FighterState.Vel = new Vector2(m_WallHJumpForce, m_WallVJumpForce);
@@ -2172,7 +2268,10 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_RightWalled)
 		{
-			print("Rightwalljumping!");
+			if(d_SendCollisionMessages)
+			{
+				print("Rightwalljumping!");
+			}
 			if(FighterState.Vel.y < 0)
 			{
 				FighterState.Vel = new Vector2(-m_WallHJumpForce, m_WallVJumpForce);
@@ -2215,6 +2314,11 @@ public class FighterChar : NetworkBehaviour
 	// PUBLIC FUNCTIONS
 	//###################################################################################################################################
 	#region PUBLIC FUNCTIONS
+
+	public bool IsVelocityPunching()
+	{
+		return g_VelocityPunching;
+	}
 
 	public void PunchConnect(GameObject victim, Vector2 aimDirection)
 	{
@@ -2322,6 +2426,25 @@ public class FighterChar : NetworkBehaviour
 		// Executes when the player leaves zon stance without using power.
 	}
 
+	public void SetSpeed(Vector2 inputVelocity, float speed)
+	{
+		//print("SetSpeed");
+		Vector2 newVelocity;
+		Vector2 direction = inputVelocity.normalized;
+		newVelocity = direction * speed;
+		FighterState.Vel = newVelocity;
+	}
+
+	public void SetSpeed(float speed)
+	{
+		//print("SetSpeed");
+		Vector2 newVelocity;
+		Vector2 direction = FighterState.Vel.normalized;
+		newVelocity = direction * speed;
+		FighterState.Vel = newVelocity;
+	}
+
+
 	#endregion
 }
 
@@ -2329,6 +2452,8 @@ public class FighterChar : NetworkBehaviour
 {
 	[SerializeField][ReadOnlyAttribute]public bool JumpKey;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClick;
+	[SerializeField][ReadOnlyAttribute]public bool LeftClickHold;
+	[SerializeField][ReadOnlyAttribute]public bool LeftClickRelease;
 	[SerializeField][ReadOnlyAttribute]public bool RightClick;
 	[SerializeField][ReadOnlyAttribute]public bool LeftKey;
 	[SerializeField][ReadOnlyAttribute]public bool RightKey;

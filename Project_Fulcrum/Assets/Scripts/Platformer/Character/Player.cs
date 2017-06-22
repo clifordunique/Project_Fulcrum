@@ -411,15 +411,26 @@ public class Player : FighterChar
 			}
 		}
 			
-		if(FighterState.LeftClick&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
 		{
 			if(!(FighterState.LeftKey&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKey&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
 			//print("Leftclick detected");
-			FighterState.LeftClick = false;
+			FighterState.LeftClickRelease = false;
 		}	
+
+		if(FighterState.LeftClickHold&&!(d_DevMode||d_ClickToKnockPlayer)&&(FighterState.Vel.magnitude > 40))
+		{
+			o_VelocityPunch.inUse = true;
+			g_VelocityPunching = true;
+		}
+		else
+		{
+			o_VelocityPunch.inUse = false;
+			g_VelocityPunching = false;
+		}
 
 
 	}
@@ -463,6 +474,11 @@ public class Player : FighterChar
 		{
 			i_DevKey4  = true;				
 		}
+
+		//
+		// Key-Up Unpresses
+		//
+		FighterState.LeftClickRelease = Input.GetMouseButtonUp(0);
 			
 		//
 		// Key Hold-Downs
@@ -471,6 +487,7 @@ public class Player : FighterChar
 		FighterState.RightKey = Input.GetButton("Right");
 		FighterState.UpKey = Input.GetButton("Up");
 		FighterState.DownKey = Input.GetButton("Down");
+		FighterState.LeftClickHold = Input.GetMouseButton(0);
 
 		// Mouse position in world space
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
