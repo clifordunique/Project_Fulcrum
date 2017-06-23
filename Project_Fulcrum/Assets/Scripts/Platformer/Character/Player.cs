@@ -273,7 +273,7 @@ public class Player : FighterChar
 		m_Kneeling = false;
 		g_ZonStance = -1;
 
-		if(FighterState.RightClick&&(d_DevMode))
+		if(FighterState.RightClick&&(FighterState.DevMode))
 		{
 			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
 			//newMarker.name = "DebugMarker";
@@ -292,7 +292,7 @@ public class Player : FighterChar
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		if(FighterState.LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockPlayer))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*10;
 			//print("Knocking the player.");
@@ -301,13 +301,13 @@ public class Player : FighterChar
 
 		if(i_DevKey1)
 		{
-			if(d_DevMode)
+			if(FighterState.DevMode)
 			{
-				d_DevMode = false;
+				FighterState.DevMode = false;
 			}
 			else
 			{
-				d_DevMode = true;
+				FighterState.DevMode = true;
 			}
 			i_DevKey1 = false;
 		}
@@ -328,7 +328,7 @@ public class Player : FighterChar
 
 		if(i_DevKey4)
 		{
-			g_CurHealth -= 10;
+			FighterState.CurHealth -= 10;
 			i_DevKey4 = false;
 		}
 	
@@ -412,7 +412,7 @@ public class Player : FighterChar
 			}
 		}
 			
-		if(FighterState.LeftClickRelease&&!(d_DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
 		{
 			if(!(FighterState.LeftKey&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKey&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
@@ -650,7 +650,7 @@ public class Player : FighterChar
 
 		if(isLocalPlayer)
 		{
-			o_Healthbar.SetCurHealth(g_CurHealth);
+			o_Healthbar.SetCurHealth(FighterState.CurHealth);
 		}
 	}
 

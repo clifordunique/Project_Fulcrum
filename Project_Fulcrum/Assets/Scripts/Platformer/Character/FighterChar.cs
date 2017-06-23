@@ -58,9 +58,10 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
 	[SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
 	[Space(10)]
+	[SerializeField] protected float m_VelPunchT = 60f; 							// Impact threshold for Velocity Punch trigger
 	[SerializeField] protected float m_SlamT = 100f; 								// Impact threshold for slam
-	[SerializeField] protected float m_CraterT = 200f; 							// Impact threshold for crater
-	[SerializeField] protected float m_GuardSlamT = 200f; 						// Guarded Impact threshold for slam
+	[SerializeField] protected float m_CraterT = 200f; 								// Impact threshold for crater
+	[SerializeField] protected float m_GuardSlamT = 200f; 							// Guarded Impact threshold for slam
 	[SerializeField] protected float m_GuardCraterT = 400f; 						// Guarded Impact threshold for crater
 
 
@@ -164,8 +165,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool showContactIndicators;	// Shows player's surface-contact raycasts, which turn green when touching something.
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the player is fully stuck in something, teleports player to last good position.
 	[SerializeField] protected bool d_ClickToKnockPlayer;	// When true and you left click, the player is propelled toward where you clicked.
-	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection.
-	[SerializeField] public  bool d_DevMode;				// Turns on all dev cheats.
+	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
 	protected LineRenderer m_DebugLine; 					// Part of above indicators.
 	protected LineRenderer m_GroundLine;					// Part of above indicators.		
 	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
@@ -191,13 +191,12 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool g_VelocityPunching;				// True when player is channeling a velocity fuelled punch.
 	[SerializeField] protected bool g_VelocityPunchExpended;			// True when player's VelocityPunch has been used up.
 	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the player in? -1 = no stance.
-	[SerializeField] protected int g_CurHealth = 100;				// Current health.
+
 	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
 	[SerializeField] protected int g_MinSlamDMG = 5;				// Min damage a slam impact can deal.
 	[SerializeField] protected int g_MaxSlamDMG = 30;				// Max damage a slam impact can deal.	
 	[SerializeField] protected int g_MinCrtrDMG = 30;				// Min damage a crater impact can deal.
 	[SerializeField] protected int g_MaxCrtrDMG = 60;				// Max damage a crater impact can deal.
-	[SerializeField] protected bool g_Dead = false;					// True when the player's health reaches 0 and they die.
 	//[SerializeField] protected bool g_FallStunned = false;		// True when the player is recoiling after falling.
 	[SerializeField] protected float g_CurFallStun = 0;				// How much longer the player is stunned after a fall. When this value is > 0  the player is stunned.
 	[SerializeField] protected float g_MinSlamStun = 0.5f;			// Min duration the player can be stunned from slamming the ground.
@@ -248,20 +247,20 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void Death()
 	{
-		if(d_DevMode)
+		if(FighterState.DevMode)
 		{
-			g_CurHealth = 100;
+			FighterState.CurHealth = 100;
 			return;
 		}
-		g_Dead = true;
+		FighterState.Dead = true;
 		o_Anim.SetBool("Dead", true);
 		o_SpriteRenderer.color = Color.red;
 	}
 
 	protected virtual void Respawn()
 	{
-		g_Dead = false;
-		g_CurHealth = g_MaxHealth;
+		FighterState.Dead = false;
+		FighterState.CurHealth = g_MaxHealth;
 		o_Anim.SetBool("Dead", false);
 		o_SpriteRenderer.color = Color.white;
 	}
@@ -395,11 +394,17 @@ public class FighterChar : NetworkBehaviour
 				g_VelocityPunchExpended = true;
 				Slam();
 			}
+			else if(m_IGF >= m_VelPunchT&&g_VelocityPunching)
+			{
+				g_VelocityPunchExpended = true;
+				Slam();
+			}
 			else
 			{
 				o_FighterAudio.LandingSound(m_IGF);
 			}
 		}
+	
 
 		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 
@@ -421,7 +426,7 @@ public class FighterChar : NetworkBehaviour
 		g_ZonStance = -1;
 
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if(FighterState.LeftClick&&(d_DevMode||d_ClickToKnockPlayer))
+		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockPlayer))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*10;
 			print("Leftclick detected");
@@ -440,13 +445,13 @@ public class FighterChar : NetworkBehaviour
 				g_CurFallStun = 0;
 			}
 		}
-		if(g_CurHealth <= 0)
+		if(FighterState.CurHealth <= 0)
 		{
 			Death();
 		}
 		else
 		{
-			if(g_Dead)
+			if(FighterState.Dead)
 			{
 				Respawn();
 			}
@@ -585,6 +590,8 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FighterAwake()
 	{
+		FighterState.CurHealth = 100;					// Current health.
+		FighterState.Dead = false;						// True when the player's health reaches 0 and they die.
 		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
 		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
@@ -624,11 +631,11 @@ public class FighterChar : NetworkBehaviour
 		//print(m_RemainingMovement);
 
 
-		if(!(showVelocityIndicator||d_DevMode)){
+		if(!(showVelocityIndicator||FighterState.DevMode)){
 			m_DebugLine.enabled = false;
 		}
 
-		if(!(showContactIndicators||d_DevMode))
+		if(!(showContactIndicators||FighterState.DevMode))
 		{
 			m_CeilingLine.enabled = false;
 			m_GroundLine.enabled = false;
@@ -669,8 +676,8 @@ public class FighterChar : NetworkBehaviour
 		float stunTime = g_MinCrtrStun+((g_MaxCrtrStun-g_MinCrtrStun)*linScaleModifier); // Stun duration scales linearly from ...
 
 		g_CurFallStun = stunTime;				 // Stunned for stunTime.
-		g_CurHealth -= (int)damagedealt;		 // Damaged by fall.
-		if(g_CurHealth < 0){g_CurHealth = 0;}
+		FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 	}
 
 	protected void Slam() // Triggered when character impacts anything too hard.
@@ -700,8 +707,11 @@ public class FighterChar : NetworkBehaviour
 		float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*linScaleModifier); // Stun duration scales linearly from ...
 
 		g_CurFallStun = stunTime;				 // Stunned for stunTime.
-		g_CurHealth -= (int)damagedealt;		 // Damaged by fall.
-		if(g_CurHealth < 0){g_CurHealth = 0;}
+		if(damagedealt >= 0)
+		{
+			FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+		}
+		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 	}
 
 	protected void Collision()	// Handles all collisions with terrain geometry.
@@ -2555,7 +2565,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		if(enemyFighter != null)
 		{
-			enemyFighter.g_CurHealth -= 5;
+			enemyFighter.FighterState.CurHealth -= 5;
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
 
@@ -2590,7 +2600,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		if(enemyFighter != null)
 		{
-			enemyFighter.g_CurHealth -= 5;
+			enemyFighter.FighterState.CurHealth -= 5;
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
 			print("Punch connected remotely");
@@ -2600,7 +2610,7 @@ public class FighterChar : NetworkBehaviour
 
 	public bool IsDisabled()
 	{
-		if(g_Dead||(g_CurFallStun>0))
+		if(FighterState.Dead||(g_CurFallStun>0))
 		{
 			return true;
 		}
@@ -2674,6 +2684,9 @@ public class FighterChar : NetworkBehaviour
 
 [System.Serializable] public struct FighterState
 {
+	[SerializeField] public bool DevMode;											// Turns on all dev cheats.
+	[SerializeField][ReadOnlyAttribute]public int CurHealth;						// Current health.
+	[SerializeField][ReadOnlyAttribute]public bool Dead;							// True when the player's health reaches 0 and they die.
 	[SerializeField][ReadOnlyAttribute]public bool JumpKey;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClick;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickHold;
@@ -2686,6 +2699,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public bool ZonKey;
 	[SerializeField][ReadOnlyAttribute]public Vector2 MouseWorldPos;				// Mouse position in world coordinates.
 	[SerializeField][ReadOnlyAttribute]public Vector2 PlayerMouseVector;			// Vector pointing from the player to their mouse position.
-	[SerializeField][ReadOnlyAttribute]public Vector2 Vel;						//Current (x,y) velocity.
+	[SerializeField][ReadOnlyAttribute]public Vector2 Vel;							//Current (x,y) velocity.
 	[SerializeField][ReadOnlyAttribute]public Vector2 FinalPos;						//The final position of the character at the end of the physics frame.
 }

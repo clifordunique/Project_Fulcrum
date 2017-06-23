@@ -12,7 +12,7 @@ public class GodModeBox : MonoBehaviour
 
 		if(thePlayer != null)
 		{
-			thePlayer.d_DevMode = true;
+			//thePlayer.FighterState.DevMode = true;
 		}
 	}
 }
