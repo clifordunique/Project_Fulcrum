@@ -204,7 +204,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected float g_MinCrtrStun = 1.5f;			// Max duration the player can be stunned from smashing the ground hard.
 	[SerializeField] protected float g_MaxCrtrStun = 3f;			// Max duration the player can be stunned from smashing the ground hard.
 
-
+	protected bool isAPlayer;
 
 	#endregion 
 
@@ -244,6 +244,47 @@ public class FighterChar : NetworkBehaviour
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	protected void ThrowPunch(Vector2 aimDirection)
+	{
+		float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
+		float xTransform = 1f;
+		float yTransform = 1f;
+
+		if(aimDirection.x<0)
+		{
+			facingDirection = false;
+			xTransform = -1f;
+		}
+		else
+		{
+			facingDirection = true;
+		}
+
+		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
+		punchAngle.x = 0;
+		punchAngle.y = 0;
+		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle, this.transform);
+
+		if(randomness1>0)
+		{
+			yTransform = -1f;
+			newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
+		}
+
+		Vector3 theLocalScale = new Vector3 (xTransform, yTransform, 1f);
+		Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
+
+		newAirPunch.transform.localScale = theLocalScale;
+		newAirPunch.transform.Translate(theLocalTranslate);
+		newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+
+		newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
+		newAirPunch.GetComponentInChildren<AirPunch>().punchThrower = this;
+
+		o_FighterAudio.PunchSound();
+	}
 
 	protected virtual void Death()
 	{
@@ -1494,7 +1535,10 @@ public class FighterChar : NetworkBehaviour
 	protected bool ToRightWall(RaycastHit2D rightCheck) 
 	{ //Sets the new position of the player and their m_RightNormal.
 
-		print ("We've hit RightWall, sir!!");
+		if(d_SendCollisionMessages)
+		{
+			print ("We've hit RightWall, sir!!");
+		}
 		//print ("groundCheck.normal=" + groundCheck.normal);
 		//print("prerightwall Pos:" + this.transform.position);
 
@@ -2554,9 +2598,14 @@ public class FighterChar : NetworkBehaviour
 		return g_VelocityPunching;
 	}
 
+	public bool isAlive()
+	{
+		return !FighterState.Dead;
+	}
+
 	public void PunchConnect(GameObject victim, Vector2 aimDirection)
 	{
-		if(!isLocalPlayer){return;}
+		if((isAPlayer&&!isLocalPlayer)|| !isAPlayer&&!isServer){return;}
 		FighterChar enemyFighter = null;
 
 		if(victim != null)
@@ -2633,6 +2682,11 @@ public class FighterChar : NetworkBehaviour
 	public Vector2 GetVelocity()
 	{
 		return FighterState.Vel;
+	}
+
+	public Vector2 GetPosition()
+	{
+		return FighterState.FinalPos;
 	}
 
 	public float GetSpeed()

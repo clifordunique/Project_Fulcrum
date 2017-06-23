@@ -84,6 +84,7 @@ public class Player : FighterChar
 	protected override void Awake()
 	{
 		inputBuffer = new Queue<FighterState>();
+		isAPlayer = true;
 		FighterAwake();
 	}
 
@@ -159,50 +160,6 @@ public class Player : FighterChar
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
-
-	protected void ThrowPunch(Vector2 aimDirection)
-	{
-		//if(!isLocalPlayer){return;}
-		float randomness1 = UnityEngine.Random.Range(-0.2f,0.2f);
-		float randomness2 = UnityEngine.Random.Range(-0.2f,0.2f);
-		float xTransform = 1f;
-		float yTransform = 1f;
-
-		if(aimDirection.x<0)
-		{
-			facingDirection = false;
-			xTransform = -1f;
-		}
-		else
-		{
-			facingDirection = true;
-		}
-
-		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
-		punchAngle.x = 0;
-		punchAngle.y = 0;
-		GameObject newAirPunch = (GameObject)Instantiate(p_AirPunchPrefab, this.transform.position, punchAngle, this.transform);
-
-		if(randomness1>0)
-		{
-			yTransform = -1f;
-			newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
-		}
-
-		Vector3 theLocalScale = new Vector3 (xTransform, yTransform, 1f);
-		Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
-
-		newAirPunch.transform.localScale = theLocalScale;
-		newAirPunch.transform.Translate(theLocalTranslate);
-		newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
-
-		newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
-		newAirPunch.GetComponentInChildren<AirPunch>().punchThrower = this;
-
-		//CmdThrowPunch(aimDirection);
-
-		o_FighterAudio.PunchSound();
-	}
 
 	[Command]protected void CmdThrowPunch(Vector2 aimDirection)
 	{
@@ -331,14 +288,13 @@ public class Player : FighterChar
 			FighterState.CurHealth -= 10;
 			i_DevKey4 = false;
 		}
-	
-
-	
 
 		if(IsDisabled())
 		{
 			FighterState.RightClick = false;
 			FighterState.LeftClick = false;
+			FighterState.LeftClickRelease = false;
+			FighterState.LeftClickHold = false;
 			FighterState.UpKey = false;
 			FighterState.LeftKey = false;
 			FighterState.DownKey = false;
