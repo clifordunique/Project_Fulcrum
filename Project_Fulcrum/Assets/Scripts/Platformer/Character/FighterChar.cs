@@ -73,7 +73,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected Light o_TempLight;      			// Reference to a spotlight attached to the character.
 	[SerializeField] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
-	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to a sprite prefab used to mark locations ingame during development.
+	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
+	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
 	[SerializeField] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
@@ -187,6 +189,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected int g_ZonLevel;						// Level of player Zon Power.
 	[SerializeField] protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
 	[SerializeField] protected bool g_VelocityPunching;				// True when player is channeling a velocity fuelled punch.
+	[SerializeField] protected bool g_VelocityPunchExpended;			// True when player's VelocityPunch has been used up.
 	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the player in? -1 = no stance.
 	[SerializeField] protected int g_CurHealth = 100;				// Current health.
 	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
@@ -252,6 +255,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		g_Dead = true;
 		o_Anim.SetBool("Dead", true);
+		o_SpriteRenderer.color = Color.red;
 	}
 
 	protected virtual void Respawn()
@@ -259,6 +263,44 @@ public class FighterChar : NetworkBehaviour
 		g_Dead = false;
 		g_CurHealth = g_MaxHealth;
 		o_Anim.SetBool("Dead", false);
+		o_SpriteRenderer.color = Color.white;
+	}
+
+	protected virtual void SpawnShockEffect(Vector2 hitDirection)
+	{
+		print("Hit direction = "+hitDirection);
+		if(hitDirection.y == 0){hitDirection.y = 0.0001f;}
+		if(hitDirection.x == 0){hitDirection.x = 0.0001f;}
+		Quaternion ImpactAngle = Quaternion.LookRotation(hitDirection);
+		ImpactAngle.x = 0;
+		ImpactAngle.y = 0;
+		GameObject newShockEffect = (GameObject)Instantiate(p_ShockEffectPrefab, this.transform.position, ImpactAngle);
+
+		float xTransform = 3f;
+		if(hitDirection.x<0)
+		{
+			xTransform = -3f;
+		}
+			
+		//if(randomness1>0)
+		//{
+		//	yTransform = -1f;
+		//	newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
+		//}
+
+		Vector3 theLocalScale = new Vector3 (xTransform, 3f, 1f);
+		//Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
+
+		newShockEffect.transform.localScale = theLocalScale;
+		//newAirPunch.transform.Translate(theLocalTranslate);
+		//newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
+
+		//newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
+		//newAirPunch.GetComponentInChildren<ShockEffect>().punchThrower = this;
+
+		//CmdThrowPunch(aimDirection);
+
+		//o_FighterAudio.PunchSound();
 	}
 
 	protected virtual void FixedUpdatePhysics()
@@ -282,6 +324,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(!noGravity)
 		{//Gravity!
+			AirControl(CtrlH);
 			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1);
 			m_Ceilinged = false;
 		}	
@@ -344,10 +387,12 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(m_IGF >= m_CraterT)
 			{
+				g_VelocityPunchExpended = true;
 				Crater();
 			}
 			else if(m_IGF >= m_SlamT)
 			{
+				g_VelocityPunchExpended = true;
 				Slam();
 			}
 			else
@@ -398,6 +443,13 @@ public class FighterChar : NetworkBehaviour
 		if(g_CurHealth <= 0)
 		{
 			Death();
+		}
+		else
+		{
+			if(g_Dead)
+			{
+				Respawn();
+			}
 		}
 	}
 
@@ -605,6 +657,13 @@ public class FighterChar : NetworkBehaviour
 
 		o_FighterAudio.CraterSound(m_IGF, m_CraterT, 1000f);
 
+		SpawnShockEffect(this.initialVel.normalized);
+
+		if(g_VelocityPunching)
+		{
+			g_VelocityPunchExpended = true;
+		}
+
 		float linScaleModifier = ((m_IGF-m_CraterT)/(1000f-m_CraterT));
 		float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*linScaleModifier); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
 		float stunTime = g_MinCrtrStun+((g_MaxCrtrStun-g_MinCrtrStun)*linScaleModifier); // Stun duration scales linearly from ...
@@ -629,6 +688,12 @@ public class FighterChar : NetworkBehaviour
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
 		o_FighterAudio.SlamSound(m_IGF, m_SlamT, m_CraterT);
+
+		if(g_VelocityPunching)
+		{
+			g_VelocityPunchExpended = true;
+			SpawnShockEffect(this.initialVel.normalized);
+		}
 
 		float linScaleModifier = ((m_IGF-m_SlamT)/(m_CraterT-m_SlamT));
 		float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*linScaleModifier); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
@@ -1057,6 +1122,165 @@ public class FighterChar : NetworkBehaviour
 		//ChangeSpeedLinear(FighterState.Vel, );
 		//print("PostTraction velocity: "+FighterState.Vel);
 	}
+
+	protected void AirControl(float horizontalInput)
+	{
+//		Vector2 groundPerp = Perp(m_GroundNormal);
+//
+//		//print("Traction");
+//		//print("gp="+groundPerp);
+//
+//		if(groundPerp.x > 0)
+//		{
+//			groundPerp *= -1;
+//		}
+//
+//		float steepnessAngle = Vector2.Angle(Vector2.left,groundPerp);
+//
+//		steepnessAngle = (float)Math.Round(steepnessAngle,2);
+//		//print("SteepnessAngle:"+steepnessAngle);
+//
+//		float slopeMultiplier = 0;
+//
+//		if(steepnessAngle > m_TractionLossMinAngle)
+//		{
+//			if(steepnessAngle >= m_TractionLossMaxAngle)
+//			{
+//				//print("MAXED OUT!");
+//				slopeMultiplier = 1;
+//			}
+//			else
+//			{
+//				slopeMultiplier = ((steepnessAngle-m_TractionLossMinAngle)/(m_TractionLossMaxAngle-m_TractionLossMinAngle));
+//			}
+//
+//			//print("slopeMultiplier: "+ slopeMultiplier);
+//			//print("groundPerpY: "+groundPerpY+", slopeT: "+slopeT);
+//		}
+//
+//
+//		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
+//		{// If running at an obstruction you're up against.
+//			//print("Running against a wall.");
+//			horizontalInput = 0;
+//		}
+//
+//		//print("Traction executing");
+//		float rawSpeed = FighterState.Vel.magnitude;
+//		//print("FighterState.Vel.magnitude"+FighterState.Vel.magnitude);
+//
+//		if (horizontalInput == 0) 
+//		{//if not pressing any move direction, slow to zero linearly.
+//			//print("No input, slowing...");
+//			if(rawSpeed <= 0.5f)
+//			{
+//				FighterState.Vel = Vector2.zero;	
+//			}
+//			else
+//			{
+//				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearSlideRate);
+//			}
+//		}
+//		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
+//		{//if pressing same button as move direction, move to MAXSPEED.
+//			//print("Moving with keypress");
+//			if(rawSpeed < m_MaxRunSpeed)
+//			{
+//				//print("Rawspeed("+rawSpeed+") less than max");
+//				if(rawSpeed > m_TractionChangeT)
+//				{
+//					//print("LinAccel-> " + rawSpeed);
+//					if(FighterState.Vel.y > 0)
+//					{ 	// If climbing, recieve uphill movement penalty.
+//						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate*(1-slopeMultiplier));
+//					}
+//					else
+//					{
+//						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate);
+//					}
+//				}
+//				else if(rawSpeed < 0.001)
+//				{
+//					FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+//					//print("Starting motion. Adding " + m_Acceleration);
+//				}
+//				else
+//				{
+//					//print("ExpAccel-> " + rawSpeed);
+//					float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
+//					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
+//
+//					float addedSpeed = curveMultiplier*(m_Acceleration);
+//					if(FighterState.Vel.y > 0)
+//					{ // If climbing, recieve uphill movement penalty.
+//						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
+//					}
+//					//print("Addedspeed:"+addedSpeed);
+//					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
+//					//print("FighterState.Vel:"+FighterState.Vel);
+//				}
+//			}
+//			else
+//			{
+//				if(rawSpeed < m_MaxRunSpeed+1)
+//				{
+//					rawSpeed = m_MaxRunSpeed;
+//					SetSpeed(FighterState.Vel,m_MaxRunSpeed);
+//				}
+//				else
+//				{
+//					//print("Rawspeed("+rawSpeed+") more than max.");
+//					FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearOverSpeedRate);
+//				}
+//			}
+//		}
+//		else if((horizontalInput > 0 && FighterState.Vel.x < 0) || (horizontalInput < 0 && FighterState.Vel.x > 0))
+//		{//if pressing button opposite of move direction, slow to zero exponentially.
+//			if(rawSpeed > m_TractionChangeT )
+//			{
+//				//print("LinDecel");
+//				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
+//			}
+//			else
+//			{
+//				//print("Decelerating");
+//				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
+//				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
+//				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
+//				FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed-2*addedSpeed);
+//			}
+//
+//			//float modifier = Mathf.Abs(FighterState.Vel.x/FighterState.Vel.y);
+//			//print("SLOPE MODIFIER: " + modifier);
+//			//FighterState.Vel = FighterState.Vel/(1.25f);
+//		}
+//
+//		Vector2 downSlope = FighterState.Vel.normalized; // Normal vector pointing down the current slope!
+//		if (downSlope.y > 0) //Make sure the vector is descending.
+//		{
+//			downSlope *= -1;
+//		}
+//
+//
+//
+//		if(downSlope == Vector2.zero)
+//		{
+//			downSlope = Vector2.down;
+//		}
+//
+		//FighterState.Vel += downSlope*m_SlippingAcceleration*slopeMultiplier;
+		FighterState.Vel += new Vector2(horizontalInput/20, 0);
+
+		//	TESTINGSLOPES
+		//print("downSlope="+downSlope);
+		//print("m_SlippingAcceleration="+m_SlippingAcceleration);
+		//print("slopeMultiplier="+slopeMultiplier);
+
+		//ChangeSpeedLinear(FighterState.Vel, );
+		//print("PostTraction velocity: "+FighterState.Vel);
+	}
+
+
 
 	protected void WallTraction(float horizontalInput, Vector2 wallSurface)
 	{

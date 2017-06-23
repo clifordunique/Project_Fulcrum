@@ -8,4 +8,12 @@ public class NPC : FighterChar {
 	{
 		this.FighterState.FinalPos = this.transform.position;
 	}
+
+	protected override void Respawn()
+	{
+		g_Dead = false;
+		g_CurHealth = g_MaxHealth;
+		o_Anim.SetBool("Dead", false);
+		o_SpriteRenderer.color = new Color(1,0.6f,0,1);
+	}
 }

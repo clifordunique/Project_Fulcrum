@@ -22,19 +22,20 @@ public class VelocityPunch : MonoBehaviour {
 		if(!inUse)
 		{
 			this.transform.localScale = Vector3.zero;
+			myTrailRenderer.Clear();
 			return;
 		}
 		float speed = myFighter.GetSpeed();
 		this.transform.localPosition = -myFighter.GetVelocity().normalized;
-		if(speed >= 50)
+		if(speed >= 80)
 		{
 			//myTrailRenderer.enabled = true;
 			this.transform.localScale = Vector3.one;
 		}
-		else if(speed > 40)
+		else if(speed > 70)
 		{
 			//myTrailRenderer.enabled = true;
-			this.transform.localScale = new Vector3((speed-40)/10, (speed-40)/10, 1);
+			this.transform.localScale = new Vector3((speed-70)/10, (speed-70)/10, 1);
 		}
 		else
 		{

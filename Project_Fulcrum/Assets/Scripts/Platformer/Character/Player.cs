@@ -41,7 +41,6 @@ public class Player : FighterChar
 	[SerializeField] private CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
 	[SerializeField] public Spooler o_Spooler;				// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField] public Healthbar o_Healthbar;			// Reference to the Healthbar UI element.
-	[SerializeField] public GameObject p_AirPunchPrefab;	// Reference to the air punch prefab.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -59,6 +58,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey2;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey3;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey4;
+	[SerializeField][ReadOnlyAttribute]public float i_LeftClickHoldDuration;
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
@@ -75,6 +75,7 @@ public class Player : FighterChar
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
+
 	#endregion 
 	//########################################################################################################################################
 	// CORE FUNCTIONS
@@ -418,21 +419,38 @@ public class Player : FighterChar
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
 			//print("Leftclick detected");
+			//g_VelocityPunchExpended = false;
 			FighterState.LeftClickRelease = false;
 		}	
 
-		if(FighterState.LeftClickHold&&!(d_DevMode||d_ClickToKnockPlayer)&&(FighterState.Vel.magnitude > 40))
+		if(FighterState.LeftClickHold)
 		{
-			o_VelocityPunch.inUse = true;
-			g_VelocityPunching = true;
+			i_LeftClickHoldDuration += Time.fixedDeltaTime;
+			if(g_VelocityPunching)
+			{
+				if(FighterState.Vel.magnitude <= 70||g_VelocityPunchExpended)
+				{
+					g_VelocityPunching = false;
+					o_VelocityPunch.inUse = false;
+					g_VelocityPunchExpended = true;
+				}
+			}
+			else
+			{
+				if((FighterState.Vel.magnitude > 70)&&(!g_VelocityPunchExpended)&&(i_LeftClickHoldDuration>=0.5f)) //If going fast enough and holding click for long enough.
+				{
+					g_VelocityPunching = true;
+					o_VelocityPunch.inUse = true;
+				}
+			}
 		}
 		else
 		{
-			o_VelocityPunch.inUse = false;
+			i_LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
+			o_VelocityPunch.inUse = false;
+			g_VelocityPunchExpended = false;
 		}
-
-
 	}
 
 	protected override void UpdateInput()
