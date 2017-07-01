@@ -30,35 +30,35 @@ public class FighterChar : NetworkBehaviour
 	#region MOVEMENT HANDLING
 	[Header("Movement Tuning:")]
 	[SerializeField] protected float m_MinSpeed = 10f; 							// The instant starting speed while moving
-	[SerializeField] protected float m_MaxRunSpeed = 200f;						// The fastest the player can travel along land.
-	[Range(0,2)][SerializeField] protected float m_Acceleration = 0.6f;    			// Speed the player accelerates at
-	[SerializeField] protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
-	[SerializeField] protected float m_HJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
-	[SerializeField] protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the player walljumps.
-	[SerializeField] protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the player walljumps.
+	[SerializeField] protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
+	[Range(0,2)][SerializeField] protected float m_Acceleration = 0.6f;    			// Speed the fighter accelerates at
+	[SerializeField] protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
+	[SerializeField] protected float m_HJumpForce = 5f;  							// Amount of horizontal force added when the fighter jumps.
+	[SerializeField] protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the fighter walljumps.
+	[SerializeField] protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the fighter walljumps.
 	[SerializeField] protected float m_TractionChangeT = 20f;						// Threshold where movement changes from exponential to linear acceleration.  
 	[SerializeField] protected float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
-	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 			// How fast the player decelerates when changing direction.
-	[Range(0,5)][SerializeField] protected float m_LinearSlideRate = 0.35f;		// How fast the player decelerates with no input.
-	[Range(0,5)][SerializeField] protected float m_LinearOverSpeedRate = 0.1f;	// How fast the player decelerates when running too fast.
-	[Range(0,5)][SerializeField] protected float m_LinearAccelRate = 0.4f;		// How fast the player accelerates with input.
-	[Range(1,89)][SerializeField] protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_ImpactDecelMaxAngle.
+	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 			// How fast the fighter decelerates when changing direction.
+	[Range(0,5)][SerializeField] protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
+	[Range(0,5)][SerializeField] protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
+	[Range(0,5)][SerializeField] protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
+	[Range(1,89)][SerializeField] protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
 	[Range(1,89)][SerializeField] protected float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
 	[Range(1,89)][SerializeField] protected float m_TractionLossMinAngle = 45f; 	// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
-	[Range(45,90)][SerializeField] protected float m_TractionLossMaxAngle = 78f; 	// Changes the angle at which player loses ALL traction, and starts slipping back down. Default of 90 degrees.
-	[Range(0,2)][SerializeField] protected float m_SlippingAcceleration = 1f;  	// Changes how fast the player slides down overly steep slopes.
-	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 		// How long the player can cling to walls before gravity takes over.
+	[Range(45,90)][SerializeField] protected float m_TractionLossMaxAngle = 78f; 	// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
+	[Range(0,2)][SerializeField] protected float m_SlippingAcceleration = 1f;  	// Changes how fast the fighter slides down overly steep slopes.
+	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 		// How long the fighter can cling to walls before gravity takes over.
 	[Range(20,70)][SerializeField] protected float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
-	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;							// This is the normal of the last surface clung to, to make sure the player doesn't repeatedly cling the same surface after clingtime expires.
-	[ReadOnlyAttribute]protected float m_TimeSpentHanging = 0f;					// Amount of time the player has been clung to a wall.
-	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;						// Max time the player can cling to current wall.
+	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;							// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
+	[ReadOnlyAttribute]protected float m_TimeSpentHanging = 0f;					// Amount of time the fighter has been clung to a wall.
+	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;						// Max time the fighter can cling to current wall.
 	[Range(0,0.5f)][SerializeField] protected float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
-	[Range(0.01f,0.4f)][SerializeField] protected float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
+	[Range(0.01f,0.4f)][SerializeField] protected float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
 	[Space(10)]
 	[SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
 	[SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
 	[Space(10)]
-	[SerializeField] protected float m_VelPunchT = 60f; 							// Impact threshold for Velocity Punch trigger
+	[SerializeField] public float m_VelPunchT = 60f; 								// Impact threshold for Velocity Punch trigger
 	[SerializeField] protected float m_SlamT = 100f; 								// Impact threshold for slam
 	[SerializeField] protected float m_CraterT = 200f; 								// Impact threshold for crater
 	[SerializeField] protected float m_GuardSlamT = 200f; 							// Guarded Impact threshold for slam
@@ -85,7 +85,8 @@ public class FighterChar : NetworkBehaviour
 	// PHYSICS&RAYCASTING
 	//###########################################################################################################################################################################
 	#region PHYSICS&RAYCASTING
-	[SerializeField] protected LayerMask mask;// A mask determining what collides with the character.
+	[SerializeField] protected LayerMask mask;			// Mask used for terrain collisions.
+	[SerializeField] protected LayerMask fighterMask;	// Mask used for fighter collisions.
 
 	protected Transform m_GroundFoot; 		// Ground collider.
 	protected Vector2 m_GroundFootOffset; 	// Ground raycast endpoint.
@@ -108,7 +109,7 @@ public class FighterChar : NetworkBehaviour
 	protected Vector2 m_LeftNormal;			// Vector with slope of LeftWall.
 	protected Vector2 m_RightNormal;			// Vector with slope of RightWall.
 
-	[Header("Player State:")]
+	[Header("Fighter State:")]
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
@@ -140,14 +141,14 @@ public class FighterChar : NetworkBehaviour
 
 	#endregion
 	//##########################################################################################################################################################################
-	// PLAYER INPUT VARIABLES
+	// FIGHTER INPUT VARIABLES
 	//###########################################################################################################################################################################
-	#region PLAYERINPUT
+	#region FIGHTERINPUT
 	[Header("Networked Variables:")]
-	[SerializeField][ReadOnlyAttribute] protected FighterState FighterState; 			// Struct holding all input.
-	protected int CtrlH; 							// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
-	protected int CtrlV; 							// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-	protected bool facingDirection; 				// True means right, false means left.
+	[SerializeField][ReadOnlyAttribute] protected FighterState FighterState;// Struct holding all networked fighter info.
+	protected int CtrlH; 													// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
+	protected int CtrlV; 													// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
+	protected bool facingDirection; 										// True means right, false means left.
 
 	#endregion
 	//############################################################################################################################################################################################################
@@ -156,15 +157,15 @@ public class FighterChar : NetworkBehaviour
 	#region DEBUGGING
 	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
 	[Header("Debug:")]
-	[SerializeField] protected bool autoRunLeft; 			// When true, player will behave as if the left key is pressed.
-	[SerializeField] protected bool autoRunRight; 			// When true, player will behave as if the right key is pressed.
-	[SerializeField] protected bool autoJump;				// When true, player jumps instantly on every surface.
-	[SerializeField] protected bool antiTunneling = true;	// When true, player will be pushed out of objects they are stuck in.
+	[SerializeField] protected bool autoRunLeft; 			// When true, fighter will behave as if the left key is pressed.
+	[SerializeField] protected bool autoRunRight; 			// When true, fighter will behave as if the right key is pressed.
+	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
+	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
 	[SerializeField] protected bool noGravity;				// Disable gravity.
 	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
-	[SerializeField] protected bool showContactIndicators;	// Shows player's surface-contact raycasts, which turn green when touching something.
-	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the player is fully stuck in something, teleports player to last good position.
-	[SerializeField] protected bool d_ClickToKnockPlayer;	// When true and you left click, the player is propelled toward where you clicked.
+	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
+	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
+	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
 	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
 	protected LineRenderer m_DebugLine; 					// Part of above indicators.
 	protected LineRenderer m_GroundLine;					// Part of above indicators.		
@@ -177,33 +178,34 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
-	[SerializeField][Range(0,10)]protected float v_ReversingSlideT =5;	// How fast the player must be going to go into a slide posture when changing directions.
+	[SerializeField][Range(0,10)]protected float v_ReversingSlideT = 5;	// How fast the fighter must be going to go into a slide posture when changing directions.
 	//[SerializeField]protected float v_CameraZoom; 					// Amount of camera zoom.
-	[SerializeField][Range(0,3)]protected int v_PlayerGlow;				// Amount of player "energy glow" effect.
+	[SerializeField][Range(0,3)]protected int v_FighterGlow;			// Amount of fighter "energy glow" effect.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
 	[Header("Gameplay:")]
-	[SerializeField] protected int g_ZonLevel;						// Level of player Zon Power.
+	[SerializeField] protected int g_ZonLevel;						// Level of fighter Zon Power.
 	[SerializeField] protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
-	[SerializeField] protected bool g_VelocityPunching;				// True when player is channeling a velocity fuelled punch.
-	[SerializeField] protected bool g_VelocityPunchExpended;			// True when player's VelocityPunch has been used up.
-	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the player in? -1 = no stance.
+	[SerializeField] protected bool g_VelocityPunching;				// True when fighter is channeling a velocity fuelled punch.
+	[SerializeField] protected bool g_VelocityPunchExpended;			// True when fighter's VelocityPunch has been used up.
+	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the fighter in? -1 = no stance.
 
 	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
 	[SerializeField] protected int g_MinSlamDMG = 5;				// Min damage a slam impact can deal.
 	[SerializeField] protected int g_MaxSlamDMG = 30;				// Max damage a slam impact can deal.	
 	[SerializeField] protected int g_MinCrtrDMG = 30;				// Min damage a crater impact can deal.
 	[SerializeField] protected int g_MaxCrtrDMG = 60;				// Max damage a crater impact can deal.
-	//[SerializeField] protected bool g_FallStunned = false;		// True when the player is recoiling after falling.
-	[SerializeField] protected float g_CurFallStun = 0;				// How much longer the player is stunned after a fall. When this value is > 0  the player is stunned.
-	[SerializeField] protected float g_MinSlamStun = 0.5f;			// Min duration the player can be stunned from slamming the ground.
-	[SerializeField] protected float g_MaxSlamStun = 1.5f;			// Max duration the player can be stunned from slamming the ground.
-	[SerializeField] protected float g_MinCrtrStun = 1.5f;			// Max duration the player can be stunned from smashing the ground hard.
-	[SerializeField] protected float g_MaxCrtrStun = 3f;			// Max duration the player can be stunned from smashing the ground hard.
-
+	//[SerializeField] protected bool g_FallStunned = false;		// True when the fighter is recoiling after falling.
+	[SerializeField] protected float g_CurFallStun = 0;				// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
+	[SerializeField] protected float g_MinSlamStun = 0.5f;			// Min duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected float g_MaxSlamStun = 1.5f;			// Max duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected float g_MinCrtrStun = 1.5f;			// Max duration the fighter can be stunned from smashing the ground hard.
+	[SerializeField] protected float g_MaxCrtrStun = 3f;			// Max duration the fighter can be stunned from smashing the ground hard.
+	[SerializeField] public int g_IsInGrass;						// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
+	[SerializeField] public bool g_fighterCollision = true;			// While true, this fighter will collide with other fighters
 	protected bool isAPlayer;
 
 	#endregion 
@@ -380,7 +382,12 @@ public class FighterChar : NetworkBehaviour
 
 		//print("m_RemainingMovement before collision: "+m_RemainingMovement);
 
-		Collision();
+		if(g_fighterCollision)
+		{
+			DynamicCollision();
+		}
+
+		WorldCollision();
 
 		//print("Per frame velocity at end of Collizion() "+FighterState.Vel*Time.fixedDeltaTime);
 		//print("Velocity at end of Collizion() "+FighterState.Vel);
@@ -467,7 +474,7 @@ public class FighterChar : NetworkBehaviour
 		g_ZonStance = -1;
 
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockPlayer))
+		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockFighter))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*10;
 			print("Leftclick detected");
@@ -502,13 +509,13 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdateAnimation()
 	{
-		v_PlayerGlow = g_ZonLevel;
-		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
+		v_FighterGlow = g_ZonLevel;
+		if (v_FighterGlow > 7){v_FighterGlow = 7;}
 
-		if(v_PlayerGlow>2)
+		if(v_FighterGlow>2)
 		{
 			o_TempLight.color = new Color(1,1,0,1);
-			o_TempLight.intensity = (v_PlayerGlow)+(UnityEngine.Random.Range(-1f,1f));
+			o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(-1f,1f));
 		}
 		else
 		{
@@ -632,33 +639,33 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FighterAwake()
 	{
 		FighterState.CurHealth = 100;					// Current health.
-		FighterState.Dead = false;						// True when the player's health reaches 0 and they die.
-		Vector2 playerOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
+		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
+		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
 		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
 
 		m_GroundFoot = transform.Find("MidFoot");
 		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
-		m_GroundFootOffset.x = m_GroundFoot.position.x-playerOrigin.x;
-		m_GroundFootOffset.y = m_GroundFoot.position.y-playerOrigin.y;
+		m_GroundFootOffset.x = m_GroundFoot.position.x-fighterOrigin.x;
+		m_GroundFootOffset.y = m_GroundFoot.position.y-fighterOrigin.y;
 		m_GroundFootLength = m_GroundFootOffset.magnitude;
 
 		m_CeilingFoot = transform.Find("CeilingFoot");
 		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
-		m_CeilingFootOffset.x = m_CeilingFoot.position.x-playerOrigin.x;
-		m_CeilingFootOffset.y = m_CeilingFoot.position.y-playerOrigin.y;
+		m_CeilingFootOffset.x = m_CeilingFoot.position.x-fighterOrigin.x;
+		m_CeilingFootOffset.y = m_CeilingFoot.position.y-fighterOrigin.y;
 		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
 
 		m_LeftSide = transform.Find("LeftSide");
 		m_LeftSideLine = m_LeftSide.GetComponent<LineRenderer>();
-		m_LeftSideOffset.x = m_LeftSide.position.x-playerOrigin.x;
-		m_LeftSideOffset.y = m_LeftSide.position.y-playerOrigin.y;
+		m_LeftSideOffset.x = m_LeftSide.position.x-fighterOrigin.x;
+		m_LeftSideOffset.y = m_LeftSide.position.y-fighterOrigin.y;
 		m_LeftSideLength = m_LeftSideOffset.magnitude;
 
 		m_RightSide = transform.Find("RightSide");
 		m_RightSideLine = m_RightSide.GetComponent<LineRenderer>();
-		m_RightSideOffset.x = m_RightSide.position.x-playerOrigin.x;
-		m_RightSideOffset.y = m_RightSide.position.y-playerOrigin.y;
+		m_RightSideOffset.x = m_RightSide.position.x-fighterOrigin.x;
+		m_RightSideOffset.y = m_RightSide.position.y-fighterOrigin.y;
 		m_RightSideLength = m_RightSideOffset.magnitude;
 
 
@@ -755,7 +762,31 @@ public class FighterChar : NetworkBehaviour
 		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 	}
 
-	protected void Collision()	// Handles all collisions with terrain geometry.
+	protected void DynamicCollision()
+	{
+		#region fightercollisions
+		// FIGHTER-FIGHTER COLLISION TESTING IS SEPERATE AND PRECEDES WORLD COLLISIONS
+		float crntSpeed = FighterState.Vel.magnitude*Time.fixedDeltaTime; //Current speed.
+		RaycastHit2D[] fighterCollision = Physics2D.RaycastAll(this.transform.position, FighterState.Vel, crntSpeed, fighterMask);
+
+		foreach(RaycastHit2D hit in fighterCollision)
+		{
+			if(hit.collider.gameObject != this.gameObject)
+			{
+				print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
+				if(hit.collider.GetComponent<FighterChar>())
+				{
+					CollideWithFighter(hit.collider.GetComponent<FighterChar>());
+				}
+			}
+		}
+		//		ToLeftWall(predictedLoc[2]);
+		//		DirectionChange(m_LeftNormal);
+
+		#endregion
+	}
+
+	protected void WorldCollision()	// Handles all collisions with terrain geometry (and fighters).
 	{
 		//print ("Collision->m_Grounded=" + m_Grounded);
 		float crntSpeed = FighterState.Vel.magnitude*Time.fixedDeltaTime; //Current speed.
@@ -778,7 +809,7 @@ public class FighterChar : NetworkBehaviour
 			m_RightWallBlocked = false;
 		}
 
-		#region collision raytesting
+		#region worldcollision raytesting
 
 		Vector2 adjustedBot = m_GroundFoot.position; // AdjustedBot marks the end of the ground raycast, but 0.02 shorter.
 		adjustedBot.y += m_MaxEmbed;
@@ -797,8 +828,8 @@ public class FighterChar : NetworkBehaviour
 
 		predictedLoc[0] = Physics2D.Raycast(adjustedBot, FighterState.Vel, crntSpeed, mask); 	// Ground
 		predictedLoc[1] = Physics2D.Raycast(adjustedTop, FighterState.Vel, crntSpeed, mask); 	// Ceiling
-		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, mask); // Left
-		predictedLoc[3] = Physics2D.Raycast(adjustedRight, FighterState.Vel, crntSpeed, mask);// Right  
+		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, mask); 	// Left
+		predictedLoc[3] = Physics2D.Raycast(adjustedRight, FighterState.Vel, crntSpeed, mask);	// Right  
 
 		float[] rayDist = new float[4];
 		rayDist[0] = predictedLoc[0].distance; // Ground dist
@@ -1176,159 +1207,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected void AirControl(float horizontalInput)
 	{
-//		Vector2 groundPerp = Perp(m_GroundNormal);
-//
-//		//print("Traction");
-//		//print("gp="+groundPerp);
-//
-//		if(groundPerp.x > 0)
-//		{
-//			groundPerp *= -1;
-//		}
-//
-//		float steepnessAngle = Vector2.Angle(Vector2.left,groundPerp);
-//
-//		steepnessAngle = (float)Math.Round(steepnessAngle,2);
-//		//print("SteepnessAngle:"+steepnessAngle);
-//
-//		float slopeMultiplier = 0;
-//
-//		if(steepnessAngle > m_TractionLossMinAngle)
-//		{
-//			if(steepnessAngle >= m_TractionLossMaxAngle)
-//			{
-//				//print("MAXED OUT!");
-//				slopeMultiplier = 1;
-//			}
-//			else
-//			{
-//				slopeMultiplier = ((steepnessAngle-m_TractionLossMinAngle)/(m_TractionLossMaxAngle-m_TractionLossMinAngle));
-//			}
-//
-//			//print("slopeMultiplier: "+ slopeMultiplier);
-//			//print("groundPerpY: "+groundPerpY+", slopeT: "+slopeT);
-//		}
-//
-//
-//		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
-//		{// If running at an obstruction you're up against.
-//			//print("Running against a wall.");
-//			horizontalInput = 0;
-//		}
-//
-//		//print("Traction executing");
-//		float rawSpeed = FighterState.Vel.magnitude;
-//		//print("FighterState.Vel.magnitude"+FighterState.Vel.magnitude);
-//
-//		if (horizontalInput == 0) 
-//		{//if not pressing any move direction, slow to zero linearly.
-//			//print("No input, slowing...");
-//			if(rawSpeed <= 0.5f)
-//			{
-//				FighterState.Vel = Vector2.zero;	
-//			}
-//			else
-//			{
-//				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearSlideRate);
-//			}
-//		}
-//		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
-//		{//if pressing same button as move direction, move to MAXSPEED.
-//			//print("Moving with keypress");
-//			if(rawSpeed < m_MaxRunSpeed)
-//			{
-//				//print("Rawspeed("+rawSpeed+") less than max");
-//				if(rawSpeed > m_TractionChangeT)
-//				{
-//					//print("LinAccel-> " + rawSpeed);
-//					if(FighterState.Vel.y > 0)
-//					{ 	// If climbing, recieve uphill movement penalty.
-//						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate*(1-slopeMultiplier));
-//					}
-//					else
-//					{
-//						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate);
-//					}
-//				}
-//				else if(rawSpeed < 0.001)
-//				{
-//					FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
-//					//print("Starting motion. Adding " + m_Acceleration);
-//				}
-//				else
-//				{
-//					//print("ExpAccel-> " + rawSpeed);
-//					float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
-//					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-//
-//					float addedSpeed = curveMultiplier*(m_Acceleration);
-//					if(FighterState.Vel.y > 0)
-//					{ // If climbing, recieve uphill movement penalty.
-//						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
-//					}
-//					//print("Addedspeed:"+addedSpeed);
-//					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
-//					//print("FighterState.Vel:"+FighterState.Vel);
-//				}
-//			}
-//			else
-//			{
-//				if(rawSpeed < m_MaxRunSpeed+1)
-//				{
-//					rawSpeed = m_MaxRunSpeed;
-//					SetSpeed(FighterState.Vel,m_MaxRunSpeed);
-//				}
-//				else
-//				{
-//					//print("Rawspeed("+rawSpeed+") more than max.");
-//					FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearOverSpeedRate);
-//				}
-//			}
-//		}
-//		else if((horizontalInput > 0 && FighterState.Vel.x < 0) || (horizontalInput < 0 && FighterState.Vel.x > 0))
-//		{//if pressing button opposite of move direction, slow to zero exponentially.
-//			if(rawSpeed > m_TractionChangeT )
-//			{
-//				//print("LinDecel");
-//				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
-//			}
-//			else
-//			{
-//				//print("Decelerating");
-//				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
-//				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-//				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
-//				FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed-2*addedSpeed);
-//			}
-//
-//			//float modifier = Mathf.Abs(FighterState.Vel.x/FighterState.Vel.y);
-//			//print("SLOPE MODIFIER: " + modifier);
-//			//FighterState.Vel = FighterState.Vel/(1.25f);
-//		}
-//
-//		Vector2 downSlope = FighterState.Vel.normalized; // Normal vector pointing down the current slope!
-//		if (downSlope.y > 0) //Make sure the vector is descending.
-//		{
-//			downSlope *= -1;
-//		}
-//
-//
-//
-//		if(downSlope == Vector2.zero)
-//		{
-//			downSlope = Vector2.down;
-//		}
-//
-		//FighterState.Vel += downSlope*m_SlippingAcceleration*slopeMultiplier;
 		FighterState.Vel += new Vector2(horizontalInput/20, 0);
-
-		//	TESTINGSLOPES
-		//print("downSlope="+downSlope);
-		//print("m_SlippingAcceleration="+m_SlippingAcceleration);
-		//print("slopeMultiplier="+slopeMultiplier);
-
-		//ChangeSpeedLinear(FighterState.Vel, );
-		//print("PostTraction velocity: "+FighterState.Vel);
 	}
 
 
@@ -1455,7 +1334,7 @@ public class FighterChar : NetworkBehaviour
 	}
 
 	protected bool ToLeftWall(RaycastHit2D leftCheck) 
-	{ //Sets the new position of the player and their m_LeftNormal.
+	{ //Sets the new position of the fighter and their m_LeftNormal.
 
 		//print ("We've hit LeftWall, sir!!");
 		//print ("leftCheck.normal=" + leftCheck.normal);
@@ -1533,7 +1412,7 @@ public class FighterChar : NetworkBehaviour
 	}
 
 	protected bool ToRightWall(RaycastHit2D rightCheck) 
-	{ //Sets the new position of the player and their m_RightNormal.
+	{ //Sets the new position of the fighter and their m_RightNormal.
 
 		if(d_SendCollisionMessages)
 		{
@@ -1605,8 +1484,25 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
+	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
+	{ // Handles collisions with another Fighter.
+		if(!IsVelocityPunching()){return false;}
+
+		Vector2 velocitee = GetVelocity();
+		float speed = velocitee.magnitude;
+
+		//this.gameObject.SetActive(false);
+		print("Fighter recieved a blow of force: "+speed);
+		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
+		m_Impact = true;
+		this.SetSpeed(this.GetSpeed()*0.25f);
+
+		return true;
+	}
+
+
 	protected bool ToGround(RaycastHit2D groundCheck) 
-	{ //Sets the new position of the player and their ground normal.
+	{ //Sets the new position of the fighter and their ground normal.
 		//print ("m_Grounded=" + m_Grounded);
 
 		if (m_Airborne)
@@ -1699,7 +1595,7 @@ public class FighterChar : NetworkBehaviour
 	}
 
 	protected bool ToCeiling(RaycastHit2D ceilingCheck) 
-	{ //Sets the new position of the player when they hit the ceiling.
+	{ //Sets the new position of the fighter when they hit the ceiling.
 
 		//float testNumber = ceilingCheck.normal.y/ceilingCheck.normal.x;
 		//print(testNumber);
@@ -1807,7 +1703,7 @@ public class FighterChar : NetworkBehaviour
 		newVelocity = direction * speed;
 		return newVelocity;
 	}
-		
+
 	protected void DirectionChange(Vector2 newNormal)
 	{
 		//print("DirectionChange");
@@ -1907,10 +1803,11 @@ public class FighterChar : NetworkBehaviour
 		else
 		{ // Angle beyond max, momentum halted. 
 			speedLossMult = 0;
+			m_Impact = true;
 		}
 
 		if(initialSpeed <= 2f)
-		{ // If the player is near stationary, do not remove any velocity because there is no impact!
+		{ // If the fighter is near stationary, do not remove any velocity because there is no impact!
 			speedLossMult = 1;
 		}
 
@@ -1922,7 +1819,7 @@ public class FighterChar : NetworkBehaviour
 	}
 
 	protected void OmniWedge(int lowerContact, int upperContact)
-	{//Executes when the player is moving into a corner and there isn't enough room to fit them. It halts the player's momentum and sets off a blocked-direction flag.
+	{//Executes when the fighter is moving into a corner and there isn't enough room to fit them. It halts the fighter's momentum and sets off a blocked-direction flag.
 
 		//print("OmniWedge!");
 
@@ -2361,12 +2258,12 @@ public class FighterChar : NetworkBehaviour
 		{// Setting up variables	
 			//print("Resolving right wedge.");
 			if(gPerp.x>0)
-			{// Ensure both perpendicular vectors are pointing left, out of the corner the player is lodged in.
+			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
 				gPerp *= -1;
 			}
 
 			if(cPerp.x>0)
-			{// Ensure both perpendicular vectors are pointing left, out of the corner the player is lodged in.
+			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
 				cPerp *= -1;
 			}
 
@@ -2399,14 +2296,14 @@ public class FighterChar : NetworkBehaviour
 		else
 		{
 			//print("Resolving left wedge.");
-			// Ensure both perpendicular vectors are pointing right, out of the corner the player is lodged in.
+			// Ensure both perpendicular vectors are pointing right, out of the corner the fighter is lodged in.
 			if(gPerp.x<0)
 			{
 				gPerp *= -1;
 			}
 
 			if(cPerp.x<0)
-			{// Ensure both perpendicular vectors are pointing left, out of the corner the player is lodged in.
+			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
 				cPerp *= -1;
 			}
 
@@ -2446,7 +2343,7 @@ public class FighterChar : NetworkBehaviour
 
 		float B = gPerp.y;
 		float A = cPerp.y;
-		float H = embedDistance; //Reduced so the player stays just embedded enough for the raycast to detect next frame.
+		float H = embedDistance; //Reduced so the fighter stays just embedded enough for the raycast to detect next frame.
 		float DivX;
 		float DivY;
 		float X;
@@ -2603,6 +2500,20 @@ public class FighterChar : NetworkBehaviour
 		return !FighterState.Dead;
 	}
 
+	public void InstantForce(Vector2 newDirection, float speed)
+	{
+		//newDirection.Normalize();
+		SetSpeed(newDirection, speed);
+		//DirectionChange(newDirection);
+		print("Changing direction to" +newDirection);
+		//
+	}
+
+	public void InstantForce(Vector2 newDirection)
+	{
+		DirectionChange(newDirection);
+	}
+
 	public void PunchConnect(GameObject victim, Vector2 aimDirection)
 	{
 		if((isAPlayer&&!isLocalPlayer)|| !isAPlayer&&!isServer){return;}
@@ -2628,7 +2539,7 @@ public class FighterChar : NetworkBehaviour
 			Vector3 PosInfluence = new Vector3(posX,posY,0);
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
-			print("Punch connected locally");
+			//print("Punch connected locally");
 		}
 
 		CmdPunchConnect(victim, aimDirection);
@@ -2652,7 +2563,7 @@ public class FighterChar : NetworkBehaviour
 			enemyFighter.FighterState.CurHealth -= 5;
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
-			print("Punch connected remotely");
+			//print("Punch connected remotely");
 		}
 	}
 
@@ -2711,7 +2622,7 @@ public class FighterChar : NetworkBehaviour
 
 	public void DissipateZon()
 	{
-		// Executes when the player leaves zon stance without using power.
+		// Executes when the fighter leaves zon stance without using power.
 	}
 
 	public void SetSpeed(Vector2 inputVelocity, float speed)
@@ -2740,7 +2651,7 @@ public class FighterChar : NetworkBehaviour
 {
 	[SerializeField] public bool DevMode;											// Turns on all dev cheats.
 	[SerializeField][ReadOnlyAttribute]public int CurHealth;						// Current health.
-	[SerializeField][ReadOnlyAttribute]public bool Dead;							// True when the player's health reaches 0 and they die.
+	[SerializeField][ReadOnlyAttribute]public bool Dead;							// True when the fighter's health reaches 0 and they die.
 	[SerializeField][ReadOnlyAttribute]public bool JumpKey;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClick;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickHold;

@@ -249,10 +249,10 @@ public class Player : FighterChar
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockPlayer))
+		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockFighter))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*10;
-			//print("Knocking the player.");
+			//print("Knocking the fighter.");
 			FighterState.LeftClick = false;
 		}	
 
@@ -303,9 +303,9 @@ public class Player : FighterChar
 			FighterState.ZonKey = false;
 		}
 
-		//################################################################################
-		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE PLAYER IS INCAPACITATED. ###
-		//################################################################################
+		//#################################################################################
+		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE FIGHTER IS INCAPACITATED. ###
+		//#################################################################################
 
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
 		if(!(FighterState.LeftKey||FighterState.RightKey) || (FighterState.LeftKey && FighterState.RightKey))
@@ -368,7 +368,7 @@ public class Player : FighterChar
 			}
 		}
 			
-		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockPlayer)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
 		{
 			if(!(FighterState.LeftKey&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKey&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
@@ -476,13 +476,13 @@ public class Player : FighterChar
 
 	protected override void FixedUpdateAnimation()
 	{
-		v_PlayerGlow = g_ZonLevel;
-		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
+		v_FighterGlow = g_ZonLevel;
+		if (v_FighterGlow > 7){v_FighterGlow = 7;}
 
-		if(v_PlayerGlow>0)
+		if(v_FighterGlow>0)
 		{
 			o_TempLight.color = new Color(1,1,0,1);
-			o_TempLight.intensity = (v_PlayerGlow)+(UnityEngine.Random.Range(0,1f));
+			o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(0,1f));
 		}
 		else
 		{

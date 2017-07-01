@@ -7,6 +7,7 @@ public class VelocityPunch : MonoBehaviour {
 	Transform myParent;
 	TrailRenderer myTrailRenderer;
 	public bool inUse = false;
+	private float punchThreshold;
 
 	// Use this for initialization
 	void Start () 
@@ -14,6 +15,7 @@ public class VelocityPunch : MonoBehaviour {
 		myParent = this.transform.parent;
 		myFighter = myParent.GetComponent<FighterChar>();
 		myTrailRenderer = this.transform.GetComponent<TrailRenderer>();
+		punchThreshold = myFighter.m_VelPunchT;
 	}
 	
 	// Update is called once per frame
@@ -27,15 +29,15 @@ public class VelocityPunch : MonoBehaviour {
 		}
 		float speed = myFighter.GetSpeed();
 		this.transform.localPosition = -myFighter.GetVelocity().normalized;
-		if(speed >= 80)
+		if(speed >= (punchThreshold+10))
 		{
 			//myTrailRenderer.enabled = true;
 			this.transform.localScale = Vector3.one;
 		}
-		else if(speed > 70)
+		else if(speed > punchThreshold)
 		{
 			//myTrailRenderer.enabled = true;
-			this.transform.localScale = new Vector3((speed-70)/10, (speed-70)/10, 1);
+			this.transform.localScale = new Vector3((speed-punchThreshold)/10, (speed-punchThreshold)/10, 1);
 		}
 		else
 		{

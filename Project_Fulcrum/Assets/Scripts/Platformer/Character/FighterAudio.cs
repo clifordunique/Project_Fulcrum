@@ -39,8 +39,6 @@ public class FighterAudio : NetworkBehaviour {
 
 	public void StepSound()
 	{
-		//if(!isClient){return;}
-		//print("lermp");
 		if(muteFootsteps){return;}
 		float speed = theCharacter.GetSpeed();
 		float volume = stepVolM;
@@ -48,24 +46,15 @@ public class FighterAudio : NetworkBehaviour {
 		{
 			volume = stepVolM*(speed/30);
 		}
-		if(isServer)
+		if(theCharacter.g_IsInGrass > 0)
 		{
-			//print("Serverside modulated volume ="+volume);
-			//print("Serverside speed ="+speed);
+			int soundIndex = (int)Random.Range(4,7);
+			charAudioSource.PlayOneShot(footstepSounds[soundIndex], volume/4);
 		}
-		//int whichSound = (int)Random.Range(0,4);
-		//volume *= volumeM;
-		//if(isLocalPlayer)
-		//{
-			//print("Step Played on localplayer at volume: "+volume);
+		else
+		{
 			charAudioSource.PlayOneShot(footstepSounds[1], volume);
-		//}
-		if(isServer)
-		{
-			//print("SERVER EXECUTING RPC of volume "+volume);
-			//RpcStepSound(volume);
 		}
-		//CmdStepSound(volume);
 	}
 //	[Command] public void CmdStepSound(float volume)
 //	{
@@ -100,7 +89,7 @@ public class FighterAudio : NetworkBehaviour {
 
 	public void PunchHitSound()
 	{
-		print("PunchHitsound played locally");
+		//print("PunchHitsound played locally");
 
 		int whichSound = 0;
 		float volume = punchHitVolM;
@@ -138,7 +127,15 @@ public class FighterAudio : NetworkBehaviour {
 		{
 			volume = landVolM*(impactGForce/30);
 		}
-		charAudioSource.PlayOneShot(landingSounds[whichSound], volume);
+		if(theCharacter.g_IsInGrass > 0)
+		{
+			int soundIndex = (int)Random.Range(4,7);
+			charAudioSource.PlayOneShot(footstepSounds[soundIndex], volume);
+		}
+		else
+		{
+			charAudioSource.PlayOneShot(landingSounds[whichSound], volume);
+		}
 		//CmdLandingSound(volume);
 	}
 //	[Command] public void CmdLandingSound(float volume)

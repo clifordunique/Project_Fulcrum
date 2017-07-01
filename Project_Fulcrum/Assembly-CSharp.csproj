@@ -53,6 +53,7 @@
      <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
+     <Compile Include="Assets\DeformMeshTest.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeByDistance.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnKeyPress.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnTrigger.cs" />
@@ -83,6 +84,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\Grass.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
@@ -121,6 +123,7 @@
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SceneManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
+     <Compile Include="Assets\TextureGenerator.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
@@ -162,6 +165,7 @@
      <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
      <None Include="Assets\Text\LC1.txt" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
+     <None Include="Assets\Images\ShaderTests\Grass.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
