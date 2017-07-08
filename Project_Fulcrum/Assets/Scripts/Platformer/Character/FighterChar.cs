@@ -229,7 +229,7 @@ public class FighterChar : NetworkBehaviour
 		FighterState.RightClick = false;
 		FighterState.LeftClick = false;
 		FighterState.ZonKey = false;
-
+		FighterState.DisperseKey = false;
 	}
 
 	protected virtual void Update()
@@ -2643,6 +2643,10 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Vel = newVelocity;
 	}
 
+	public bool IsPlayer()
+	{
+		return isAPlayer;
+	}
 
 	#endregion
 }
@@ -2662,6 +2666,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public bool UpKey;
 	[SerializeField][ReadOnlyAttribute]public bool DownKey;
 	[SerializeField][ReadOnlyAttribute]public bool ZonKey;
+	[SerializeField][ReadOnlyAttribute]public bool DisperseKey;
 	[SerializeField][ReadOnlyAttribute]public Vector2 MouseWorldPos;				// Mouse position in world coordinates.
 	[SerializeField][ReadOnlyAttribute]public Vector2 PlayerMouseVector;			// Vector pointing from the player to their mouse position.
 	[SerializeField][ReadOnlyAttribute]public Vector2 Vel;							//Current (x,y) velocity.

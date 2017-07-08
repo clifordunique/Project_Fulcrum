@@ -8,6 +8,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AudioSource charAudioSource;
 	[SerializeField]private AudioSource windSource;
 	[SerializeField]private AudioClip[] jumpSounds;
+	[SerializeField]private AudioClip[] sfxSounds;
 	[SerializeField]private AudioClip[] footstepSounds;
 	[SerializeField]private AudioClip[] landingSounds;
 	[SerializeField]private AudioClip[] punchSounds;
@@ -22,6 +23,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField][Range(0,1f)]private float stepVolM;		// Footstep volume
 	[SerializeField][Range(0,1f)]private float punchVolM;		// Punch volume
 	[SerializeField][Range(0,1f)]private float punchHitVolM;	// Punch hit volume
+	[SerializeField][Range(0,1f)]private float sfxVolM;			// Special effects volume
 	[Space(10)]												    
 	[SerializeField][Range(100f,500f)]private float windMinT;						// Speed at which wind sound becomes audible
 	[SerializeField][Range(100f,500f)]private float windMaxT;						// Speed at which wind sound is loudest
@@ -56,27 +58,13 @@ public class FighterAudio : NetworkBehaviour {
 			charAudioSource.PlayOneShot(footstepSounds[1], volume);
 		}
 	}
-//	[Command] public void CmdStepSound(float volume)
-//	{
-//		RpcStepSound(volume);
-//	}
-//	[ClientRpc] public void RpcStepSound(float theVolume)
-//	{
-//		//print("RPCSTEPSOUND ACTIVATED");
-//		//if(isLocalPlayer){return;}
-//		if(isLocalPlayer)
-//		{
-//			return;
-//		}
-//		if(isClient)
-//		{
-//			//print("Step Played on client with volume "+theVolume);
-//			charAudioSource.PlayOneShot(footstepSounds[1], theVolume);
-//		}
-//
-//
-//	}
-		
+
+	public void ZonPulseSound()
+	{
+		float volume = sfxVolM;
+		charAudioSource.PlayOneShot(sfxSounds[0], volume);
+	}
+
 	public void PunchSound()
 	{
 		//print("Punchsound played locally");

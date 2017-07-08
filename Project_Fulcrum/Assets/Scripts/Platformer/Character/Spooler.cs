@@ -42,7 +42,6 @@ public class Spooler : MonoBehaviour
 
 	#region PLAYERINPUT
 	private bool i_ZonKey;
-	private bool i_IntKey;
 	public bool i_GoodStance;
 	private int CtrlH; 				// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	private int CtrlV; 				// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
@@ -87,7 +86,6 @@ public class Spooler : MonoBehaviour
 		}
 
 		i_ZonKey = Input.GetButtonDown("Spooling");
-		i_IntKey = Input.GetButtonDown("Interact");
 
 		if((!i_GoodStance)&&(r_Active))
 		{

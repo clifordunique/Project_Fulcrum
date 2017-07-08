@@ -17,11 +17,13 @@ Shader "Custom/Grass" {
 		Tags
 		{
 			"Queue" = "Transparent"
+			"RenderType" = "Transparent"
+			"IgnoreProjector" = "True"
 		}
-
+		ZWrite Off
 		Pass
 		{
-			Blend SrcAlpha OneMinusSrcAlpha
+			Blend SrcAlpha OneMinusSrcAlpha 
 			//Blend One One
 
 			CGPROGRAM
@@ -109,6 +111,7 @@ Shader "Custom/Grass" {
 				//float4 colour3 = float4(1-colour.r, 1-colour.g, 1-colour.b, colour.a);
 				//float4 colour4 = float4(colour.r*_Color.r,colour.g*_Color.g,colour.b*_Color.b,alpha*_Color.a);
 				colour *= _Color;
+				clip(colour.a-1);
 				//return colour4;
 				return colour;
 			}

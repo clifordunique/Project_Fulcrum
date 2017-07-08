@@ -35,12 +35,14 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
-	[SerializeField] private Text o_Speedometer;      		// Reference to the speed indicator (dev tool).
-	[SerializeField] private Text o_ZonCounter;      		// Reference to the level of zon power (dev tool).
-	[SerializeField] private Camera o_MainCamera;			// Reference to the main camera.
-	[SerializeField] private CameraShaker o_CamShaker;		// Reference to the main camera's shaking controller.
-	[SerializeField] public Spooler o_Spooler;				// Reference to the character's spooler object, which handles power charging gameplay.
-	[SerializeField] public Healthbar o_Healthbar;			// Reference to the Healthbar UI element.
+	[SerializeField] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
+	[SerializeField] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
+	[SerializeField] private Camera o_MainCamera;				// Reference to the main camera.
+	[SerializeField] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
+	[SerializeField] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
+	[SerializeField] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
+	[SerializeField] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
+	[SerializeField] private GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -98,6 +100,7 @@ public class Player : FighterChar
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
+		o_ProximityLiner = this.GetComponent<ProximityLiner>();
 	}
 
 	protected override void FixedUpdate()
@@ -117,8 +120,6 @@ public class Player : FighterChar
 			if(inputBuffer.Count > 0)
 			{
 				FighterState = inputBuffer.Dequeue();
-				//print("Inputbuffer count  = "+inputBuffer.Count);
-				//print("Jumpkey state  = "+FighterState.JumpKey);
 			}
 		}
 
@@ -129,6 +130,7 @@ public class Player : FighterChar
 		FighterState.RightClick = false;
 		FighterState.LeftClick = false;
 		FighterState.ZonKey = false;
+		FighterState.DisperseKey = false;
 		FighterState.JumpKey = false;
 	}
 
@@ -276,12 +278,10 @@ public class Player : FighterChar
 			i_DevKey2 = false;
 		}
 
-
 		if(i_DevKey3)
 		{
 			i_DevKey3 = false;
 		}
-
 
 		if(i_DevKey4)
 		{
@@ -301,6 +301,7 @@ public class Player : FighterChar
 			FighterState.RightKey = false;
 			FighterState.JumpKey = false;
 			FighterState.ZonKey = false;
+			FighterState.DisperseKey = false;
 		}
 
 		//#################################################################################
@@ -358,6 +359,7 @@ public class Player : FighterChar
 			
 		if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{
+			FighterState.JumpKey = false;
 			if(m_Kneeling)
 			{
 				ZonJump(FighterState.PlayerMouseVector.normalized);
@@ -407,6 +409,12 @@ public class Player : FighterChar
 			o_VelocityPunch.inUse = false;
 			g_VelocityPunchExpended = false;
 		}
+			
+		if(FighterState.DisperseKey)
+		{
+			ZonPulse();
+			FighterState.DisperseKey = false;
+		}
 	}
 
 	protected override void UpdateInput()
@@ -427,6 +435,10 @@ public class Player : FighterChar
 		if(Input.GetButtonDown("Spooling"))
 		{
 			FighterState.ZonKey = true;				
+		}
+		if(Input.GetButtonDown("Disperse"))
+		{
+			FighterState.DisperseKey = true;				
 		}
 		if(Input.GetButtonDown("Jump"))
 		{
@@ -636,7 +648,6 @@ public class Player : FighterChar
 		
 	protected void ZonJump(Vector2 jumpNormal)
 	{
-		//g_ZonJumpCharge = o_Spooler.GetTotalPower();
 		g_ZonJumpCharge = g_ZonLevel;
 		if(g_ZonLevel > 0)
 		{
@@ -644,9 +655,23 @@ public class Player : FighterChar
 		}
 		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge)));
 		g_ZonJumpCharge = 0;		
-		FighterState.JumpKey = false;
 		o_FighterAudio.JumpSound();
-		//o_Spooler.Reset();
+	}
+
+	protected void ZonPulse()
+	{
+		if(g_ZonLevel <= 0)
+		{
+			return;
+		}
+
+		g_ZonLevel--;
+		o_ProximityLiner.ClearAllFighters();
+		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
+		newZonPulse.GetComponentInChildren<ZonPulse>().originPlayer = this;
+		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(g_ZonLevel*50);
+		//o_ProximityLiner.outerRange = 100+(g_ZonLevel*25);
+		o_FighterAudio.ZonPulseSound();
 	}
 		
 
@@ -655,6 +680,16 @@ public class Player : FighterChar
 	// PUBLIC FUNCTIONS
 	//###################################################################################################################################
 	#region PUBLIC FUNCTIONS
+
+	public Vector2 GetPosition()
+	{
+		return FighterState.FinalPos;
+	}
+
+	public void PulseHit(FighterChar theFighter)
+	{
+		o_ProximityLiner.AddFighter(theFighter);
+	}
 
 	#endregion
 }

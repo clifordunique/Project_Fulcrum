@@ -20,6 +20,8 @@ Shader "Custom/SpoolTest" {
 			"Queue" = "Transparent"
 		}
 
+
+		ZWrite Off
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha
