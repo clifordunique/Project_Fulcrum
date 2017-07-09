@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AirBurst.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
@@ -132,6 +133,7 @@
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterMessageReceiver.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\Rotate.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
+     <Compile Include="Assets\WindEffector.cs" />
      <Compile Include="Assets\ZonPulse.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />

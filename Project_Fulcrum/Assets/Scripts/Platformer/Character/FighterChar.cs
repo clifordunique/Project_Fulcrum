@@ -77,6 +77,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
+	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a circular windforce.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
 	[SerializeField] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
@@ -310,12 +311,27 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void SpawnShockEffect(Vector2 hitDirection)
 	{
-		print("Hit direction = "+hitDirection);
-		if(hitDirection.y == 0){hitDirection.y = 0.0001f;}
-		if(hitDirection.x == 0){hitDirection.x = 0.0001f;}
+		//print("Hit direction = "+hitDirection);
+		if(Math.Abs(hitDirection.x) < 0.01f){hitDirection.x = 0;} //Duct tape fix
+		if(Math.Abs(hitDirection.y) < 0.01f){hitDirection.y = 0;} //Duct tape fix
 		Quaternion ImpactAngle = Quaternion.LookRotation(hitDirection);
 		ImpactAngle.x = 0;
 		ImpactAngle.y = 0;
+		if(hitDirection.x == 0) //Duct tape fix
+		{
+			if(hitDirection.y < 0)
+			{
+				ImpactAngle.eulerAngles = new Vector3(0, 0, -90);
+			}
+			else if(hitDirection.y > 0)
+			{
+				ImpactAngle.eulerAngles = new Vector3(0, 0, 90);
+			}
+			else
+			{
+				print("ERROR: IMPACT DIRECTION OF (0,0)");
+			}
+		}
 		GameObject newShockEffect = (GameObject)Instantiate(p_ShockEffectPrefab, this.transform.position, ImpactAngle);
 
 		float xTransform = 3f;
@@ -323,26 +339,9 @@ public class FighterChar : NetworkBehaviour
 		{
 			xTransform = -3f;
 		}
-			
-		//if(randomness1>0)
-		//{
-		//	yTransform = -1f;
-		//	newAirPunch.GetComponentInChildren<SpriteRenderer>().sortingLayerName = "Background";	
-		//}
-
 		Vector3 theLocalScale = new Vector3 (xTransform, 3f, 1f);
-		//Vector3 theLocalTranslate = new Vector3(randomness1,randomness2, 0);
 
 		newShockEffect.transform.localScale = theLocalScale;
-		//newAirPunch.transform.Translate(theLocalTranslate);
-		//newAirPunch.transform.Rotate(new Vector3(0,0,randomness1));
-
-		//newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
-		//newAirPunch.GetComponentInChildren<ShockEffect>().punchThrower = this;
-
-		//CmdThrowPunch(aimDirection);
-
-		//o_FighterAudio.PunchSound();
 	}
 
 	protected virtual void FixedUpdatePhysics()
@@ -726,6 +725,13 @@ public class FighterChar : NetworkBehaviour
 		g_CurFallStun = stunTime;				 // Stunned for stunTime.
 		FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
 		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+
+//		GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
+//		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70*linScaleModifier, 0.4f, m_IGF); 					//Set the parameters of the shockwave.
+//		newAirBurst.name = "Shockwave";
+		GameObject newWindGust = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
+		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*linScaleModifier, 0.8f, linScaleModifier*4, m_IGF); 		//Set the parameters of the afterslam wind.
+		newWindGust.name = "AirGust";
 	}
 
 	protected void Slam() // Triggered when character impacts anything too hard.
@@ -760,6 +766,9 @@ public class FighterChar : NetworkBehaviour
 			FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
 		}
 		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+
+		GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
+		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30*linScaleModifier, linScaleModifier*0.8f, m_IGF*2); //Set the parameters of the shockwave.
 	}
 
 	protected void DynamicCollision()

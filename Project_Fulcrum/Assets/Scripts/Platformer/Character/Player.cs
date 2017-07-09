@@ -234,9 +234,9 @@ public class Player : FighterChar
 
 		if(FighterState.RightClick&&(FighterState.DevMode))
 		{
-			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
-			//newMarker.name = "DebugMarker";
-			//newMarker.transform.position = FighterState.MouseWorldPos;
+			GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, FighterState.MouseWorldPos, Quaternion.identity);
+			newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70, 0.2f, 250); 
+
 			FighterState.RightClick = false;
 			float Magnitude = 2f;
 			//float Magnitude = 0.5f;
