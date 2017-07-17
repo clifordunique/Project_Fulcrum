@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\AirBurst.cs" />
+     <Compile Include="Assets\CloudHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />

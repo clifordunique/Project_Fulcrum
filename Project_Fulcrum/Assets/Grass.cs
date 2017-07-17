@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Grass : MonoBehaviour {
-	private Renderer r_Grass;
+	private SpriteRenderer r_Grass;
 	[SerializeField]float shakeWidthDefault = 0.2f;	// How far left and right the blades will drift naturally.
 	[SerializeField]float shakeSpeedDefault = 1;	// How frequently the blades flap back and forth naturally.
 	[SerializeField]float shakeWidth = 0;			// How far left and right the blades will drift when blown.
@@ -16,17 +17,25 @@ public class Grass : MonoBehaviour {
 	[SerializeField]float springBackSpeed = 2;		// How fast the grass returns to its default position after being moved.
 	[SerializeField][ReadOnlyAttribute]FighterChar fighterChar;
 	[SerializeField][ReadOnlyAttribute]WindEffector windEffector;
+	[SerializeField][ReadOnlyAttribute]ParticleSystem v_ParticleSystem;
 
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
-		r_Grass = this.GetComponent<Renderer>();
+		v_ParticleSystem = this.GetComponentInChildren<ParticleSystem>();
+		r_Grass = this.GetComponent<SpriteRenderer>();
 		//temporalOffset = (this.transform.position.x%6.28f)*temporalOffsetM;
 		temporalOffset = this.transform.position.x*temporalOffsetM;
 		windForceDefault += UnityEngine.Random.Range(-defaultRandomOffset,defaultRandomOffset);
 
-		//this.transform.localPosition = new Vector3(this.transform.localPosition.x+Random.Range(-0.1f,0.1f),0,0);
+		shakeWidthDefault += UnityEngine.Random.Range(-0.05f,0.05f);	// How far left and right the blades will drift naturally.
+		//shakeSpeedDefault += UnityEngine.Random.Range(-defaultRandomOffset,defaultRandomOffset);	
+
+		if(v_ParticleSystem==null){return;}
+		Color particleColor = r_Grass.color;
+		ParticleSystem.MainModule particleMain = v_ParticleSystem.main;
+		particleMain.startColor = particleColor;//new Color(particleColor.r,particleColor.g,particleColor.b);
 	}
 
 	void OnTriggerEnter2D(Collider2D theObject)
@@ -66,10 +75,13 @@ public class Grass : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		float overForce = 0;
+		float theTime = Time.deltaTime*10;
 		if(windEffector!=null)
 		{
 			if(windEffector.blowDirection == Vector2.zero)
 			{
+				overForce = windEffector.g_Intensity;
 				Vector2 trueBlowDirection = windEffector.transform.position-this.transform.position;
 				if(trueBlowDirection.x>0)
 				{
@@ -94,9 +106,8 @@ public class Grass : MonoBehaviour {
 			shakeWidth = 0;
 			if(Mathf.Abs(fighterChar.GetVelocity().x) >= 0.6f)
 			{
+				overForce = fighterChar.GetSpeed();
 				windForce = -fighterChar.GetVelocity().x;
-				if(windForce > 2){windForce = 2;}
-				if(windForce < -2){windForce = -2;}
 			}
 		}
 		else
@@ -113,15 +124,10 @@ public class Grass : MonoBehaviour {
 				windForce -= windForce*Time.fixedDeltaTime*springBackSpeed;
 				//windForce += (windForceDefault-windForce)*Time.fixedDeltaTime*springBackSpeed;
 			}
-//			if(Mathf.Abs(windForce-windForceDefault) <= 0.01f)
-//			{
-//				windForce = windForceDefault;
-//			}
-//			else
-//			{
-//				windForce += (windForceDefault-windForce)*Time.fixedDeltaTime*springBackSpeed;
-//			}
 		}
+
+		if(windForce > 2.5f){windForce = 2.5f;}
+		if(windForce < -2.5f){windForce = -2.5f;}
 		float timeSin = Mathf.Sin((Time.time+temporalOffset)*(shakeSpeedDefault+shakeSpeed));
 		//print("timeSin"+timeSin);
 		float shakeAmount = (shakeWidthDefault+shakeWidth)*timeSin;
@@ -131,6 +137,24 @@ public class Grass : MonoBehaviour {
 		if(grassBend < -2){grassBend = -2;}
 		grassBend += shakeAmount;
 		//print(grassBend);
+
+		if(v_ParticleSystem!=null){
+			if(Math.Abs(overForce) > 80)
+			{
+				if(!v_ParticleSystem.isPlaying)
+				{
+					v_ParticleSystem.Play();	
+				}
+			}
+			else
+			{
+				if(v_ParticleSystem.isPlaying)
+				{
+					v_ParticleSystem.Stop();	
+				}
+			}
+		}
+
 		r_Grass.material.SetFloat("_WindForce", grassBend);
 	}
 }

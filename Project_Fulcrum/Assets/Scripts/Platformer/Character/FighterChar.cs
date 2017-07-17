@@ -719,6 +719,7 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		float linScaleModifier = ((m_IGF-m_CraterT)/(1000f-m_CraterT));
+		if(linScaleModifier > 1){linScaleModifier = 1;}
 		float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*linScaleModifier); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
 		float stunTime = g_MinCrtrStun+((g_MaxCrtrStun-g_MinCrtrStun)*linScaleModifier); // Stun duration scales linearly from ...
 
@@ -730,7 +731,7 @@ public class FighterChar : NetworkBehaviour
 //		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70*linScaleModifier, 0.4f, m_IGF); 					//Set the parameters of the shockwave.
 //		newAirBurst.name = "Shockwave";
 		GameObject newWindGust = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
-		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*linScaleModifier, 0.8f, linScaleModifier*4, m_IGF); 		//Set the parameters of the afterslam wind.
+		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*linScaleModifier, 0.8f, linScaleModifier*3, m_IGF); 		//Set the parameters of the afterslam wind.
 		newWindGust.name = "AirGust";
 	}
 
@@ -1501,8 +1502,10 @@ public class FighterChar : NetworkBehaviour
 		float speed = velocitee.magnitude;
 
 		//this.gameObject.SetActive(false);
-		print("Fighter recieved a blow of force: "+speed);
+
 		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
+		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
+		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
 		m_Impact = true;
 		this.SetSpeed(this.GetSpeed()*0.25f);
 
@@ -2650,6 +2653,11 @@ public class FighterChar : NetworkBehaviour
 		Vector2 direction = FighterState.Vel.normalized;
 		newVelocity = direction * speed;
 		FighterState.Vel = newVelocity;
+	}
+
+	public void TakeDamage(int dmgAmount)
+	{
+		FighterState.CurHealth -= dmgAmount;
 	}
 
 	public bool IsPlayer()

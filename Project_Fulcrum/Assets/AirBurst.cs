@@ -9,32 +9,25 @@ public class AirBurst : WindEffector {
 	[ReadOnlyAttribute][SerializeField]public float g_ExpandTime; 	// Time it takes for airburst to reach maximum radius.
 	[ReadOnlyAttribute][SerializeField]public float g_Duration; 	// Duration of the airburst. Recommended to make this >= g_ExpandTime
 	[ReadOnlyAttribute][SerializeField]public float g_TimeAlive; 	// Time since the airburst appeared. When it reaches duration, the airburst is destroyed.
-	[SerializeField]public bool g_IsShockwave;						// When true, sets windType to 0(radial shockwave). When false, sets windType to 1(radial blow).
+	//[ReadOnlyAttribute][SerializeField]public bool g_IsShockwave;	// When true, sets windType to 0(radial shockwave). When false, sets windType to 1(radial blow).
+	[ReadOnlyAttribute][SerializeField]public WindZone g_WindZone; 	// Windzone - Unity component used to effect particle systems.
 
 	// Use this for initialization
 	void Awake() 
 	{
-		//print("EXPLOOOOOSION!");
-		g_IsShockwave = true;
+		g_WindZone = this.GetComponent<WindZone>();
 		g_MaxRange = 20;		// Max radius of the airburst.
 		g_ExpandTime = 0.3f; 	// Time it takes for airburst to reach maximum radius.
 		g_Duration = 0.3f; 		// Duration of the airburst. Recommended to make this >= g_ExpandTime
 		blowDirection = Vector2.zero;
 		g_IntensityDefault = 300;
 		g_Intensity = g_IntensityDefault;
-		if(g_IsShockwave)
-		{
-			g_WindType = 0;
-		}
-		else
-		{
-			g_WindType = 1;
-		}
+		//g_WindType = 0;
 	}
 
 	public void Create(bool isShockwave, float minRange, float maxRange, float expandTime, float duration, float intensity)
 	{
-		g_IsShockwave = isShockwave;
+		bool isAShockwave = isShockwave;
 		g_MinRange = minRange;
 		g_MaxRange = maxRange;		// Max radius of the airburst.
 
@@ -46,7 +39,7 @@ public class AirBurst : WindEffector {
 		g_Duration = duration; 		// Duration of the airburst. Recommended to make this >= g_ExpandTime
 		g_IntensityDefault = intensity;
 		g_Intensity = g_IntensityDefault;
-		if(g_IsShockwave)
+		if(isAShockwave)
 		{
 			g_WindType = 0;
 		}
@@ -54,18 +47,21 @@ public class AirBurst : WindEffector {
 		{
 			g_WindType = 1;
 		}
+		g_WindZone.windMain = g_Intensity;
+		g_WindZone.radius = g_CurRange;
 	}
 
 	public void Create(bool isShockwave, float maxRange, float duration, float intensity)
 	{
-		g_IsShockwave = isShockwave;
+		bool isAShockwave = isShockwave;
 		g_MinRange = 0;
 		g_MaxRange = maxRange;		// Max radius of the airburst.
 		g_ExpandTime = duration; 	// Time it takes for airburst to reach maximum radius.
 		g_Duration = duration; 		// Duration of the airburst. Recommended to make this >= g_ExpandTime
 		g_IntensityDefault = intensity;
 		g_Intensity = g_IntensityDefault;
-		if(g_IsShockwave)
+		g_WindZone.windMain = g_Intensity;
+		if(isAShockwave)
 		{
 			g_WindType = 0;
 		}
@@ -73,6 +69,8 @@ public class AirBurst : WindEffector {
 		{
 			g_WindType = 1;
 		}
+		g_WindZone.windMain = g_Intensity;
+		g_WindZone.radius = g_CurRange;
 	}
 
 	void  FixedUpdate () 
@@ -99,6 +97,7 @@ public class AirBurst : WindEffector {
 				g_Intensity = 0;
 			}
 		}
-
+		g_WindZone.windMain = -g_Intensity/2;
+		g_WindZone.radius = g_CurRange;
 	}
 }

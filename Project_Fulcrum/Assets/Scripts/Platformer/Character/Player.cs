@@ -266,6 +266,7 @@ public class Player : FighterChar
 			}
 			else
 			{
+				o_ProximityLiner.DetectAllFighters();
 				FighterState.DevMode = true;
 			}
 			i_DevKey1 = false;
@@ -632,6 +633,10 @@ public class Player : FighterChar
 		{
 			zoomChange = (0.15f*v_CameraZoom)-5f;
 		}
+//		if((v_CameraZoom)>=5f)
+//		{
+//			zoomChange = (v_CameraZoom)-5f;
+//		}
 		//o_MainCamera.orthographicSize = 5f+(0.15f*v_CameraZoom);
 		if(8f+zoomChange >= 50f)
 		{
@@ -641,7 +646,8 @@ public class Player : FighterChar
 		{
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
-		//o_MainCamera.orthographicSize = 25f;
+
+		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
 	}

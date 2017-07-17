@@ -1,5 +1,5 @@
 ﻿/*
- ALL CREDIT FOR THIS CODE GOES TO DAVID DION-PAQUET AND HIS BLOG POST! Thanks Dave!
+ THANKS TO DAVID DION-PAQUET AND HIS BLOG POST!
  http://www.gamasutra.com/blogs/DavidDionPaquet/20140601/218766/Creating_a_parallax_system_in_Unity3D_is_harder_than_it_seems.php
 */
 
@@ -10,6 +10,8 @@ using System.Collections;
 public class ParallaxLayer : MonoBehaviour {
 	public float speedX;
 	public float speedY;
+	public float parallaxMovement; // full movement at 1, no movement at 0
+	public float distanceKM = -1;
 	public bool moveInOppositeDirection;
 
 	private Transform cameraTransform;
@@ -17,7 +19,8 @@ public class ParallaxLayer : MonoBehaviour {
 	private bool previousMoveParallax;
 	private ParallaxOption options;
 
-	void OnEnable() {
+	void OnEnable() 
+	{
 		GameObject gameCamera = GameObject.Find("Main Camera");
 		if(gameCamera == null)
 		{
@@ -32,14 +35,23 @@ public class ParallaxLayer : MonoBehaviour {
 		previousCameraPosition = cameraTransform.position;
 	}
 
-	void Update () {
+	void Update () 
+	{
+		if(distanceKM > 0)
+		{
+			this.transform.localScale = new Vector3((1.0f/(1.0f+distanceKM)),(1.0f/(1.0f+distanceKM)),1);
+			parallaxMovement = 1/distanceKM;
+			speedX = 1-parallaxMovement;
+			speedY = 1-parallaxMovement;
+		}
 		if(options.moveParallax && !previousMoveParallax)
+		{
 			previousCameraPosition = cameraTransform.position;
+		}
 
 		previousMoveParallax = options.moveParallax;
 
-		if(!Application.isPlaying && !options.moveParallax)
-			return;
+		if(!Application.isPlaying && !options.moveParallax){return;}
 
 		Vector3 distance = cameraTransform.position - previousCameraPosition;
 		float direction = (moveInOppositeDirection) ? -1f : 1f;

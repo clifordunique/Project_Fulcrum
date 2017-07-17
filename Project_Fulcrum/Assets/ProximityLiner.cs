@@ -49,20 +49,25 @@ public class ProximityLiner : MonoBehaviour {
 	{
 		ClearAllFighters();
 		FighterChar[] o_FighterArray = FindObjectsOfType(typeof(FighterChar)) as FighterChar[];
-		o_FighterList.AddRange(o_FighterArray);
 
-		if(o_ProxLine.Count < o_FighterList.Count)
+		for(int i = 0; i < o_FighterArray.Length; i++)
 		{
-			for(int i = o_ProxLine.Count; i < o_FighterList.Count; i++)
-			{
-				//if(o_FighterList[i] == o_LocalPlayer){continue;}
-				o_ProxLine.Add((GameObject)Instantiate(p_ProxLinePrefab, Canvas.transform));
-				o_ProxLine[i].GetComponent<ProxLine>().assignedFighter = o_FighterList[i];
-				ProxLine p = o_ProxLine[i].GetComponent<ProxLine>();
-				p.assignedFighter = o_FighterList[i];
-				p.originPlayer = o_LocalPlayer;
-			}
+			AddFighter(o_FighterArray[i]);
 		}
+
+		//o_FighterList.AddRange(o_FighterArray);
+//		if(o_ProxLine.Count < o_FighterList.Count)
+//		{
+//			for(int i = o_ProxLine.Count; i < o_FighterList.Count; i++)
+//			{
+//				//if(o_FighterList[i] == o_LocalPlayer){continue;}
+//				o_ProxLine.Add((GameObject)Instantiate(p_ProxLinePrefab, Canvas.transform));
+//				o_ProxLine[i].GetComponent<ProxLine>().assignedFighter = o_FighterList[i];
+//				ProxLine p = o_ProxLine[i].GetComponent<ProxLine>();
+//				p.assignedFighter = o_FighterList[i];
+//				p.originPlayer = o_LocalPlayer;
+//			}
+//		}
 	}
 
 	void Update () 
