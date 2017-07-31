@@ -647,7 +647,7 @@ public class Player : FighterChar
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
 
-		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
+		o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
 	}

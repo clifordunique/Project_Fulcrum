@@ -46,8 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AirBurst.cs" />
-     <Compile Include="Assets\CloudHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\AnswerHandler.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\CsvParser.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\DialogueManager.cs" />
@@ -55,7 +53,6 @@
      <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
-     <Compile Include="Assets\DeformMeshTest.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeByDistance.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnKeyPress.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnTrigger.cs" />
@@ -86,9 +83,14 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\Grass.cs" />
-     <Compile Include="Assets\ProxLine.cs" />
-     <Compile Include="Assets\ProximityLiner.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\DontDestroy.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\EventSystemChecker.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\Pause.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\PlayMusic.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\QuitApplication.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\SetAudioLevels.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\ShowPanels.cs" />
+     <Compile Include="Assets\Game Jam Template\Scripts\StartOptions.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
@@ -101,17 +103,27 @@
      <Compile Include="Assets\Scripts\Platformer\Character\NPC.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\PlatformerCharacter2D.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Player.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\ProxLine.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\ProximityLiner.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Ring.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Spooler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VelocityPunch.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\ZonPulse.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Experiments\DeformMeshTest.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Experiments\TextureGenerator.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Breakable.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudLayer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\GodModeBox.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\Grass.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\IndoorFader.cs" />
      <Compile Include="Assets\Scripts\Platformer\RegionLocker.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Visual\AirBurst.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ShaderTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ShockEffect.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Visual\WindEffector.cs" />
      <Compile Include="Assets\Scripts\Social\Actor.cs" />
      <Compile Include="Assets\Scripts\Social\ActorAnimator.cs" />
      <Compile Include="Assets\Scripts\Social\Choice.cs" />
@@ -125,17 +137,14 @@
      <Compile Include="Assets\Scripts\Social\MenuChoicePrefab.cs" />
      <Compile Include="Assets\Scripts\Social\NeutralButton.cs" />
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
-     <Compile Include="Assets\Scripts\Social\SceneManager.cs" />
+     <Compile Include="Assets\Scripts\Social\SocialManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
-     <Compile Include="Assets\TextureGenerator.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterMessageReceiver.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\Rotate.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Test\TestReporter.cs" />
-     <Compile Include="Assets\WindEffector.cs" />
-     <Compile Include="Assets\ZonPulse.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
@@ -180,6 +189,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderYUV.shader" />
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CreaseApply.shader" />
+     <None Include="Assets\Game Jam Template\Fonts\OpenSans\License!.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ChromaticAberrationShader.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\GlobalFog.shader" />
@@ -225,6 +235,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
      <None Include="Assets\Images\Shaders\SpoolTest.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
+     <None Include="Assets\Game Jam Template\GameJamTemplateReadMe.txt" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
      <None Include="Assets\Images\Shaders\Test.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
