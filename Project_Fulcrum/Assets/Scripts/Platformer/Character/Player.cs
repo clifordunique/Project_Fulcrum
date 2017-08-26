@@ -4,6 +4,7 @@ using UnityEngine;
 using EZCameraShake;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 /*
  * AUTHOR'S NOTES:
@@ -78,6 +79,12 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
 
+	#endregion 	
+	//############################################################################################################################################################################################################
+	// NETWORKING VARIABLES
+	//###########################################################################################################################################################################
+	#region NETWORKING VARIABLES
+	[SerializeField]private bool sceneIsReady = false;
 	#endregion 
 	//########################################################################################################################################
 	// CORE FUNCTIONS
@@ -90,21 +97,48 @@ public class Player : FighterChar
 		FighterAwake();
 	}
 
-	protected void Start()
+	void OnDestroy()
 	{
-		if(!isLocalPlayer){return;}
-		this.FighterState.FinalPos = this.transform.position;
+		SceneManager.sceneLoaded -= SceneLoadPlayer;
+	}
+
+    void OnEnable()
+    {
+		SceneManager.sceneLoaded += SceneLoadPlayer;
+    }
+
+    void OnDisable()
+    {
+		SceneManager.sceneLoaded -= SceneLoadPlayer;
+    }
+
+	protected void SceneLoadPlayer(Scene scene, LoadSceneMode mode)
+	{
+		sceneIsReady = true;
+		if(!isLocalPlayer||!isClient){return;}
+		print("Executing post-scenelaunch code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		o_MainCamera.transform.parent.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 		o_MainCamera.transform.parent.SetParent(this.transform);
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
+
+	}
+
+	protected void Start()
+	{
 		o_ProximityLiner = this.GetComponent<ProximityLiner>();
+		this.FighterState.FinalPos = this.transform.position;
+		if(SceneManager.GetActiveScene().isLoaded)
+		{
+			SceneLoadPlayer(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+		}
 	}
 
 	protected override void FixedUpdate()
 	{
+		if(!sceneIsReady){return;}
 		if(isLocalPlayer)
 		{
 			inputBuffer.Enqueue(FighterState);
@@ -136,6 +170,7 @@ public class Player : FighterChar
 
 	protected override void Update()
 	{
+		if(!sceneIsReady){return;}
 		if(!isLocalPlayer){return;}
 		UpdateInput();
 
@@ -151,6 +186,7 @@ public class Player : FighterChar
 
 	protected override void LateUpdate()
 	{
+		if(!sceneIsReady){return;}
 		if(isLocalPlayer)
 		{
 			CameraControl();
@@ -626,6 +662,7 @@ public class Player : FighterChar
 	protected void CameraControl()
 	{
 		#region zoom
+		if(!o_MainCamera){return;}
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, 0.1f);
 		//v_CameraZoom = FighterState.Vel.magnitude;
 		float zoomChange = 0;
@@ -647,7 +684,7 @@ public class Player : FighterChar
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
 
-		o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
+		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
 	}

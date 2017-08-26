@@ -37,12 +37,12 @@ public class CloudLayer : MonoBehaviour {
 //		{
 //			Initialize(1, 10, Color.blue);
 //		}
-		print("AWAKE!");
+		//print("AWAKE!");
 	}
 
 	public void Initialize(int lyrDepth, float distKM, Color color)
 	{
-		print("Initializing! \n LayerDepth: "+lyrDepth+"\n DistanceKM: "+distKM+"\n Colour: "+color);
+		//print("Initializing! \n LayerDepth: "+lyrDepth+"\n DistanceKM: "+distKM+"\n Colour: "+color);
 		distanceKM = distKM;
 		layerDepth = lyrDepth;
 		cloudColor = color;
@@ -72,13 +72,13 @@ public class CloudLayer : MonoBehaviour {
 			newCloud.layer = this.gameObject.layer;
 			allClouds[i] = newCloud;
 			isInitialized = true;
-			print("Initialization of Cloud_"+layerDepth+"_"+i+" is complete");
+			//print("Initialization of Cloud_"+layerDepth+"_"+i+" is complete");
 		}
 	}
 
 	public void Adjust(int lyrDepth, float distKM, Color color)
 	{
-		print("Adjust activated.");
+		//print("Adjust activated.");
 		distanceKM = distKM;
 		layerDepth = lyrDepth;
 		cloudColor = color;

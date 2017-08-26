@@ -1,15 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Game Jam Template\Scripts\PlayMusic.cs">
     <Files>
-      <File FileName="Assets\Scripts\Platformer\Character\Healthbar.cs" Line="1" Column="1" />
-      <File FileName="Assets\CloudHandler.cs" Line="158" Column="3" />
-      <File FileName="Assets\Editor\ParallaxOptionEditor.cs" Line="4" Column="3" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="18" Column="41" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" Line="4" Column="3" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="4" Column="15" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="639" Column="6" />
-      <File FileName="Assets\CloudLayer.cs" Line="40" Column="16" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="117" Column="23" />
+      <File FileName="Assets\Scripts\Platformer\RegionLocker.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Spooler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Map Objects\CloudLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Game Jam Template\Scripts\DontDestroy.cs" Line="1" Column="1" />
+      <File FileName="Assets\Game Jam Template\Scripts\QuitApplication.cs" Line="1" Column="1" />
+      <File FileName="Assets\Game Jam Template\Scripts\Pause.cs" Line="1" Column="1" />
+      <File FileName="Assets\Game Jam Template\Scripts\EventSystemChecker.cs" Line="1" Column="1" />
+      <File FileName="Assets\Game Jam Template\Scripts\StartOptions.cs" Line="207" Column="49" />
+      <File FileName="Assets\Game Jam Template\Scripts\PlayMusic.cs" Line="43" Column="19" />
+      <File FileName="Assets\FulcrumNetworkManager.cs" Line="10" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

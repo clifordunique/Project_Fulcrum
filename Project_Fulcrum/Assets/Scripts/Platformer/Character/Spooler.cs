@@ -64,11 +64,7 @@ public class Spooler : MonoBehaviour
 		r_Rotation = 0;
 		r_TotalPower = 0;
 		r_Accuracy = 0;
-
-//		if(isClient)
-//		{
-		o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
-//		}
+		//o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
@@ -306,10 +302,9 @@ public class Spooler : MonoBehaviour
 		r_Accuracy = 0;
 		r_TooEarly = false;
 
-		//if(isClient)
-		//{
-			o_FeedbackText.text = "";
-		//}
+
+		//o_FeedbackText.text = "";
+
 		
 		Destroy(o_Core.gameObject);
 
@@ -370,11 +365,8 @@ public class Spooler : MonoBehaviour
 		r_Paused = true;
 		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
 
-//		if(isClient)
-//		{
-			o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
-			o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
-//		}
+//		o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
+//		o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
 	}
 
 	//###################################################################################################################################
