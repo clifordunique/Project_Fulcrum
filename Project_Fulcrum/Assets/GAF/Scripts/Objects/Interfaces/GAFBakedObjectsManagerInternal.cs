@@ -1,24 +1,11 @@
-// ***********************************************************************
-// Assembly         : GAF
-// Author           : Niktin.Nikolay
-// Created          : 02-13-2015
-//
-// Last Modified By : Niktin.Nikolay
-// Last Modified On : 02-16-2015
-// ***********************************************************************
-// <copyright file="GAFBakedObjectsManagerInternal.cs" company="Catalyst apps">
-//     Copyright © GAF Media 2015
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
-/*
- * File:			GAFBakedObjectsManagerInternal.cs
- * Version:			2.0
- * Last changed:	2015/2/2 10:33
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAF
- */
+
+// File:			GAFBakedObjectsManagerInternal.cs
+// Version:			5.2
+// Last changed:	2017/3/31 09:45
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		� 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -67,11 +54,11 @@ namespace GAFInternal.Objects
 		/// All objects list. Serialized data
 		/// </summary>
 		/// <value>The objects.</value>
-		public override IEnumerable<IGAFObject> objects
+		public override List<IGAFObject> objects
 		{
 			get
 			{
-				return m_BakedObjects.Cast<IGAFObject>();
+				return m_BakedObjects.Cast<IGAFObject>().ToList();
 			}
 		}
 
@@ -108,23 +95,23 @@ namespace GAFInternal.Objects
 			}
 		}
 
-		//public override List<GAFTransform> timelines
-		//{
-		//	get
-		//	{
-		//		throw new NotImplementedException();
-		//	}
-		//}
+        //public override List<GAFTransform> timelines
+        //{
+        //	get
+        //	{
+        //		throw new NotImplementedException();
+        //	}
+        //}
 
-		#endregion // Properties
+        #endregion // Properties
 
-		#region Interface
+        #region Interface
 
-		/// <summary>
-		/// Initialize object manager parameters.
-		/// <para />Animation subobjects are created here.
-		/// </summary>
-		public override void initialize()
+        /// <summary>
+        /// Initialize object manager parameters.
+        /// <para />Animation subobjects are created here.
+        /// </summary>
+        public override void initialize()
 		{
 			//cachedRenderer.hideFlags 	= HideFlags.NotEditable;
 			//cachedFilter.hideFlags 		= HideFlags.NotEditable;

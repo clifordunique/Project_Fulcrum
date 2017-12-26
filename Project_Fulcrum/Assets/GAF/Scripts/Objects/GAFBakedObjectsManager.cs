@@ -1,11 +1,11 @@
-/*
- * File:			GAFBakedObjectsManager.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:32
- * Author:			Niktin.Nikolay
- * Copyright:		Â© GAFMedia
- * Project:			GAF Unity plugin
- */
+
+// File:			GAFBakedObjectsManager.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -39,13 +39,9 @@ namespace GAF.Objects
 
 		public override void reload()
 		{
-#if UNITY_5
 			cachedRenderer.useLightProbes = false;
 			cachedRenderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 			cachedRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-#else
-			cachedRenderer.castShadows = false;
-#endif
 			cachedRenderer.receiveShadows = false;
 
 			base.reload();

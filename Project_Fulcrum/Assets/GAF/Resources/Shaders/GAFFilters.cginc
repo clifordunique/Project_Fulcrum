@@ -11,6 +11,8 @@
 uniform float _BlurX;
 uniform float _BlurY;
 
+uniform float _Strength;
+
 uniform fixed4 _GlowColor;
 
 uniform float2 _Scale;
@@ -110,6 +112,8 @@ fixed4 gaf_glow_frag(gaf_v2f_blur input) : SV_Target
 	resultColor += tex2D(_MainTex, input.texcoord + input.blurstep * 2.0).a * 0.12;
 	resultColor += tex2D(_MainTex, input.texcoord + input.blurstep * 3.0).a * 0.09;
 	resultColor += tex2D(_MainTex, input.texcoord + input.blurstep * 4.0).a * 0.05;
+
+	resultColor.a *= _Strength;
     
 	return resultColor * _GlowColor;
 }

@@ -53,6 +53,7 @@
      <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
+     <Compile Include="Assets\DopplerTestScript.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeByDistance.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnKeyPress.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnTrigger.cs" />
@@ -140,6 +141,9 @@
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SocialManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
+     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\CameraLogic.cs" />
+     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\Demo.cs" />
+     <Compile Include="Assets\Supercyan Character Pack Free Sample\Scripts\SimpleCharacterControl.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
@@ -268,13 +272,10 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="GAF">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
  </Reference>
  <Reference Include="Ionic.Zip.Reduced">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

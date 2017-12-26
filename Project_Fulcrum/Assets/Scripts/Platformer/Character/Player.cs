@@ -94,6 +94,7 @@ public class Player : FighterChar
 	{
 		inputBuffer = new Queue<FighterState>();
 		isAPlayer = true;
+		FighterState.DevMode = true;
 		FighterAwake();
 	}
 

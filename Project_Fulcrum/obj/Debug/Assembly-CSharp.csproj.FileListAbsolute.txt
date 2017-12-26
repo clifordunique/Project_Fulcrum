@@ -34,3 +34,38 @@ C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Temp\bin
 C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.xml
 C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp.dll
 C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp.pdb
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Ionic.Zip.Reduced.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\nunit.framework.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.Analytics.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.HoloLens.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.Networking.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.TestRunner.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.UI.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.VR.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Mono.Cecil.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Unity.SerializationLogic.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Unity.DataContract.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Unity.UNetWeaver.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Unity.CecilTools.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Mono.Cecil.Pdb.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Mono.Cecil.Mdb.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.UI.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.Networking.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.TestRunner.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\nunit.framework.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.Analytics.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.HoloLens.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.VR.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.xml
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp.dll
+C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp.pdb

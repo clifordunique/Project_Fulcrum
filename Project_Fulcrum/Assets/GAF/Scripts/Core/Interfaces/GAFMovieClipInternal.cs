@@ -1,16 +1,11 @@
-// ***********************************************************************
-// Assembly         : GAF
-// Author           : Niktin.Nikolay
-// Created          : 02-02-2015
-//
-// Last Modified By : Niktin.Nikolay
-// Last Modified On : 02-17-2015
-// ***********************************************************************
-// <copyright file="GAFMovieClipInternal.cs" company="Catalyst apps">
-//     Copyright Â© GAF Media 2015
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
+
+// File:			GAFMovieClipInternal.cs
+// Version:			5.2
+// Last changed:	2017/3/31 09:45
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -41,10 +36,12 @@ namespace GAFInternal.Core
 
 		private bool m_IsPlaying = false;
 		private bool m_ContiniousPlaying = false;
+		private bool m_IsFirstFrame = false;
 
-		private float m_Stopwatch = 0f;
-		private float m_StoredTime = 0f;
-		private float m_PreviouseUpdateTime = 0f;
+		private float	m_Stopwatch				= 0f;
+		private float	m_StoredTime			= 0f;
+		private float	m_PreviouseUpdateTime	= 0f;
+		private uint	m_TargetFrame			= 0;
 
 		#endregion // Members
 
@@ -86,6 +83,8 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndStop(uint _FrameNumber)
 		{
+			currentFrameNumber = _FrameNumber;
+
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -106,6 +105,12 @@ namespace GAFInternal.Core
 		/// <param name="_FrameNumber">Number of frame.</param>
 		public void gotoAndPlay(uint _FrameNumber)
 		{
+			currentFrameNumber = int.MaxValue;
+
+			m_TargetFrame = _FrameNumber;
+
+			m_IsFirstFrame = true;
+
 			_FrameNumber = (uint)Mathf.Clamp(
 				(int)_FrameNumber
 				, (int)currentSequence.startFrame
@@ -170,6 +175,12 @@ namespace GAFInternal.Core
 				(sequenceIndex != uint.MaxValue && !isPlaying()))
 			{
 				currentSequenceIndex = sequenceIndex;
+
+				currentFrameNumber = _PlayImmediately ? int.MaxValue : currentSequence.startFrame;
+
+				m_TargetFrame = currentSequence.startFrame;
+
+				m_IsFirstFrame = true;
 
 				updateToFrame(currentSequence.startFrame, true);
 
@@ -302,6 +313,16 @@ namespace GAFInternal.Core
 
 				isInitialized = true;
 
+			    if (_Asset.rootClip != null)
+			    {
+			        useCustomDelegate = _Asset.rootClip.useCustomDelegate;
+			        customDelegate = _Asset.rootClip.customDelegate;
+			    }
+			    else
+			    {
+			        _Asset.rootClip = this;
+			    }
+
 				m_ClipVersion = GAFSystem.MovieClipVersion;
 				asset = _Asset;
 				timelineID = _TimelineID;
@@ -343,7 +364,13 @@ namespace GAFInternal.Core
 						upgrade();
 					}
 
-					if (m_ClipVersion == GAFSystem.MovieClipVersion)
+                    if (asset.rootClip != null)
+                    {
+                        useCustomDelegate = asset.rootClip.useCustomDelegate;
+                        customDelegate = asset.rootClip.customDelegate;
+                    }
+
+                    if (m_ClipVersion == GAFSystem.MovieClipVersion)
 					{
 						initResources(asset);
 
@@ -352,7 +379,7 @@ namespace GAFInternal.Core
 						{
 							isLoaded = true;
 
-							gafTransform.onTransformChanged -= onTransformChanged;
+                            gafTransform.onTransformChanged -= onTransformChanged;
 							gafTransform.onTransformChanged += onTransformChanged;
 
 							//if (gafTransform.gafParent != null &&
@@ -470,9 +497,8 @@ namespace GAFInternal.Core
 
 			cleanView();
 
-			//m_FrameEvents.Clear();
-
 			isInitialized = false;
+
 			asset = null;
 			resource = null;
 			settings = new GAFAnimationPlayerSettings();
@@ -493,10 +519,10 @@ namespace GAFInternal.Core
 			}
 
 			if (parent == null)
-				m_RegisteredMaterials.Clear();
+				clearMaterials(m_RegisteredMaterials);
 			else
 			{
-				parent.registeredMaterials.Clear();
+				clearMaterials(parent.registeredMaterials);
 			}
 		}
 
@@ -545,7 +571,7 @@ namespace GAFInternal.Core
 
 		private void FixedUpdate()
         {
-            if (   asset != null
+			if (   asset != null
                 && asset.isLoaded 
                 && isLoaded 
                 && isPlaying() 
@@ -584,9 +610,18 @@ namespace GAFInternal.Core
             {
                 defineFramesEvents(stop, play, setSequence, gotoAndStop, gotoAndPlay);
 				m_IsActive = true;
-                m_ContiniousPlaying = settings.playAutomatically;
-                setPlaying(settings.playAutomatically);
-            }
+				m_IsFirstFrame = true;
+
+				if (!m_ContiniousPlaying)
+				{
+					m_ContiniousPlaying = settings.playAutomatically;
+					setPlaying(settings.playAutomatically);
+				}
+				else
+				{
+					setPlaying(true);
+				}
+			}
         }
         
         private void OnDestroy()
@@ -622,7 +657,7 @@ namespace GAFInternal.Core
 
         private void EditorUpdate()
         {
-            if (  asset != null 
+			if (  asset != null 
                 && asset.isLoaded 
                 && isLoaded 
                 && isPlaying() 
@@ -634,7 +669,7 @@ namespace GAFInternal.Core
                 m_PreviouseUpdateTime = Time.realtimeSinceStartup;
             }
         }
-        
+
         private void OnUpdate(float _TimeDelta)
         {
             m_Stopwatch += _TimeDelta;
@@ -656,13 +691,21 @@ namespace GAFInternal.Core
 				m_Stopwatch = 0f;
 
 				if (internalFrameNumber > 1)
-					currentFrameNumber = internalFrameNumber;
+				{
+					currentFrameNumber = !m_IsFirstFrame ? internalFrameNumber : internalFrameNumber - 1;
+					m_IsFirstFrame = false;
+				}
+				else
+				{
+					currentFrameNumber = currentSequence.startFrame - 1;
+					m_IsFirstFrame = false;
+				}
 
-				var targetFrame = internalFrameNumber + (uint)framesCount;
+				m_TargetFrame = internalFrameNumber + (uint)framesCount;
 
 				GAFFrameData tempFrame = null;
 				
-				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= targetFrame; currentFrameNumber++)
+				for (currentFrameNumber = currentFrameNumber + 1; currentFrameNumber <= m_TargetFrame; currentFrameNumber++)
                 {
 					if (currentFrameNumber > currentSequence.endFrame)
 					{
@@ -681,32 +724,47 @@ namespace GAFInternal.Core
 						{
 							var soundEvent = tempEvent as GAFSoundEvent;
 
-							var audioFrame = m_AudioSources.Find(x => x.frameNumber == tempFrame.frameNumber);
-							if (audioFrame != null)
+							if (soundEvent.action == GAFSoundEvent.SoundAction.Stop)
 							{
-								var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
-
-								if (data != null)
+								foreach (var frameAudioData in m_FramesAudioData)
 								{
-									if (soundEvent.action == 2)
-										data.source.Play();
-									else if (soundEvent.action == 1)
+									for (int i = 0, count = frameAudioData.audios.Count; i < count; i++)
 									{
-										foreach (var audioData in audioFrame.audios)
+										var frameAudio = frameAudioData.audios[i];
+
+										if (frameAudio.ID == soundEvent.id)
 										{
-											audioData.source.Stop();
-                                        }
-									}
-									else if (soundEvent.action == 3)
-									{
-										if (!data.source.isPlaying)
-										{
-											data.source.Play();
+											frameAudio.source.Stop();
 										}
 									}
 								}
 							}
-                        }
+
+							else
+							{
+								var audioFrame = m_FramesAudioData.Find(x => x.frameNumber == tempFrame.frameNumber);
+								if (audioFrame != null)
+								{
+									var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
+
+									if (data != null)
+									{
+										switch (soundEvent.action)
+										{
+											case GAFSoundEvent.SoundAction.Continue:
+												data.source.Play();
+												break;
+											case GAFSoundEvent.SoundAction.Start:
+												if (!data.source.isPlaying)
+												{
+													data.source.Play();
+												}
+												break;
+										}
+									}
+								}
+							}
+						}
 					}
 
 					if (m_Triggers != null && m_Triggers.ContainsKey(tempFrame.frameNumber))
@@ -715,7 +773,7 @@ namespace GAFInternal.Core
 					}
                 }
 
-				if (targetFrame > currentSequence.endFrame)
+				if (m_TargetFrame > currentSequence.endFrame)
 				{
 					switch (settings.wrapMode)
 					{
@@ -729,6 +787,7 @@ namespace GAFInternal.Core
 						case GAFWrapMode.Loop:
 							updateToFrame(currentSequence.startFrame, true);
 							currentFrameNumber = 0;
+							m_IsFirstFrame = true;
 
 							if (on_stop_play != null)
 								on_stop_play(this);
@@ -745,7 +804,7 @@ namespace GAFInternal.Core
 					}
 				}
 
-				updateToFrame(targetFrame, false);
+				updateToFrame(m_TargetFrame, false);
 			}
 		}
         
@@ -788,7 +847,7 @@ namespace GAFInternal.Core
         
         private void setPlaying(bool _IsPlay) 
         {
-            if (m_IsPlaying != _IsPlay)
+			if (m_IsPlaying != _IsPlay)
             {
                 m_IsPlaying = _IsPlay;
                 
@@ -810,8 +869,8 @@ namespace GAFInternal.Core
                 }
             }
         }
-        
-        private void onTransformChanged(GAFTransform.TransformType _Type)
+
+	    public override void onTransformChanged(GAFTransform.TransformType _Type)
         {
             switch (_Type)
             {
@@ -832,14 +891,14 @@ namespace GAFInternal.Core
                     break;
             }
         }
-        
-        private void onGeometryChanged()
+
+	    public override void onGeometryChanged()
         {
             m_ObjectsManager.reload();
 			updateToFrame(internalFrameNumber, true);
 		}
 
-		private void onVisibilityChanged()
+	    public override void onVisibilityChanged()
 		{
 			gafTransform.localVisible = m_IsActive = gafTransform.gafParent.visible;
 
@@ -848,8 +907,8 @@ namespace GAFInternal.Core
 				_child.localVisible = gafTransform.localVisible && _child.realVisibility;
 			}
 		}
-        
-        private void onColorChanged()
+
+	    public override void onColorChanged()
         {
             if (!settings.hasIndividualMaterial)
             {
@@ -904,8 +963,8 @@ namespace GAFInternal.Core
 			//	}
 			//}
 		}
-        
-        private void onMaskingChanged()
+
+	    public override void onMaskingChanged()
         {
             if (!settings.hasIndividualMaterial)
             {

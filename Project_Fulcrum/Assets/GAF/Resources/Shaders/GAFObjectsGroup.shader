@@ -20,7 +20,7 @@ Shader "GAF/GAFObjectsGroup"
 		Blend SrcAlpha OneMinusSrcAlpha
 		Cull Off
 		Zwrite Off
-		Lighting Off
+		Lighting On
 		
 		Stencil
 		{

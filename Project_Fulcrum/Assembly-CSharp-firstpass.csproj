@@ -241,13 +241,10 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
  <Reference Include="GAF">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
  </Reference>
  <Reference Include="Ionic.Zip.Reduced">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

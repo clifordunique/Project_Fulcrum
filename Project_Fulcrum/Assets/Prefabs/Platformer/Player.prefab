@@ -986,13 +986,13 @@ MonoBehaviour:
     PlayerMouseVector: {x: 0, y: 0}
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
-  autoRunLeft: 0
+  autoRunLeft: 1
   autoRunRight: 0
   autoJump: 0
   antiTunneling: 1
   noGravity: 0
   showVelocityIndicator: 1
-  showContactIndicators: 0
+  showContactIndicators: 1
   recoverFromFullEmbed: 1
   d_ClickToKnockFighter: 0
   d_SendCollisionMessages: 0

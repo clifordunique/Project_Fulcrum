@@ -11,8 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1730d0b8751ac9e44b6303c6b7703fa7, type: 3}
   m_Name: monster_glow
   m_EditorClassIdentifier: 
+  rootClip: {fileID: 0}
   m_EnableSequenceCaching: 0
-  m_AssetVersion: 3
+  m_AssetVersion: 4
   m_ResourcesDirectory: GAF/Resources/Cache/
   m_MecanimResourcesDirectory: GAF/Examples/Sources/Monsters/monster_glow_animator/
   m_AudioResourcesDirectory: GAF/Examples/Sources/Monsters/

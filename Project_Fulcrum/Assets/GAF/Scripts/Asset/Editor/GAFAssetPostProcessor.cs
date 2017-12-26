@@ -1,11 +1,11 @@
-/*
- * File:			GAFAssetPostProcessor.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:34
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAF Unity plugin
- */
+
+// File:			GAFAssetPostProcessor.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEditor;
 using UnityEngine;
@@ -17,7 +17,6 @@ using GAF.Assets;
 using GAFInternal.Reader;
 
 using GAFEditorInternal.Assets;
-using GAFEditorInternal.Tracking;
 
 namespace GAFEditor.Assets
 {
@@ -81,11 +80,7 @@ namespace GAFEditor.Assets
 				{
 					if (findAsset)
 					{
-#if UNITY_5
 						asset = AssetDatabase.LoadAssetAtPath<GAFAnimationAsset>(assetName);
-#else
-						asset = AssetDatabase.LoadAssetAtPath(assetName, typeof(GAFAnimationAsset)) as GAFAnimationAsset;
-#endif
 						if (asset != null) findAsset = false;
 
 						if (asset != null && ((asset.resourcesPaths == null || asset.resourcesPaths.Count == 0) || (asset.audioResources.Count == 0 && asset.sharedData.audioClips.Count > 0)))

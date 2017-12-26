@@ -6,6 +6,7 @@
 		_BlurX ("Horizontal blur", Float) = 0
 		_BlurY ("Vertical blur", Float) = 0
 		_GlowColor ("Glow color", Color) = (1, 1, 1, 1)
+		_Strength ("Strength", Float) = 1.0
 	}
 
 	SubShader

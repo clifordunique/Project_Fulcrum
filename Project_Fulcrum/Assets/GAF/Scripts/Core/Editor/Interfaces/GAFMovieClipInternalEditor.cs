@@ -1,11 +1,12 @@
-/*
- * File:			gafmovieclipinternaleditor.cs
- * Version:			2.0
- * Last changed:	2015/2/16 17:22
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAFEditor
- */
+
+// File:			GAFMovieClipInternalEditor.cs
+// Version:			5.2
+// Last changed:	2017/3/28 14:41
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
+
 using UnityEditor;
 using UnityEngine;
 
@@ -87,6 +88,16 @@ namespace GAFEditorInternal.Core
 
 				EditorGUILayout.BeginVertical(EditorStyles.textField);
 				{
+					//GUILayout.Space(3f);
+					//EditorGUI.BeginChangeCheck();
+
+					//drawProperty(settingProperty.FindPropertyRelative("m_FlipX"), new GUIContent("Flip X: ", "​Flip current animation by x"));
+					//if (EditorGUI.EndChangeCheck())
+					//{
+					//	serializedObject.ApplyModifiedProperties();
+					//	reloadTargets();
+					//}
+
 					GUILayout.Space(3f);
 					drawProperty(settingProperty.FindPropertyRelative("m_PlayAutomatically"), new GUIContent("Play automatically: ", "Should the animation be played automatically when starting the scene? (Defines whether the animation should be played automatically when starting the scene)​"));
 					

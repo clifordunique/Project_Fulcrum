@@ -217,29 +217,20 @@
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.Graphs.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.WebGL.Extensions">
- <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
- </Reference>
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="GAF">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/GAF.dll</HintPath>
  </Reference>
  <Reference Include="Ionic.Zip.Reduced">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/MiniJson.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
  <Reference Include="GAFConverter">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFConverter.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFConverter.dll</HintPath>
  </Reference>
  <Reference Include="GAFEditor">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFEditor.dll</HintPath>
- </Reference>
- <Reference Include="MiniJson">
- <HintPath>C:/Users/Sean Mcfarlane/Desktop/PF_REPO/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/MiniJson.dll</HintPath>
+ <HintPath>C:/GameDev/Project_Fulcrum/Project_Fulcrum/Assets/GAF/Plugins/Editor/GAFEditor.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

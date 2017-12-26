@@ -1,11 +1,11 @@
-/*
- * File:			GAFAnimationAssetEditor.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:34
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAF Unity plugin
- */
+
+// File:			GAFAnimationAssetEditor.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEditor;
 
@@ -17,11 +17,7 @@ using UnityEngine;
 
 using System.Linq;
 
-#if UNITY_5
 using UnityEditor.Animations;
-#else
-using UnityEditorInternal;
-#endif
 
 namespace GAFEditor.Assets
 {
@@ -73,11 +69,9 @@ namespace GAFEditor.Assets
 					{
 						var count = 0;
 						if (_controller != null)
-#if !UNITY_5
-							count = (_controller as AnimatorController).GetLayer(0).stateMachine.stateCount;
-#else
+
 						count = (_controller as AnimatorController).layers[0].stateMachine.states.Length;
-#endif // !UNITY_5
+
 						return count;
 					}).Sum();
 
@@ -112,35 +106,6 @@ namespace GAFEditor.Assets
 						{
 							foreach (var _sequence in currentTimeline.sequences)
 							{
-#if !UNITY_5
-								var mainLayer = controller.GetLayer(0);
-
-								var stateMachine = mainLayer.stateMachine;
-								AnimationClip animation = null;
-								for (int i = 0; i < stateMachine.stateCount; ++i)
-								{
-									var animatorState = stateMachine.GetState(i);
-									var motion = animatorState.GetMotion();
-									if (motion != null && motion.name.Contains(_sequence.name))
-										animation = motion as AnimationClip;
-								}
-
-								EditorGUILayout.BeginHorizontal();
-								{
-									GUILayout.Space(30f);
-									if (animation != null)
-									{
-										var textWidth = GUIStyle.none.CalcSize(new GUIContent("Animation clip. Sequence name - " + _sequence.name + ": ")).x + 3f;
-										EditorGUILayout.LabelField("Animation clip. Sequence name - " + _sequence.name + ": ", GUILayout.MaxWidth(textWidth));
-										EditorGUILayout.ObjectField(animation, typeof(AnimationClip), false);
-									}
-									else
-									{
-										EditorGUILayout.HelpBox("Animation clip. Sequence name - " + _sequence.name + ": Missing. Please press \"Rebuild mecanim resources\" button", MessageType.Error);
-									}
-								}
-								EditorGUILayout.EndHorizontal();
-#else
 								var mainLayer = controller.layers[0];
 
 								var stateMachine = mainLayer.stateMachine;
@@ -168,7 +133,6 @@ namespace GAFEditor.Assets
 									}
 								}
 								EditorGUILayout.EndHorizontal();
-#endif // !UNITY_5
 							}
 						}
 

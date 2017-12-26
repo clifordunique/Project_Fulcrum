@@ -366,14 +366,14 @@ public class FighterChar : NetworkBehaviour
 		else if(!noGravity)
 		{//Gravity!
 			AirControl(CtrlH);
-			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1);
+			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1f);
 			m_Ceilinged = false;
 		}	
 
-		errorDetectingRecursionCount = 0; //Used for Collizion();
+		errorDetectingRecursionCount = 0; //Used for WorldCollizion(); (note: colliZion is used to help searches for the keyword 'collision' by filtering out extraneous matches)
 
-		//print("Velocity before Coll ision: "+FighterState.Vel);
-		//print("Position before Coll ision: "+this.transform.position);
+		//print("Velocity before Collizion: "+FighterState.Vel);
+		//print("Position before Collizion: "+this.transform.position);
 
 		m_RemainingVelM = 1f;
 		m_RemainingMovement = FighterState.Vel*Time.fixedDeltaTime;
@@ -454,6 +454,8 @@ public class FighterChar : NetworkBehaviour
 	
 
 		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+
+		DebugUCN();
 
 		//print("Per frame velocity at end of physics frame: "+FighterState.Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
@@ -835,7 +837,7 @@ public class FighterChar : NetworkBehaviour
 
 		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
-
+		//These raycasts fire from the 4 edges of the player collider in the direction of travel, effectively forming a projection of the player. This is a form of continuous collision detection.
 		predictedLoc[0] = Physics2D.Raycast(adjustedBot, FighterState.Vel, crntSpeed, mask); 	// Ground
 		predictedLoc[1] = Physics2D.Raycast(adjustedTop, FighterState.Vel, crntSpeed, mask); 	// Ceiling
 		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, mask); 	// Left
@@ -894,7 +896,7 @@ public class FighterChar : NetworkBehaviour
 			shortestHorizontal = 3;
 		}
 
-		//non-zero shortest of all four colliders.
+		//non-zero, shortest distance of all four colliders. This selects the collider that hits an obstacle the earliest. Zero is excluded because a non-colliding raycast returns a distance of 0.
 		if(shortestVertical >= 0 && shortestHorizontal >= 0)
 		{
 			//print("Horiz dist="+shortestHorizontal);
@@ -927,10 +929,9 @@ public class FighterChar : NetworkBehaviour
 		//print("G="+gDist+" C="+cDist+" R="+rDist+" L="+lDist);
 		//print("VDist: "+shortestDistV);
 		//print("HDist: "+shortestDistH);
-
-
 		//print("shortestDist: "+rayDist[shortestRaycast]);
 
+		//Count the number of sides colliding during this movement for debug purposes.
 		int collisionNum = 0;
 
 		if(predictedLoc[0])
@@ -1066,6 +1067,59 @@ public class FighterChar : NetworkBehaviour
 		//print("Traction");
 		//print("gp="+groundPerp);
 
+		// This block of code makes the player treat very steep left and right surfaces as walls when they aren't going fast enough to reasonably climb them. 
+		// This aims to prevent a jittering effect when the player build small amounts of speed, then hits the steeper slope and starts sliding down again 
+		// as frequently as 60 times a second.
+		if (this.GetSpeed() <= 0.0001f) 
+		{
+			//print("Hitting wall slowly, considering correction.");
+			float wallSteepnessAngle;
+
+			if ((m_LeftWalled) && (horizontalInput < 0)) 
+			{
+				//print("Trying to run up left wall slowly.");
+				Vector2 wallPerp = Perp (m_LeftNormal);
+				wallSteepnessAngle = Vector2.Angle (Vector2.up, wallPerp);
+				if (wallSteepnessAngle == 180) 
+				{
+					wallSteepnessAngle = 0;
+				}
+				if (wallSteepnessAngle >= m_TractionLossMaxAngle) 
+				{ //If the wall surface the player is running
+					//print("Wall steepness of "+wallSteepnessAngle+" was too steep for speed "+this.GetSpeed()+", stopping.");
+					FighterState.Vel = Vector2.zero;
+					m_LeftWallBlocked = true;
+				}
+			} 
+			else if ((m_RightWalled) && (horizontalInput > 0)) 
+			{
+				//print("Trying to run up right wall slowly.");
+				Vector2 wallPerp = Perp (m_RightNormal);
+				wallSteepnessAngle = Vector2.Angle (Vector2.up, wallPerp);
+				wallSteepnessAngle = 180f - wallSteepnessAngle;
+				if (wallSteepnessAngle == 180) 
+				{
+					wallSteepnessAngle = 0;
+				}
+				if (wallSteepnessAngle >= m_TractionLossMaxAngle) 
+				{ //If the wall surface the player is running
+					//print("Wall steepness of "+wallSteepnessAngle+" was too steep for speed "+this.GetSpeed()+", stopping.");
+					FighterState.Vel = Vector2.zero;
+					m_RightWallBlocked = true;
+				}
+			}
+			else 
+			{
+				//print("Not trying to move up a wall; Continue as normal.");
+			}
+
+
+
+	
+		}
+		// End of anti-slope-jitter code.
+
+
 		if(groundPerp.x > 0)
 		{
 			groundPerp *= -1;
@@ -1114,7 +1168,7 @@ public class FighterChar : NetworkBehaviour
 			}
 			else
 			{
-				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearSlideRate);
+				FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, -m_LinearSlideRate);
 			}
 		}
 		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
@@ -1284,6 +1338,42 @@ public class FighterChar : NetworkBehaviour
 			m_MaxTimeHanging = 0;
 		}
 
+
+		//
+		// This code block is likely unnecessary
+		// Anti-Jitter code for transitioning to a steep slope that is too steep to climb.
+		//
+		if (this.GetSpeed () <= 0.0001f) 
+		{
+			print ("RIDING WALL SLOWLY, CONSIDERING CORRECTION");
+			if ((m_LeftWalled) && (horizontalInput < 0)) 
+			{
+				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
+					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
+					//FighterState.Vel = Vector2.zero;
+					m_LeftWallBlocked = true;
+					horizontalInput = 0;
+					m_SurfaceCling = false;
+				}
+			} 
+			else if ((m_RightWalled) && (horizontalInput > 0)) 
+			{
+				print ("Trying to run up right wall slowly.");
+				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
+					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
+					//FighterState.Vel = Vector2.zero;
+					m_RightWallBlocked = true;
+					horizontalInput = 0;
+					m_SurfaceCling = false;
+				}
+			} 
+			else 
+			{
+				print ("Not trying to move up a wall; Continue as normal.");
+			}
+		}
+
+
 		//print("Wall Steepness Angle:"+steepnessAngle);
 
 		///////////////////
@@ -1386,37 +1476,37 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			m_LeftWalled = false;
+			//m_LeftWalled = false;
 		}
 
 		m_LeftNormal = leftCheck2.normal;
 
-		if(m_Grounded)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("LeftGroundWedge detected during left collision.");
-			}
-			OmniWedge(0,2);
-		}
-
-		if(m_Ceilinged)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("LeftCeilingWedge detected during left collision.");
-			}
-			OmniWedge(2,1);
-		}
-
-		if(m_RightWalled)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("THERE'S PROBLEMS.");
-			}
-			//OmniWedge(2,3);
-		}
+//		if(m_Grounded)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("LeftGroundWedge detected during left collision.");
+//			}
+//			OmniWedge(0,2);
+//		}
+//
+//		if(m_Ceilinged)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("LeftCeilingWedge detected during left collision.");
+//			}
+//			OmniWedge(2,1);
+//		}
+//
+//		if(m_RightWalled)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("THERE'S PROBLEMS.");
+//			}
+//			//OmniWedge(2,3);
+//		}
 		return true;
 		//print ("Final Position2:  " + this.transform.position);
 	}
@@ -1494,25 +1584,6 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
-	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
-	{ // Handles collisions with another Fighter.
-		if(!IsVelocityPunching()){return false;}
-
-		Vector2 velocitee = GetVelocity();
-		float speed = velocitee.magnitude;
-
-		//this.gameObject.SetActive(false);
-
-		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
-		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
-		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
-		m_Impact = true;
-		this.SetSpeed(this.GetSpeed()*0.25f);
-
-		return true;
-	}
-
-
 	protected bool ToGround(RaycastHit2D groundCheck) 
 	{ //Sets the new position of the fighter and their ground normal.
 		//print ("m_Grounded=" + m_Grounded);
@@ -1575,32 +1646,32 @@ public class FighterChar : NetworkBehaviour
 
 		m_GroundNormal = groundCheck2.normal;
 
-		if(m_Ceilinged)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("CeilGroundWedge detected during ground collision.");
-			}
-			OmniWedge(0,1);
-		}
-
-		if(m_LeftWalled)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("LeftGroundWedge detected during ground collision.");
-			}
-			OmniWedge(0,2);
-		}
-
-		if(m_RightWalled)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("RightGroundWedge detected during groundcollision.");
-			}
-			OmniWedge(0,3);
-		}
+//		if(m_Ceilinged)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("CeilGroundWedge detected during ground collision.");
+//			}
+//			OmniWedge(0,1);
+//		}
+//
+//		if(m_LeftWalled)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("LeftGroundWedge detected during ground collision.");
+//			}
+//			OmniWedge(0,2);
+//		}
+//
+//		if(m_RightWalled)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("RightGroundWedge detected during groundcollision.");
+//			}
+//			OmniWedge(0,3);
+//		}
 
 		//print ("Final Position2:  " + this.transform.position);
 		return true;
@@ -1695,6 +1766,24 @@ public class FighterChar : NetworkBehaviour
 			OmniWedge(3,1);
 		}
 		//print ("Final Position2:  " + this.transform.position);
+		return true;
+	}
+
+	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
+	{ // Handles collisions with another Fighter.
+		if(!IsVelocityPunching()){return false;}
+
+		Vector2 velocitee = GetVelocity();
+		float speed = velocitee.magnitude;
+
+		//this.gameObject.SetActive(false);
+
+		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
+		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
+		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
+		m_Impact = true;
+		this.SetSpeed(this.GetSpeed()*0.25f);
+
 		return true;
 	}
 
@@ -1833,7 +1922,7 @@ public class FighterChar : NetworkBehaviour
 	protected void OmniWedge(int lowerContact, int upperContact)
 	{//Executes when the fighter is moving into a corner and there isn't enough room to fit them. It halts the fighter's momentum and sets off a blocked-direction flag.
 
-		//print("OmniWedge!");
+		print("OmniWedge("+lowerContact+","+upperContact+")");
 
 		RaycastHit2D lowerHit;
 		Vector2 lowerDirection = Vector2.down;
@@ -1858,12 +1947,14 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 2: //lowercontact is left
 			{
+				print("Omniwedge: lowercontact is left");
 				lowerDirection = Vector2.left;
 				lowerLength = m_LeftSideLength;
 				break;
 			}
 		case 3: //lowercontact is right
 			{
+				print("Omniwedge: lowercontact is right");
 				lowerDirection = Vector2.right;
 				lowerLength = m_RightSideLength;
 				break;
@@ -1877,21 +1968,21 @@ public class FighterChar : NetworkBehaviour
 		lowerHit = Physics2D.Raycast(this.transform.position, lowerDirection, lowerLength, mask);
 
 		float embedDepth;
-		Vector2 gPerp; //lowerperp, aka groundperp
-		Vector2 cPerp; //upperperp, aka ceilingperp
-		Vector2 moveAmount = new Vector2(0,0);
+		Vector2 gPara; //lowerpara, aka groundparallel
+		Vector2 cPara; //upperpara, aka ceilingparallel
+		Vector2 correctionVector = new Vector2(0,0);
 
 		if(!lowerHit)
 		{
 			//throw new Exception("Bottom not wedged!");
 			print("Bottom not wedged!");
-			gPerp.x = m_GroundNormal.x;
-			gPerp.y = m_GroundNormal.y;
+			//gPara.x = m_GroundNormal.x;
+			//gPara.y = m_GroundNormal.y;
 			return;
 		}
 		else
 		{
-			gPerp = Perp(lowerHit.normal);
+			gPara = Perp(lowerHit.normal);
 			Vector2 groundPosition = lowerHit.point;
 			if(lowerContact == 0) //ground contact
 			{
@@ -1928,12 +2019,14 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 2: //uppercontact is left
 			{
+				print("Omniwedge: uppercontact is left");
 				upperDirection = Vector2.left;
 				upperLength = m_LeftSideLength;
 				break;
 			}
 		case 3: //uppercontact is right
 			{
+				print("Omniwedge: uppercontact is right");
 				upperDirection = Vector2.right;
 				upperLength = m_RightSideLength;
 				break;
@@ -1950,7 +2043,7 @@ public class FighterChar : NetworkBehaviour
 		if(!upperHit)
 		{
 			//throw new Exception("Top not wedged!");
-			cPerp = Perp(upperHit.normal);
+			cPara = Perp(upperHit.normal);
 			if(d_SendCollisionMessages)
 			{
 				print("Top not wedged!");
@@ -1960,50 +2053,57 @@ public class FighterChar : NetworkBehaviour
 		else
 		{
 			//print("Hitting top, superunwedging..."); 
-			cPerp = Perp(upperHit.normal);
+			cPara = Perp(upperHit.normal);
 		}
 
 		//print("Embedded ("+embedDepth+") units into the ceiling");
 
-		float cornerAngle = Vector2.Angle(cPerp,gPerp);
+		//Rounding the perpendiculars to 4 decimal places to eliminate error prone edge-cases and floating point imprecision.
+		gPara.x = Mathf.Round(gPara.x * 10000f) / 10000f;
+		gPara.y = Mathf.Round(gPara.y * 10000f) / 10000f;
 
-		//print("Ground Perp = " + gPerp);
-		//print("Ceiling Perp = " + cPerp);
+		cPara.x = Mathf.Round(cPara.x * 10000f) / 10000f;
+		cPara.y = Mathf.Round(cPara.y * 10000f) / 10000f;
+
+		float cornerAngle = Vector2.Angle(cPara,gPara);
+
+		//print("Ground Perp = " + gPara);
+		//print("Ceiling Perp = " + cPara);
 		//print("cornerAngle = " + cornerAngle);
-		bool convergingLeft = false;
 
-		Vector2 cPerpTest = cPerp;
-		Vector2 gPerpTest = gPerp;
+		Vector2 cParaTest = cPara;
+		Vector2 gParaTest = gPara;
 
-		if(cPerpTest.x < 0)
+		if(cParaTest.x < 0)
 		{
-			cPerpTest *= -1;
+			cParaTest *= -1;
 		}
-		if(gPerpTest.x < 0)
+		if(gParaTest.x < 0)
 		{
-			gPerpTest *= -1;
+			gParaTest *= -1;
 		}
 
-		//print("gPerpTest = " + gPerpTest);
-		//print("cPerpTest= " + cPerpTest);
+		//print("gParaTest = " + gParaTest);
+		//print("cParaTest= " + cParaTest);
 
-		float convergenceValue = cPerpTest.y-gPerpTest.y;
+		float convergenceValue = cParaTest.y-gParaTest.y;
+		//print("ConvergenceValue =" + convergenceValue);
 
-		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // THIS IS BAD, PLACEHOLDER CODE!
-		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // THIS IS BAD, PLACEHOLDER CODE!
+		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // PLACEHOLDER CODE! It just sets it to converging left when touching left contact.
+		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // PLACEHOLDER CODE! It just sets it to converging right when touching right contact.
 
-		if(cornerAngle > 90f)
+		if(cornerAngle >= 90f)
 		{
 			if(convergenceValue > 0)
 			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				//print("Left wedge!");
+				print("Left wedge!");
+				correctionVector = SuperUnwedger(cPara, gPara, true, embedDepth);
 				m_LeftWallBlocked = true;
 			}
 			else if(convergenceValue < 0)
 			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
 				//print("Right wedge!");
+				correctionVector = SuperUnwedger(cPara, gPara, false, embedDepth);
 				m_RightWallBlocked = true;
 			}
 			else
@@ -2014,13 +2114,14 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			moveAmount = (upperDirection*(-embedDepth));
+			print("Obtuse wedge angle detected!");
+			correctionVector = (upperDirection*(-(embedDepth-m_MinEmbed)));
 		}
 
-		this.transform.position = new Vector2((this.transform.position.x + moveAmount.x), (this.transform.position.y + moveAmount.y));
+		this.transform.position = new Vector2((this.transform.position.x + correctionVector.x), (this.transform.position.y + correctionVector.y));
 	}
 
-	protected Vector2	Perp(Vector2 input)
+	protected Vector2 Perp(Vector2 input)
 	{
 		Vector2 output;
 		output.x = input.y;
@@ -2028,7 +2129,7 @@ public class FighterChar : NetworkBehaviour
 		return output;
 	}		
 
-	protected void UpdateContactNormals(bool posCorrection)
+	protected void UpdateContactNormals(bool posCorrection) // UCN - Updates the present-time state of the player's contact with surrounding world geometry. Corrects the player's position if it is embedded in geometry, and gathers information about where the player can move.
 	{
 		m_Grounded = false;
 		m_Ceilinged = false;
@@ -2115,6 +2216,66 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
+	protected void DebugUCN() //Like normal UCN but doesn't affect anything and prints results.
+	{
+		print("DEBUG_UCN");
+		m_GroundLine.endColor = Color.red;
+		m_GroundLine.startColor = Color.red;
+		m_CeilingLine.endColor = Color.red;
+		m_CeilingLine.startColor = Color.red;
+		m_LeftSideLine.endColor = Color.red;
+		m_LeftSideLine.startColor = Color.red;
+		m_RightSideLine.endColor = Color.red;
+		m_RightSideLine.startColor = Color.red;
+
+		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
+		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask); 	// Ground
+		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);  	// Ceiling
+		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask); 	// Left
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);	// Right  
+
+		if (directionContacts[0]) 
+		{
+			m_GroundLine.endColor = Color.green;
+			m_GroundLine.startColor = Color.green;
+		} 
+
+		if (directionContacts[1]) 
+		{
+			m_CeilingLine.endColor = Color.green;
+			m_CeilingLine.startColor = Color.green;
+		} 
+
+
+		if (directionContacts[2])
+		{
+			m_LeftSideLine.endColor = Color.green;
+			m_LeftSideLine.startColor = Color.green;
+		} 
+
+		if (directionContacts[3])
+		{
+			m_RightSideLine.endColor = Color.green;
+			m_RightSideLine.startColor = Color.green;
+		} 
+
+		bool[] isEmbedded = {false, false, false, false};
+		int contactCount = 0;
+		if(groundContact){contactCount++;}
+		if(ceilingContact){contactCount++;}
+		if(leftSideContact){contactCount++;}
+		if(rightSideContact){contactCount++;}
+
+		int embedCount = 0;
+		if(groundContact && ((m_GroundFootLength-directionContacts[0].distance)>=0.011f))	{ print("Embedded in grnd by amount: "+((m_GroundFootLength-directionContacts[0].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(ceilingContact && ((m_CeilingFootLength-directionContacts[1].distance)>=0.011f))	{ print("Embedded in ceil by amount: "+((m_CeilingFootLength-directionContacts[1].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(leftSideContact && ((m_LeftSideLength-directionContacts[2].distance)>=0.011f))	{ print("Embedded in left by amount: "+((m_LeftSideLength-directionContacts[2].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(rightSideContact && ((m_RightSideLength-directionContacts[3].distance)>=0.011f))	{ print("Embedded in rigt by amount: "+((m_RightSideLength-directionContacts[3].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+
+		print(contactCount+" sides touching, "+embedCount+" sides embedded");
+	}
+
+
 	protected void AntiTunneler(RaycastHit2D[] contacts)
 	{
 		bool[] isEmbedded = {false, false, false, false};
@@ -2134,12 +2295,13 @@ public class FighterChar : NetworkBehaviour
 		{
 		case 0: //No embedded contacts. Save this position as the most recent valid one and move on.
 			{
-				//print("No embedding! :)");
+				print("No embedding! :)");
 				lastSafePosition = this.transform.position;
 				break;
 			}
 		case 1: //One side is embedded. Simply push out to remove it.
 			{
+				print("One side embed!");
 				if(isEmbedded[0])
 				{
 					Vector2 surfacePosition = contacts[0].point;
@@ -2264,114 +2426,123 @@ public class FighterChar : NetworkBehaviour
 
 	}
 
-	protected Vector2 SuperUnwedger(Vector2 cPerp, Vector2 gPerp, bool cornerIsLeft, float embedDistance)
+
+
+	protected Vector2 SuperUnwedger(Vector2 cPara, Vector2 gPara, bool cornerIsLeft, float embedDistance)
 	{
+		print("Ground Perp = ("+gPara.x+", "+gPara.y+")");
+		print("Ceiling Perp = ("+cPara.x+", "+cPara.y+")");
+
 		if(!cornerIsLeft)
 		{// Setting up variables	
 			//print("Resolving right wedge.");
-			if(gPerp.x>0)
+
+
+			if(gPara.x>0)
 			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				gPerp *= -1;
+				gPara *= -1;
 			}
 
-			if(cPerp.x>0)
+			if(cPara.x>=0)
 			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				cPerp *= -1;
+				//print("("+cPara.x+", "+cPara.y+") is cPara, inverting this...");
+				cPara *= -1;
 			}
 
-			if(cPerp.x != -1)
+			if(cPara.x != -1)
 			{// Multiply/Divide the top vector so that its x = -1.
-				if(cPerp.x == 0)
+				//if(Math.Abs(cPara.x) < 1)
+				if(Math.Abs(cPara.x) == 0)
 				{
-					//print("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
 					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
-					cPerp /= Mathf.Abs(cPerp.x);
+					cPara /= Mathf.Abs(cPara.x);
 				}
 			}
 
-			if(gPerp.x != -1)
+			if(gPara.x != -1)
 			{// Multiply/Divide the bottom vector so that its x = -1.
-				if(gPerp.x == 0)
+				if(gPara.x == 0)
 				{
 					//throw new Exception("Your ground has no horizontality. What are you even doing?");
 					return new Vector2(0, embedDistance);
 				}
 				else
 				{
-					gPerp /= Mathf.Abs(gPerp.x);
+					gPara /= Mathf.Abs(gPara.x);
 				}
 			}
 		}
 		else
 		{
-			//print("Resolving left wedge.");
-			// Ensure both perpendicular vectors are pointing right, out of the corner the fighter is lodged in.
-			if(gPerp.x<0)
-			{
-				gPerp *= -1;
+			print("Resolving left wedge.");
+
+			if(gPara.x<0)
+			{// Ensure both surface-parallel vectors are pointing right, out of the corner the fighter is lodged in.
+				gPara *= -1;
 			}
 
-			if(cPerp.x<0)
-			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				cPerp *= -1;
+			if(cPara.x<0)
+			{// Ensure both surface-parallel vectors are pointing left, out of the corner the fighter is lodged in.
+				cPara *= -1;
 			}
 
-			if(cPerp.x != 1)
-			{// Multiply/Divide the top vector so that its x = -1.
-				if(cPerp.x == 0)
+			if(cPara.x != 1)
+			{// Multiply/Divide the top vector so that its x = 1.
+				if(Math.Abs(cPara.x) == 0)
 				{
-					//throw new Exception("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
-					return new Vector2(0, -embedDistance);
+					print("It's a wall, bro");
+					//return new Vector2(0, -embedDistance);
+					return new Vector2(embedDistance-m_MinEmbed,0);
 				}
 				else
 				{
-					cPerp /= cPerp.x;
+					cPara /= cPara.x;
 				}
 			}
 
-			if(gPerp.x != -1)
+			if(gPara.x != -1)
 			{// Multiply/Divide the bottom vector so that its x = -1.
-				if(gPerp.x == 0)
+				if(gPara.x == 0)
 				{
 					//throw new Exception("Your ground has no horizontality. What are you even doing?");
 					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
-					gPerp /= gPerp.x;
+					gPara /= gPara.x;
 				}
 			}
 		}
 
-		//print("Adapted Ground Perp = " + gPerp);
-		//print("Adapted Ceiling Perp = " + cPerp);
+		print("Adapted Ground Perp = " + gPara);
+		print("Adapted Ceiling Perp = " + cPara);
 
 		//
-		// Now, the equation for repositioning a vertical line that is embedded in a corner:
+		// Now, the equation for repositioning two points that are embedded in a corner, so that both points are touching the lines that comprise the corner
+		// In other words, here is the glorious UNWEDGER algorithm.
 		//
-
-		float B = gPerp.y;
-		float A = cPerp.y;
+		float B = gPara.y;
+		float A = cPara.y;
 		float H = embedDistance; //Reduced so the fighter stays just embedded enough for the raycast to detect next frame.
 		float DivX;
 		float DivY;
 		float X;
 		float Y;
 
-		//print("(A, B)=("+ A +", "+ B +").");
+		print("(A, B)=("+ A +", "+ B +").");
 
 		if(B <= 0)
 		{
-			//print("B <= 0, using normal eqn.");
+			print("B <= 0, using normal eqn.");
 			DivX = B-A;
 			DivY = -(DivX/B);
 		}
 		else
 		{
-			//print("B >= 0, using alternate eqn.");
+			print("B >= 0, using alternate eqn.");
 			DivX = 1f/(B-A);
 			DivY = -(A*DivX);
 		}
@@ -2405,6 +2576,11 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		//print("Adding the movement: ("+ X +", "+Y+").");
+		if(Math.Abs(X) >= 1000 || Math.Abs(Y) >= 1000)
+		{
+			print("ERROR: HYPERMASSIVE CORRECTION OF ("+X+","+Y+")");
+			//return new Vector2 (0, 0);
+		}
 		return new Vector2(X,Y); // Returns the distance the object must move to resolve wedging.
 	}
 
@@ -2420,6 +2596,9 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_Grounded)
 		{
+			//m_LeftWallBlocked = false;
+			//m_RightWallBlocked = false;
+
 			if(FighterState.Vel.y >= 0)
 			{
 				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), FighterState.Vel.y+m_VJumpForce);
