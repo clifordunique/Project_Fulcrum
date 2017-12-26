@@ -318,6 +318,14 @@ public class Player : FighterChar
 
 		if(i_DevKey3)
 		{
+			if(autoRunLeft==false)
+			{
+				autoRunLeft = true;
+			}
+			else
+			{
+				autoRunLeft = false;
+			}
 			i_DevKey3 = false;
 		}
 

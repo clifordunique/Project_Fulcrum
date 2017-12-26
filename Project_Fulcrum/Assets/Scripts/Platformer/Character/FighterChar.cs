@@ -346,8 +346,6 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdatePhysics()
 	{
-		this.transform.position = FighterState.FinalPos;
-		UpdateContactNormals(true);
 		m_DistanceTravelled = Vector2.zero;
 		initialVel = FighterState.Vel;
 
@@ -452,10 +450,23 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 	
+//		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+//
+//		this.transform.position = FighterState.FinalPos;
+//		UpdateContactNormals(true);
+//
+//		DebugUCN();
 
-		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 
-		DebugUCN();
+		UpdateContactNormals(true);
+
+		FighterState.FinalPos = this.transform.position;
+
+		if(FighterState.DevMode)
+		{
+			DebugUCN();
+		}
 
 		//print("Per frame velocity at end of physics frame: "+FighterState.Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
@@ -1074,6 +1085,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			//print("Hitting wall slowly, considering correction.");
 			float wallSteepnessAngle;
+			float groundSteepnessAngle;
 
 			if ((m_LeftWalled) && (horizontalInput < 0)) 
 			{
@@ -1110,7 +1122,7 @@ public class FighterChar : NetworkBehaviour
 			}
 			else 
 			{
-				//print("Not trying to move up a wall; Continue as normal.");
+				//print("Only hitting groundcontact, test ground steepness.");
 			}
 
 
@@ -1189,9 +1201,16 @@ public class FighterChar : NetworkBehaviour
 						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate);
 					}
 				}
-				else if(rawSpeed < 0.001)
+				else if(rawSpeed < 0.001f)
 				{
-					FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+					if(slopeMultiplier<0.5)
+					{
+						FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+					}
+					else
+					{
+						print("Too steep!");
+					}
 					//print("Starting motion. Adding " + m_Acceleration);
 				}
 				else
@@ -2295,13 +2314,13 @@ public class FighterChar : NetworkBehaviour
 		{
 		case 0: //No embedded contacts. Save this position as the most recent valid one and move on.
 			{
-				print("No embedding! :)");
+				//print("No embedding! :)");
 				lastSafePosition = this.transform.position;
 				break;
 			}
 		case 1: //One side is embedded. Simply push out to remove it.
 			{
-				print("One side embed!");
+				//print("One side embed!");
 				if(isEmbedded[0])
 				{
 					Vector2 surfacePosition = contacts[0].point;
@@ -2581,6 +2600,7 @@ public class FighterChar : NetworkBehaviour
 			print("ERROR: HYPERMASSIVE CORRECTION OF ("+X+","+Y+")");
 			//return new Vector2 (0, 0);
 		}
+		print("SuperUnwedger push of: ("+X+","+Y+")");
 		return new Vector2(X,Y); // Returns the distance the object must move to resolve wedging.
 	}
 
