@@ -255,11 +255,11 @@ public class NPC : FighterChar {
 		if(!(FighterState.LeftKey||FighterState.RightKey) || (FighterState.LeftKey && FighterState.RightKey))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoRunLeft||autoRunRight))
+			if(!(autoPressLeft||autoPressRight))
 			{
 				CtrlH = 0;
 			}
-			else if(autoRunLeft)
+			else if(autoPressLeft)
 			{
 				CtrlH = -1;
 			}

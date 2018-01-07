@@ -78,7 +78,6 @@ public class Player : FighterChar
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
-
 	#endregion 	
 	//############################################################################################################################################################################################################
 	// NETWORKING VARIABLES
@@ -318,13 +317,13 @@ public class Player : FighterChar
 
 		if(i_DevKey3)
 		{
-			if(autoRunLeft==false)
+			if(autoPressLeft==false)
 			{
-				autoRunLeft = true;
+				autoPressLeft = true;
 			}
 			else
 			{
-				autoRunLeft = false;
+				autoPressLeft = false;
 			}
 			i_DevKey3 = false;
 		}
@@ -353,16 +352,16 @@ public class Player : FighterChar
 		//#################################################################################
 		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE FIGHTER IS INCAPACITATED. ###
 		//#################################################################################
-
+		//Horizontal button pressing
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if(!(FighterState.LeftKey||FighterState.RightKey) || (FighterState.LeftKey && FighterState.RightKey))
+		if((FighterState.LeftKey && FighterState.RightKey) || !(FighterState.LeftKey||FighterState.RightKey))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoRunLeft||autoRunRight))
+			if(!(autoPressLeft||autoPressRight))
 			{
 				CtrlH = 0;
 			}
-			else if(autoRunLeft)
+			else if(autoPressLeft)
 			{
 				CtrlH = -1;
 			}
@@ -391,6 +390,47 @@ public class Player : FighterChar
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
+		//Vertical button pressing
+		if((FighterState.DownKey && FighterState.UpKey) || !(FighterState.UpKey||FighterState.DownKey))
+		{
+			//print("BOTH OR NEITHER");
+			if(!(autoPressDown||autoPressUp))
+			{
+				CtrlV = 0;
+			}
+			else if(autoPressDown)
+			{
+				CtrlV = -1;
+			}
+			else
+			{
+				CtrlV = 1;
+			}
+		}
+		else if(FighterState.DownKey)
+		{
+			//print("LEFT");
+			CtrlV = -1;
+		}
+		else
+		{
+			//print("RIGHT");
+			CtrlV = 1;
+		}
+
+		if(CtrlV<0)
+		{
+			facingDirectionV = -1; //true means up (the direction), false means down.
+		}
+		else if(CtrlV>0)
+		{
+			facingDirectionV = 1; //true means up (the direction), false means down.
+		}
+		else
+		{
+			facingDirectionV = 0;	
+		}
+
 		//print("CTRLH=" + CtrlH);
 		if(FighterState.DownKey&&m_Grounded)
 		{
@@ -403,16 +443,21 @@ public class Player : FighterChar
 			g_ZonJumpCharge=0;
 		}
 			
-		if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		//if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if(FighterState.JumpKey)
 		{
 			FighterState.JumpKey = false;
 			if(m_Kneeling)
 			{
 				ZonJump(FighterState.PlayerMouseVector.normalized);
 			}
-			else
+			else if(m_JumpBufferG>0 || m_JumpBufferC>0 || m_JumpBufferL>0 || m_JumpBufferR>0)
 			{
 				Jump(CtrlH);
+			}
+			else
+			{
+				StrandSpringTypeA(CtrlH, CtrlV);
 			}
 		}
 			
@@ -726,7 +771,6 @@ public class Player : FighterChar
 		o_FighterAudio.ZonPulseSound();
 	}
 		
-
 	#endregion
 	//###################################################################################################################################
 	// PUBLIC FUNCTIONS

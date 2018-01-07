@@ -925,6 +925,11 @@ MonoBehaviour:
   m_CraterT: 200
   m_GuardSlamT: 200
   m_GuardCraterT: 400
+  m_JumpBufferG: 0
+  m_JumpBufferC: 0
+  m_JumpBufferL: 0
+  m_JumpBufferR: 0
+  m_JumpBufferFrameAmount: 30
   o_TempLight: {fileID: 108262091546041426}
   o_FighterAudio: {fileID: 114591870329239686}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -986,7 +991,7 @@ MonoBehaviour:
     PlayerMouseVector: {x: 0, y: 0}
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
-  autoRunLeft: 1
+  autoRunLeft: 0
   autoRunRight: 0
   autoJump: 0
   antiTunneling: 1
