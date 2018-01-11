@@ -16,6 +16,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AudioClip 	windSound;
 	[SerializeField]private FighterChar theCharacter;
 	[SerializeField][Range(0,1f)]private float jumpVolM;		// Jump volume
+	[SerializeField][Range(0,1f)]private float strandJumpVolM;	// Strand jump volume
 	[SerializeField][Range(0,1f)]private float landVolM;		// Normal landing volume
 	[SerializeField][Range(0,1f)]private float slamVolM;		// Slam volume
 	[SerializeField][Range(0,1f)]private float crtrVolM;		// Crater volume
@@ -208,6 +209,23 @@ public class FighterAudio : NetworkBehaviour {
 //		if(isLocalPlayer){return;}
 //		windSource.volume = volume;
 //	}
+
+
+	public void StrandJumpSound()
+	{
+		if(!isLocalPlayer){return;}
+		charAudioSource.PlayOneShot(jumpSounds[1], strandJumpVolM);
+		CmdStrandJumpSound(strandJumpVolM);
+	}
+	[Command] public void CmdStrandJumpSound(float volume)
+	{
+		RpcStrandJumpSound(volume);
+	}
+	[ClientRpc] public void RpcStrandJumpSound(float volume)
+	{
+		if(isLocalPlayer){return;}
+		charAudioSource.PlayOneShot(jumpSounds[1], volume);
+	}
 
 	// Update is called once per frame
 	void Update() 

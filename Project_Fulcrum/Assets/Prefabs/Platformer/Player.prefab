@@ -929,7 +929,13 @@ MonoBehaviour:
   m_JumpBufferC: 0
   m_JumpBufferL: 0
   m_JumpBufferR: 0
-  m_JumpBufferFrameAmount: 30
+  m_JumpBufferFrameAmount: 10
+  m_StrandJumpSpeedLossM: 0
+  m_StrandJumpReflectSpd: 0
+  m_StrandJumpReflectDir: {x: 0, y: 0}
+  k_IsKinematic: 0
+  k_KinematicAnim: 0
+  k_StrandJumpSlowdownM: 0.66
   o_TempLight: {fileID: 108262091546041426}
   o_FighterAudio: {fileID: 114591870329239686}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -938,6 +944,8 @@ MonoBehaviour:
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_ShockEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
+    type: 2}
+  p_StrandJumpPrefab: {fileID: 1241283713325446, guid: 95751ca55b570564ead712379a7c4613,
     type: 2}
   p_AirBurstPrefab: {fileID: 1978595356474728, guid: 2c2261d633c10a349a656b3701bb7b68,
     type: 2}
@@ -991,8 +999,10 @@ MonoBehaviour:
     PlayerMouseVector: {x: 0, y: 0}
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
-  autoRunLeft: 0
-  autoRunRight: 0
+  autoPressLeft: 0
+  autoPressRight: 0
+  autoPressDown: 0
+  autoPressUp: 0
   autoJump: 0
   antiTunneling: 1
   noGravity: 0
@@ -1206,6 +1216,7 @@ MonoBehaviour:
   windSource: {fileID: 82974305029215952}
   jumpSounds:
   - {fileID: 8300000, guid: 484913db82778d643bd3ac44fc3722d6, type: 3}
+  - {fileID: 8300000, guid: 9a0f6239ca2bba349bca7a6f617f7a7e, type: 3}
   sfxSounds:
   - {fileID: 8300000, guid: 8ce393386c0b1c44c89fd67eabf54f54, type: 3}
   footstepSounds:
@@ -1236,6 +1247,7 @@ MonoBehaviour:
   windSound: {fileID: 8300000, guid: 49a72558cc015014fa776a44e42e5914, type: 3}
   theCharacter: {fileID: 114019870783442572}
   jumpVolM: 0.2
+  strandJumpVolM: 0.5
   landVolM: 0.2
   slamVolM: 0.3
   crtrVolM: 0.3

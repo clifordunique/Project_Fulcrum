@@ -36,13 +36,13 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
-	[SerializeField] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
-	[SerializeField] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
-	[SerializeField] private Camera o_MainCamera;				// Reference to the main camera.
-	[SerializeField] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
+	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
+	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
 	[SerializeField] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
-	[SerializeField] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
-	[SerializeField] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
+	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
+	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	#endregion
 	//############################################################################################################################################################################################################
@@ -93,7 +93,7 @@ public class Player : FighterChar
 	{
 		inputBuffer = new Queue<FighterState>();
 		isAPlayer = true;
-		FighterState.DevMode = true;
+		//FighterState.DevMode = true;
 		FighterAwake();
 	}
 
@@ -158,7 +158,16 @@ public class Player : FighterChar
 		}
 
 		FixedUpdateProcessInput();
-		FixedUpdatePhysics(); 		// Change this to take time.deltatime as an input so you can implement time dilation.
+
+		if(k_IsKinematic)
+		{
+			FixedUpdateKinematic();	//If the player is in kinematic mode, physics are disabled while animations are played.
+		}
+		else
+		{
+			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
+		}
+
 		FixedUpdateLogic();			// Deals with variables such as life and zon power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
 		FighterState.RightClick = false;
@@ -331,6 +340,7 @@ public class Player : FighterChar
 		if(i_DevKey4)
 		{
 			FighterState.CurHealth -= 10;
+			g_ZonLevel = 8;
 			i_DevKey4 = false;
 		}
 
@@ -457,7 +467,7 @@ public class Player : FighterChar
 			}
 			else
 			{
-				StrandSpringTypeA(CtrlH, CtrlV);
+				StrandJumpTypeA(CtrlH, CtrlV);
 			}
 		}
 			
@@ -741,18 +751,6 @@ public class Player : FighterChar
 		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
-	}
-		
-	protected void ZonJump(Vector2 jumpNormal)
-	{
-		g_ZonJumpCharge = g_ZonLevel;
-		if(g_ZonLevel > 0)
-		{
-			g_ZonLevel--;
-		}
-		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge)));
-		g_ZonJumpCharge = 0;		
-		o_FighterAudio.JumpSound();
 	}
 
 	protected void ZonPulse()
