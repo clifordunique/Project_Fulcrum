@@ -14,7 +14,7 @@ MonoBehaviour:
   m_Asset: {fileID: 11400000, guid: 64d12ba990b2ffc4eb9079117a4a2adb, type: 2}
   m_Scale: 1
   m_CSF: 1
-  m_CurrentDataPath: Assets/
+  m_CurrentDataPath: Assets/GAF Assets/
   m_Data:
   - m_SearchName: Athena_Unity_2
     m_SharedTexture: {fileID: 2800000, guid: af76626ee76cc604a9ca2155c56b3a15, type: 3}

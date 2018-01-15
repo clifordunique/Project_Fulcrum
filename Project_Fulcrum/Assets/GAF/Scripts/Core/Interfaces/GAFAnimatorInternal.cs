@@ -1,16 +1,11 @@
-// ***********************************************************************
-// Assembly         : GAF
-// Author           : Niktin.Nikolay
-// Created          : 02-02-2015
-//
-// Last Modified By : Niktin.Nikolay
-// Last Modified On : 02-17-2015
-// ***********************************************************************
-// <copyright file="GAFAnimatorInternal.cs" company="Catalyst apps">
-//     Copyright © GAF Media 2015
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
+
+// File:			GAFAnimatorInternal.cs
+// Version:			5.2
+// Last changed:	2017/3/31 09:45
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 using System.Linq;
@@ -69,19 +64,24 @@ namespace GAFInternal.Core
 			{
 				settings.init(_Asset);
 
-				isInitialized = true;
+                if (_Asset.rootClip == null)
+                {
+                    _Asset.rootClip = this;
+                }
+                else
+                {
+                    useCustomDelegate = _Asset.rootClip.useCustomDelegate;
+                    customDelegate = _Asset.rootClip.customDelegate;
+                }
+
+                isInitialized = true;
 
 				m_AnimatorVersion = GAFSystem.AnimatorVersion;
 				asset = _Asset;
 				timelineID = _TimelineID;
 				m_Animator = GetComponent<Animator>();
 				m_ObjectsManager = GetComponent<ObjectsManagerType>();
-
-#if UNITY_5
 				m_Animator.cullingMode = AnimatorCullingMode.CullUpdateTransforms;
-#else
-				m_Animator.cullingMode = AnimatorCullingMode.BasedOnRenderers;
-#endif
 				//m_Animator.hideFlags = HideFlags.NotEditable;
 				m_Animator.runtimeAnimatorController = _Asset.getAnimatorController(timelineID);
 
@@ -107,6 +107,12 @@ namespace GAFInternal.Core
 
 				if (asset.isLoaded)
 				{
+				    if (asset.rootClip != null)
+				    {
+				        useCustomDelegate = asset.rootClip.useCustomDelegate;
+				        customDelegate = asset.rootClip.customDelegate;
+				    }
+
 					if (m_AnimatorVersion < GAFSystem.AnimatorVersion)
 					{
 						upgrade();
@@ -121,7 +127,7 @@ namespace GAFInternal.Core
 						{
 							isLoaded = true;
 
-							gafTransform.onTransformChanged -= onTransformChanged;
+                            gafTransform.onTransformChanged -= onTransformChanged;
 							gafTransform.onTransformChanged += onTransformChanged;
 
 							if (gafTransform.gafParent != null &&
@@ -139,7 +145,7 @@ namespace GAFInternal.Core
 
 							updateToFrameAnimatorWithRefresh((int)internalFrameNumber);
 						}
-					}
+                    }
 
 					foreach (var mat in getSharedMaterials())
 					{
@@ -218,7 +224,11 @@ namespace GAFInternal.Core
 			resource = null;
 			settings = new GAFAnimationPlayerSettings();
 
-			internalFrameNumber = getFrames().Keys.First();
+			var frames = getFrames();
+			if (frames != null)
+			{
+				internalFrameNumber = getFrames().Keys.First();
+			}
 		}
 
 		/// <summary>
@@ -232,7 +242,7 @@ namespace GAFInternal.Core
 				m_ObjectsManager.cleanView();
 			}
 
-			m_RegisteredMaterials.Clear();
+			clearMaterials(m_RegisteredMaterials);
 		}
 
 		/// <summary>
@@ -275,27 +285,42 @@ namespace GAFInternal.Core
 						{
 							var soundEvent = tempEvent as GAFSoundEvent;
 
-							var audioFrame = m_AudioSources.Find(x => x.frameNumber == tempFrame.frameNumber);
-							if (audioFrame != null)
+							if (soundEvent.action == GAFSoundEvent.SoundAction.Stop)
 							{
-								var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
-
-								if (data != null)
+								foreach (var frameAudioData in m_FramesAudioData)
 								{
-									if (soundEvent.action == 2)
-										data.source.Play();
-									else if (soundEvent.action == 1)
+									for (int frameIndex = 0, count = frameAudioData.audios.Count; frameIndex < count; frameIndex++)
 									{
-										foreach (var audioData in audioFrame.audios)
+										var frameAudio = frameAudioData.audios[frameIndex];
+
+										if (frameAudio.ID == soundEvent.id)
 										{
-											audioData.source.Stop();
+											frameAudio.source.Stop();
 										}
 									}
-									else if (soundEvent.action == 3)
+								}
+							}
+
+							else
+							{
+								var audioFrame = m_FramesAudioData.Find(x => x.frameNumber == tempFrame.frameNumber);
+								if (audioFrame != null)
+								{
+									var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
+
+									if (data != null)
 									{
-										if (!data.source.isPlaying)
+										switch (soundEvent.action)
 										{
-											data.source.Play();
+											case GAFSoundEvent.SoundAction.Continue:
+												data.source.Play();
+												break;
+											case GAFSoundEvent.SoundAction.Start:
+												if (!data.source.isPlaying)
+												{
+													data.source.Play();
+												}
+												break;
 										}
 									}
 								}
@@ -337,31 +362,42 @@ namespace GAFInternal.Core
 					var tempEvent = tempFrame.events[i];
 					if (tempEvent.type != GAFBaseEvent.ActionType.SoundEvent)
 						tempEvent.execute(this);
-					else
+					else if (Application.isPlaying)
 					{
 						var soundEvent = tempEvent as GAFSoundEvent;
 
-						var audioFrame = m_AudioSources.Find(x => x.frameNumber == tempFrame.frameNumber);
-						if (audioFrame != null)
+						if (soundEvent.action == GAFSoundEvent.SoundAction.Stop)
 						{
-							var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
-
-							if (data != null)
+							foreach (var frameAudioData in m_FramesAudioData)
 							{
-								if (soundEvent.action == 2)
-									data.source.Play();
-								else if (soundEvent.action == 1)
+								for (int frameIndex = 0, count = frameAudioData.audios.Count; frameIndex < count; frameIndex++)
 								{
-									foreach (var audioData in audioFrame.audios)
+									var frameAudio = frameAudioData.audios[frameIndex];
+
+									if (frameAudio.ID == soundEvent.id)
 									{
-										audioData.source.Stop();
+										frameAudio.source.Stop();
 									}
 								}
-								else if (soundEvent.action == 3)
+							}
+						}
+
+						else
+						{
+							var audioFrame = m_FramesAudioData.Find(x => x.frameNumber == tempFrame.frameNumber);
+							if (audioFrame != null)
+							{
+								var data = audioFrame.audios.Find(x => x.ID == soundEvent.id);
+
+								if (data != null)
 								{
-									if (!data.source.isPlaying)
+									switch (soundEvent.action)
 									{
-										data.source.Play();
+										case GAFSoundEvent.SoundAction.Continue:
+										case GAFSoundEvent.SoundAction.Start:
+											if (!data.source.isPlaying)
+											data.source.Play();
+											break;
 									}
 								}
 							}
@@ -421,7 +457,7 @@ namespace GAFInternal.Core
 
 #region Implementation
 
-		private void onTransformChanged(GAFTransform.TransformType _Type)
+	    public override void onTransformChanged(GAFTransform.TransformType _Type)
 		{
 			switch (_Type)
 			{
@@ -443,13 +479,13 @@ namespace GAFInternal.Core
 			}
 		}
 
-		private void onGeometryChanged()
+	    public override void onGeometryChanged()
 		{
 			m_ObjectsManager.reload();
 			updateToFrameAnimatorWithRefresh((int)internalFrameNumber);
 		}
 
-		private void onVisibilityChanged()
+	    public override void onVisibilityChanged()
 		{
 			gafTransform.localVisible = gafTransform.gafParent.visible;
 
@@ -459,7 +495,7 @@ namespace GAFInternal.Core
 			}
 		}
 
-		private void onColorChanged()
+	    public override void onColorChanged()
 		{
 			if (!settings.hasIndividualMaterial)
 			{
@@ -524,7 +560,7 @@ namespace GAFInternal.Core
 			}
 		}
 
-		private void onMaskingChanged()
+	    public override void onMaskingChanged()
 		{
 			m_ObjectsManager.reload();
 			updateToFrameAnimatorWithRefresh((int)internalFrameNumber);

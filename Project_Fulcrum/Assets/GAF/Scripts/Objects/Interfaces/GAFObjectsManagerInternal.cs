@@ -1,16 +1,11 @@
-// ***********************************************************************
-// Assembly         : GAF
-// Author           : Niktin.Nikolay
-// Created          : 02-13-2015
-//
-// Last Modified By : Niktin.Nikolay
-// Last Modified On : 02-17-2015
-// ***********************************************************************
-// <copyright file="GAFObjectsManagerInternal.cs" company="Catalyst apps">
-//     Copyright Â© GAF Media 2015
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
+
+// File:			GAFObjectsManagerInternal.cs
+// Version:			5.2
+// Last changed:	2017/3/31 09:45
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -37,7 +32,6 @@ namespace GAFInternal.Objects
 		[HideInInspector][SerializeField] private GAFBaseClip			m_MovieClip			= null;
 		[HideInInspector][SerializeField] private GAFSortingManager		m_SortingManager	= null;
 		[HideInInspector][SerializeField] private List<TypeOfObject>	m_Objects			= new List<TypeOfObject>();
-		//[HideInInspector][SerializeField] private List<GAFTransform>	m_Timelines			= new List<GAFTransform>();
 
 		[HideInInspector]
 		[System.NonSerialized]
@@ -63,11 +57,11 @@ namespace GAFInternal.Objects
 		/// All objects list. Serialized data
 		/// </summary>
 		/// <value>The objects.</value>
-		public override IEnumerable<IGAFObject> objects
+		public override List<IGAFObject> objects
 		{
 			get
 			{
-				return m_Objects.Cast<IGAFObject>();
+				return m_Objects.Cast<IGAFObject>().ToList();
 			}
 		}
 
@@ -202,13 +196,13 @@ namespace GAFInternal.Objects
 			foreach (Transform child in cachedTransform)
 				children.Add(child.gameObject);
 			
-			children.ForEach((GameObject child) =>
+			foreach (var child in children)
 			{
 				if (Application.isPlaying)
 					Destroy(child);
 				else
 					DestroyImmediate(child, true);
-			});
+			}
 		}
 
 		/// <summary>
@@ -281,14 +275,8 @@ namespace GAFInternal.Objects
 				var _objectData = objects[i];
 				string _name = string.Empty;
 
-				if (_objectData.type == GAFObjectType.Timeline)
-				{
-					_name = clip.asset.getTimeline((int)_objectData.atlasElementID).linkageName;
-				}
-				if (string.IsNullOrEmpty(_name))
-				{
-					_name = getObjectName(_objectData);
-				}
+				_name = getObjectName(_objectData);
+
 				var _type = clip.asset.getExternalData(clip.timelineID).objectTypeFlags[i];
 
 				m_Objects.Add(createObject(_name, _type, _objectData));

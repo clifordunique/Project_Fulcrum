@@ -1,11 +1,11 @@
-﻿/*
- * File:			GAFBakedObject.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:32
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAF Unity plugin
- */
+﻿
+// File:			GAFBakedObject.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 

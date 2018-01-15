@@ -275,7 +275,7 @@ HISTORY ##########################################################
 		Pocket 7 was only able to take in 43,000 refugees before the decision was made to sever connection to earth. The military and leadership did not make it.
 		The PROJECT FULCRUM science team was put in charge due to their experience and extensive knowledge of AXIS.
 		
-	A1-A5 ###############################################################
+	AE1-AE5 ###############################################################
 		
 		Settlement of axis begins. 
 		The botanist immediately assembles an expedition to lower altitude in search of arable land. 
@@ -285,7 +285,7 @@ HISTORY ##########################################################
 		The Project Overseer set up a base of operations on the high mountain of Othrys for its clear line of sight and distance from the former gateway, in case of earthly attack.
 		The botanist remained at the foot of Olympus, improving agriculture operations to suit the new climate.
 		
-	A5-A10 ##############################################################
+	AE5-AE10 ##############################################################
 		
 		
 	

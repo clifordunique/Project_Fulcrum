@@ -1,11 +1,11 @@
-/*
- * File:			GAFLoadResourceFromBundle.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:43
- * Author:			Niktin.Nikolay
- * Copyright:		Â© GAFMedia
- * Project:			GAF Unity plugin
- */
+
+// File:			GAFLoadResourceFromBundle.cs
+// Version:			5.2
+// Last changed:	2017/3/31 09:45
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -14,6 +14,7 @@ using System.Collections;
 using GAF.Core;
 using GAF.Assets;
 using GAFInternal.Assets;
+using GAFInternal.Core;
 
 namespace GAF.Demo
 {
@@ -43,11 +44,7 @@ namespace GAF.Demo
 
 			if (m_Bundle != null)
 			{
-#if UNITY_5
 				resource = m_Bundle.LoadAsset(_ResourceName, typeof(GAFTexturesResourceInternal)) as GAFTexturesResourceInternal;
-#else
-				resource = m_Bundle.Load(_ResourceName, typeof(GAFTexturesResourceInternal)) as GAFTexturesResourceInternal;
-#endif
 			}
 
 			return resource;
@@ -59,25 +56,45 @@ namespace GAF.Demo
 
 		private void Awake()
 		{
-			switch (Application.platform)
-			{
-				case RuntimePlatform.Android:
-					BundleUrl += "_android.unity3d";
-					break;
+            switch (Application.platform)
+            {
+#if UNITY_5_0
+                case RuntimePlatform.Android:
+                    BundleUrl += "_android.unity3d";
+                    break;
 
-				case RuntimePlatform.IPhonePlayer:
-					BundleUrl += "_iphone.unity3d";
-					break;
+                case RuntimePlatform.IPhonePlayer:
+                    BundleUrl += "_iphone.unity3d";
+                    break;
 
-				default:
-					BundleUrl += ".unity3d";
-					break;
-			}
-		}
+                default:
+                    BundleUrl += ".unity3d";
+                    break;
+#else
+                case RuntimePlatform.Android:
+                    BundleUrl += "_android";
+                    break;
 
-		private IEnumerator Start()
+                case RuntimePlatform.IPhonePlayer:
+                    BundleUrl += "_ios";
+                    break;
+
+#endif // UNITY_5_0
+            }
+
+        }
+
+        private IEnumerator Start()
 		{
-			var www = WWW.LoadFromCacheOrDownload(BundleUrl, 0);
+			Caching.CleanCache();
+
+            string bundleUrl = BundleUrl;
+
+#if !UNITY_5_0
+             bundleUrl = BundleUrl.ToLower();
+#endif
+
+            var www = WWW.LoadFromCacheOrDownload(bundleUrl, 0);
 
 			yield return www;
 
@@ -99,11 +116,7 @@ namespace GAF.Demo
 				}
 				else
 				{
-#if UNITY_5
 					asset = m_Bundle.LoadAsset(AssetName, typeof(GAFAnimationAsset)) as GAFAnimationAsset;
-#else
-					asset = m_Bundle.Load(AssetName, typeof(GAFAnimationAsset)) as GAFAnimationAsset;
-#endif
 				}
 
 				var clip = GetComponent<GAFMovieClip>();
@@ -118,6 +131,6 @@ namespace GAF.Demo
 			}
 		}
 
-		#endregion // Implementation
+#endregion // Implementation
 	}
 }

@@ -36,13 +36,13 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
-	[SerializeField] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
-	[SerializeField] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
-	[SerializeField] private Camera o_MainCamera;				// Reference to the main camera.
-	[SerializeField] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
+	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
+	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
 	[SerializeField] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
-	[SerializeField] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
-	[SerializeField] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
+	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
+	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	#endregion
 	//############################################################################################################################################################################################################
@@ -78,7 +78,6 @@ public class Player : FighterChar
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
-
 	#endregion 	
 	//############################################################################################################################################################################################################
 	// NETWORKING VARIABLES
@@ -94,6 +93,7 @@ public class Player : FighterChar
 	{
 		inputBuffer = new Queue<FighterState>();
 		isAPlayer = true;
+		//FighterState.DevMode = true;
 		FighterAwake();
 	}
 
@@ -158,7 +158,16 @@ public class Player : FighterChar
 		}
 
 		FixedUpdateProcessInput();
-		FixedUpdatePhysics(); 		// Change this to take time.deltatime as an input so you can implement time dilation.
+
+		if(k_IsKinematic)
+		{
+			FixedUpdateKinematic();	//If the player is in kinematic mode, physics are disabled while animations are played.
+		}
+		else
+		{
+			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
+		}
+
 		FixedUpdateLogic();			// Deals with variables such as life and zon power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
 		FighterState.RightClick = false;
@@ -317,12 +326,21 @@ public class Player : FighterChar
 
 		if(i_DevKey3)
 		{
+			if(autoPressLeft==false)
+			{
+				autoPressLeft = true;
+			}
+			else
+			{
+				autoPressLeft = false;
+			}
 			i_DevKey3 = false;
 		}
 
 		if(i_DevKey4)
 		{
 			FighterState.CurHealth -= 10;
+			g_ZonLevel = 8;
 			i_DevKey4 = false;
 		}
 
@@ -344,16 +362,16 @@ public class Player : FighterChar
 		//#################################################################################
 		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE FIGHTER IS INCAPACITATED. ###
 		//#################################################################################
-
+		//Horizontal button pressing
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if(!(FighterState.LeftKey||FighterState.RightKey) || (FighterState.LeftKey && FighterState.RightKey))
+		if((FighterState.LeftKey && FighterState.RightKey) || !(FighterState.LeftKey||FighterState.RightKey))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoRunLeft||autoRunRight))
+			if(!(autoPressLeft||autoPressRight))
 			{
 				CtrlH = 0;
 			}
-			else if(autoRunLeft)
+			else if(autoPressLeft)
 			{
 				CtrlH = -1;
 			}
@@ -382,6 +400,47 @@ public class Player : FighterChar
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
+		//Vertical button pressing
+		if((FighterState.DownKey && FighterState.UpKey) || !(FighterState.UpKey||FighterState.DownKey))
+		{
+			//print("BOTH OR NEITHER");
+			if(!(autoPressDown||autoPressUp))
+			{
+				CtrlV = 0;
+			}
+			else if(autoPressDown)
+			{
+				CtrlV = -1;
+			}
+			else
+			{
+				CtrlV = 1;
+			}
+		}
+		else if(FighterState.DownKey)
+		{
+			//print("LEFT");
+			CtrlV = -1;
+		}
+		else
+		{
+			//print("RIGHT");
+			CtrlV = 1;
+		}
+
+		if(CtrlV<0)
+		{
+			facingDirectionV = -1; //true means up (the direction), false means down.
+		}
+		else if(CtrlV>0)
+		{
+			facingDirectionV = 1; //true means up (the direction), false means down.
+		}
+		else
+		{
+			facingDirectionV = 0;	
+		}
+
 		//print("CTRLH=" + CtrlH);
 		if(FighterState.DownKey&&m_Grounded)
 		{
@@ -394,16 +453,21 @@ public class Player : FighterChar
 			g_ZonJumpCharge=0;
 		}
 			
-		if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		//if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if(FighterState.JumpKey)
 		{
 			FighterState.JumpKey = false;
 			if(m_Kneeling)
 			{
 				ZonJump(FighterState.PlayerMouseVector.normalized);
 			}
-			else
+			else if(m_JumpBufferG>0 || m_JumpBufferC>0 || m_JumpBufferL>0 || m_JumpBufferR>0)
 			{
 				Jump(CtrlH);
+			}
+			else
+			{
+				StrandJumpTypeA(CtrlH, CtrlV);
 			}
 		}
 			
@@ -688,18 +752,6 @@ public class Player : FighterChar
 
 		#endregion
 	}
-		
-	protected void ZonJump(Vector2 jumpNormal)
-	{
-		g_ZonJumpCharge = g_ZonLevel;
-		if(g_ZonLevel > 0)
-		{
-			g_ZonLevel--;
-		}
-		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge)));
-		g_ZonJumpCharge = 0;		
-		o_FighterAudio.JumpSound();
-	}
 
 	protected void ZonPulse()
 	{
@@ -717,7 +769,6 @@ public class Player : FighterChar
 		o_FighterAudio.ZonPulseSound();
 	}
 		
-
 	#endregion
 	//###################################################################################################################################
 	// PUBLIC FUNCTIONS

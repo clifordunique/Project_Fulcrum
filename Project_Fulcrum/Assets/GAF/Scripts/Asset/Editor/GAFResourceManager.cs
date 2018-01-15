@@ -1,12 +1,18 @@
-﻿using UnityEngine;
+﻿
+// File:			GAFResourceManager.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
+
+using UnityEngine;
 using GAFEditorInternal.Assets;
 using GAFInternal.Data;
 
-#if UNITY_5
 using UnityEditor.Animations;
-#else
-using UnityEditorInternal;
-#endif
+
 
 using GAFInternal.Assets;
 using UnityEditor;
@@ -69,53 +75,6 @@ namespace GAFEditor.Assets
 
 		protected override void createAnimations(GAFTimelineData _Timeline, AnimatorController _AnimatorController, string _AnimationsPath)
 		{
-#if !UNITY_5
-			var layer 				= _AnimatorController.GetLayer(0);
-			var stateMachine 		= layer.stateMachine;
-			var isNewStateMachine 	= stateMachine.stateCount == 0;
-
-			var i = 0;
-			foreach (var sequence in _Timeline.sequences)
-			{
-				int stateFoundIndex = -1;
-
-				for (int stateIndex = 0; stateIndex < stateMachine.stateCount; ++stateIndex)
-				{
-					if (stateMachine.GetState(stateIndex).name == sequence.name)
-					{
-						stateFoundIndex = stateIndex;
-						break;
-					}
-				}
-
-				var clipName = _AnimatorController.name + "_" + sequence.name + ".anim";
-				var clip = AssetDatabase.LoadAssetAtPath(_AnimationsPath + clipName, typeof(AnimationClip)) as AnimationClip;
-				if (clip == null)
-					clip = createAnimationClip(_Timeline, sequence, _AnimationsPath + clipName);
-
-				State state = null;
-				if (stateFoundIndex >= 0)
-				{
-					state = stateMachine.GetState(stateFoundIndex);
-				}
-				else
-				{
-					state = stateMachine.AddState(sequence.name);
-					state.position = new Vector3(0, 50f, 0f) * i;
-				}
-
-				state.SetAnimationClip(clip);
-				if (isNewStateMachine)
-                {
-					if (sequence.name.ToLower() == "default")
-					{
-						stateMachine.defaultState = state;
-					}
-				}
-				++i;
-
-			}
-#else
 			var layer				= _AnimatorController.layers[0];
 			var stateMachine		= layer.stateMachine;
 			var isNewStateMachine 	= stateMachine.states.Length == 0;
@@ -161,7 +120,6 @@ namespace GAFEditor.Assets
 				}
 				++i;
 			}
-#endif // !UNITY_5
 		}
 
 		protected override AnimationClip createAnimationClip(GAFTimelineData _Timeline, GAFSequenceData _Sequence, string _Path)
@@ -197,9 +155,6 @@ namespace GAFEditor.Assets
 			loopTime.boolValue = true;
 			serializedObj.ApplyModifiedProperties();
 
-#if !UNITY_5
-			AnimationUtility.SetAnimationType(animationClip, ModelImporterAnimationType.Generic);
-#endif
 			AnimationUtility.SetAnimationEvents(animationClip, events);
 
 			AssetDatabase.CreateAsset(animationClip, _Path);

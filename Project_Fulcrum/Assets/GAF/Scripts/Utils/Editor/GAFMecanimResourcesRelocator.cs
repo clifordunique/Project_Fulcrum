@@ -1,13 +1,19 @@
-﻿using UnityEngine;
+﻿
+// File:			GAFMecanimResourcesRelocator.cs
+// Version:			5.2
+// Last changed:	2017/3/28 12:42
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
+
+using UnityEngine;
 using GAFEditorInternal.Utils;
 using GAFInternal.Assets;
 using UnityEditor;
 
-#if !UNITY_5
-using UnityEditorInternal;
-#else
 using UnityEditor.Animations;
-#endif
+
 
 namespace GAFEditor.Utils
 {
@@ -26,24 +32,6 @@ namespace GAFEditor.Utils
 
 				AssetDatabase.MoveAsset(controllerOldPath, controllerNewPath);
 
-#if !UNITY_5
-				for (int j = 0; j < animatorController.layerCount; ++j)
-				{
-					var layerStateMachine = animatorController.GetLayer(j).stateMachine;
-					for (int k = 0; k < layerStateMachine.stateCount; ++k)
-					{
-						var state = layerStateMachine.GetState(k);
-						var clip = state.GetMotion() as AnimationClip;
-						var clipOldPath = AssetDatabase.GetAssetPath(clip);
-						var clipNewPath = "Assets/" + _NewPath + System.IO.Path.GetFileName(clipOldPath);
-						var existingClip = AssetDatabase.LoadAssetAtPath(controllerNewPath, typeof(AnimationClip)) as AnimationClip;
-						if (existingClip != null)
-							AssetDatabase.DeleteAsset(clipNewPath);
-
-						AssetDatabase.MoveAsset(clipOldPath, clipNewPath);
-					}
-				}
-#else
 				for (int j = 0; j < animatorController.layers.Length; ++j)
 				{
 					var layerStateMachine = animatorController.layers[j].stateMachine;
@@ -60,7 +48,6 @@ namespace GAFEditor.Utils
 						AssetDatabase.MoveAsset(clipOldPath, clipNewPath);
 					}
 				}
-#endif // !UNITY_5
 			}
 		}
 	}

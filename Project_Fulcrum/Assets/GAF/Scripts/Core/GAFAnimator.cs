@@ -1,11 +1,11 @@
-﻿/*
- * File:			gafanimator.cs
- * Version:			2.0
- * Last changed:	2015/2/2 14:43
- * Author:			Niktin.Nikolay
- * Copyright:		© GAFMedia
- * Project:			GAF Unity plugin
- */
+﻿
+// File:			GAFAnimator.cs
+// Version:			5.2
+// Last changed:	2017/3/28 14:41
+// Author:			Nikitin Nikolay, Nikitin Alexey
+// Copyright:		© 2017 GAFMedia
+// Project:			GAF Unity plugin
+
 
 using UnityEngine;
 
@@ -69,7 +69,6 @@ namespace GAF.Core
 			{
 				_State.vertices = new Vector3[4];
 
-				float scale = settings.pixelsPerUnit / settings.scale;
 				var matrix = Matrix4x4.identity;
 				var obj = _Objects[_State.id].impl;
 

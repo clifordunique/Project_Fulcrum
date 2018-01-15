@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 /*
  * AUTHOR'S NOTES:
  * 
- * Naming Shorthand:
+ * Naming conventions:
  * If a variable ends with: A, it is short for:B
  * 		A	|	B
  * --------------------------
@@ -23,9 +23,34 @@ using UnityEngine.Networking;
 
 [System.Serializable]
 public class FighterChar : NetworkBehaviour
-{        	
+{        
 	//############################################################################################################################################################################################################
-	// HANDLING VARIABLES
+	// DEBUGGING VARIABLES
+	//##########################################################################################################################################################################
+	#region DEBUGGING
+	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
+	[Header("Debug:")]
+	[SerializeField] protected bool autoPressLeft; 			// When true, fighter will behave as if the left key is pressed.
+	[SerializeField] protected bool autoPressRight; 			// When true, fighter will behave as if the right key is pressed.	
+	[SerializeField] protected bool autoPressDown; 			// When true, fighter will behave as if the left key is pressed.
+	[SerializeField] protected bool autoPressUp; 			// When true, fighter will behave as if the right key is pressed.
+	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
+	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
+	[SerializeField] protected bool noGravity;				// Disable gravity.
+	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
+	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
+	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
+	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
+	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
+	[SerializeField] protected bool d_SendTractionMessages;// When true, the console prints messages related to collision detection
+	protected LineRenderer m_DebugLine; 					// Part of above indicators.
+	protected LineRenderer m_GroundLine;					// Part of above indicators.		
+	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
+	protected LineRenderer m_LeftSideLine;					// Part of above indicators.		
+	protected LineRenderer m_RightSideLine;					// Part of above indicators.		
+	#endregion
+	//############################################################################################################################################################################################################
+	// MOVEMENT HANDLING VARIABLES
 	//###########################################################################################################################################################################
 	#region MOVEMENT HANDLING
 	[Header("Movement Tuning:")]
@@ -63,8 +88,26 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected float m_CraterT = 200f; 								// Impact threshold for crater
 	[SerializeField] protected float m_GuardSlamT = 200f; 							// Guarded Impact threshold for slam
 	[SerializeField] protected float m_GuardCraterT = 400f; 						// Guarded Impact threshold for crater
+	[Space(10)]
+	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides a _ frame buffer to allow players to jump after leaving the ground.
+	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides a _ frame buffer to allow players to jump after leaving the ceiling.
+	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferL; //Provides a _ frame buffer to allow players to jump after leaving the leftwall.
+	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferR; //Provides a _ frame buffer to allow players to jump after leaving the rightwall.
+	[SerializeField][Range(1,600)] protected int m_JumpBufferFrameAmount; //Dictates the duration of the jump buffer in physics frames.
+	[Space(10)]
+	[SerializeField][Range(0,1)] protected float m_StrandJumpSpeedLossM; //Percent of speed lost with each strand Jump
+	[SerializeField] protected float m_StrandJumpReflectSpd;
+	[SerializeField] protected Vector2 m_StrandJumpReflectDir;
 
+	#endregion
 
+	//############################################################################################################################################################################################################
+	// KINEMATIC VARIABLES
+	//###########################################################################################################################################################################
+	#region KINEMATIC VARIABLES
+	[SerializeField] protected bool k_IsKinematic; //Dictates whether the player is moving in physical fighterchar mode or in some sort of specially controlled fashion, such as in cutscenes or strand jumps
+	[SerializeField] protected int k_KinematicAnim; //Designates the kinematic animation being played. 0 is strandjumping.
+	[SerializeField] protected float k_StrandJumpSlowdownM = 0.5f; //Percent of momentum lost per frame when hitting a strand.
 	#endregion
 	//############################################################################################################################################################################################################
 	// OBJECT REFERENCES
@@ -77,6 +120,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
+	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the shock visual effect prefab.
 	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a circular windforce.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
@@ -139,7 +183,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected bool m_Kneeling;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Impact;
 	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
-
 	#endregion
 	//##########################################################################################################################################################################
 	// FIGHTER INPUT VARIABLES
@@ -150,29 +193,8 @@ public class FighterChar : NetworkBehaviour
 	protected int CtrlH; 													// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	protected int CtrlV; 													// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
 	protected bool facingDirection; 										// True means right, false means left.
+	protected int facingDirectionV; 										// 1 means up, -1 means down, and 0 means horizontal.
 
-	#endregion
-	//############################################################################################################################################################################################################
-	// DEBUGGING VARIABLES
-	//##########################################################################################################################################################################
-	#region DEBUGGING
-	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
-	[Header("Debug:")]
-	[SerializeField] protected bool autoRunLeft; 			// When true, fighter will behave as if the left key is pressed.
-	[SerializeField] protected bool autoRunRight; 			// When true, fighter will behave as if the right key is pressed.
-	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
-	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
-	[SerializeField] protected bool noGravity;				// Disable gravity.
-	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
-	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
-	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
-	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
-	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
-	protected LineRenderer m_DebugLine; 					// Part of above indicators.
-	protected LineRenderer m_GroundLine;					// Part of above indicators.		
-	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
-	protected LineRenderer m_LeftSideLine;					// Part of above indicators.		
-	protected LineRenderer m_RightSideLine;					// Part of above indicators.		
 	#endregion
 	//############################################################################################################################################################################################################
 	// VISUAL&SOUND VARIABLES
@@ -223,8 +245,15 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdate()
 	{
-		FixedUpdateProcessInput();
-		FixedUpdatePhysics();
+		if(k_IsKinematic)
+		{
+			FixedUpdateKinematic();	
+		}
+		else
+		{
+			FixedUpdateProcessInput();
+			FixedUpdatePhysics();
+		}
 		FixedUpdateLogic();
 		FixedUpdateAnimation();
 		FighterState.RightClick = false;
@@ -346,8 +375,6 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdatePhysics()
 	{
-		this.transform.position = FighterState.FinalPos;
-		UpdateContactNormals(true);
 		m_DistanceTravelled = Vector2.zero;
 		initialVel = FighterState.Vel;
 
@@ -366,14 +393,14 @@ public class FighterChar : NetworkBehaviour
 		else if(!noGravity)
 		{//Gravity!
 			AirControl(CtrlH);
-			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1);
+			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1f);
 			m_Ceilinged = false;
 		}	
 
-		errorDetectingRecursionCount = 0; //Used for Collizion();
+		errorDetectingRecursionCount = 0; //Used for WorldCollizion(); (note: colliZion is used to help searches for the keyword 'collision' by filtering out extraneous matches)
 
-		//print("Velocity before Coll ision: "+FighterState.Vel);
-		//print("Position before Coll ision: "+this.transform.position);
+		//print("Velocity before Collizion: "+FighterState.Vel);
+		//print("Position before Collizion: "+this.transform.position);
 
 		m_RemainingVelM = 1f;
 		m_RemainingMovement = FighterState.Vel*Time.fixedDeltaTime;
@@ -452,8 +479,23 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 	
+//		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+//
+//		this.transform.position = FighterState.FinalPos;
+//		UpdateContactNormals(true);
+//
+//		DebugUCN();
 
-		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+
+		UpdateContactNormals(true);
+
+		FighterState.FinalPos = this.transform.position;
+
+		if(FighterState.DevMode&&d_SendCollisionMessages)
+		{
+			DebugUCN();
+		}
 
 		//print("Per frame velocity at end of physics frame: "+FighterState.Vel*Time.fixedDeltaTime);
 		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
@@ -465,7 +507,7 @@ public class FighterChar : NetworkBehaviour
 
 	}
 
-	protected virtual void FixedUpdateProcessInput()
+	protected virtual void FixedUpdateProcessInput() //FUPI
 	{
 		m_Impact = false;
 		m_Landing = false;
@@ -481,7 +523,29 @@ public class FighterChar : NetworkBehaviour
 		}	
 	}
 
-	protected virtual void FixedUpdateLogic()
+	protected virtual void FixedUpdateKinematic() //FUK
+	{
+		switch (k_KinematicAnim)
+		{
+		case -1:
+			{
+				k_IsKinematic = false;
+				break;
+			}
+		case 0: // Strand Jump
+			{
+				StrandJumpKinematic();
+				break; 
+			}
+		default:
+			{
+				k_IsKinematic = false;
+				break;
+			}
+		}
+	}
+
+	protected virtual void FixedUpdateLogic() //FUL
 	{
 
 		if(g_CurFallStun > 0)
@@ -696,6 +760,51 @@ public class FighterChar : NetworkBehaviour
 		return new Vector2(inputVector.x, inputVector.y);
 	}
 
+	protected void StrandJumpKinematic() //SJK
+	{
+		errorDetectingRecursionCount = 0; //Used for WorldCollizion(); (note: colliZion is used to help searches for the keyword 'collision' by filtering out extraneous matches)
+		m_DistanceTravelled = Vector2.zero;
+		m_RemainingMovement = FighterState.Vel*Time.fixedDeltaTime;
+		Vector2 startingPos = this.transform.position;
+
+		FighterState.Vel *= k_StrandJumpSlowdownM;
+
+		if(g_fighterCollision)
+		{
+			DynamicCollision();
+		}
+
+		WorldCollision();
+
+		//print("m_RemainingVelM: "+m_RemainingVelM);
+		//print("movement after distance travelled: "+m_RemainingMovement);
+		//print("Speed this frame: "+FighterState.Vel.magnitude);
+
+		m_RemainingMovement = FighterState.Vel*m_RemainingVelM*Time.fixedDeltaTime;
+
+		//print("Corrected remaining movement: "+m_RemainingMovement);
+
+		m_Spd = FighterState.Vel.magnitude;
+
+		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+
+		UpdateContactNormals(true);
+
+		FighterState.FinalPos = this.transform.position;
+
+		if(FighterState.Vel.magnitude<=1f)
+		{ // If stopped, reflect in the other direction now.
+			k_IsKinematic = false;
+			k_KinematicAnim = -1;
+			InstantForce(m_StrandJumpReflectDir, m_StrandJumpReflectSpd);
+		}
+
+		if(FighterState.DevMode&&d_SendCollisionMessages)
+		{
+			DebugUCN();
+		}
+	}
+
 	protected void Crater() // Triggered when character impacts anything REALLY hard.
 	{
 		float Multiplier = (m_IGF+m_CraterT)/(2*m_CraterT);
@@ -783,7 +892,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(hit.collider.gameObject != this.gameObject)
 			{
-				print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
+				//print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
 				if(hit.collider.GetComponent<FighterChar>())
 				{
 					CollideWithFighter(hit.collider.GetComponent<FighterChar>());
@@ -835,7 +944,7 @@ public class FighterChar : NetworkBehaviour
 
 		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
-
+		//These raycasts fire from the 4 edges of the player collider in the direction of travel, effectively forming a projection of the player. This is a form of continuous collision detection.
 		predictedLoc[0] = Physics2D.Raycast(adjustedBot, FighterState.Vel, crntSpeed, mask); 	// Ground
 		predictedLoc[1] = Physics2D.Raycast(adjustedTop, FighterState.Vel, crntSpeed, mask); 	// Ceiling
 		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, mask); 	// Left
@@ -894,7 +1003,7 @@ public class FighterChar : NetworkBehaviour
 			shortestHorizontal = 3;
 		}
 
-		//non-zero shortest of all four colliders.
+		//non-zero, shortest distance of all four colliders. This selects the collider that hits an obstacle the earliest. Zero is excluded because a non-colliding raycast returns a distance of 0.
 		if(shortestVertical >= 0 && shortestHorizontal >= 0)
 		{
 			//print("Horiz dist="+shortestHorizontal);
@@ -927,10 +1036,9 @@ public class FighterChar : NetworkBehaviour
 		//print("G="+gDist+" C="+cDist+" R="+rDist+" L="+lDist);
 		//print("VDist: "+shortestDistV);
 		//print("HDist: "+shortestDistH);
-
-
 		//print("shortestDist: "+rayDist[shortestRaycast]);
 
+		//Count the number of sides colliding during this movement for debug purposes.
 		int collisionNum = 0;
 
 		if(predictedLoc[0])
@@ -975,14 +1083,50 @@ public class FighterChar : NetworkBehaviour
 
 				//print("GroundDist"+predictedLoc[0].distance);
 				//print("RightDist"+predictedLoc[3].distance);
+				bool snaggingfeet = false; // True when the player is hitting a surface with their feet while ascending, and that surface is flatter than the player's trajectory. This only happens when coming up over a ledge, and if left alone will make the player snag on the flat surface and lose their upward momentum.
+
+		
 
 				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
-					ToGround(predictedLoc[0]);
-					DirectionChange(m_GroundNormal);
+
+					//
+					// Start of Ascendant Snag detection
+					// This is when the player's foot hits a surface that is less vertical than its current trajectory, and gets pulled downward onto the flatter slope. 
+					// The code detects this circumstance by comparing the new surface's y value to the y value of the player trajectory. If the player's y value is higher, they are hitting the surface from the underside with their foot collider, which should be ignored.
+
+					Vector2 predictedPerp = Perp(predictedLoc[0].normal);
+					if(predictedPerp.x==0)
+					{
+						predictedPerp = Perp(predictedPerp);
+					}
+
+					if((predictedPerp.x<0 && FighterState.Vel.x>0) || (predictedPerp.x>0 && FighterState.Vel.x<0))
+					{
+						//print("flipping predictedPerp...");
+						predictedPerp *= -1;
+					}
+
+					if(FighterState.Vel.normalized.y>predictedPerp.y)
+					{
+						if(d_SendCollisionMessages)
+						{
+							print("MD: "+FighterState.Vel.normalized);
+							print("PDL: "+predictedPerp);
+							print("Ascendant snag detected.");
+						}
+						return;
+					}
+					//
+					// End of Ascendant Snag detection
+					//
+					if(ToGround(predictedLoc[0]))
+					{
+						DirectionChange(m_GroundNormal);
+					}
 					return;
 				}
-				else 
+				else // When the slope you're hitting is the same as your current slope, no action is needed.
 				{
 					if(invertedDirectionNormal == predictedLoc[0].normal&&d_SendCollisionMessages)
 					{
@@ -991,17 +1135,19 @@ public class FighterChar : NetworkBehaviour
 					return;
 				}
 			}
-		case 1:
+		case 1: //Ceiling collision
 			{
 
 				if ((moveDirectionNormal != predictedLoc[1].normal) && (invertedDirectionNormal != predictedLoc[1].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					//print("CEILINm_Impact");
-					ToCeiling(predictedLoc[1]);
-					DirectionChange(m_CeilingNormal);
+					if(ToCeiling(predictedLoc[1]))
+					{
+						DirectionChange(m_CeilingNormal);
+					}
 					return;
 				}
-				else 
+				else // When the slope you're hitting is the same as your current slope, no action is needed.
 				{
 					if(invertedDirectionNormal == predictedLoc[1].normal&&d_SendCollisionMessages)
 					{
@@ -1010,16 +1156,18 @@ public class FighterChar : NetworkBehaviour
 					return;
 				}
 			}
-		case 2:
+		case 2: //Left contact collision
 			{
 				if ((moveDirectionNormal != predictedLoc[2].normal) && (invertedDirectionNormal != predictedLoc[2].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					//print("LEFT_IMPACT");
-					ToLeftWall(predictedLoc[2]);
-					DirectionChange(m_LeftNormal);
+					if(ToLeftWall(predictedLoc[2]))
+					{
+						DirectionChange(m_LeftNormal);
+					}
 					return;
 				}
-				else 
+				else // When the slope you're hitting is the same as your current slope, no action is needed.
 				{
 					if(invertedDirectionNormal == predictedLoc[2].normal&&d_SendCollisionMessages)
 					{
@@ -1028,7 +1176,7 @@ public class FighterChar : NetworkBehaviour
 					return;
 				}
 			}
-		case 3:
+		case 3: //Right contact collision
 			{
 				if ((moveDirectionNormal != predictedLoc[3].normal) && (invertedDirectionNormal != predictedLoc[3].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
@@ -1042,7 +1190,7 @@ public class FighterChar : NetworkBehaviour
 					}
 					return;
 				}
-				else 
+				else // When the slope you're hitting is the same as your current slope, no action is needed.
 				{
 					if(invertedDirectionNormal == predictedLoc[3].normal&&d_SendCollisionMessages)
 					{
@@ -1059,22 +1207,79 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
+	protected float GetSteepness(Vector2 vectorPara)
+	{
+		return 0f;
+	}
+
 	protected void Traction(float horizontalInput)
 	{
-		Vector2 groundPerp = Perp(m_GroundNormal);
+		Vector2 groundPara = Perp(m_GroundNormal);
+		if(d_SendTractionMessages){print("Traction");}
 
-		//print("Traction");
-		//print("gp="+groundPerp);
 
-		if(groundPerp.x > 0)
+		// This block of code makes the player treat very steep left and right surfaces as walls when they aren't going fast enough to reasonably climb them. 
+		// This aims to prevent a jittering effect when the player build small amounts of speed, then hits the steeper slope and starts sliding down again 
+		// as frequently as 60 times a second.
+		if (this.GetSpeed() <= 0.0001f) 
 		{
-			groundPerp *= -1;
+			//print("Hitting wall slowly, considering correction.");
+			float wallSteepnessAngle;
+			float groundSteepnessAngle;
+
+			if ((m_LeftWalled) && (horizontalInput < 0)) 
+			{
+				//print("Trying to run up left wall slowly.");
+				Vector2 wallPara = Perp (m_LeftNormal);
+				wallSteepnessAngle = Vector2.Angle (Vector2.up, wallPara);
+				if (wallSteepnessAngle == 180) 
+				{
+					wallSteepnessAngle = 0;
+				}
+				if (wallSteepnessAngle >= m_TractionLossMaxAngle) 
+				{ //If the wall surface the player is running
+					//print("Wall steepness of "+wallSteepnessAngle+" was too steep for speed "+this.GetSpeed()+", stopping.");
+					FighterState.Vel = Vector2.zero;
+					m_LeftWallBlocked = true;
+				}
+			} 
+			else if ((m_RightWalled) && (horizontalInput > 0)) 
+			{
+				//print("Trying to run up right wall slowly.");
+				Vector2 wallPara = Perp (m_RightNormal);
+				wallSteepnessAngle = Vector2.Angle (Vector2.up, wallPara);
+				wallSteepnessAngle = 180f - wallSteepnessAngle;
+				if (wallSteepnessAngle == 180) 
+				{
+					wallSteepnessAngle = 0;
+				}
+				if (wallSteepnessAngle >= m_TractionLossMaxAngle) 
+				{ //If the wall surface the player is running
+					//print("Wall steepness of "+wallSteepnessAngle+" was too steep for speed "+this.GetSpeed()+", stopping.");
+					FighterState.Vel = Vector2.zero;
+					m_RightWallBlocked = true;
+				}
+			}
+			else 
+			{
+				//print("Only hitting groundcontact, test ground steepness.");
+			}
+
+		}
+		// End of anti-slope-jitter code.
+
+
+		if(groundPara.x > 0)
+		{
+			groundPara *= -1;
 		}
 
-		float steepnessAngle = Vector2.Angle(Vector2.left,groundPerp);
+		if(d_SendTractionMessages){print("gp="+groundPara);}
+
+		float steepnessAngle = Vector2.Angle(Vector2.left,groundPara);
 
 		steepnessAngle = (float)Math.Round(steepnessAngle,2);
-		//print("SteepnessAngle:"+steepnessAngle);
+		if(d_SendTractionMessages){print("SteepnessAngle:"+steepnessAngle);}
 
 		float slopeMultiplier = 0;
 
@@ -1082,7 +1287,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(steepnessAngle >= m_TractionLossMaxAngle)
 			{
-				//print("MAXED OUT!");
+				if(d_SendTractionMessages){print("MAXED OUT!");}
 				slopeMultiplier = 1;
 			}
 			else
@@ -1090,42 +1295,42 @@ public class FighterChar : NetworkBehaviour
 				slopeMultiplier = ((steepnessAngle-m_TractionLossMinAngle)/(m_TractionLossMaxAngle-m_TractionLossMinAngle));
 			}
 
-			//print("slopeMultiplier: "+ slopeMultiplier);
-			//print("groundPerpY: "+groundPerpY+", slopeT: "+slopeT);
+			if(d_SendTractionMessages){print("slopeMultiplier: "+slopeMultiplier);}
+			//print("groundParaY: "+groundParaY+", slopeT: "+slopeT);
 		}
 
 
 		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
 		{// If running at an obstruction you're up against.
-			//print("Running against a wall.");
+			print("Running against a wall.");
 			horizontalInput = 0;
 		}
 
 		//print("Traction executing");
 		float rawSpeed = FighterState.Vel.magnitude;
-		//print("FighterState.Vel.magnitude"+FighterState.Vel.magnitude);
+		if(d_SendTractionMessages){print("FighterState.Vel.magnitude: "+FighterState.Vel.magnitude);}
 
 		if (horizontalInput == 0) 
 		{//if not pressing any move direction, slow to zero linearly.
-			//print("No input, slowing...");
+			if(d_SendTractionMessages){print("No input, slowing...");}
 			if(rawSpeed <= 0.5f)
 			{
 				FighterState.Vel = Vector2.zero;	
 			}
 			else
 			{
-				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearSlideRate);
+				FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, -m_LinearSlideRate);
 			}
 		}
 		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
 		{//if pressing same button as move direction, move to MAXSPEED.
-			//print("Moving with keypress");
+			if(d_SendTractionMessages){print("Moving with keypress");}
 			if(rawSpeed < m_MaxRunSpeed)
 			{
-				//print("Rawspeed("+rawSpeed+") less than max");
+				if(d_SendTractionMessages){print("Rawspeed("+rawSpeed+") less than max");}
 				if(rawSpeed > m_TractionChangeT)
 				{
-					//print("LinAccel-> " + rawSpeed);
+					if(d_SendTractionMessages){print("LinAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
 						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate*(1-slopeMultiplier));
@@ -1135,10 +1340,17 @@ public class FighterChar : NetworkBehaviour
 						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate);
 					}
 				}
-				else if(rawSpeed < 0.001)
+				else if(rawSpeed < 0.001f)
 				{
-					FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
-					//print("Starting motion. Adding " + m_Acceleration);
+					if(slopeMultiplier<0.5)
+					{
+						FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+					}
+					else
+					{
+						print("Too steep!");
+					}
+					if(d_SendTractionMessages){print("Starting motion. Adding " + m_Acceleration);}
 				}
 				else
 				{
@@ -1151,9 +1363,9 @@ public class FighterChar : NetworkBehaviour
 					{ // If climbing, recieve uphill movement penalty.
 						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
 					}
-					//print("Addedspeed:"+addedSpeed);
+					if(d_SendTractionMessages){print("Addedspeed:"+addedSpeed);}
 					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
-					//print("FighterState.Vel:"+FighterState.Vel);
+					if(d_SendTractionMessages){print("FighterState.Vel:"+FighterState.Vel);}
 				}
 			}
 			else
@@ -1165,7 +1377,7 @@ public class FighterChar : NetworkBehaviour
 				}
 				else
 				{
-					//print("Rawspeed("+rawSpeed+") more than max.");
+					if(d_SendTractionMessages){print("Rawspeed("+rawSpeed+") more than max.");}
 					FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearOverSpeedRate);
 				}
 			}
@@ -1174,16 +1386,17 @@ public class FighterChar : NetworkBehaviour
 		{//if pressing button opposite of move direction, slow to zero exponentially.
 			if(rawSpeed > m_TractionChangeT )
 			{
-				//print("LinDecel");
+				if(d_SendTractionMessages){print("LinDecel");}
 				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
 			}
 			else
 			{
-				//print("Decelerating");
+				if(d_SendTractionMessages){print("Decelerating");}
 				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
+				float addedSpeed = curveMultiplier*(m_Acceleration);
 				FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed-2*addedSpeed);
+				if(d_SendTractionMessages){print("Deceleration result:"+(rawSpeed-2*addedSpeed));}
 			}
 
 			//float modifier = Mathf.Abs(FighterState.Vel.x/FighterState.Vel.y);
@@ -1207,12 +1420,12 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Vel += downSlope*m_SlippingAcceleration*slopeMultiplier;
 
 		//	TESTINGSLOPES
-		//print("downSlope="+downSlope);
-		//print("m_SlippingAcceleration="+m_SlippingAcceleration);
-		//print("slopeMultiplier="+slopeMultiplier);
+		if(d_SendTractionMessages){print("downSlope="+downSlope);}
+		if(d_SendTractionMessages){print("m_SlippingAcceleration="+m_SlippingAcceleration);}
+		if(d_SendTractionMessages){print("slopeMultiplier="+slopeMultiplier);}
 
 		//ChangeSpeedLinear(FighterState.Vel, );
-		//print("PostTraction velocity: "+FighterState.Vel);
+		if(d_SendTractionMessages){print("PostTraction velocity: "+FighterState.Vel);}
 	}
 
 	protected void AirControl(float horizontalInput)
@@ -1227,16 +1440,16 @@ public class FighterChar : NetworkBehaviour
 		////////////////////
 		// Variable Setup //
 		////////////////////
-		Vector2 wallPerp = Perp(wallSurface);
+		Vector2 wallPara = Perp(wallSurface);
 
 		//print("horizontalInput="+horizontalInput);
 
-		if(wallPerp.x > 0)
+		if(wallPara.x > 0)
 		{
-			wallPerp *= -1;
+			wallPara *= -1;
 		}
 
-		float steepnessAngle = Vector2.Angle(Vector2.up,wallPerp);
+		float steepnessAngle = Vector2.Angle(Vector2.up,wallPara);
 
 		if(m_RightWalled)
 		{
@@ -1283,6 +1496,42 @@ public class FighterChar : NetworkBehaviour
 			m_TimeSpentHanging = 0;
 			m_MaxTimeHanging = 0;
 		}
+
+
+		//
+		// This code block is likely unnecessary
+		// Anti-Jitter code for transitioning to a steep slope that is too steep to climb.
+		//
+//		if (this.GetSpeed () <= 0.0001f) 
+//		{
+//			print ("RIDING WALL SLOWLY, CONSIDERING CORRECTION");
+//			if ((m_LeftWalled) && (horizontalInput < 0)) 
+//			{
+//				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
+//					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
+//					//FighterState.Vel = Vector2.zero;
+//					m_LeftWallBlocked = true;
+//					horizontalInput = 0;
+//					m_SurfaceCling = false;
+//				}
+//			} 
+//			else if ((m_RightWalled) && (horizontalInput > 0)) 
+//			{
+//				print ("Trying to run up right wall slowly.");
+//				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
+//					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
+//					//FighterState.Vel = Vector2.zero;
+//					m_RightWallBlocked = true;
+//					horizontalInput = 0;
+//					m_SurfaceCling = false;
+//				}
+//			} 
+//			else 
+//			{
+//				print ("Not trying to move up a wall; Continue as normal.");
+//			}
+//		}
+
 
 		//print("Wall Steepness Angle:"+steepnessAngle);
 
@@ -1386,7 +1635,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			m_LeftWalled = false;
+			//m_LeftWalled = false;
 		}
 
 		m_LeftNormal = leftCheck2.normal;
@@ -1494,25 +1743,6 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
-	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
-	{ // Handles collisions with another Fighter.
-		if(!IsVelocityPunching()){return false;}
-
-		Vector2 velocitee = GetVelocity();
-		float speed = velocitee.magnitude;
-
-		//this.gameObject.SetActive(false);
-
-		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
-		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
-		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
-		m_Impact = true;
-		this.SetSpeed(this.GetSpeed()*0.25f);
-
-		return true;
-	}
-
-
 	protected bool ToGround(RaycastHit2D groundCheck) 
 	{ //Sets the new position of the fighter and their ground normal.
 		//print ("m_Grounded=" + m_Grounded);
@@ -1526,13 +1756,12 @@ public class FighterChar : NetworkBehaviour
 
 		Breakable hitBreakable = groundCheck.collider.transform.GetComponent<Breakable>();
 
-		if(hitBreakable!=null&&m_Spd > 3)
+		if(hitBreakable!=null&&this.GetSpeed() > 3)
 		{
 			print("hit a hitbreakable!");
 			if(hitBreakable.RecieveHit(this)){return false;}
 		}
-
-		//m_Impact = true;
+			
 		m_Grounded = true;
 		Vector2 setCharPos = groundCheck.point;
 		setCharPos.y = setCharPos.y+m_GroundFootLength-m_MinEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
@@ -1542,16 +1771,7 @@ public class FighterChar : NetworkBehaviour
 		//print("Sent to normal:" + groundCheck.normal);
 
 		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
-		if (groundCheck2) 
-		{
-			//			if(antiTunneling){
-			//				Vector2 surfacePosition = groundCheck2.point;
-			//				surfacePosition.y += m_GroundFootLength-m_MinEmbed;
-			//				this.transform.position = surfacePosition;
-			//				print("Antitunneling executed during impact.");
-			//			}
-		}
-		else
+		if (!groundCheck2) 
 		{
 			//print ("Impact Pos:  " + groundCheck.point);
 			//print("Reflected back into the air!");
@@ -1569,41 +1789,58 @@ public class FighterChar : NetworkBehaviour
 			//throw new Exception("Existence is suffering");
 			if(d_SendCollisionMessages)
 			{
-				print("GtG VERTICAL :O");
+				//print("GtG VERTICAL :O");
 			}
 		}
 
-		m_GroundNormal = groundCheck2.normal;
-
-		if(m_Ceilinged)
-		{
-			if(d_SendCollisionMessages)
+		if((GetSteepness(groundCheck2.normal)>=((m_TractionLossMaxAngle+m_TractionLossMinAngle)/2)) && this.GetSpeed()<=0.001f) 
+		{ //If going slow and hitting a steep slope, don't move to the new surface, and treat the new surface as a wall on that side.
+			if(this.GetVelocity().x>0)
 			{
-				print("CeilGroundWedge detected during ground collision.");
+				print("Positive slope ground acting as right wall due to steepness.");
+				m_RightWallBlocked = true;
 			}
-			OmniWedge(0,1);
+			else
+			{
+				print("Negative slope ground acting as left wall due to steepness.");
+				m_LeftWallBlocked = true;
+			}
+			return false;
+		}
+		else
+		{
+			m_GroundNormal = groundCheck2.normal;
+			return true;
 		}
 
-		if(m_LeftWalled)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("LeftGroundWedge detected during ground collision.");
-			}
-			OmniWedge(0,2);
-		}
-
-		if(m_RightWalled)
-		{
-			if(d_SendCollisionMessages)
-			{
-				print("RightGroundWedge detected during groundcollision.");
-			}
-			OmniWedge(0,3);
-		}
+//		if(m_Ceilinged)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("CeilGroundWedge detected during ground collision.");
+//			}
+//			OmniWedge(0,1);
+//		}
+//
+//		if(m_LeftWalled)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("LeftGroundWedge detected during ground collision.");
+//			}
+//			OmniWedge(0,2);
+//		}
+//
+//		if(m_RightWalled)
+//		{
+//			if(d_SendCollisionMessages)
+//			{
+//				print("RightGroundWedge detected during groundcollision.");
+//			}
+//			OmniWedge(0,3);
+//		}
 
 		//print ("Final Position2:  " + this.transform.position);
-		return true;
 	}
 
 	protected bool ToCeiling(RaycastHit2D ceilingCheck) 
@@ -1698,6 +1935,24 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
+	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
+	{ // Handles collisions with another Fighter.
+		if(!IsVelocityPunching()){return false;}
+
+		Vector2 velocitee = GetVelocity();
+		float speed = velocitee.magnitude;
+
+		//this.gameObject.SetActive(false);
+
+		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
+		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
+		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
+		m_Impact = true;
+		this.SetSpeed(this.GetSpeed()*0.25f);
+
+		return true;
+	}
+
 	protected Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)
 	{
 		Vector2 newVelocity;
@@ -1722,14 +1977,14 @@ public class FighterChar : NetworkBehaviour
 		m_ExpiredNormal = new Vector2(0,0); //Used for wallslides. This resets the surface normal that wallcling is set to ignore.
 
 		Vector2 initialDirection = FighterState.Vel.normalized;
-		Vector2 newPerp = Perp(newNormal);
+		Vector2 newPara = Perp(newNormal);
 		Vector2 AdjustedVel;
 
 		float initialSpeed = FighterState.Vel.magnitude;
 		//print("Speed before : " + initialSpeed);
-		float testNumber = newPerp.y/newPerp.x;
+		float testNumber = newPara.y/newPara.x;
 		//print(testNumber);
-		//print("newPerp="+newPerp);
+		//print("newPara="+newPara);
 		//print("initialDirection="+initialDirection);
 		if(float.IsNaN(testNumber))
 		{
@@ -1738,16 +1993,16 @@ public class FighterChar : NetworkBehaviour
 			//print("X = "+ newNormal.x +", Y = " + newNormal.y);
 		}
 
-		if((initialDirection == newPerp)||initialDirection == Vector2.zero)
+		if((initialDirection == newPara)||initialDirection == Vector2.zero)
 		{
 			//print("same angle");
 			return;
 		}
 
-		float impactAngle = Vector2.Angle(initialDirection,newPerp);
+		float impactAngle = Vector2.Angle(initialDirection,newPara);
 		//print("TrueimpactAngle: " +impactAngle);
 		//print("InitialDirection: "+initialDirection);
-		//print("GroundDirection: "+newPerp);
+		//print("GroundDirection: "+newPara);
 
 
 		impactAngle = (float)Math.Round(impactAngle,2);
@@ -1765,18 +2020,18 @@ public class FighterChar : NetworkBehaviour
 		//print("impactAngle: " +impactAngle);
 
 		float projectionVal;
-		if(newPerp.sqrMagnitude == 0)
+		if(newPara.sqrMagnitude == 0)
 		{
 			projectionVal = 0;
 		}
 		else
 		{
-			projectionVal = Vector2.Dot(FighterState.Vel, newPerp)/newPerp.sqrMagnitude;
+			projectionVal = Vector2.Dot(FighterState.Vel, newPara)/newPara.sqrMagnitude;
 		}
 
 
 		//print("P"+projectionVal);
-		AdjustedVel = newPerp * projectionVal;
+		AdjustedVel = newPara * projectionVal;
 		//print("A"+AdjustedVel);
 
 		if(FighterState.Vel == Vector2.zero)
@@ -1794,7 +2049,7 @@ public class FighterChar : NetworkBehaviour
 			catch(Exception e)
 			{
 				print(e);
-				print("newPerp="+newPerp);
+				print("newPara="+newPara);
 				print("projectionVal"+projectionVal);
 				print("adjustedVel"+AdjustedVel);
 			}
@@ -1802,30 +2057,35 @@ public class FighterChar : NetworkBehaviour
 
 		//Speed loss from impact angle handling beyond this point
 
-		float speedLossMult = 1; // The % of speed retained, based on sharpness of impact angle. A direct impact = full stop.
+		float speedRetentionMult = 1; // The % of speed retained, based on sharpness of impact angle. A direct impact = full stop.
 
 		if(impactAngle <= m_ImpactDecelMinAngle)
 		{ // Angle lower than min, no speed penalty.
-			speedLossMult = 1;
+			speedRetentionMult = 1;
 		}
 		else if(impactAngle < m_ImpactDecelMaxAngle)
 		{ // In the midrange, administering momentum loss on a curve leading from min to max.
-			speedLossMult = 1-Mathf.Pow((impactAngle-m_ImpactDecelMinAngle)/(m_ImpactDecelMaxAngle-m_ImpactDecelMinAngle),2); // See Workflowy notes section for details on this formula.
+			speedRetentionMult = 1-Mathf.Pow((impactAngle-m_ImpactDecelMinAngle)/(m_ImpactDecelMaxAngle-m_ImpactDecelMinAngle),2); // See Workflowy notes section for details on this formula.
 		}
 		else
 		{ // Angle beyond max, momentum halted. 
-			speedLossMult = 0;
+			speedRetentionMult = 0;
 			m_Impact = true;
 		}
 
 		if(initialSpeed <= 2f)
 		{ // If the fighter is near stationary, do not remove any velocity because there is no impact!
-			speedLossMult = 1;
+			speedRetentionMult = 1;
 		}
 
-		//print("SPLMLT " + speedLossMult);
+//		if(initialSpeed<0.001f && m_TractionLossMinAngle)
+//		{
+//			//RETURNHERE
+//		}
 
-		SetSpeed(FighterState.Vel, initialSpeed*speedLossMult);
+		//print("SPLMLT " + speedRetentionMult);
+
+		SetSpeed(FighterState.Vel, initialSpeed*speedRetentionMult);
 		//print("Final Vel " + FighterState.Vel);
 		//print ("DirChange Vel:  " + FighterState.Vel);
 	}
@@ -1833,7 +2093,7 @@ public class FighterChar : NetworkBehaviour
 	protected void OmniWedge(int lowerContact, int upperContact)
 	{//Executes when the fighter is moving into a corner and there isn't enough room to fit them. It halts the fighter's momentum and sets off a blocked-direction flag.
 
-		//print("OmniWedge!");
+		if(d_SendCollisionMessages){print("OmniWedge("+lowerContact+","+upperContact+")");}
 
 		RaycastHit2D lowerHit;
 		Vector2 lowerDirection = Vector2.down;
@@ -1858,12 +2118,14 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 2: //lowercontact is left
 			{
+				if(d_SendCollisionMessages){print("Omniwedge: lowercontact is left");}
 				lowerDirection = Vector2.left;
 				lowerLength = m_LeftSideLength;
 				break;
 			}
 		case 3: //lowercontact is right
 			{
+				if(d_SendCollisionMessages){print("Omniwedge: lowercontact is right");}
 				lowerDirection = Vector2.right;
 				lowerLength = m_RightSideLength;
 				break;
@@ -1877,21 +2139,21 @@ public class FighterChar : NetworkBehaviour
 		lowerHit = Physics2D.Raycast(this.transform.position, lowerDirection, lowerLength, mask);
 
 		float embedDepth;
-		Vector2 gPerp; //lowerperp, aka groundperp
-		Vector2 cPerp; //upperperp, aka ceilingperp
-		Vector2 moveAmount = new Vector2(0,0);
+		Vector2 gPara; //lowerpara, aka groundparallel
+		Vector2 cPara; //upperpara, aka ceilingparallel
+		Vector2 correctionVector = new Vector2(0,0);
 
 		if(!lowerHit)
 		{
 			//throw new Exception("Bottom not wedged!");
-			print("Bottom not wedged!");
-			gPerp.x = m_GroundNormal.x;
-			gPerp.y = m_GroundNormal.y;
+			if(d_SendCollisionMessages){print("Bottom not wedged!");}
+			//gPara.x = m_GroundNormal.x;
+			//gPara.y = m_GroundNormal.y;
 			return;
 		}
 		else
 		{
-			gPerp = Perp(lowerHit.normal);
+			gPara = Perp(lowerHit.normal);
 			Vector2 groundPosition = lowerHit.point;
 			if(lowerContact == 0) //ground contact
 			{
@@ -1928,12 +2190,14 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 2: //uppercontact is left
 			{
+				if(d_SendCollisionMessages){print("Omniwedge: uppercontact is left");}
 				upperDirection = Vector2.left;
 				upperLength = m_LeftSideLength;
 				break;
 			}
 		case 3: //uppercontact is right
 			{
+				if(d_SendCollisionMessages){print("Omniwedge: uppercontact is right");}
 				upperDirection = Vector2.right;
 				upperLength = m_RightSideLength;
 				break;
@@ -1950,7 +2214,7 @@ public class FighterChar : NetworkBehaviour
 		if(!upperHit)
 		{
 			//throw new Exception("Top not wedged!");
-			cPerp = Perp(upperHit.normal);
+			cPara = Perp(upperHit.normal);
 			if(d_SendCollisionMessages)
 			{
 				print("Top not wedged!");
@@ -1960,50 +2224,58 @@ public class FighterChar : NetworkBehaviour
 		else
 		{
 			//print("Hitting top, superunwedging..."); 
-			cPerp = Perp(upperHit.normal);
+			cPara = Perp(upperHit.normal);
 		}
 
 		//print("Embedded ("+embedDepth+") units into the ceiling");
 
-		float cornerAngle = Vector2.Angle(cPerp,gPerp);
+		//Rounding the perpendiculars to 4 decimal places to eliminate error prone edge-cases and floating point imprecision.
+		gPara.x = Mathf.Round(gPara.x * 10000f) / 10000f;
+		gPara.y = Mathf.Round(gPara.y * 10000f) / 10000f;
 
-		//print("Ground Perp = " + gPerp);
-		//print("Ceiling Perp = " + cPerp);
+		cPara.x = Mathf.Round(cPara.x * 10000f) / 10000f;
+		cPara.y = Mathf.Round(cPara.y * 10000f) / 10000f;
+
+		float cornerAngle = Vector2.Angle(cPara,gPara);
+
+		//print("Ground Para = " + gPara);
+		//print("Ceiling Para = " + cPara);
 		//print("cornerAngle = " + cornerAngle);
-		bool convergingLeft = false;
 
-		Vector2 cPerpTest = cPerp;
-		Vector2 gPerpTest = gPerp;
+		Vector2 cParaTest = cPara;
+		Vector2 gParaTest = gPara;
 
-		if(cPerpTest.x < 0)
+		if(cParaTest.x < 0)
 		{
-			cPerpTest *= -1;
+			cParaTest *= -1;
 		}
-		if(gPerpTest.x < 0)
+		if(gParaTest.x < 0)
 		{
-			gPerpTest *= -1;
+			gParaTest *= -1;
 		}
 
-		//print("gPerpTest = " + gPerpTest);
-		//print("cPerpTest= " + cPerpTest);
+		//print("gParaTest = " + gParaTest);
+		//print("cParaTest= " + cParaTest);
 
-		float convergenceValue = cPerpTest.y-gPerpTest.y;
+		float convergenceValue = cParaTest.y-gParaTest.y;
+		//print("ConvergenceValue =" + convergenceValue);
 
-		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // THIS IS BAD, PLACEHOLDER CODE!
-		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // THIS IS BAD, PLACEHOLDER CODE!
+		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // PLACEHOLDER CODE! It just sets it to converging left when touching left contact.
+		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // PLACEHOLDER CODE! It just sets it to converging right when touching right contact.
 
 		if(cornerAngle > 90f)
 		{
 			if(convergenceValue > 0)
 			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
-				//print("Left wedge!");
+				if(d_SendCollisionMessages){print("Left wedge!");}
+				correctionVector = SuperUnwedger(cPara, gPara, true, embedDepth);
+				if(d_SendCollisionMessages){print("correctionVector:"+correctionVector);}
 				m_LeftWallBlocked = true;
 			}
 			else if(convergenceValue < 0)
 			{
-				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
 				//print("Right wedge!");
+				correctionVector = SuperUnwedger(cPara, gPara, false, embedDepth);
 				m_RightWallBlocked = true;
 			}
 			else
@@ -2014,13 +2286,14 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			moveAmount = (upperDirection*(-embedDepth));
+			if(d_SendCollisionMessages){print("Obtuse wedge angle detected!");}
+			correctionVector = (upperDirection*(-(embedDepth-m_MinEmbed)));
 		}
 
-		this.transform.position = new Vector2((this.transform.position.x + moveAmount.x), (this.transform.position.y + moveAmount.y));
+		this.transform.position = new Vector2((this.transform.position.x + correctionVector.x), (this.transform.position.y + correctionVector.y));
 	}
 
-	protected Vector2	Perp(Vector2 input)
+	protected Vector2 Perp(Vector2 input)
 	{
 		Vector2 output;
 		output.x = input.y;
@@ -2028,13 +2301,18 @@ public class FighterChar : NetworkBehaviour
 		return output;
 	}		
 
-	protected void UpdateContactNormals(bool posCorrection)
+	protected void UpdateContactNormals(bool posCorrection) // UCN - Updates the present-time state of the player's contact with surrounding world geometry. Corrects the player's position if it is embedded in geometry, and gathers information about where the player can move.
 	{
 		m_Grounded = false;
 		m_Ceilinged = false;
 		m_LeftWalled = false;
 		m_RightWalled = false;
 		m_Airborne = false;
+
+		if(m_JumpBufferG>0){m_JumpBufferG--;}
+		if(m_JumpBufferC>0){m_JumpBufferC--;}
+		if(m_JumpBufferL>0){m_JumpBufferL--;}
+		if(m_JumpBufferR>0){m_JumpBufferR--;}
 
 		groundContact = false;
 		ceilingContact = false;
@@ -2063,6 +2341,7 @@ public class FighterChar : NetworkBehaviour
 			m_GroundLine.startColor = Color.green;
 			m_GroundNormal = directionContacts[0].normal;
 			m_Grounded = true;
+			m_JumpBufferG = m_JumpBufferFrameAmount;
 		} 
 
 		if (directionContacts[1]) 
@@ -2072,6 +2351,7 @@ public class FighterChar : NetworkBehaviour
 			m_CeilingLine.startColor = Color.green;
 			m_CeilingNormal = directionContacts[1].normal;
 			m_Ceilinged = true;
+			m_JumpBufferC = m_JumpBufferFrameAmount;
 		} 
 
 
@@ -2082,6 +2362,7 @@ public class FighterChar : NetworkBehaviour
 			m_LeftSideLine.endColor = Color.green;
 			m_LeftSideLine.startColor = Color.green;
 			m_LeftWalled = true;
+			m_JumpBufferL = m_JumpBufferFrameAmount;
 		} 
 
 		if (directionContacts[3])
@@ -2091,6 +2372,7 @@ public class FighterChar : NetworkBehaviour
 			m_RightSideLine.endColor = Color.green;
 			m_RightSideLine.startColor = Color.green;
 			m_RightWalled = true;
+			m_JumpBufferR = m_JumpBufferFrameAmount;
 		} 
 
 		if(!(m_Grounded&&m_Ceilinged))
@@ -2114,6 +2396,66 @@ public class FighterChar : NetworkBehaviour
 			m_Airborne = true;	
 		}
 	}
+
+	protected void DebugUCN() //Like normal UCN but doesn't affect anything and prints results.
+	{
+		print("DEBUG_UCN");
+		m_GroundLine.endColor = Color.red;
+		m_GroundLine.startColor = Color.red;
+		m_CeilingLine.endColor = Color.red;
+		m_CeilingLine.startColor = Color.red;
+		m_LeftSideLine.endColor = Color.red;
+		m_LeftSideLine.startColor = Color.red;
+		m_RightSideLine.endColor = Color.red;
+		m_RightSideLine.startColor = Color.red;
+
+		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
+		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask); 	// Ground
+		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);  	// Ceiling
+		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask); 	// Left
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);	// Right  
+
+		if (directionContacts[0]) 
+		{
+			m_GroundLine.endColor = Color.green;
+			m_GroundLine.startColor = Color.green;
+		} 
+
+		if (directionContacts[1]) 
+		{
+			m_CeilingLine.endColor = Color.green;
+			m_CeilingLine.startColor = Color.green;
+		} 
+
+
+		if (directionContacts[2])
+		{
+			m_LeftSideLine.endColor = Color.green;
+			m_LeftSideLine.startColor = Color.green;
+		} 
+
+		if (directionContacts[3])
+		{
+			m_RightSideLine.endColor = Color.green;
+			m_RightSideLine.startColor = Color.green;
+		} 
+
+		bool[] isEmbedded = {false, false, false, false};
+		int contactCount = 0;
+		if(groundContact){contactCount++;}
+		if(ceilingContact){contactCount++;}
+		if(leftSideContact){contactCount++;}
+		if(rightSideContact){contactCount++;}
+
+		int embedCount = 0;
+		if(d_SendCollisionMessages&&groundContact && ((m_GroundFootLength-directionContacts[0].distance)>=0.011f))	{ print("Embedded in grnd by amount: "+((m_GroundFootLength-directionContacts[0].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(d_SendCollisionMessages&&ceilingContact && ((m_CeilingFootLength-directionContacts[1].distance)>=0.011f))	{ print("Embedded in ceil by amount: "+((m_CeilingFootLength-directionContacts[1].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(d_SendCollisionMessages&&leftSideContact && ((m_LeftSideLength-directionContacts[2].distance)>=0.011f))	{ print("Embedded in left by amount: "+((m_LeftSideLength-directionContacts[2].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+		if(d_SendCollisionMessages&&rightSideContact && ((m_RightSideLength-directionContacts[3].distance)>=0.011f))	{ print("Embedded in rigt by amount: "+((m_RightSideLength-directionContacts[3].distance)-m_MinEmbed)); embedCount++;} //If embedded too deep in this surface.
+
+		if(d_SendCollisionMessages){print(contactCount+" sides touching, "+embedCount+" sides embedded");}
+	}
+
 
 	protected void AntiTunneler(RaycastHit2D[] contacts)
 	{
@@ -2140,6 +2482,7 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 1: //One side is embedded. Simply push out to remove it.
 			{
+				//print("One side embed!");
 				if(isEmbedded[0])
 				{
 					Vector2 surfacePosition = contacts[0].point;
@@ -2264,114 +2607,127 @@ public class FighterChar : NetworkBehaviour
 
 	}
 
-	protected Vector2 SuperUnwedger(Vector2 cPerp, Vector2 gPerp, bool cornerIsLeft, float embedDistance)
+
+
+	protected Vector2 SuperUnwedger(Vector2 cPara, Vector2 gPara, bool cornerIsLeft, float embedDistance)
 	{
+		if(d_SendCollisionMessages)
+		{
+			print("Ground Para = ("+gPara.x+", "+gPara.y+")");
+			print("Ceiling Para = ("+cPara.x+", "+cPara.y+")");
+		}
 		if(!cornerIsLeft)
 		{// Setting up variables	
 			//print("Resolving right wedge.");
-			if(gPerp.x>0)
+
+
+			if(gPara.x>0)
 			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				gPerp *= -1;
+				gPara *= -1;
 			}
 
-			if(cPerp.x>0)
+			if(cPara.x>=0)
 			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				cPerp *= -1;
+				//print("("+cPara.x+", "+cPara.y+") is cPara, inverting this...");
+				cPara *= -1;
 			}
 
-			if(cPerp.x != -1)
+			if(cPara.x != -1)
 			{// Multiply/Divide the top vector so that its x = -1.
-				if(cPerp.x == 0)
+				//if(Math.Abs(cPara.x) < 1)
+				if(Math.Abs(cPara.x) == 0)
 				{
-					//print("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
 					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
-					cPerp /= Mathf.Abs(cPerp.x);
+					cPara /= Mathf.Abs(cPara.x);
 				}
 			}
 
-			if(gPerp.x != -1)
+			if(gPara.x != -1)
 			{// Multiply/Divide the bottom vector so that its x = -1.
-				if(gPerp.x == 0)
+				if(gPara.x == 0)
 				{
 					//throw new Exception("Your ground has no horizontality. What are you even doing?");
 					return new Vector2(0, embedDistance);
 				}
 				else
 				{
-					gPerp /= Mathf.Abs(gPerp.x);
+					gPara /= Mathf.Abs(gPara.x);
 				}
 			}
 		}
 		else
 		{
-			//print("Resolving left wedge.");
-			// Ensure both perpendicular vectors are pointing right, out of the corner the fighter is lodged in.
-			if(gPerp.x<0)
-			{
-				gPerp *= -1;
+			if(d_SendCollisionMessages){print("Resolving left wedge.");}
+
+			if(gPara.x<0)
+			{// Ensure both surface-parallel vectors are pointing right, out of the corner the fighter is lodged in.
+				gPara *= -1;
 			}
 
-			if(cPerp.x<0)
-			{// Ensure both perpendicular vectors are pointing left, out of the corner the fighter is lodged in.
-				cPerp *= -1;
+			if(cPara.x<0)
+			{// Ensure both surface-parallel vectors are pointing left, out of the corner the fighter is lodged in.
+				cPara *= -1;
 			}
 
-			if(cPerp.x != 1)
-			{// Multiply/Divide the top vector so that its x = -1.
-				if(cPerp.x == 0)
+			if(cPara.x != 1)
+			{// Multiply/Divide the top vector so that its x = 1.
+				if(Math.Abs(cPara.x) == 0)
 				{
-					//throw new Exception("You're unwedging from a wall, that's not allowed. Wall corners aren't wedgy enough.");
-					return new Vector2(0, -embedDistance);
+					if(d_SendCollisionMessages){print("It's a wall, bro");}
+					//return new Vector2(0, -embedDistance);
+					return new Vector2(embedDistance-m_MinEmbed,0);
 				}
 				else
 				{
-					cPerp /= cPerp.x;
+					cPara /= cPara.x;
 				}
 			}
 
-			if(gPerp.x != -1)
+			if(gPara.x != -1)
 			{// Multiply/Divide the bottom vector so that its x = -1.
-				if(gPerp.x == 0)
+				if(gPara.x == 0)
 				{
 					//throw new Exception("Your ground has no horizontality. What are you even doing?");
 					return new Vector2(0, -embedDistance);
 				}
 				else
 				{
-					gPerp /= gPerp.x;
+					gPara /= gPara.x;
 				}
 			}
 		}
 
-		//print("Adapted Ground Perp = " + gPerp);
-		//print("Adapted Ceiling Perp = " + cPerp);
-
+		if(d_SendCollisionMessages)
+		{
+			print("Adapted Ground Para = "+gPara);
+			print("Adapted Ceiling Para = "+cPara);
+		}
 		//
-		// Now, the equation for repositioning a vertical line that is embedded in a corner:
+		// Now, the equation for repositioning two points that are embedded in a corner, so that both points are touching the lines that comprise the corner
+		// In other words, here is the glorious UNWEDGER algorithm.
 		//
-
-		float B = gPerp.y;
-		float A = cPerp.y;
+		float B = gPara.y;
+		float A = cPara.y;
 		float H = embedDistance; //Reduced so the fighter stays just embedded enough for the raycast to detect next frame.
 		float DivX;
 		float DivY;
 		float X;
 		float Y;
 
-		//print("(A, B)=("+ A +", "+ B +").");
+		if(d_SendCollisionMessages){print("(A, B)=("+A+", "+B+").");}
 
 		if(B <= 0)
 		{
-			//print("B <= 0, using normal eqn.");
+			if(d_SendCollisionMessages){print("B <= 0, using normal eqn.");}
 			DivX = B-A;
 			DivY = -(DivX/B);
 		}
 		else
 		{
-			//print("B >= 0, using alternate eqn.");
+			if(d_SendCollisionMessages){print("B >= 0, using alternate eqn.");}
 			DivX = 1f/(B-A);
 			DivY = -(A*DivX);
 		}
@@ -2405,6 +2761,12 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		//print("Adding the movement: ("+ X +", "+Y+").");
+		if(Math.Abs(X) >= 1000 || Math.Abs(Y) >= 1000)
+		{
+			print("ERROR: HYPERMASSIVE CORRECTION OF ("+X+","+Y+")");
+			return new Vector2 (0, 0);
+		}
+		if(d_SendCollisionMessages){print("SuperUnwedger push of: ("+X+","+Y+")");}
 		return new Vector2(X,Y); // Returns the distance the object must move to resolve wedging.
 	}
 
@@ -2413,13 +2775,15 @@ public class FighterChar : NetworkBehaviour
 		if(m_Grounded&&m_Ceilinged)
 		{
 			if(d_SendCollisionMessages)
-			{
-				print("Grounded and Ceilinged, nowhere to jump!");
-			}
+			{print("Grounded and Ceilinged, nowhere to jump!");}
 			//FighterState.JumpKey = false;
 		}
-		else if(m_Grounded)
+		//	else if(m_Grounded)
+		else if(m_JumpBufferG>0)
 		{
+			//m_LeftWallBlocked = false;
+			//m_RightWallBlocked = false;
+
 			if(FighterState.Vel.y >= 0)
 			{
 				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), FighterState.Vel.y+m_VJumpForce);
@@ -2431,7 +2795,8 @@ public class FighterChar : NetworkBehaviour
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
 		}
-		else if(m_LeftWalled)
+		//else if(m_LeftWalled)m_JumpBufferG>0
+		else if(m_JumpBufferL>0)
 		{
 			if(d_SendCollisionMessages)
 			{
@@ -2453,7 +2818,8 @@ public class FighterChar : NetworkBehaviour
 			//FighterState.JumpKey = false;
 			m_LeftWalled = false;
 		}
-		else if(m_RightWalled)
+		//else if(m_RightWalled)
+		else if(m_JumpBufferR>0)
 		{
 			if(d_SendCollisionMessages)
 			{
@@ -2476,7 +2842,8 @@ public class FighterChar : NetworkBehaviour
 			//FighterState.JumpKey = false;
 			m_RightWalled = false;
 		}
-		else if(m_Ceilinged)
+		//else if(m_Ceilinged)
+		else if(m_JumpBufferC>0)
 		{
 			if(FighterState.Vel.y <= 0)
 			{
@@ -2494,8 +2861,93 @@ public class FighterChar : NetworkBehaviour
 		{
 			//print("Can't jump, airborne!");
 		}
+		m_JumpBufferG = 0;
+		m_JumpBufferC = 0;
+		m_JumpBufferL = 0;
+		m_JumpBufferR = 0;
 	}
 
+	protected void ZonJump(Vector2 jumpNormal)
+	{
+		g_ZonJumpCharge = g_ZonLevel;
+		if(g_ZonLevel > 0)
+		{
+			g_ZonLevel--;
+		}
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge)));
+		g_ZonJumpCharge = 0;		
+		o_FighterAudio.JumpSound();
+	}
+
+	protected void StrandJumpTypeA(float horizontalInput, float verticalInput) //SJTA
+	{
+		float numberOfInputs = Math.Abs(horizontalInput)+Math.Abs(verticalInput);
+		if(FighterState.Vel.magnitude>=20&&g_ZonLevel > 0&&numberOfInputs > 0)
+		{
+			//print("STRANDJUMP!");
+			Vector2 oldDirection = FighterState.Vel.normalized;
+			print("olddir:("+oldDirection.x+","+oldDirection.y+")");
+			g_ZonLevel--;
+			Vector2 newDirection = new Vector2(horizontalInput, verticalInput);
+			//print("newdir:("+newDirection.x+","+newDirection.y+")");
+
+
+
+		//	print("sum:("+(newDirection.x+oldDirection.x)+","+(newDirection.y+oldDirection.y)+")");
+			Vector2 reflectionVector;
+			if((oldDirection+newDirection)==Vector2.zero)
+			{
+				print("equal!");
+				reflectionVector = Perp(oldDirection);
+			}
+			else
+			{
+				reflectionVector = Perp((oldDirection+newDirection)/2); // Reflection surface is perpendicular to the vector perfectly between the impact angle and the reflected angle, which is found by averaging the two vectors.
+			}
+
+			Quaternion ImpactAngle = Quaternion.LookRotation(reflectionVector);
+			ImpactAngle.x = 0;
+			ImpactAngle.y = 0;
+
+
+			if(reflectionVector.y == 0) //Duct tape fix
+			{
+				if(reflectionVector.x < 0)
+				{
+					ImpactAngle.eulerAngles = new Vector3(0, 0, -90);
+				}
+				else if(reflectionVector.x > 0)
+				{
+					ImpactAngle.eulerAngles = new Vector3(0, 0, 90);
+				}
+				else
+				{
+					print("ERROR: IMPACT DIRECTION OF (0,0)");
+				}
+			}
+
+
+			GameObject newStrandJumpEffect = (GameObject)Instantiate(p_StrandJumpPrefab, this.transform.position, ImpactAngle);
+			Vector3 theLocalScale = new Vector3(1f, 1f, 1f);
+			newStrandJumpEffect.transform.localScale = theLocalScale;
+			k_IsKinematic = true;
+			k_KinematicAnim = 0;
+
+			newStrandJumpEffect.GetComponentInChildren<StrandJumpEffect>().SetFighterChar(this);
+			//InstantForce(newDirection, FighterState.Vel.magnitude*(1-m_StrandJumpSpeedLossM));	
+			m_StrandJumpReflectSpd = FighterState.Vel.magnitude*(1-m_StrandJumpSpeedLossM);
+			m_StrandJumpReflectDir = newDirection;
+
+
+			o_FighterAudio.StrandJumpSound();
+		}
+	}
+
+//	protected void StrandJumpTypeB(Vector2 playerMouseVector)
+//	{
+
+//	}
+//
 	#endregion
 	//###################################################################################################################################
 	// PUBLIC FUNCTIONS
@@ -2519,11 +2971,6 @@ public class FighterChar : NetworkBehaviour
 		//DirectionChange(newDirection);
 		print("Changing direction to" +newDirection);
 		//
-	}
-
-	public void InstantForce(Vector2 newDirection)
-	{
-		DirectionChange(newDirection);
 	}
 
 	public void PunchConnect(GameObject victim, Vector2 aimDirection)
@@ -2591,6 +3038,12 @@ public class FighterChar : NetworkBehaviour
 			return false;
 		}
 	}
+
+	public bool IsKinematic()
+	{
+		return k_IsKinematic;
+	}
+
 
 	public float GetInstantGForce()
 	{
