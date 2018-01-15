@@ -23,7 +23,32 @@ using UnityEngine.Networking;
 
 [System.Serializable]
 public class FighterChar : NetworkBehaviour
-{        	
+{        
+	//############################################################################################################################################################################################################
+	// DEBUGGING VARIABLES
+	//##########################################################################################################################################################################
+	#region DEBUGGING
+	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
+	[Header("Debug:")]
+	[SerializeField] protected bool autoPressLeft; 			// When true, fighter will behave as if the left key is pressed.
+	[SerializeField] protected bool autoPressRight; 			// When true, fighter will behave as if the right key is pressed.	
+	[SerializeField] protected bool autoPressDown; 			// When true, fighter will behave as if the left key is pressed.
+	[SerializeField] protected bool autoPressUp; 			// When true, fighter will behave as if the right key is pressed.
+	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
+	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
+	[SerializeField] protected bool noGravity;				// Disable gravity.
+	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
+	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
+	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
+	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
+	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
+	[SerializeField] protected bool d_SendTractionMessages;// When true, the console prints messages related to collision detection
+	protected LineRenderer m_DebugLine; 					// Part of above indicators.
+	protected LineRenderer m_GroundLine;					// Part of above indicators.		
+	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
+	protected LineRenderer m_LeftSideLine;					// Part of above indicators.		
+	protected LineRenderer m_RightSideLine;					// Part of above indicators.		
+	#endregion
 	//############################################################################################################################################################################################################
 	// MOVEMENT HANDLING VARIABLES
 	//###########################################################################################################################################################################
@@ -170,30 +195,6 @@ public class FighterChar : NetworkBehaviour
 	protected bool facingDirection; 										// True means right, false means left.
 	protected int facingDirectionV; 										// 1 means up, -1 means down, and 0 means horizontal.
 
-	#endregion
-	//############################################################################################################################################################################################################
-	// DEBUGGING VARIABLES
-	//##########################################################################################################################################################################
-	#region DEBUGGING
-	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
-	[Header("Debug:")]
-	[SerializeField] protected bool autoPressLeft; 			// When true, fighter will behave as if the left key is pressed.
-	[SerializeField] protected bool autoPressRight; 			// When true, fighter will behave as if the right key is pressed.	
-	[SerializeField] protected bool autoPressDown; 			// When true, fighter will behave as if the left key is pressed.
-	[SerializeField] protected bool autoPressUp; 			// When true, fighter will behave as if the right key is pressed.
-	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
-	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
-	[SerializeField] protected bool noGravity;				// Disable gravity.
-	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
-	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
-	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
-	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
-	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
-	protected LineRenderer m_DebugLine; 					// Part of above indicators.
-	protected LineRenderer m_GroundLine;					// Part of above indicators.		
-	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
-	protected LineRenderer m_LeftSideLine;					// Part of above indicators.		
-	protected LineRenderer m_RightSideLine;					// Part of above indicators.		
 	#endregion
 	//############################################################################################################################################################################################################
 	// VISUAL&SOUND VARIABLES
@@ -891,7 +892,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(hit.collider.gameObject != this.gameObject)
 			{
-				print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
+				//print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
 				if(hit.collider.GetComponent<FighterChar>())
 				{
 					CollideWithFighter(hit.collider.GetComponent<FighterChar>());
@@ -1082,9 +1083,43 @@ public class FighterChar : NetworkBehaviour
 
 				//print("GroundDist"+predictedLoc[0].distance);
 				//print("RightDist"+predictedLoc[3].distance);
+				bool snaggingfeet = false; // True when the player is hitting a surface with their feet while ascending, and that surface is flatter than the player's trajectory. This only happens when coming up over a ledge, and if left alone will make the player snag on the flat surface and lose their upward momentum.
+
+		
 
 				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
+
+					//
+					// Start of Ascendant Snag detection
+					// This is when the player's foot hits a surface that is less vertical than its current trajectory, and gets pulled downward onto the flatter slope. 
+					// The code detects this circumstance by comparing the new surface's y value to the y value of the player trajectory. If the player's y value is higher, they are hitting the surface from the underside with their foot collider, which should be ignored.
+
+					Vector2 predictedPerp = Perp(predictedLoc[0].normal);
+					if(predictedPerp.x==0)
+					{
+						predictedPerp = Perp(predictedPerp);
+					}
+
+					if((predictedPerp.x<0 && FighterState.Vel.x>0) || (predictedPerp.x>0 && FighterState.Vel.x<0))
+					{
+						//print("flipping predictedPerp...");
+						predictedPerp *= -1;
+					}
+
+					if(FighterState.Vel.normalized.y>predictedPerp.y)
+					{
+						if(d_SendCollisionMessages)
+						{
+							print("MD: "+FighterState.Vel.normalized);
+							print("PDL: "+predictedPerp);
+							print("Ascendant snag detected.");
+						}
+						return;
+					}
+					//
+					// End of Ascendant Snag detection
+					//
 					if(ToGround(predictedLoc[0]))
 					{
 						DirectionChange(m_GroundNormal);
@@ -1180,9 +1215,8 @@ public class FighterChar : NetworkBehaviour
 	protected void Traction(float horizontalInput)
 	{
 		Vector2 groundPara = Perp(m_GroundNormal);
+		if(d_SendTractionMessages){print("Traction");}
 
-		//print("Traction");
-		//print("gp="+groundPara);
 
 		// This block of code makes the player treat very steep left and right surfaces as walls when they aren't going fast enough to reasonably climb them. 
 		// This aims to prevent a jittering effect when the player build small amounts of speed, then hits the steeper slope and starts sliding down again 
@@ -1240,10 +1274,12 @@ public class FighterChar : NetworkBehaviour
 			groundPara *= -1;
 		}
 
+		if(d_SendTractionMessages){print("gp="+groundPara);}
+
 		float steepnessAngle = Vector2.Angle(Vector2.left,groundPara);
 
 		steepnessAngle = (float)Math.Round(steepnessAngle,2);
-		//print("SteepnessAngle:"+steepnessAngle);
+		if(d_SendTractionMessages){print("SteepnessAngle:"+steepnessAngle);}
 
 		float slopeMultiplier = 0;
 
@@ -1251,7 +1287,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(steepnessAngle >= m_TractionLossMaxAngle)
 			{
-				//print("MAXED OUT!");
+				if(d_SendTractionMessages){print("MAXED OUT!");}
 				slopeMultiplier = 1;
 			}
 			else
@@ -1259,24 +1295,24 @@ public class FighterChar : NetworkBehaviour
 				slopeMultiplier = ((steepnessAngle-m_TractionLossMinAngle)/(m_TractionLossMaxAngle-m_TractionLossMinAngle));
 			}
 
-			//print("slopeMultiplier: "+ slopeMultiplier);
+			if(d_SendTractionMessages){print("slopeMultiplier: "+slopeMultiplier);}
 			//print("groundParaY: "+groundParaY+", slopeT: "+slopeT);
 		}
 
 
 		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
 		{// If running at an obstruction you're up against.
-			//print("Running against a wall.");
+			print("Running against a wall.");
 			horizontalInput = 0;
 		}
 
 		//print("Traction executing");
 		float rawSpeed = FighterState.Vel.magnitude;
-		//print("FighterState.Vel.magnitude"+FighterState.Vel.magnitude);
+		if(d_SendTractionMessages){print("FighterState.Vel.magnitude: "+FighterState.Vel.magnitude);}
 
 		if (horizontalInput == 0) 
 		{//if not pressing any move direction, slow to zero linearly.
-			//print("No input, slowing...");
+			if(d_SendTractionMessages){print("No input, slowing...");}
 			if(rawSpeed <= 0.5f)
 			{
 				FighterState.Vel = Vector2.zero;	
@@ -1288,13 +1324,13 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
 		{//if pressing same button as move direction, move to MAXSPEED.
-			//print("Moving with keypress");
+			if(d_SendTractionMessages){print("Moving with keypress");}
 			if(rawSpeed < m_MaxRunSpeed)
 			{
-				//print("Rawspeed("+rawSpeed+") less than max");
+				if(d_SendTractionMessages){print("Rawspeed("+rawSpeed+") less than max");}
 				if(rawSpeed > m_TractionChangeT)
 				{
-					//print("LinAccel-> " + rawSpeed);
+					if(d_SendTractionMessages){print("LinAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
 						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate*(1-slopeMultiplier));
@@ -1314,7 +1350,7 @@ public class FighterChar : NetworkBehaviour
 					{
 						print("Too steep!");
 					}
-					//print("Starting motion. Adding " + m_Acceleration);
+					if(d_SendTractionMessages){print("Starting motion. Adding " + m_Acceleration);}
 				}
 				else
 				{
@@ -1327,9 +1363,9 @@ public class FighterChar : NetworkBehaviour
 					{ // If climbing, recieve uphill movement penalty.
 						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
 					}
-					//print("Addedspeed:"+addedSpeed);
+					if(d_SendTractionMessages){print("Addedspeed:"+addedSpeed);}
 					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
-					//print("FighterState.Vel:"+FighterState.Vel);
+					if(d_SendTractionMessages){print("FighterState.Vel:"+FighterState.Vel);}
 				}
 			}
 			else
@@ -1341,7 +1377,7 @@ public class FighterChar : NetworkBehaviour
 				}
 				else
 				{
-					//print("Rawspeed("+rawSpeed+") more than max.");
+					if(d_SendTractionMessages){print("Rawspeed("+rawSpeed+") more than max.");}
 					FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearOverSpeedRate);
 				}
 			}
@@ -1350,16 +1386,17 @@ public class FighterChar : NetworkBehaviour
 		{//if pressing button opposite of move direction, slow to zero exponentially.
 			if(rawSpeed > m_TractionChangeT )
 			{
-				//print("LinDecel");
+				if(d_SendTractionMessages){print("LinDecel");}
 				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
 			}
 			else
 			{
-				//print("Decelerating");
+				if(d_SendTractionMessages){print("Decelerating");}
 				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
 				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
+				float addedSpeed = curveMultiplier*(m_Acceleration);
 				FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed-2*addedSpeed);
+				if(d_SendTractionMessages){print("Deceleration result:"+(rawSpeed-2*addedSpeed));}
 			}
 
 			//float modifier = Mathf.Abs(FighterState.Vel.x/FighterState.Vel.y);
@@ -1383,12 +1420,12 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Vel += downSlope*m_SlippingAcceleration*slopeMultiplier;
 
 		//	TESTINGSLOPES
-		//print("downSlope="+downSlope);
-		//print("m_SlippingAcceleration="+m_SlippingAcceleration);
-		//print("slopeMultiplier="+slopeMultiplier);
+		if(d_SendTractionMessages){print("downSlope="+downSlope);}
+		if(d_SendTractionMessages){print("m_SlippingAcceleration="+m_SlippingAcceleration);}
+		if(d_SendTractionMessages){print("slopeMultiplier="+slopeMultiplier);}
 
 		//ChangeSpeedLinear(FighterState.Vel, );
-		//print("PostTraction velocity: "+FighterState.Vel);
+		if(d_SendTractionMessages){print("PostTraction velocity: "+FighterState.Vel);}
 	}
 
 	protected void AirControl(float horizontalInput)
@@ -1603,32 +1640,32 @@ public class FighterChar : NetworkBehaviour
 
 		m_LeftNormal = leftCheck2.normal;
 
-//		if(m_Grounded)
-//		{
-//			if(d_SendCollisionMessages)
-//			{
-//				print("LeftGroundWedge detected during left collision.");
-//			}
-//			OmniWedge(0,2);
-//		}
-//
-//		if(m_Ceilinged)
-//		{
-//			if(d_SendCollisionMessages)
-//			{
-//				print("LeftCeilingWedge detected during left collision.");
-//			}
-//			OmniWedge(2,1);
-//		}
-//
-//		if(m_RightWalled)
-//		{
-//			if(d_SendCollisionMessages)
-//			{
-//				print("THERE'S PROBLEMS.");
-//			}
-//			//OmniWedge(2,3);
-//		}
+		if(m_Grounded)
+		{
+			if(d_SendCollisionMessages)
+			{
+				print("LeftGroundWedge detected during left collision.");
+			}
+			OmniWedge(0,2);
+		}
+
+		if(m_Ceilinged)
+		{
+			if(d_SendCollisionMessages)
+			{
+				print("LeftCeilingWedge detected during left collision.");
+			}
+			OmniWedge(2,1);
+		}
+
+		if(m_RightWalled)
+		{
+			if(d_SendCollisionMessages)
+			{
+				print("THERE'S PROBLEMS.");
+			}
+			//OmniWedge(2,3);
+		}
 		return true;
 		//print ("Final Position2:  " + this.transform.position);
 	}
@@ -1724,8 +1761,7 @@ public class FighterChar : NetworkBehaviour
 			print("hit a hitbreakable!");
 			if(hitBreakable.RecieveHit(this)){return false;}
 		}
-
-		//m_Impact = true;
+			
 		m_Grounded = true;
 		Vector2 setCharPos = groundCheck.point;
 		setCharPos.y = setCharPos.y+m_GroundFootLength-m_MinEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
@@ -1753,7 +1789,7 @@ public class FighterChar : NetworkBehaviour
 			//throw new Exception("Existence is suffering");
 			if(d_SendCollisionMessages)
 			{
-				print("GtG VERTICAL :O");
+				//print("GtG VERTICAL :O");
 			}
 		}
 
@@ -2110,7 +2146,7 @@ public class FighterChar : NetworkBehaviour
 		if(!lowerHit)
 		{
 			//throw new Exception("Bottom not wedged!");
-			print("Bottom not wedged!");
+			if(d_SendCollisionMessages){print("Bottom not wedged!");}
 			//gPara.x = m_GroundNormal.x;
 			//gPara.y = m_GroundNormal.y;
 			return;
@@ -2227,12 +2263,13 @@ public class FighterChar : NetworkBehaviour
 		if(lowerContact == 2 || upperContact == 2){convergenceValue = 1;}; // PLACEHOLDER CODE! It just sets it to converging left when touching left contact.
 		if(lowerContact == 3 || upperContact == 3){convergenceValue =-1;}; // PLACEHOLDER CODE! It just sets it to converging right when touching right contact.
 
-		if(cornerAngle >= 90f)
+		if(cornerAngle > 90f)
 		{
 			if(convergenceValue > 0)
 			{
 				if(d_SendCollisionMessages){print("Left wedge!");}
 				correctionVector = SuperUnwedger(cPara, gPara, true, embedDepth);
+				if(d_SendCollisionMessages){print("correctionVector:"+correctionVector);}
 				m_LeftWallBlocked = true;
 			}
 			else if(convergenceValue < 0)
