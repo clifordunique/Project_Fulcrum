@@ -42,7 +42,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1201778324761438
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.62, y: -2.74, z: 0}
+  m_LocalPosition: {x: -150.62059, y: 6.4528275, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4039223620323396}
@@ -454,7 +454,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5, y: 0.4}
     oldSize: {x: 1.28, y: 1.28}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -896,6 +896,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2dcfe234c37db84ab80d947b1cfd5c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoPressLeft: 0
+  autoPressRight: 0
+  autoPressDown: 0
+  autoPressUp: 0
+  autoJump: 0
+  antiTunneling: 1
+  noGravity: 0
+  showVelocityIndicator: 0
+  showContactIndicators: 0
+  recoverFromFullEmbed: 1
+  d_ClickToKnockFighter: 0
+  d_SendCollisionMessages: 0
+  d_SendTractionMessages: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
   m_Acceleration: 0.6
@@ -933,9 +946,11 @@ MonoBehaviour:
   m_StrandJumpSpeedLossM: 0
   m_StrandJumpReflectSpd: 0
   m_StrandJumpReflectDir: {x: 0, y: 0}
+  m_WidestStrandJumpAngle: 45
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
+  k_StrandJumpSlowdownLinear: 5
   o_TempLight: {fileID: 108262091546041426}
   o_FighterAudio: {fileID: 114591870329239686}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -999,20 +1014,14 @@ MonoBehaviour:
     PlayerMouseVector: {x: 0, y: 0}
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
-  autoPressLeft: 0
-  autoPressRight: 0
-  autoPressDown: 0
-  autoPressUp: 0
-  autoJump: 0
-  antiTunneling: 1
-  noGravity: 0
-  showVelocityIndicator: 1
-  showContactIndicators: 1
-  recoverFromFullEmbed: 1
-  d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 0
   v_ReversingSlideT: 5
   v_FighterGlow: 0
+  v_CameraZoom: 0
+  v_CameraMode: 1
+  v_CameraXLeashM: 0.5
+  v_CameraYLeashM: 0.5
+  v_CameraXLeashLim: 0.95
+  v_CameraYLeashLim: 0.95
   g_ZonLevel: 0
   g_ZonJumpCharge: 0
   g_VelocityPunching: 0
@@ -1033,6 +1042,7 @@ MonoBehaviour:
   o_Speedometer: {fileID: 0}
   o_ZonCounter: {fileID: 0}
   o_MainCamera: {fileID: 0}
+  o_MainCameraTransform: {fileID: 0}
   o_CamShaker: {fileID: 0}
   o_Spooler: {fileID: 114580475300824124}
   o_Healthbar: {fileID: 0}
@@ -1043,8 +1053,15 @@ MonoBehaviour:
   i_DevKey2: 0
   i_DevKey3: 0
   i_DevKey4: 0
+  i_DevKey5: 0
+  i_DevKey6: 0
+  i_DevKey7: 0
+  i_DevKey8: 0
+  i_DevKey9: 0
+  i_DevKey10: 0
+  i_DevKey11: 0
+  i_DevKey12: 0
   i_LeftClickHoldDuration: 0
-  v_CameraZoom: 0
   sceneIsReady: 0
 --- !u!114 &114132217005915654
 MonoBehaviour:
@@ -1714,7 +1731,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 272ba847f100d4251bb8260575189042, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

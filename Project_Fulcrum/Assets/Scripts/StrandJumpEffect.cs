@@ -24,7 +24,7 @@ public class StrandJumpEffect : MonoBehaviour {
 		strandLine = this.GetComponent<LineRenderer>();
 		Vector3[] points = new Vector3[3];
 		points[0] = startPoint.position;
-		points[1] = fighterChar.GetPosition();
+		points[1] = fighterChar.GetFootPosition();
 		points[2] = endPoint.position;
 		strandLine.SetPositions(points);
 		animPlaying = true;

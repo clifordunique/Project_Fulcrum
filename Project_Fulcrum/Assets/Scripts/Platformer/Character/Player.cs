@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UI;
 using System;
 using UnityEngine;
+using UnityEditor;
 using EZCameraShake;
 using UnityEngine.Networking;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
+	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
 	[SerializeField] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
@@ -61,6 +63,14 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey2;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey3;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey4;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey5;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey6;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey7;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey8;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey9;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey10;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey11;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevKey12;
 	[SerializeField][ReadOnlyAttribute]public float i_LeftClickHoldDuration;
 	#endregion
 	//############################################################################################################################################################################################################
@@ -72,7 +82,6 @@ public class Player : FighterChar
 	// VISUAL&SOUND VARIABLES
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
-	[SerializeField]private float v_CameraZoom; 					// Amount of camera zoom.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -118,8 +127,12 @@ public class Player : FighterChar
 		if(!isLocalPlayer||!isClient){return;}
 		print("Executing post-scenelaunch code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		o_MainCamera.transform.parent.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
-		o_MainCamera.transform.parent.SetParent(this.transform);
+		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
+//		if(v_CameraMode==0)
+//		{
+//			o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
+//			o_MainCamera.transform.parent.SetParent(this.transform);
+//		}
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
@@ -175,6 +188,18 @@ public class Player : FighterChar
 		FighterState.ZonKey = false;
 		FighterState.DisperseKey = false;
 		FighterState.JumpKey = false;
+
+		if(isLocalPlayer)
+		{
+			if(v_CameraMode==0)
+			{
+				CameraControlTypeA(); //Player-locked velocity size-reactive camera
+			}
+			else
+			{
+				CameraControlTypeB(); //Mouse Directed Camera
+			}
+		}
 	}
 
 	protected override void Update()
@@ -196,10 +221,6 @@ public class Player : FighterChar
 	protected override void LateUpdate()
 	{
 		if(!sceneIsReady){return;}
-		if(isLocalPlayer)
-		{
-			CameraControl();
-		}
 	}
 
 	#endregion
@@ -342,6 +363,44 @@ public class Player : FighterChar
 			FighterState.CurHealth -= 10;
 			g_ZonLevel = 8;
 			i_DevKey4 = false;
+		}
+		if(i_DevKey5)
+		{
+			v_CameraMode++;
+			if(v_CameraMode>1)
+			{
+				v_CameraMode = 0;
+			}
+			i_DevKey5 = false;
+		}
+		if(i_DevKey6)
+		{
+			i_DevKey6 = false;
+		}
+		if(i_DevKey7)
+		{
+			i_DevKey7 = false;
+		}
+		if(i_DevKey8)
+		{
+			i_DevKey8 = false;
+		}
+		if(i_DevKey9)
+		{
+			i_DevKey9 = false;
+		}
+		if(i_DevKey10)
+		{
+			i_DevKey10 = false;
+		}
+		if(i_DevKey11)
+		{
+			i_DevKey11 = false;
+		}
+		if(i_DevKey12)
+		{
+			i_DevKey12 = false;
+			EditorApplication.isPaused = true;
 		}
 
 		if(IsDisabled())
@@ -561,6 +620,38 @@ public class Player : FighterChar
 		{
 			i_DevKey4  = true;				
 		}
+		if(Input.GetButtonDown("F5"))
+		{
+			i_DevKey5  = true;				
+		}
+		if(Input.GetButtonDown("F6"))
+		{
+			i_DevKey6  = true;				
+		}
+		if(Input.GetButtonDown("F7"))
+		{
+			i_DevKey7  = true;				
+		}
+		if(Input.GetButtonDown("F8"))
+		{
+			i_DevKey8  = true;				
+		}
+		if(Input.GetButtonDown("F9"))
+		{
+			i_DevKey9  = true;				
+		}
+		if(Input.GetButtonDown("F10"))
+		{
+			i_DevKey10  = true;				
+		}
+		if(Input.GetButtonDown("F11"))
+		{
+			i_DevKey11  = true;				
+		}
+		if(Input.GetButtonDown("F12"))
+		{
+			i_DevKey12  = true;				
+		}
 
 		//
 		// Key-Up Unpresses
@@ -594,13 +685,15 @@ public class Player : FighterChar
 
 		if(v_FighterGlow>0)
 		{
-			o_TempLight.color = new Color(1,1,0,1);
-			o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(0,1f));
+			//o_TempLight.color = new Color(1,1,0,1);
+			o_SpriteRenderer.color = new Color(1,1,(1f-(v_FighterGlow/7f)),1);
+			//o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(0,1f));
 		}
 		else
 		{
-			o_TempLight.color = new Color(1,1,1,1);
-			o_TempLight.intensity = 2;
+			o_SpriteRenderer.color = Color.white;
+			//o_TempLight.color = new Color(1,1,1,1);
+			//o_TempLight.intensity = 2;
 		}
 
 		o_Anim.SetBool("Walled", false);
@@ -687,6 +780,8 @@ public class Player : FighterChar
 		m_DebugLine.SetPositions(debugLineVector);
 
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
+		o_Anim.SetFloat("hSpeed", FighterState.Vel.x);
+		o_Anim.SetFloat("vSpeed", FighterState.Vel.y);
 
 		if(FighterState.Vel.magnitude >= m_TractionChangeT )
 		{
@@ -723,7 +818,7 @@ public class Player : FighterChar
 		}
 	}
 
-	protected void CameraControl()
+	protected void CameraControlTypeA() //CCTA
 	{
 		#region zoom
 		if(!o_MainCamera){return;}
@@ -747,11 +842,109 @@ public class Player : FighterChar
 		{
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
-
+		o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
 	}
+
+	protected void CameraControlTypeB() //CCTB
+	{
+		if(!o_MainCamera){return;}
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, 0.1f);
+		//v_CameraZoom = 50f;
+		float zoomChange = 0;
+		if((0.15f*v_CameraZoom)>=5f)
+		{
+			zoomChange = (0.15f*v_CameraZoom)-5f;
+		}
+		if(8f+zoomChange >= 50f)
+		{
+			o_MainCamera.orthographicSize = 50f;
+		}
+		else
+		{
+			o_MainCamera.orthographicSize = 8f+zoomChange;
+		}
+
+		float camAverageX = (this.transform.position.x+this.transform.position.x+FighterState.MouseWorldPos.x)/3;
+		float camAverageY = (this.transform.position.y+this.transform.position.y+FighterState.MouseWorldPos.y)/3;
+
+
+		Vector3 topRightEdge= new Vector3((1+v_CameraXLeashM)/2, (1+v_CameraYLeashM)/2, 0f);
+		Vector3 theMiddle 	= new Vector3(0.5f, 0.5f, 0f);
+		topRightEdge = o_MainCamera.ViewportToWorldPoint(topRightEdge);
+		theMiddle = o_MainCamera.ViewportToWorldPoint(theMiddle);
+		float xDistanceToEdge = topRightEdge.x-theMiddle.x;
+		float yDistanceToEdge = topRightEdge.y-theMiddle.y;
+
+		Vector3 topRightMax = new Vector3((1+v_CameraXLeashLim)/2, (1+v_CameraXLeashLim)/2, 0f);
+		topRightMax = o_MainCamera.ViewportToWorldPoint(topRightMax);
+		float xDistanceToMax = topRightMax.x-theMiddle.x;
+		float yDistanceToMax = topRightMax.y-theMiddle.y;
+
+		//print("botLeftEdge: "+botLeftEdge);
+		//print("topRightEdge: "+topRightEdge);
+		//print("Player: "+this.transform.position);
+		//print("theMiddle: "+theMiddle);
+		//print("player: "+this.transform.position.x+"\n lefted: "+botLeftEdge.x);
+
+		if(camAverageX-xDistanceToEdge>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
+		{
+			//print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
+			camAverageX = this.transform.position.x+(xDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+		}
+		if(camAverageX+xDistanceToEdge<this.transform.position.x)
+		{
+			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
+			camAverageX = this.transform.position.x-(xDistanceToEdge);
+		}
+
+		if(camAverageY-yDistanceToEdge>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
+		{
+			//print("Too far down!");
+			camAverageY = this.transform.position.y+(yDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+		}
+		if(camAverageY+yDistanceToEdge<this.transform.position.y)
+		{
+			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
+			camAverageY = this.transform.position.y-(yDistanceToEdge);
+		}
+
+		Vector3 camGoalLocation = new Vector3(camAverageX, camAverageY, -10f);
+
+		o_MainCameraTransform.position = Vector3.Lerp(o_MainCameraTransform.position, camGoalLocation, 0.1f); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
+
+		//
+		// The following block of code is for when the player hits the maximum bounds. The camera will instantly snap to the edge and won't go any further. Does not use lerp.
+		//
+
+		if(o_MainCameraTransform.position.x-xDistanceToMax>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
+		{
+			//	print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
+			o_MainCameraTransform.position = new Vector3(this.transform.position.x+(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
+		}
+		if(o_MainCameraTransform.position.x+xDistanceToMax<this.transform.position.x)
+		{
+			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
+			o_MainCameraTransform.position = new Vector3(this.transform.position.x-(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
+		}
+
+		if(o_MainCameraTransform.position.y-yDistanceToMax>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
+		{
+			//print("Too far down!");
+			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y+(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
+		}
+		if(o_MainCameraTransform.position.y+yDistanceToMax<this.transform.position.y)
+		{
+			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
+			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y-(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
+		}
+
+		//o_MainCamera.orthographicSize = 20f; // REMOVE THIS WHEN NOT DEBUGGING.
+
+	}
+
 
 	protected void ZonPulse()
 	{

@@ -114,6 +114,7 @@ MonoBehaviour:
   duration: 1
   fighterChar: {fileID: 0}
   strandLine: {fileID: 0}
+  animPlaying: 0
   startPoint: {fileID: 4716505764760922}
   endPoint: {fileID: 4430310956721688}
 --- !u!120 &120395266713707820
@@ -154,7 +155,7 @@ LineRenderer:
   - {x: 0, y: 2.5, z: 1}
   m_Parameters:
     serializedVersion: 2
-    widthMultiplier: 0.4
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
