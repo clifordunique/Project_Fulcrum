@@ -29,7 +29,7 @@ public class ShockEffect : MonoBehaviour {
 //			}
 //		}
 //	}
-//
+
 	public void Complete()
 	{
 		Destroy(this.transform.parent.gameObject);

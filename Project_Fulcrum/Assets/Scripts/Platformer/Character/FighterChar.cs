@@ -1,10 +1,12 @@
 ﻿using UnityEngine.UI;
 using System;
 using UnityEngine;
-using UnityEditor;
+
 using EZCameraShake;
 using UnityEngine.Networking;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 /*
  * AUTHOR'S NOTES:
  * 
@@ -33,10 +35,11 @@ public class FighterChar : NetworkBehaviour
 	protected int errorDetectingRecursionCount; 			//Iterates each time recursive trajectory correction executes on the current frame. Not currently used.
 	[Header("Debug:")]
 	[SerializeField] protected bool autoPressLeft; 			// When true, fighter will behave as if the left key is pressed.
-	[SerializeField] protected bool autoPressRight; 			// When true, fighter will behave as if the right key is pressed.	
+	[SerializeField] protected bool autoPressRight; 		// When true, fighter will behave as if the right key is pressed.	
 	[SerializeField] protected bool autoPressDown; 			// When true, fighter will behave as if the left key is pressed.
 	[SerializeField] protected bool autoPressUp; 			// When true, fighter will behave as if the right key is pressed.
 	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
+	[SerializeField] protected bool autoLeftClick;			// When true, fighter will behave as if left click is pressed.
 	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
 	[SerializeField] protected bool noGravity;				// Disable gravity.
 	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
@@ -44,7 +47,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
 	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
 	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
-	[SerializeField] protected bool d_SendTractionMessages;// When true, the console prints messages related to collision detection
+	[SerializeField] protected bool d_SendTractionMessages;	// When true, the console prints messages related to collision detection
 	protected LineRenderer m_DebugLine; 					// Part of above indicators.
 	protected LineRenderer m_GroundLine;					// Part of above indicators.		
 	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
@@ -222,7 +225,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected int g_ZonLevel;						// Level of fighter Zon Power.
 	[SerializeField] protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
 	[SerializeField] protected bool g_VelocityPunching;				// True when fighter is channeling a velocity fuelled punch.
-	[SerializeField] protected bool g_VelocityPunchExpended;			// True when fighter's VelocityPunch has been used up.
+	[SerializeField] protected bool g_VelocityPunchExpended;		// True when fighter's VelocityPunch has been used up.
+	[SerializeField] protected float g_VelocityPunchChargeTime;		// Min duration the fighter can be stunned from slamming the ground.
+
 	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the fighter in? -1 = no stance.
 
 	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
@@ -238,6 +243,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected float g_MaxCrtrStun = 3f;			// Max duration the fighter can be stunned from smashing the ground hard.
 	[SerializeField] public int g_IsInGrass;						// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
 	[SerializeField] public bool g_fighterCollision = true;			// While true, this fighter will collide with other fighters
+	[SerializeField] public float g_fighterCollisionCD;				// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
+	[SerializeField] public float g_fighterCollisionCDLength = 1f;	// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
+	[SerializeField] public int g_Stance = 0;						// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
 	protected bool isAPlayer;
 
 	#endregion 
@@ -385,6 +393,10 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdatePhysics()
 	{
+		if(g_fighterCollisionCD>0)
+		{
+			g_fighterCollisionCD -= Time.fixedDeltaTime;
+		}
 		m_DistanceTravelled = Vector2.zero;
 		initialVel = FighterState.Vel;
 
@@ -418,7 +430,7 @@ public class FighterChar : NetworkBehaviour
 
 		//print("m_RemainingMovement before collision: "+m_RemainingMovement);
 
-		if(g_fighterCollision)
+		if(g_fighterCollision)//&&g_fighterCollisionCD <= 0)
 		{
 			DynamicCollision();
 		}
@@ -612,6 +624,7 @@ public class FighterChar : NetworkBehaviour
 
 		if (!facingDirection) //If facing left
 		{
+			o_Anim.SetBool("IsFacingRight", false);
 			//print("FACING LEFT!   "+h)
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			o_SpriteRenderer.flipX = true;
@@ -627,7 +640,7 @@ public class FighterChar : NetworkBehaviour
 		else //If facing right
 		{
 			//print("FACING RIGHT!   "+h);
-
+			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			o_SpriteRenderer.flipX = false;
 			if(FighterState.Vel.x < 0 && m_Spd >= v_ReversingSlideT)
@@ -664,6 +677,7 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
 		o_Anim.SetFloat("hSpeed", FighterState.Vel.x);
 		o_Anim.SetFloat("vSpeed", FighterState.Vel.y);
+		o_Anim.SetInteger("Stance", g_Stance);
 	
 
 		if(FighterState.Vel.magnitude >= m_TractionChangeT )
@@ -917,9 +931,6 @@ public class FighterChar : NetworkBehaviour
 				}
 			}
 		}
-		//		ToLeftWall(predictedLoc[2]);
-		//		DirectionChange(m_LeftNormal);
-
 		#endregion
 	}
 
@@ -1938,22 +1949,72 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
-	protected bool CollideWithFighter(FighterChar fighterCollidedWith) 
+	protected bool CollideWithFighter(FighterChar fighterCollidedWith) //CWF
 	{ // Handles collisions with another Fighter.
-		if(!IsVelocityPunching()){return false;}
+		print("COLLISIONWITHFIGHTER!");
 
-		Vector2 velocitee = GetVelocity();
-		float speed = velocitee.magnitude;
+		Vector2 myVelocity = this.GetVelocity();
+		Vector2 yourVelocity = fighterCollidedWith.GetVelocity();
 
-		//this.gameObject.SetActive(false);
+		float mySpeed = this.GetSpeed();
+		float yourSpeed = fighterCollidedWith.GetSpeed();
 
-		fighterCollidedWith.InstantForce(velocitee, this.GetSpeed()*0.75f);
-		fighterCollidedWith.TakeDamage((int)(25+(75*(speed/1000))));
-		print("Fighter recieved a blow of force: "+speed+", dealing damage of: "+(int)(25+(75*(speed/1000))));
-		m_Impact = true;
-		this.SetSpeed(this.GetSpeed()*0.25f);
+		if(g_Stance == 0)
+		{
+			return false;
+		}
+		else if(g_Stance==1) // If attacking, see what stance enemy is, and decide type of impact.
+		{
+			if(fighterCollidedWith.g_Stance==0)
+			{
+				fighterCollidedWith.InstantForce(myVelocity, this.GetSpeed()*0.75f);
+				fighterCollidedWith.TakeDamage((int)(25+(75*(mySpeed/1000))));
+				print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
+				m_Impact = true;
+				this.SetSpeed(this.GetSpeed()*0.25f);
+				g_fighterCollisionCD = g_fighterCollisionCDLength;
+				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+			}
+			else if(fighterCollidedWith.g_Stance==1)
+			{
+				float combinedSpeed = mySpeed + yourSpeed; 
+				print("clashing strike!");
+				fighterCollidedWith.InstantForce(myVelocity, combinedSpeed*0.5f);
+				this.InstantForce(yourVelocity, combinedSpeed*0.5f);
 
-		return true;
+				print("Opponent got knocked in direction "+myVelocity.normalized);
+				print("I got knocked in direction "+yourVelocity.normalized);
+
+				fighterCollidedWith.TakeDamage((int)(25+(25*(combinedSpeed/1000))));
+				this.TakeDamage((int)(25+(25*(combinedSpeed/1000))));
+
+				fighterCollidedWith.m_Impact = true;
+				m_Impact = true;
+
+				this.g_VelocityPunchExpended = true;
+				fighterCollidedWith.g_VelocityPunchExpended = true;
+
+				print("Both fighters recieved a blow of force: "+combinedSpeed+", dealing damage of: "+(int)(25+(25*(combinedSpeed/1000))));
+				g_fighterCollisionCD = g_fighterCollisionCDLength;
+				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+			}
+			else
+			{
+				print("Attacking defending enemy!");
+				fighterCollidedWith.InstantForce(myVelocity, this.GetSpeed()*0.75f);
+				fighterCollidedWith.TakeDamage((int)(25+(75*(mySpeed/1000))));
+				print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
+				m_Impact = true;
+				this.SetSpeed(mySpeed*0.25f);
+				g_fighterCollisionCD = g_fighterCollisionCDLength;
+				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	protected Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)

@@ -1,12 +1,14 @@
 ﻿using UnityEngine.UI;
 using System;
 using UnityEngine;
-using UnityEditor;
+
 using EZCameraShake;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 /*
  * AUTHOR'S NOTES:
  * 
@@ -38,6 +40,7 @@ public class Player : FighterChar
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Reporter o_Reporter;      			// Reference to the console (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
@@ -59,6 +62,7 @@ public class Player : FighterChar
 	#region PLAYERINPUT
 	public int inputBufferSize = 2;
 	[SerializeField] public Queue<FighterState> inputBuffer;
+	[SerializeField][ReadOnlyAttribute]public bool i_DevkeyTilde;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey1;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey2;
 	[SerializeField][ReadOnlyAttribute]public bool i_DevKey3;
@@ -142,6 +146,7 @@ public class Player : FighterChar
 	protected void Start()
 	{
 		o_ProximityLiner = this.GetComponent<ProximityLiner>();
+		o_Reporter = FindObjectOfType<Reporter>();
 		this.FighterState.FinalPos = this.transform.position;
 		if(SceneManager.GetActiveScene().isLoaded)
 		{
@@ -294,6 +299,7 @@ public class Player : FighterChar
 	protected override void FixedUpdateProcessInput()
 	{
 		m_Impact = false;
+		g_Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
@@ -324,6 +330,21 @@ public class Player : FighterChar
 			FighterState.LeftClick = false;
 		}	
 
+		// Automatic input options.
+		if(autoJump)
+		{
+			FighterState.JumpKey = true;
+		}
+		if(autoLeftClick)
+		{
+			FighterState.LeftClick = true;
+			FighterState.LeftClickHold = true;
+		}
+		if(i_DevkeyTilde)
+		{
+			o_Reporter.doShow();
+			i_DevkeyTilde = false;
+		}
 		if(i_DevKey1)
 		{
 			if(FighterState.DevMode)
@@ -400,7 +421,9 @@ public class Player : FighterChar
 		if(i_DevKey12)
 		{
 			i_DevKey12 = false;
+			#if UNITY_EDITOR
 			EditorApplication.isPaused = true;
+			#endif
 		}
 
 		if(IsDisabled())
@@ -537,30 +560,38 @@ public class Player : FighterChar
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
 			//print("Leftclick detected");
-			//g_VelocityPunchExpended = false;
+			g_VelocityPunchExpended = false;
 			FighterState.LeftClickRelease = false;
 		}	
 
 		if(FighterState.LeftClickHold)
 		{
 			i_LeftClickHoldDuration += Time.fixedDeltaTime;
-			if(g_VelocityPunching)
+			g_Stance = 1;
+
+			if(i_LeftClickHoldDuration>=g_VelocityPunchChargeTime)
 			{
-				if(FighterState.Vel.magnitude <= 70||g_VelocityPunchExpended)
-				{
-					g_VelocityPunching = false;
-					o_VelocityPunch.inUse = false;
-					g_VelocityPunchExpended = true;
-				}
+				g_VelocityPunching = true;
+				o_VelocityPunch.inUse = true;
 			}
-			else
-			{
-				if((FighterState.Vel.magnitude > 70)&&(!g_VelocityPunchExpended)&&(i_LeftClickHoldDuration>=0.5f)) //If going fast enough and holding click for long enough.
-				{
-					g_VelocityPunching = true;
-					o_VelocityPunch.inUse = true;
-				}
-			}
+
+//			if(g_VelocityPunching)
+//			{
+//				if(FighterState.Vel.magnitude <= 70||g_VelocityPunchExpended)
+//				{
+//					g_VelocityPunching = false;
+//					o_VelocityPunch.inUse = false;
+//					g_VelocityPunchExpended = true;
+//				}
+//			}
+//			else
+//			{
+//				if((FighterState.Vel.magnitude > 70)&&(!g_VelocityPunchExpended)&&(i_LeftClickHoldDuration>=0.5f)) //If going fast enough and holding click for long enough.
+//				{
+//					g_VelocityPunching = true;
+//					o_VelocityPunch.inUse = true;
+//				}
+//			}
 		}
 		else
 		{
@@ -603,6 +634,10 @@ public class Player : FighterChar
 		if(Input.GetButtonDown("Jump"))
 		{
 			FighterState.JumpKey = true;				
+		}
+		if(Input.GetButtonDown("Tilde"))
+		{
+			i_DevkeyTilde = true;				
 		}
 		if(Input.GetButtonDown("F1"))
 		{
@@ -650,7 +685,7 @@ public class Player : FighterChar
 		}
 		if(Input.GetButtonDown("F12"))
 		{
-			i_DevKey12  = true;				
+			i_DevKey12 = true;				
 		}
 
 		//
@@ -671,11 +706,6 @@ public class Player : FighterChar
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		FighterState.MouseWorldPos = Vec2(mousePoint);
 
-		// Automatic input options.
-		if(autoJump)
-		{
-			FighterState.JumpKey = true;
-		}
 	}
 
 	protected override void FixedUpdateAnimation()
@@ -720,6 +750,7 @@ public class Player : FighterChar
 		if (!facingDirection) //If facing left
 		{
 			//print("FACING LEFT!");
+			o_Anim.SetBool("IsFacingRight", false);
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			o_SpriteRenderer.flipX = true;
 			//print(o_SpriteRenderer.flipX);
@@ -735,7 +766,7 @@ public class Player : FighterChar
 		else //If facing right
 		{
 			//print("FACING RIGHT!");
-
+			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			o_SpriteRenderer.flipX = false;
 			//print(o_SpriteRenderer.flipX);
@@ -782,6 +813,8 @@ public class Player : FighterChar
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
 		o_Anim.SetFloat("hSpeed", FighterState.Vel.x);
 		o_Anim.SetFloat("vSpeed", FighterState.Vel.y);
+		o_Anim.SetInteger("Stance", g_Stance);
+
 
 		if(FighterState.Vel.magnitude >= m_TractionChangeT )
 		{

@@ -1026,6 +1026,7 @@ MonoBehaviour:
   g_ZonJumpCharge: 0
   g_VelocityPunching: 0
   g_VelocityPunchExpended: 0
+  g_VelocityPunchChargeTime: 0.5
   g_ZonStance: 0
   g_MaxHealth: 100
   g_MinSlamDMG: 5
@@ -1039,6 +1040,7 @@ MonoBehaviour:
   g_MaxCrtrStun: 3
   g_IsInGrass: 0
   g_fighterCollision: 1
+  g_Stance: 0
   o_Speedometer: {fileID: 0}
   o_ZonCounter: {fileID: 0}
   o_MainCamera: {fileID: 0}

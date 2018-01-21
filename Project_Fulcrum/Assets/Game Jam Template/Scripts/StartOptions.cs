@@ -90,16 +90,23 @@ public class StartOptions : NetworkBehaviour {
 		Mngr.matchMaker.JoinMatch(match.networkId, "","","", 0, 0, Mngr.OnMatchJoined);
 	}
 
+//	public void SingleplayerButtonClicked()
+//	{
+//
+//		playMusic.FadeDown(fadeColorAnimationClip.length);
+//			
+//		//Use invoke to delay calling of LoadDelayed by half the length of fadeColorAnimationClip
+//		Invoke("LoadDelayed", fadeColorAnimationClip.length * .5f);
+//
+//		//Set the trigger of Animator animColorFade to start transition to the FadeToOpaque state.
+//		animColorFade.SetTrigger("fade");
+//	}
+
 	public void SingleplayerButtonClicked()
 	{
-
-		playMusic.FadeDown(fadeColorAnimationClip.length);
-			
-		//Use invoke to delay calling of LoadDelayed by half the length of fadeColorAnimationClip
-		Invoke("LoadDelayed", fadeColorAnimationClip.length * .5f);
-
-		//Set the trigger of Animator animColorFade to start transition to the FadeToOpaque state.
-		animColorFade.SetTrigger("fade");
+		ChangeSceneMultiplayer();
+		inMainMenu = false;
+		showPanels.HideMenu();
 	}
 
 	public void JoinMatchButtonClicked()
@@ -129,6 +136,15 @@ public class StartOptions : NetworkBehaviour {
 
 	public void ChangeSceneMultiplayer()
 	{
+		string matchName;
+		if(inputField.text == null)
+		{
+			matchName = "Default";
+		}
+		else
+		{
+			matchName = inputField.text;
+		}
 		isMultiplayer = true;
 		Mngr.ServerChangeScene("Scenes/MultiplayerTest");
 		//SceneManager.LoadScene("Scenes/MultiplayerTest");

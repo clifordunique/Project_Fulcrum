@@ -1756,7 +1756,7 @@ public class Reporter : MonoBehaviour
 	float lastUpdate2 = 0;
 #endif
 
-	void doShow()
+	public void doShow()
 	{
 		show = true;
 		currentView = ReportView.Logs;
@@ -1788,9 +1788,9 @@ public class Reporter : MonoBehaviour
 #endif
 
 		calculateStartIndex();
-		if (!show && isGestureDone()) {
-			doShow();
-		}
+//		if (!show && isGestureDone()) {
+//			doShow();
+//		}
 
 
 		if (threadedLogs.Count > 0) {
