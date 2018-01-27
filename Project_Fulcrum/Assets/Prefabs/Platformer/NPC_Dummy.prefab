@@ -29,13 +29,14 @@ GameObject:
   - component: {fileID: 82281442664497834}
   - component: {fileID: 114430568935117682}
   - component: {fileID: 114966289662542808}
+  - component: {fileID: 82260550262096948}
   m_Layer: 13
   m_Name: NPC_Dummy
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1025922877357856
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +215,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1011966117557460}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -695.5, y: 414.7, z: 0}
+  m_LocalPosition: {x: 1570.98, y: -149.04, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4669044847265988}
@@ -395,6 +396,93 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.1, y: 0.97}
   m_Direction: 0
+--- !u!82 &82260550262096948
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1011966117557460}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300001, guid: 409d6b2b7ed1409479c72b59cb8ae89b,
+    type: 2}
+  m_audioClip: {fileID: 8300000, guid: 9b20a1bc5c7fd4f40a2afd2b2f04157c, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0.03
+  MinDistance: 50
+  MaxDistance: 700
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0.125
+      value: 1
+      inSlope: -3.30936
+      outSlope: -3.30936
+      tangentMode: 34
+    - serializedVersion: 2
+      time: 0.3467102
+      value: 0.26628113
+      inSlope: -1.4256132
+      outSlope: -1.4256132
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: -0.14748877
+      outSlope: -0.14748877
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0.989
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!82 &82281442664497834
 AudioSource:
   m_ObjectHideFlags: 1
@@ -565,7 +653,7 @@ Animator:
   m_GameObject: {fileID: 1011966117557460}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5fc43f0c4b413534ba12c51c0e5e5f6f, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7fd40b15ffda8e644ad2d34ad8c967a0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 1
   m_ApplyRootMotion: 0
@@ -742,6 +830,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30244a32ac93af4b9e6242ffe6cfd6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoPressLeft: 0
+  autoPressRight: 0
+  autoPressDown: 0
+  autoPressUp: 0
+  autoJump: 0
+  autoLeftClick: 0
+  antiTunneling: 1
+  noGravity: 0
+  showVelocityIndicator: 0
+  showContactIndicators: 0
+  recoverFromFullEmbed: 1
+  d_ClickToKnockFighter: 0
+  d_SendCollisionMessages: 0
+  d_SendTractionMessages: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
   m_Acceleration: 0.6
@@ -751,6 +853,8 @@ MonoBehaviour:
   m_WallHJumpForce: 10
   m_TractionChangeT: 20
   m_WallTractionT: 20
+  m_WallSliding: 0
+  m_Sliding: 0
   m_LinearStopRate: 2
   m_LinearSlideRate: 0.35
   m_LinearOverSpeedRate: 0.1
@@ -771,6 +875,19 @@ MonoBehaviour:
   m_CraterT: 200
   m_GuardSlamT: 200
   m_GuardCraterT: 400
+  m_JumpBufferG: 0
+  m_JumpBufferC: 0
+  m_JumpBufferL: 0
+  m_JumpBufferR: 0
+  m_JumpBufferFrameAmount: 0
+  m_StrandJumpSpeedLossM: 0
+  m_StrandJumpReflectSpd: 0
+  m_StrandJumpReflectDir: {x: 0, y: 0}
+  m_WidestStrandJumpAngle: 0
+  k_IsKinematic: 0
+  k_KinematicAnim: 0
+  k_StrandJumpSlowdownM: 0.5
+  k_StrandJumpSlowdownLinear: 5
   o_TempLight: {fileID: 108171367994197720}
   o_FighterAudio: {fileID: 114966289662542808}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -780,7 +897,11 @@ MonoBehaviour:
     type: 2}
   p_ShockEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
     type: 2}
+  p_StrandJumpPrefab: {fileID: 1241283713325446, guid: 95751ca55b570564ead712379a7c4613,
+    type: 2}
   p_AirBurstPrefab: {fileID: 1978595356474728, guid: 2c2261d633c10a349a656b3701bb7b68,
+    type: 2}
+  p_DustEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
     type: 2}
   o_SpriteRenderer: {fileID: 212940058821808812}
   mask:
@@ -822,6 +943,8 @@ MonoBehaviour:
     LeftClickHold: 0
     LeftClickRelease: 0
     RightClick: 0
+    RightClickHold: 0
+    RightClickRelease: 0
     LeftKey: 0
     RightKey: 0
     UpKey: 0
@@ -832,28 +955,30 @@ MonoBehaviour:
     PlayerMouseVector: {x: 0, y: 0}
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
-  autoRunLeft: 0
-  autoRunRight: 0
-  autoJump: 0
-  antiTunneling: 1
-  noGravity: 0
-  showVelocityIndicator: 0
-  showContactIndicators: 0
-  recoverFromFullEmbed: 1
-  d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 0
   v_ReversingSlideT: 5
   v_FighterGlow: 0
+  v_CameraZoom: 0
+  v_CameraMode: 0
+  v_CameraXLeashM: 0
+  v_CameraYLeashM: 0
+  v_CameraXLeashLim: 0
+  v_CameraYLeashLim: 0
+  v_DustMoteFrequency: 0
+  v_DustMoteTimer: 0
+  v_DistFromLastDust: 0
+  v_DistBetweenDust: 0
   g_ZonLevel: 0
   g_ZonJumpCharge: 0
   g_VelocityPunching: 0
   g_VelocityPunchExpended: 0
+  g_VelocityPunchChargeTime: 0
   g_ZonStance: -1
   g_MaxHealth: 100
   g_MinSlamDMG: 5
   g_MaxSlamDMG: 30
   g_MinCrtrDMG: 30
   g_MaxCrtrDMG: 60
+  g_Stunned: 0
   g_CurFallStun: 0
   g_MinSlamStun: 0.5
   g_MaxSlamStun: 1.5
@@ -861,6 +986,9 @@ MonoBehaviour:
   g_MaxCrtrStun: 3
   g_IsInGrass: 0
   g_fighterCollision: 0
+  g_fighterCollisionCD: 0
+  g_fighterCollisionCDLength: 1
+  g_Stance: 0
   enemyTarget: {fileID: 0}
   distanceToTarget: 0
   attackRange: 1
@@ -896,10 +1024,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charAudioSource: {fileID: 82281442664497834}
   windSource: {fileID: 82460852557008564}
+  slideSource: {fileID: 82260550262096948}
   jumpSounds:
   - {fileID: 8300000, guid: 484913db82778d643bd3ac44fc3722d6, type: 3}
   sfxSounds:
   - {fileID: 8300000, guid: 8ce393386c0b1c44c89fd67eabf54f54, type: 3}
+  slideSounds: []
   footstepSounds:
   - {fileID: 8300000, guid: bdbf71ea920009e4b9572f0f0f6b60b5, type: 3}
   - {fileID: 8300000, guid: e8f8eee911739c8469c4bae88e1b4cbf, type: 3}
@@ -928,10 +1058,12 @@ MonoBehaviour:
   windSound: {fileID: 8300000, guid: 49a72558cc015014fa776a44e42e5914, type: 3}
   theCharacter: {fileID: 114689712747675304}
   jumpVolM: 0.2
+  strandJumpVolM: 0
   landVolM: 0.2
   slamVolM: 0.3
   crtrVolM: 0.3
   windVolM: 0.25
+  slideVolM: 0
   stepVolM: 0.3
   punchVolM: 0.2
   punchHitVolM: 0.4
@@ -940,6 +1072,8 @@ MonoBehaviour:
   windMaxT: 500
   curWindIntensity: 0
   destWindIntensity: 0
+  slideMinT: 0
+  slideMaxT: 0
   muteFootsteps: 0
 --- !u!120 &120360838583366554
 LineRenderer:

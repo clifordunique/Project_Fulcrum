@@ -7,20 +7,23 @@ public class FighterAudio : NetworkBehaviour {
 
 	[SerializeField]private AudioSource charAudioSource;
 	[SerializeField]private AudioSource windSource;
+	[SerializeField]private AudioSource slideSource;
 	[SerializeField]private AudioClip[] jumpSounds;
 	[SerializeField]private AudioClip[] sfxSounds;
+	[SerializeField]private AudioClip[] slideSounds;
 	[SerializeField]private AudioClip[] footstepSounds;
 	[SerializeField]private AudioClip[] landingSounds;
 	[SerializeField]private AudioClip[] punchSounds;
 	[SerializeField]private AudioClip[] punchHitSounds;
 	[SerializeField]private AudioClip 	windSound;
-	[SerializeField]private FighterChar theCharacter;
+	[SerializeField][ReadOnlyAttribute] private FighterChar theCharacter;
 	[SerializeField][Range(0,1f)]private float jumpVolM;		// Jump volume
 	[SerializeField][Range(0,1f)]private float strandJumpVolM;	// Strand jump volume
 	[SerializeField][Range(0,1f)]private float landVolM;		// Normal landing volume
 	[SerializeField][Range(0,1f)]private float slamVolM;		// Slam volume
 	[SerializeField][Range(0,1f)]private float crtrVolM;		// Crater volume
 	[SerializeField][Range(0,1f)]private float windVolM;		// Wind volume
+	[SerializeField][Range(0,1f)]private float slideVolM;		// Slide volume
 	[SerializeField][Range(0,1f)]private float stepVolM;		// Footstep volume
 	[SerializeField][Range(0,1f)]private float punchVolM;		// Punch volume
 	[SerializeField][Range(0,1f)]private float punchHitVolM;	// Punch hit volume
@@ -31,12 +34,15 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField][ReadOnlyAttribute] private float curWindIntensity = 0;			// Wind loudness based on speed. Lerps toward destWindIntensity		
 	[SerializeField][ReadOnlyAttribute] private float destWindIntensity = 0;		// Goal wind loudness
 
+	[SerializeField][Range(0f,20f)]private float slideMinT;						// Speed at which slide sound becomes audible
+	[SerializeField][Range(20f,100f)]private float slideMaxT;						// Speed at which slide sound is loudest
+
 	[SerializeField]private bool muteFootsteps;
 
 	// Use this for initialization
-	void Start () 
+	void Start() 
 	{
-		//charAudioSource = this.gameObject.GetComponent<AudioSource>();
+		theCharacter = this.gameObject.GetComponent<FighterChar>();
 	}
 
 
@@ -230,12 +236,18 @@ public class FighterAudio : NetworkBehaviour {
 	// Update is called once per frame
 	void Update() 
 	{
+		modulateWind();
+		modulateSlide();
+	}
+
+	private void modulateWind()
+	{
 		float windVolume = 0;
-		if(theCharacter.m_Spd > windMinT)
+		if(theCharacter.GetSpeed() > windMinT)
 		{
-			if(theCharacter.m_Spd < windMaxT)
+			if(theCharacter.GetSpeed() < windMaxT)
 			{
-				windVolume = (theCharacter.m_Spd-windMinT)/(windMaxT-windMinT);
+				windVolume = (theCharacter.GetSpeed()-windMinT)/(windMaxT-windMinT);
 
 				windVolume *= windVolM;
 			}
@@ -256,5 +268,30 @@ public class FighterAudio : NetworkBehaviour {
 		windSource.volume = curWindIntensity;
 		//CmdWindSound(windVolume);
 		//windSource.pitch = 1 + windVolume*0.2f;
+	}
+
+	private void modulateSlide()
+	{
+		float slideVolume = 0;
+		if((theCharacter.GetSpeed()>slideMinT) && (theCharacter.isSliding()))
+		{
+			if(theCharacter.GetSpeed()<slideMaxT)
+			{
+				slideVolume = (theCharacter.GetSpeed()-slideMinT)/(slideMaxT-slideMinT);
+
+				slideVolume *= slideVolM;
+			}
+			else
+			{
+				slideVolume = slideVolM;
+			}
+		}
+		else
+		{
+			slideVolume = 0;
+		}
+		slideSource.volume = slideVolume;
+		//CmdslideSound(slideVolume);
+		//slideSource.pitch = 1 + slideVolume*0.2f;
 	}
 }

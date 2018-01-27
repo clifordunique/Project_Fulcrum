@@ -53,6 +53,7 @@
      <Compile Include="Assets\CsvDialogueSystem\Scripts\LanguageControl.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\SoundLoader.cs" />
      <Compile Include="Assets\CsvDialogueSystem\Scripts\StartButtonHandler.cs" />
+     <Compile Include="Assets\DustEffect.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeByDistance.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnKeyPress.cs" />
      <Compile Include="Assets\EZ Camera Shake\Demo\Sample Scripts\ShakeOnTrigger.cs" />

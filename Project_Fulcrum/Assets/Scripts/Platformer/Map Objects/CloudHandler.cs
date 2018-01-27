@@ -76,7 +76,7 @@ public class CloudHandler : MonoBehaviour {
 
 	void UpdateAllClouds()
 	{
-		print("UPDATING CLOUD VARS");
+		//print("UPDATING CLOUD VARS");
 		for(int i = 1; i <= o_CloudLayer.Length; i++)
 		{
 			AdjustCloudLayer(i);

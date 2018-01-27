@@ -61,38 +61,40 @@ public class FighterChar : NetworkBehaviour
 	[Header("Movement Tuning:")]
 	[SerializeField] protected float m_MinSpeed = 10f; 							// The instant starting speed while moving
 	[SerializeField] protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
-	[Range(0,2)][SerializeField] protected float m_Acceleration = 0.6f;    			// Speed the fighter accelerates at
+	[Range(0,2)][SerializeField] protected float m_Acceleration = 0.6f;    		// Speed the fighter accelerates at
 	[SerializeField] protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
-	[SerializeField] protected float m_HJumpForce = 5f;  							// Amount of horizontal force added when the fighter jumps.
+	[SerializeField] protected float m_HJumpForce = 5f;  						// Amount of horizontal force added when the fighter jumps.
 	[SerializeField] protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the fighter walljumps.
 	[SerializeField] protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the fighter walljumps.
-	[SerializeField] protected float m_TractionChangeT = 20f;						// Threshold where movement changes from exponential to linear acceleration.  
+	[SerializeField] protected float m_TractionChangeT = 20f;					// Threshold where movement changes from exponential to linear acceleration.  
 	[SerializeField] protected float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
-	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 			// How fast the fighter decelerates when changing direction.
+	[SerializeField] protected bool m_WallSliding;								// Speed threshold at which wallsliding traction changes.
+	[SerializeField] protected bool m_Sliding;									// Whether or not the player is sliding.
+	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 		// How fast the fighter decelerates when changing direction.
 	[Range(0,5)][SerializeField] protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
 	[Range(0,5)][SerializeField] protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
 	[Range(0,5)][SerializeField] protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
 	[Range(1,89)][SerializeField] protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
 	[Range(1,89)][SerializeField] protected float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
-	[Range(1,89)][SerializeField] protected float m_TractionLossMinAngle = 45f; 	// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
-	[Range(45,90)][SerializeField] protected float m_TractionLossMaxAngle = 78f; 	// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
+	[Range(1,89)][SerializeField] protected float m_TractionLossMinAngle = 45f; // Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
+	[Range(45,90)][SerializeField] protected float m_TractionLossMaxAngle = 78f;// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
 	[Range(0,2)][SerializeField] protected float m_SlippingAcceleration = 1f;  	// Changes how fast the fighter slides down overly steep slopes.
-	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 		// How long the fighter can cling to walls before gravity takes over.
+	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 	// How long the fighter can cling to walls before gravity takes over.
 	[Range(20,70)][SerializeField] protected float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
-	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;							// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
+	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;						// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
 	[ReadOnlyAttribute]protected float m_TimeSpentHanging = 0f;					// Amount of time the fighter has been clung to a wall.
-	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;						// Max time the fighter can cling to current wall.
+	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;					// Max time the fighter can cling to current wall.
 	[Range(0,0.5f)][SerializeField] protected float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
-	[Range(0.01f,0.4f)][SerializeField] protected float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
+	[Range(0.01f,0.4f)][SerializeField] protected float m_MinEmbed = 0.01f; 	// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
 	[Space(10)]
 	[SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
 	[SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
 	[Space(10)]
-	[SerializeField] public float m_VelPunchT = 60f; 								// Impact threshold for Velocity Punch trigger
-	[SerializeField] protected float m_SlamT = 100f; 								// Impact threshold for slam
-	[SerializeField] protected float m_CraterT = 200f; 								// Impact threshold for crater
-	[SerializeField] protected float m_GuardSlamT = 200f; 							// Guarded Impact threshold for slam
-	[SerializeField] protected float m_GuardCraterT = 400f; 						// Guarded Impact threshold for crater
+	[SerializeField] public float m_VelPunchT = 60f; 							// Impact threshold for Velocity Punch trigger
+	[SerializeField] protected float m_SlamT = 100f; 							// Impact threshold for slam
+	[SerializeField] protected float m_CraterT = 200f; 							// Impact threshold for crater
+	[SerializeField] protected float m_GuardSlamT = 200f; 						// Guarded Impact threshold for slam
+	[SerializeField] protected float m_GuardCraterT = 400f; 					// Guarded Impact threshold for crater
 	[Space(10)]
 	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides a _ frame buffer to allow players to jump after leaving the ground.
 	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides a _ frame buffer to allow players to jump after leaving the ceiling.
@@ -104,7 +106,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected float m_StrandJumpReflectSpd;
 	[SerializeField] protected Vector2 m_StrandJumpReflectDir;
 	[SerializeField][Range(0f,180f)] protected float m_WidestStrandJumpAngle;
-
 	#endregion
 
 	//############################################################################################################################################################################################################
@@ -122,16 +123,17 @@ public class FighterChar : NetworkBehaviour
 	#region OBJECT REFERENCES
 	[Header("Character Components:")]
 	[SerializeField] protected Light o_TempLight;      			// Reference to a spotlight attached to the character.
-	[SerializeField] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
+	[SerializeField][ReadOnlyAttribute] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
-	[SerializeField] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
 	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the shock visual effect prefab.
-	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a circular windforce.
+	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a radial windforce.
+	[SerializeField] public GameObject p_DustEffectPrefab;		// Reference to the dust visual effect prefab.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
-	[SerializeField] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
+	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -165,7 +167,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
 	[SerializeField][ReadOnlyAttribute]protected float m_CGF; 					//"Continuous G-Force" over time.
 	[SerializeField][ReadOnlyAttribute]protected float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
-	[SerializeField][ReadOnlyAttribute]public float m_Spd;			//Current speed.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 initialVel;			//Velocity at the start of the physics frame.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_DistanceTravelled;	//(x,y) distance travelled on current frame. Inversely proportional to m_RemainingMovement.
 	[SerializeField][ReadOnlyAttribute]protected Vector2 m_RemainingMovement; 	//Remaining (x,y) movement after impact.
@@ -188,7 +189,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected bool m_Airborne;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Landing;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Kneeling;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Impact;
+	[SerializeField][ReadOnlyAttribute]protected bool m_WorldImpact;
 	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
 	#endregion
 	//##########################################################################################################################################################################
@@ -208,44 +209,57 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
-	[SerializeField][Range(0,10)]protected float v_ReversingSlideT = 5;	// How fast the fighter must be going to go into a slide posture when changing directions.
-	[SerializeField][Range(0,3)] protected int v_FighterGlow;			// Amount of fighter "energy glow" effect.
-	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	// Amount of camera zoom.
-	[SerializeField][Range(0,1)] protected int v_CameraMode; 			// What camera control type is in use.
-	[SerializeField][Range(0,1)] protected float v_CameraXLeashM; 		// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
-	[SerializeField][Range(0,1)] protected float v_CameraYLeashM; 		// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
-	[SerializeField][Range(0,1)] protected float v_CameraXLeashLim; 	// MUST BE SET HIGHER THAN LEASHM Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
-	[SerializeField][Range(0,1)] protected float v_CameraYLeashLim; 	// MUST BE SET HIGHER THAN LEASHM Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
+	[SerializeField][Range(0,10)]protected float v_ReversingSlideT = 5;		// How fast the fighter must be going to go into a slide posture when changing directions.
+	[SerializeField][Range(0,3)] protected int v_FighterGlow;			 	// Amount of fighter "energy glow" effect.
+	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	 	// Amount of camera zoom.
+	[SerializeField][Range(0,1)] protected int v_CameraMode; 			 	// What camera control type is in use.
+	[SerializeField][Range(0,1)] protected float v_CameraXLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
+	[SerializeField][Range(0,1)] protected float v_CameraYLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
+	[SerializeField][Range(0,1)] protected float v_CameraXLeashLim; 	 	// MUST BE SET HIGHER THAN LEASHM. Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
+	[SerializeField][Range(0,1)] protected float v_CameraYLeashLim; 	 	// MUST BE SET HIGHER THAN LEASHM. Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
+	[SerializeField][Range(0.01f,20)] protected float v_DustMoteFrequency;	// Amount of dustmotes generated behind the player per second.
+	[SerializeField][ReadOnlyAttribute] protected float v_DustMoteTimer; 	// Records the time between dust cloud spawns.
+	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
+	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
+	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
 	//###########################################################################################################################################################################
 	#region GAMEPLAY VARIABLES
 	[Header("Gameplay:")]
-	[SerializeField] protected int g_ZonLevel;						// Level of fighter Zon Power.
-	[SerializeField] protected int g_ZonJumpCharge;					// Level of power channelled into current jump.
-	[SerializeField] protected bool g_VelocityPunching;				// True when fighter is channeling a velocity fuelled punch.
-	[SerializeField] protected bool g_VelocityPunchExpended;		// True when fighter's VelocityPunch has been used up.
-	[SerializeField] protected float g_VelocityPunchChargeTime;		// Min duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected int g_ZonLevel;							// Level of fighter Zon Power.
+	[SerializeField] protected int g_ZonJumpCharge;						// Level of power channelled into current jump.
+	[SerializeField] protected bool g_VelocityPunching;					// True when fighter is channeling a velocity fuelled punch.
+	[SerializeField] protected float g_VelocityPunchChargeTime;			// Min duration the fighter can be stunned from slamming the ground.
 
-	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;	// Which stance is the fighter in? -1 = no stance.
+	[SerializeField][ReadOnlyAttribute] protected int g_ZonStance;		// Which stance is the fighter in? -1 = no stance.
 
-	[SerializeField] protected int g_MaxHealth = 100;				// Max health.
-	[SerializeField] protected int g_MinSlamDMG = 5;				// Min damage a slam impact can deal.
-	[SerializeField] protected int g_MaxSlamDMG = 30;				// Max damage a slam impact can deal.	
-	[SerializeField] protected int g_MinCrtrDMG = 30;				// Min damage a crater impact can deal.
-	[SerializeField] protected int g_MaxCrtrDMG = 60;				// Max damage a crater impact can deal.
-	//[SerializeField] protected bool g_FallStunned = false;		// True when the fighter is recoiling after falling.
-	[SerializeField] protected float g_CurFallStun = 0;				// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
-	[SerializeField] protected float g_MinSlamStun = 0.5f;			// Min duration the fighter can be stunned from slamming the ground.
-	[SerializeField] protected float g_MaxSlamStun = 1.5f;			// Max duration the fighter can be stunned from slamming the ground.
-	[SerializeField] protected float g_MinCrtrStun = 1.5f;			// Max duration the fighter can be stunned from smashing the ground hard.
-	[SerializeField] protected float g_MaxCrtrStun = 3f;			// Max duration the fighter can be stunned from smashing the ground hard.
-	[SerializeField] public int g_IsInGrass;						// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
-	[SerializeField] public bool g_fighterCollision = true;			// While true, this fighter will collide with other fighters
-	[SerializeField] public float g_fighterCollisionCD;				// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
-	[SerializeField] public float g_fighterCollisionCDLength = 1f;	// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
-	[SerializeField] public int g_Stance = 0;						// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
+	[SerializeField] protected int g_MaxHealth = 100;					// Max health.
+	[SerializeField] protected int g_MinSlamDMG = 5;					// Min damage a slam impact can deal.
+	[SerializeField] protected int g_MaxSlamDMG = 30;					// Max damage a slam impact can deal.	
+	[SerializeField] protected int g_MinCrtrDMG = 30;					// Min damage a crater impact can deal.
+	[SerializeField] protected int g_MaxCrtrDMG = 60;					// Max damage a crater impact can deal.
+	[SerializeField] protected float g_MinSlamStun = 0.5f;				// Min duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected float g_MaxSlamStun = 1.5f;				// Max duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected float g_MinCrtrStun = 1.5f;				// Max duration the fighter can be stunned from smashing the ground hard.
+	[SerializeField] protected float g_MaxCrtrStun = 3f;				// Max duration the fighter can be stunned from smashing the ground hard.
+	[SerializeField] protected bool g_Stunned = false;					// True when the fighter loses control after a hard impact from the ground or a player.
+	[SerializeField] protected bool g_Staggered = false;				// True when the fighter loses control after a hard impact from the ground or a player.
+	[SerializeField] public int g_IsInGrass;							// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
+	[SerializeField] public bool g_fighterCollision = true;				// While true, this fighter will collide with other fighters
+	[SerializeField] public float g_fighterCollisionCD;					// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
+	[SerializeField] public float g_fighterCollisionCDLength = 1f;		// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
+	[SerializeField] public int g_Stance = 0;							// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
+	[SerializeField][ReadOnlyAttribute]protected float g_CurStun = 0;	// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
+	[SerializeField] protected float g_MaxClashDisparity = 500;			// The speed difference at which the damage a clash deals reaches its max. For example, if set to 500, one player must be going 500 Kph faster than their opponent to deal 100% damage. If value is lost, try starting with 500 to test.
+	[SerializeField] protected float g_MaxClashDamage = 300;			// Max damage dealt by any clash of fighters. (A clash is when two fighters collide in attack stance)
+	[SerializeField] protected float g_MaxClashDamageForce = 2000;		// Combined force at which max damage is dealt by any clash of fighters. (A clash is when two fighters collide in attack stance)
+
+	[SerializeField][Range(0,1)] protected float g_MinClashStaggerT = 0.1f;				// Min damage required to stagger the fighter during a clash.
+	[SerializeField][Range(0,1)] protected float g_ClashStaggerStunT = 0.25f;			// Max damage required to reach max stagger time from a clash. Min damage required to stun the fighter during a clash.
+	[SerializeField][Range(0,1)] protected float g_MaxClashStunT = 0.4f;				// Max damage required to reach max stun time from a clash.
+
 	protected bool isAPlayer;
 
 	#endregion 
@@ -283,6 +297,7 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void Update()
 	{
 		UpdateInput();
+		UpdateAnimation();
 	}
 
 	protected virtual void LateUpdate()
@@ -353,7 +368,21 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Dead = false;
 		FighterState.CurHealth = g_MaxHealth;
 		o_Anim.SetBool("Dead", false);
-		o_SpriteRenderer.color = Color.white;
+		o_SpriteRenderer.color = v_DefaultColor;
+	}
+
+	protected virtual void SpawnDustEffect()
+	{
+		Vector3 spawnPos = this.m_GroundFoot.position;
+		if(facingDirection)
+		{
+			spawnPos = new Vector3(spawnPos.x-0.5f, spawnPos.y, 0);
+		}
+		else
+		{
+			spawnPos = new Vector3(spawnPos.x+0.5f, spawnPos.y, 0);
+		}
+		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
 	}
 
 	protected virtual void SpawnShockEffect(Vector2 hitDirection)
@@ -464,8 +493,6 @@ public class FighterChar : NetworkBehaviour
 
 		//print("Corrected remaining movement: "+m_RemainingMovement);
 
-		m_Spd = FighterState.Vel.magnitude;
-
 		Vector2 deltaV = FighterState.Vel-initialVel;
 		m_IGF = deltaV.magnitude;
 		m_CGF += m_IGF;
@@ -478,29 +505,65 @@ public class FighterChar : NetworkBehaviour
 		//	print("m_CGF over limit!!");	
 		//}
 
-		if(m_Impact)
+		if(m_WorldImpact)
 		{
 			if(m_IGF >= m_CraterT)
 			{
-				g_VelocityPunchExpended = true;
-				Crater();
+				float impactStrengthM = ((m_IGF-m_CraterT)/(1000f-m_CraterT));
+				if(impactStrengthM > 1){impactStrengthM = 1;}
+
+				Crater(m_IGF);
+
+				float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
+				float stunTime = g_MinCrtrStun+((g_MaxCrtrStun-g_MinCrtrStun)*impactStrengthM); // Stun duration scales linearly from ...
+
+				g_CurStun = stunTime;				 			// Stunned for stunTime.
+				g_Stunned = true;
+				FighterState.CurHealth -= (int)damagedealt;		// Damaged by fall.
+				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+
 			}
 			else if(m_IGF >= m_SlamT)
 			{
-				g_VelocityPunchExpended = true;
-				Slam();
+				float impactStrengthM = ((m_IGF-m_SlamT)/(m_CraterT-m_SlamT));
+
+				Slam(m_IGF);
+
+				float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
+				float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*impactStrengthM); // Stun duration scales linearly from ...
+
+				g_CurStun = stunTime;				 // Stunned for stunTime.
+				g_Staggered = true;
+				if(damagedealt >= 0)
+				{
+					FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+				}
+				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+
 			}
 			else if(m_IGF >= m_VelPunchT&&g_VelocityPunching)
 			{
-				g_VelocityPunchExpended = true;
-				Slam();
+				float impactStrengthM = ((m_IGF-m_VelPunchT)/(m_CraterT-m_VelPunchT));
+
+				Slam(m_IGF);
+
+				float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
+				float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*impactStrengthM); // Stun duration scales linearly from ...
+
+				g_CurStun = stunTime;				 // Stunned for stunTime.
+				g_Staggered = true;
+				if(damagedealt >= 0)
+				{
+					FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+				}
+				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 			}
 			else
 			{
 				o_FighterAudio.LandingSound(m_IGF);
 			}
 		}
-	
+
 //		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 //
 //		this.transform.position = FighterState.FinalPos;
@@ -531,7 +594,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdateProcessInput() //FUPI
 	{
-		m_Impact = false;
+		m_WorldImpact = false;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
@@ -570,14 +633,21 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdateLogic() //FUL
 	{
 
-		if(g_CurFallStun > 0)
+		if(g_CurStun>0)
 		{
-			g_CurFallStun -= Time.deltaTime;
-			if(g_CurFallStun < 0)
+			g_CurStun -= Time.deltaTime;
+			if(g_CurStun<0)
 			{
-				g_CurFallStun = 0;
+				g_CurStun = 0;
+				g_Stunned = false;
+				g_Staggered = false;
 			}
 		}
+		else
+		{
+			g_Stunned = false;
+		}
+			
 		if(FighterState.CurHealth <= 0)
 		{
 			Death();
@@ -591,35 +661,68 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-
-	protected virtual void FixedUpdateAnimation()
+	protected virtual void UpdateAnimation()
 	{
+		if(m_Sliding)
+		{
+			if(v_DistFromLastDust<=0)
+			{
+				SpawnDustEffect();
+				v_DistFromLastDust = v_DistBetweenDust;
+			}
+			else
+			{
+				v_DistFromLastDust -= this.GetSpeed()*Time.deltaTime;
+			}
+		}
+	}
+
+	protected virtual void FixedUpdateAnimation() //FUA
+	{
+		m_WallSliding = false;
+		m_Sliding = false;
+
+		if(g_Staggered)
+		{
+			m_Kneeling = true;
+		}
+		if(g_Stunned)
+		{
+			if(FighterState.Vel.x>0)
+			{
+				facingDirection = true;
+			}
+			if(FighterState.Vel.x<0)
+			{
+				facingDirection = false;
+			}
+		}
 		v_FighterGlow = g_ZonLevel;
 		if (v_FighterGlow > 7){v_FighterGlow = 7;}
 
 		if(v_FighterGlow>2)
 		{
-			o_TempLight.color = new Color(1,1,0,1);
-			o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(-1f,1f));
+			o_SpriteRenderer.color = new Color(1,1,(1f-(v_FighterGlow/7f)),1);
 		}
 		else
 		{
-			o_TempLight.color = new Color(1,1,1,1);
-			o_TempLight.intensity = 2;
+			o_SpriteRenderer.color = v_DefaultColor;
 		}
 
 		o_Anim.SetBool("Walled", false);
 
 		if(m_LeftWalled&&!m_Grounded)
 		{
+			m_Sliding = true;
 			o_Anim.SetBool("Walled", true);
-			facingDirection = false;
+			facingDirection = true;
 		}
 
 		if(m_RightWalled&&!m_Grounded)
 		{
+			m_Sliding = true;
 			o_Anim.SetBool("Walled", true);
-			facingDirection = true;
+			facingDirection = false;
 		}
 
 		if (!facingDirection) //If facing left
@@ -628,9 +731,10 @@ public class FighterChar : NetworkBehaviour
 			//print("FACING LEFT!   "+h)
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			o_SpriteRenderer.flipX = true;
-			if(FighterState.Vel.x > 0 && m_Spd >= v_ReversingSlideT)
+			if(FighterState.Vel.x > 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
+				m_Sliding = true;
 			}
 			else
 			{
@@ -643,9 +747,10 @@ public class FighterChar : NetworkBehaviour
 			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			o_SpriteRenderer.flipX = false;
-			if(FighterState.Vel.x < 0 && m_Spd >= v_ReversingSlideT)
+			if(FighterState.Vel.x < 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
+				m_Sliding = true;
 			}
 			else
 			{
@@ -653,9 +758,28 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 
-		if(m_Kneeling||(g_CurFallStun>0))
+		if(m_WallSliding)
 		{
+			print("THIS IS WHY UR SMOKING");
+			m_Sliding = true;
+		}
+
+		if(m_Kneeling&&!m_Airborne)
+		{
+			m_Sliding = true;
 			o_Anim.SetBool("Crouch", true);
+
+			if(this.IsPlayer())
+			{
+				if((FighterState.MouseWorldPos.x-this.transform.position.x)<0)
+				{
+					facingDirection = false;
+				}
+				else
+				{
+					facingDirection = true;
+				}
+			}
 		}
 
 		Vector3[] debugLineVector = new Vector3[3];
@@ -675,9 +799,13 @@ public class FighterChar : NetworkBehaviour
 		m_DebugLine.SetPositions(debugLineVector);
 
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
-		o_Anim.SetFloat("hSpeed", FighterState.Vel.x);
-		o_Anim.SetFloat("vSpeed", FighterState.Vel.y);
+		o_Anim.SetFloat("hSpeed", Math.Abs(FighterState.Vel.x));
+		o_Anim.SetFloat("vSpeed", Math.Abs(FighterState.Vel.y));
+		o_Anim.SetFloat("hVelocity", FighterState.Vel.x);
+		o_Anim.SetFloat("vVelocity", FighterState.Vel.y);
 		o_Anim.SetInteger("Stance", g_Stance);
+		o_Anim.SetBool("Stunned", g_Stunned);
+		o_Anim.SetBool("Staggered", g_Staggered);
 	
 
 		if(FighterState.Vel.magnitude >= m_TractionChangeT )
@@ -758,10 +886,11 @@ public class FighterChar : NetworkBehaviour
 		m_RightSideOffset.y = m_RightSide.position.y-fighterOrigin.y;
 		m_RightSideLength = m_RightSideOffset.magnitude;
 
-
+		o_FighterAudio = this.GetComponent<FighterAudio>();
 		o_Anim = this.GetComponent<Animator>();
 		o_Rigidbody2D = GetComponent<Rigidbody2D>();
-		//o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
+		o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
+		v_DefaultColor = o_SpriteRenderer.color;
 
 		lastSafePosition = new Vector2(0,0);
 		m_RemainingMovement = new Vector2(0,0);
@@ -823,8 +952,6 @@ public class FighterChar : NetworkBehaviour
 
 		//print("Corrected remaining movement: "+m_RemainingMovement);
 
-		m_Spd = FighterState.Vel.magnitude;
-
 		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
 
 		UpdateContactNormals(true);
@@ -837,12 +964,14 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected void Crater() // Triggered when character impacts anything REALLY hard.
+	protected void Crater(float impactForce) // Triggered when character impacts anything REALLY hard.
 	{
-		float Multiplier = (m_IGF+m_CraterT)/(2*m_CraterT);
-		//print(Multiplier);
-		if(Multiplier >=2){Multiplier = 2;}
-		float Magnitude = Multiplier;
+		float impactStrengthM = ((impactForce-m_CraterT)/(1000f-m_CraterT));
+		if(impactStrengthM > 1){impactStrengthM = 1;}
+		float camShakeM = (impactForce+m_CraterT)/(2*m_CraterT);
+
+		if(camShakeM >=2){camShakeM = 2;}
+		float Magnitude = camShakeM;
 		float Roughness = 10f;
 		float FadeOutTime = 2.5f;
 		float FadeInTime = 0f;
@@ -850,72 +979,46 @@ public class FighterChar : NetworkBehaviour
 		Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
-		o_FighterAudio.CraterSound(m_IGF, m_CraterT, 1000f);
+		o_FighterAudio.CraterSound(impactForce, m_CraterT, 1000f);
 
 		SpawnShockEffect(this.initialVel.normalized);
 
-		if(g_VelocityPunching)
-		{
-			g_VelocityPunchExpended = true;
-		}
-
-		float linScaleModifier = ((m_IGF-m_CraterT)/(1000f-m_CraterT));
-		if(linScaleModifier > 1){linScaleModifier = 1;}
-		float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*linScaleModifier); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
-		float stunTime = g_MinCrtrStun+((g_MaxCrtrStun-g_MinCrtrStun)*linScaleModifier); // Stun duration scales linearly from ...
-
-		g_CurFallStun = stunTime;				 // Stunned for stunTime.
-		FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
-		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
-
 //		GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
-//		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70*linScaleModifier, 0.4f, m_IGF); 					//Set the parameters of the shockwave.
+		//		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70*linScaleModifier, 0.4f, impactForce); 					//Set the parameters of the shockwave.
 //		newAirBurst.name = "Shockwave";
 		GameObject newWindGust = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
-		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*linScaleModifier, 0.8f, linScaleModifier*3, m_IGF); 		//Set the parameters of the afterslam wind.
+		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*impactStrengthM, 0.8f, impactStrengthM*3, impactForce); 		//Set the parameters of the afterslam wind.
 		newWindGust.name = "AirGust";
 	}
 
-	protected void Slam() // Triggered when character impacts anything too hard.
+	protected void Slam(float impactForce) // Triggered when character impacts anything too hard.
 	{
-		float Multiplier = (m_IGF+m_SlamT)/(2*m_SlamT);
-		//print(Multiplier);
-		if(Multiplier >=2){Multiplier = 2;}
+		float impactStrengthM = ((impactForce-m_SlamT)/(m_CraterT-m_SlamT));
+		float camShakeM = (impactForce+m_SlamT)/(2*m_SlamT);
+		if(camShakeM >=2){camShakeM = 2;}
 		float Magnitude = 0.5f;
 		float Roughness = 20f;
-		float FadeOutTime = 0.6f*Multiplier;
+		float FadeOutTime = 0.6f*camShakeM;
 		float FadeInTime = 0f;
-		float posM = 0.3f*Multiplier;
+		float posM = 0.3f*camShakeM;
 		Vector3 RotInfluence = new Vector3(0,0,0);
 		Vector3 PosInfluence = new Vector3(posM,posM,0);
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
-		o_FighterAudio.SlamSound(m_IGF, m_SlamT, m_CraterT);
+		o_FighterAudio.SlamSound(impactForce, m_SlamT, m_CraterT);
 
 		if(g_VelocityPunching)
 		{
-			g_VelocityPunchExpended = true;
 			SpawnShockEffect(this.initialVel.normalized);
 		}
-
-		float linScaleModifier = ((m_IGF-m_SlamT)/(m_CraterT-m_SlamT));
-		float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*linScaleModifier); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
-		float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*linScaleModifier); // Stun duration scales linearly from ...
-
-		g_CurFallStun = stunTime;				 // Stunned for stunTime.
-		if(damagedealt >= 0)
-		{
-			FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
-		}
-		if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
-
 		GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
-		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30*linScaleModifier, linScaleModifier*0.8f, m_IGF*2); //Set the parameters of the shockwave.
+		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30*impactStrengthM, impactStrengthM*0.8f, impactForce*2); //Set the parameters of the shockwave.
 	}
 
 	protected void DynamicCollision()
 	{
 		#region fightercollisions
+		if(!this.isAlive()){return;}
 		// FIGHTER-FIGHTER COLLISION TESTING IS SEPERATE AND PRECEDES WORLD COLLISIONS
 		float crntSpeed = FighterState.Vel.magnitude*Time.fixedDeltaTime; //Current speed.
 		RaycastHit2D[] fighterCollision = Physics2D.RaycastAll(this.transform.position, FighterState.Vel, crntSpeed, fighterMask);
@@ -927,7 +1030,10 @@ public class FighterChar : NetworkBehaviour
 				//print("HIT: "+hit.collider.transform.gameObject);//GetComponent<>());
 				if(hit.collider.GetComponent<FighterChar>())
 				{
-					CollideWithFighter(hit.collider.GetComponent<FighterChar>());
+					if(hit.collider.GetComponent<FighterChar>().isAlive())
+					{
+						FighterCollision(hit.collider.GetComponent<FighterChar>());
+					}
 				}
 			}
 		}
@@ -1112,9 +1218,6 @@ public class FighterChar : NetworkBehaviour
 
 				//print("GroundDist"+predictedLoc[0].distance);
 				//print("RightDist"+predictedLoc[3].distance);
-				bool snaggingfeet = false; // True when the player is hitting a surface with their feet while ascending, and that surface is flatter than the player's trajectory. This only happens when coming up over a ledge, and if left alone will make the player snag on the flat surface and lose their upward momentum.
-
-		
 
 				if ((moveDirectionNormal != predictedLoc[0].normal) && (invertedDirectionNormal != predictedLoc[0].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
@@ -1331,7 +1434,7 @@ public class FighterChar : NetworkBehaviour
 
 		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
 		{// If running at an obstruction you're up against.
-			print("Running against a wall.");
+			//print("Running against a wall.");
 			horizontalInput = 0;
 		}
 
@@ -1586,6 +1689,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
+			//m_WallSliding = true;
 			if(FighterState.Vel.y > 0)
 			{
 				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
@@ -1627,12 +1731,12 @@ public class FighterChar : NetworkBehaviour
 		if (m_Airborne)
 		{
 			if(d_SendCollisionMessages){print("Airborne before impact.");}
-			m_Impact = true;
+			m_WorldImpact = true;
 		}
 
 		Breakable hitBreakable = leftCheck.collider.transform.GetComponent<Breakable>();
 
-		if(hitBreakable!=null&&m_Spd > 3)
+		if(hitBreakable!=null&&FighterState.Vel.magnitude > 3)
 		{
 			print("hit a hitbreakable!");
 			if(hitBreakable.RecieveHit(this)){return false;}
@@ -1701,12 +1805,12 @@ public class FighterChar : NetworkBehaviour
 		if (m_Airborne)
 		{
 			if(d_SendCollisionMessages){print("Airborne before impact.");}
-			m_Impact = true;
+			m_WorldImpact = true;
 		}
 
 		Breakable hitBreakable = rightCheck.collider.transform.GetComponent<Breakable>();
 
-		if(hitBreakable!=null&&m_Spd > 3)
+		if(hitBreakable!=null&&FighterState.Vel.magnitude > 3)
 		{
 			print("hit a hitbreakable!");
 			if(hitBreakable.RecieveHit(this)){return false;}
@@ -1763,7 +1867,7 @@ public class FighterChar : NetworkBehaviour
 
 		if (m_Airborne)
 		{
-			m_Impact = true;
+			m_WorldImpact = true;
 		}
 
 		Breakable hitBreakable = groundCheck.collider.transform.GetComponent<Breakable>();
@@ -1859,9 +1963,6 @@ public class FighterChar : NetworkBehaviour
 
 	protected bool ToCeiling(RaycastHit2D ceilingCheck) 
 	{ //Sets the new position of the fighter when they hit the ceiling.
-
-		//float testNumber = ceilingCheck.normal.y/ceilingCheck.normal.x;
-		//print(testNumber);
 		//print ("We've hit ceiling, sir!!");
 		//print ("ceilingCheck.normal=" + ceilingCheck.normal);
 
@@ -1872,13 +1973,13 @@ public class FighterChar : NetworkBehaviour
 				print("Airborne before impact.");
 			}
 			//			m_Landing = true;
-			m_Impact = true;
+			m_WorldImpact = true;
 		}
 
 
 		Breakable hitBreakable = ceilingCheck.collider.transform.GetComponent<Breakable>();
 
-		if(hitBreakable!=null&&m_Spd > 3)
+		if(hitBreakable!=null&&FighterState.Vel.magnitude > 3)
 		{
 			print("hit a hitbreakable!");
 			if(hitBreakable.RecieveHit(this)){return false;}
@@ -1949,72 +2050,208 @@ public class FighterChar : NetworkBehaviour
 		return true;
 	}
 
-	protected bool CollideWithFighter(FighterChar fighterCollidedWith) //CWF
+	protected bool FighterCollision(FighterChar fighterCollidedWith) //FC
 	{ // Handles collisions with another Fighter.
-		print("COLLISIONWITHFIGHTER!");
-
-		Vector2 myVelocity = this.GetVelocity();
-		Vector2 yourVelocity = fighterCollidedWith.GetVelocity();
-
-		float mySpeed = this.GetSpeed();
-		float yourSpeed = fighterCollidedWith.GetSpeed();
-
 		if(g_Stance == 0)
 		{
-			return false;
+			if(fighterCollidedWith.g_Stance==0)
+			{
+				return false;
+			}
+			else if(fighterCollidedWith.g_Stance==1)
+			{
+				fighterCollidedWith.FighterStruck(this);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		else if(g_Stance==1) // If attacking, see what stance enemy is, and decide type of impact.
 		{
 			if(fighterCollidedWith.g_Stance==0)
 			{
-				fighterCollidedWith.InstantForce(myVelocity, this.GetSpeed()*0.75f);
-				fighterCollidedWith.TakeDamage((int)(25+(75*(mySpeed/1000))));
-				print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
-				m_Impact = true;
-				this.SetSpeed(this.GetSpeed()*0.25f);
-				g_fighterCollisionCD = g_fighterCollisionCDLength;
-				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+				FighterStruck(fighterCollidedWith);
 			}
 			else if(fighterCollidedWith.g_Stance==1)
 			{
-				float combinedSpeed = mySpeed + yourSpeed; 
-				print("clashing strike!");
-				fighterCollidedWith.InstantForce(myVelocity, combinedSpeed*0.5f);
-				this.InstantForce(yourVelocity, combinedSpeed*0.5f);
-
-				print("Opponent got knocked in direction "+myVelocity.normalized);
-				print("I got knocked in direction "+yourVelocity.normalized);
-
-				fighterCollidedWith.TakeDamage((int)(25+(25*(combinedSpeed/1000))));
-				this.TakeDamage((int)(25+(25*(combinedSpeed/1000))));
-
-				fighterCollidedWith.m_Impact = true;
-				m_Impact = true;
-
-				this.g_VelocityPunchExpended = true;
-				fighterCollidedWith.g_VelocityPunchExpended = true;
-
-				print("Both fighters recieved a blow of force: "+combinedSpeed+", dealing damage of: "+(int)(25+(25*(combinedSpeed/1000))));
-				g_fighterCollisionCD = g_fighterCollisionCDLength;
-				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+				FighterClash(fighterCollidedWith);
 			}
 			else
 			{
-				print("Attacking defending enemy!");
-				fighterCollidedWith.InstantForce(myVelocity, this.GetSpeed()*0.75f);
-				fighterCollidedWith.TakeDamage((int)(25+(75*(mySpeed/1000))));
-				print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
-				m_Impact = true;
-				this.SetSpeed(mySpeed*0.25f);
-				g_fighterCollisionCD = g_fighterCollisionCDLength;
-				fighterCollidedWith.g_fighterCollisionCD = g_fighterCollisionCDLength;
+				FighterGuardStruck(fighterCollidedWith);
 			}
-			return true;
+			return true; //All paths in attack stance lead to a collision.
 		}
 		else
 		{
-			return false;
+			if(fighterCollidedWith.g_Stance==0)
+			{
+				return false;
+			}
+			else if(fighterCollidedWith.g_Stance==1)
+			{
+				fighterCollidedWith.FighterGuardStruck(this);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
+	}
+
+	protected void FighterStruck(FighterChar opponent) //Executes when a fighter in attack stance collides with an opponent in neutral stance.
+	{
+//		Vector2 myVelocity = this.GetVelocity();
+//		Vector2 yourVelocity = opponent.GetVelocity();
+//
+//		float mySpeed = this.GetSpeed();
+//		float yourSpeed = opponent.GetSpeed();
+//
+//		ThrowPunch(myVelocity);
+//		opponent.InstantForce(myVelocity, this.GetSpeed()*0.75f);
+//		opponent.TakeDamage((int)(25+(75*(mySpeed/1000))));
+//		print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
+//		m_WorldImpact = true;
+//		this.SetSpeed(this.GetSpeed()*0.25f);
+//		g_fighterCollisionCD = g_fighterCollisionCDLength;
+//		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
+	}
+
+	protected void FighterGuardStruck(FighterChar opponent) // FGS - Executes when a fighter in attack stance collides with an opponent in guard stance.
+	{
+//		Vector2 myVelocity = this.GetVelocity();
+//		Vector2 yourVelocity = opponent.GetVelocity();
+//
+//		float mySpeed = this.GetSpeed();
+//		float yourSpeed = opponent.GetSpeed();
+//
+//		ThrowPunch(myVelocity);
+//		print("Attacking defending enemy!");
+//		//fighterCollidedWith.InstantForce(myVelocity, this.GetSpeed()*0.75f);
+//		//fighterCollidedWith.TakeDamage((int)(25+(75*(mySpeed/1000))));
+//		print("Fighter recieved a blow of force: "+mySpeed+", dealing damage of: "+(int)(25+(75*(mySpeed/1000))));
+//		this.InstantForce(-myVelocity, this.GetSpeed()*0.25f);
+//		//this.SetSpeed(mySpeed*0.25f);
+//		g_fighterCollisionCD = g_fighterCollisionCDLength;
+//		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
+	}
+
+	protected void FighterClash(FighterChar opponent) // FC - Executes when two fighters collide in attack stance, clashing weapons.
+	{
+		// Calculating impact information.
+		Vector2 myVelocity = this.GetVelocity();
+		Vector2 yourVelocity = opponent.GetVelocity();
+
+		float mySpeed = this.GetSpeed();
+		float yourSpeed = opponent.GetSpeed();
+
+		float combinedSpeed = mySpeed + yourSpeed;
+
+		Vector2 lineFromMeToOpponent = opponent.GetPosition()-this.GetPosition();
+		Vector2 lineFromOpponentToMe = -lineFromMeToOpponent;
+
+		Vector2 myImpactVelocity = Proj(myVelocity, lineFromMeToOpponent);
+		Vector2 yourImpactVelocity = Proj(yourVelocity, lineFromOpponentToMe);
+
+		float myImpactForce = myImpactVelocity.magnitude;
+		float yourImpactForce = yourImpactVelocity.magnitude;
+		float combinedForce = myImpactForce+yourImpactForce;
+
+		if(combinedForce<1f)
+		{
+			return; // Placeholder
+		}
+
+		float forceInequality = Math.Abs(myImpactForce-yourImpactForce);
+		float inequalityM = forceInequality/g_MaxClashDisparity; // This number is larger the bigger the difference in velocities is. This is used to make equal-speed collisions less harmful for both parties.
+		inequalityM = 0.25f + 0.75f*inequalityM; //Inequality multiplier scales from 25% to 100%.
+
+		float impactDamageM = (combinedForce/g_MaxClashDamageForce);
+
+
+		//
+		// Dealing damage and
+		//
+		float myDamageDealtM = inequalityM*(myImpactForce/combinedForce);
+		float yourDamageDealtM = inequalityM*(yourImpactForce/combinedForce);
+
+		float myCombinedDmgM = myDamageDealtM*impactDamageM;
+		float yourCombinedDmgM = yourDamageDealtM*impactDamageM;
+
+		int myTotalDamageDealt = (int)(myCombinedDmgM*g_MaxClashDamage);
+		int yourTotalDamageDealt = (int)(yourCombinedDmgM*g_MaxClashDamage);
+
+		opponent.TakeDamage(myTotalDamageDealt);
+		this.TakeDamage(yourTotalDamageDealt);
+
+		//
+		//  Applying status effects
+		//
+		if(myCombinedDmgM>g_MaxClashStunT)
+		{
+			opponent.g_CurStun = 3f;
+			opponent.g_Stunned = true;	
+		}
+		else if(myCombinedDmgM>g_ClashStaggerStunT)
+		{
+			//opponent.g_CurStun = 2*(myCombinedDmgM-g_ClashStaggerStunT)/(g_MaxClashStunT-g_ClashStaggerStunT);
+			opponent.g_CurStun = 1f+2*(myCombinedDmgM-g_ClashStaggerStunT)/(g_MaxClashStunT-g_ClashStaggerStunT);
+			opponent.g_Stunned = true;
+		}
+		else if(myCombinedDmgM>g_ClashStaggerStunT)
+		{
+			opponent.g_CurStun = 1f;
+			opponent.g_Staggered = true;
+		}
+
+		if(yourCombinedDmgM>g_MaxClashStunT)
+		{
+			this.g_CurStun = 3f;
+			g_Stunned = true;	
+		}
+		else if(yourCombinedDmgM>g_ClashStaggerStunT)
+		{
+			this.g_CurStun = 1f+2*(yourCombinedDmgM-g_ClashStaggerStunT)/(g_MaxClashStunT-g_ClashStaggerStunT);
+			g_Stunned = true;
+		}
+		else if(yourCombinedDmgM>g_ClashStaggerStunT)
+		{
+			this.g_CurStun = 1f;
+			g_Staggered = true;
+		}
+		//
+		// Special effects
+		//
+		//ThrowPunch(myVelocity);
+		//opponent.ThrowPunch(yourVelocity);
+
+		if(combinedSpeed >= m_CraterT)
+		{
+			print("Fighter crater successful");
+			opponent.Crater(combinedSpeed);
+			Crater(combinedSpeed);
+		}
+		else if(combinedSpeed >= m_SlamT)
+		{
+			print("Fighter slam successful");
+			opponent.Slam(combinedSpeed);
+			Slam(combinedSpeed);
+		}
+		//
+		// Setting new player velocities.
+		//
+		opponent.InstantForce(myVelocity, combinedSpeed*0.5f);
+		this.InstantForce(yourVelocity, combinedSpeed*0.5f);
+
+		print("Clashing strike!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
+		print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");
+
+		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
+		g_fighterCollisionCD = g_fighterCollisionCDLength;
+		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
 	}
 
 	protected Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)
@@ -2045,15 +2282,11 @@ public class FighterChar : NetworkBehaviour
 		Vector2 AdjustedVel;
 
 		float initialSpeed = FighterState.Vel.magnitude;
-		//print("Speed before : " + initialSpeed);
 		float testNumber = newPara.y/newPara.x;
-		//print(testNumber);
-		//print("newPara="+newPara);
-		//print("initialDirection="+initialDirection);
+
 		if(float.IsNaN(testNumber))
 		{
 			if(d_SendCollisionMessages){print("NaN value found on DirectionChange");}
-			//print("X = "+ newNormal.x +", Y = " + newNormal.y);
 		}
 
 		if((initialDirection == newPara)||initialDirection == Vector2.zero)
@@ -2067,7 +2300,6 @@ public class FighterChar : NetworkBehaviour
 		//print("InitialDirection: "+initialDirection);
 		//print("GroundDirection: "+newPara);
 
-
 		impactAngle = (float)Math.Round(impactAngle,2);
 
 		if(impactAngle >= 180)
@@ -2080,45 +2312,11 @@ public class FighterChar : NetworkBehaviour
 			impactAngle = 180f - impactAngle;
 		}
 
-		//print("impactAngle: " +impactAngle);
+		AdjustedVel = Proj(FighterState.Vel, newPara);
 
-		float projectionVal;
-		if(newPara.sqrMagnitude == 0)
-		{
-			projectionVal = 0;
-		}
-		else
-		{
-			projectionVal = Vector2.Dot(FighterState.Vel, newPara)/newPara.sqrMagnitude;
-		}
+		FighterState.Vel = AdjustedVel;
 
-
-		//print("P"+projectionVal);
-		AdjustedVel = newPara * projectionVal;
-		//print("A"+AdjustedVel);
-
-		if(FighterState.Vel == Vector2.zero)
-		{
-			//FighterState.Vel = new Vector2(h, FighterState.Vel.y);
-		}
-		else
-		{
-			try
-			{
-				FighterState.Vel = AdjustedVel;
-				//print("FighterState.Vel====>"+FighterState.Vel);
-
-			}
-			catch(Exception e)
-			{
-				print(e);
-				print("newPara="+newPara);
-				print("projectionVal"+projectionVal);
-				print("adjustedVel"+AdjustedVel);
-			}
-		}
-
-		//Speed loss from impact angle handling beyond this point
+		//Speed loss from impact angle handling beyond this point. The player loses speed based on projection angle, but that is purely mathematical. The proceeding code is intended to simulate ground traction.
 
 		float speedRetentionMult = 1; // The % of speed retained, based on sharpness of impact angle. A direct impact = full stop.
 
@@ -2133,19 +2331,14 @@ public class FighterChar : NetworkBehaviour
 		else
 		{ // Angle beyond max, momentum halted. 
 			speedRetentionMult = 0;
-			m_Impact = true;
+			m_WorldImpact = true;
 		}
 
 		if(initialSpeed <= 2f)
 		{ // If the fighter is near stationary, do not remove any velocity because there is no impact!
 			speedRetentionMult = 1;
 		}
-
-//		if(initialSpeed<0.001f && m_TractionLossMinAngle)
-//		{
-//			//RETURNHERE
-//		}
-
+			
 		//print("SPLMLT " + speedRetentionMult);
 
 		SetSpeed(FighterState.Vel, initialSpeed*speedRetentionMult);
@@ -2356,12 +2549,18 @@ public class FighterChar : NetworkBehaviour
 		this.transform.position = new Vector2((this.transform.position.x + correctionVector.x), (this.transform.position.y + correctionVector.y));
 	}
 
-	protected Vector2 Perp(Vector2 input)
+	protected Vector2 Perp(Vector2 input) //Perpendicularizes the vector.
 	{
 		Vector2 output;
 		output.x = input.y;
 		output.y = -input.x;
 		return output;
+	}
+
+	protected Vector2 Proj(Vector2 A, Vector2 B) //Projects vector A onto vector B.
+	{
+		float component = Vector2.Dot(A,B)/B.magnitude;
+		return component*B.normalized;
 	}		
 
 	protected void UpdateContactNormals(bool posCorrection) // UCN - Updates the present-time state of the player's contact with surrounding world geometry. Corrects the player's position if it is embedded in geometry, and gathers information about where the player can move.
@@ -2503,7 +2702,6 @@ public class FighterChar : NetworkBehaviour
 			m_RightSideLine.startColor = Color.green;
 		} 
 
-		bool[] isEmbedded = {false, false, false, false};
 		int contactCount = 0;
 		if(groundContact){contactCount++;}
 		if(ceilingContact){contactCount++;}
@@ -3049,13 +3247,17 @@ public class FighterChar : NetworkBehaviour
 		return !FighterState.Dead;
 	}
 
+	public bool isSliding()
+	{
+		return m_Sliding;
+	}
+
 	public void InstantForce(Vector2 newDirection, float speed)
 	{
 		//newDirection.Normalize();
 		SetSpeed(newDirection, speed);
 		//DirectionChange(newDirection);
-		print("Changing direction to" +newDirection);
-		//
+		//print("Changing direction to" +newDirection);
 	}
 
 	public void PunchConnect(GameObject victim, Vector2 aimDirection)
@@ -3114,7 +3316,7 @@ public class FighterChar : NetworkBehaviour
 
 	public bool IsDisabled()
 	{
-		if(FighterState.Dead||(g_CurFallStun>0))
+		if(FighterState.Dead||(g_CurStun>0))
 		{
 			return true;
 		}
@@ -3157,7 +3359,7 @@ public class FighterChar : NetworkBehaviour
 
 	public float GetSpeed()
 	{
-		return m_Spd;
+		return FighterState.Vel.magnitude;
 	}
 
 	public void SetZonLevel(int zonLevel)
@@ -3173,11 +3375,6 @@ public class FighterChar : NetworkBehaviour
 	public int GetZonStance()
 	{
 		return g_ZonStance; //-1 is none, 0 is kneeling, 1 is AD.
-	}
-
-	public void DissipateZon()
-	{
-		// Executes when the fighter leaves zon stance without using power.
 	}
 
 	public void SetSpeed(Vector2 inputVelocity, float speed)
@@ -3221,6 +3418,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickHold;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickRelease;
 	[SerializeField][ReadOnlyAttribute]public bool RightClick;
+	[SerializeField][ReadOnlyAttribute]public bool RightClickHold;
+	[SerializeField][ReadOnlyAttribute]public bool RightClickRelease;
 	[SerializeField][ReadOnlyAttribute]public bool LeftKey;
 	[SerializeField][ReadOnlyAttribute]public bool RightKey;
 	[SerializeField][ReadOnlyAttribute]public bool UpKey;

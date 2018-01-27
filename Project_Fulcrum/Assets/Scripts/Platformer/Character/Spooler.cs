@@ -11,7 +11,7 @@ public class Spooler : MonoBehaviour
 	[SerializeField]private AudioSource o_SpoolAudio;
 	[SerializeField]private AudioMixer o_SpoolMixer;
 	[SerializeField]private AudioClip[] s_SpoolUp;
-	[SerializeField]private FighterChar o_Player;
+	[SerializeField][ReadOnlyAttribute] private FighterChar o_Player;
 	[SerializeField]private Text o_FeedbackText;
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
@@ -56,6 +56,7 @@ public class Spooler : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		o_Player = this.GetComponentInParent<FighterChar>();
 		i_GoodStance = false;
 		r_Paused = true;
 		r_CurTime = 0;

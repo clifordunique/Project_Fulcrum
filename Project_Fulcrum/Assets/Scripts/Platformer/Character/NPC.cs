@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class NPC : FighterChar {
 	//##########################################################################################################################################################################
+	// PLAYER INPUT VARIABLES
+	//###########################################################################################################################################################################
+	#region PLAYERINPUT
+	[SerializeField][ReadOnlyAttribute]public float i_LeftClickHoldDuration;
+	#endregion
+	//##########################################################################################################################################################################
 	// AI VARIABLES
 	//###########################################################################################################################################################################
 	[Header("NPC AI:")]
@@ -38,9 +44,16 @@ public class NPC : FighterChar {
 
 	protected override void FixedUpdate ()
 	{
-		FixedUpdateAI();
-		FixedUpdateProcessInput();
-		FixedUpdatePhysics();
+		if(k_IsKinematic)
+		{
+			FixedUpdateKinematic();	
+		}
+		else
+		{
+			FixedUpdateAI();
+			FixedUpdateProcessInput();
+			FixedUpdatePhysics();
+		}
 		FixedUpdateLogic();
 		FixedUpdateAnimation();
 		FighterState.RightClick = false;
@@ -135,6 +148,20 @@ public class NPC : FighterChar {
 					this.FighterState.RightKey = false;
 					this.FighterState.LeftKey = false;
 				}
+
+				if(goalLocation.y > 5f)
+				{
+					this.FighterState.JumpKey = true;
+				}
+				else
+				{
+					this.FighterState.JumpKey = false;
+				}
+				if(this.GetSpeed() >= 30)
+				{
+					this.FighterState.LeftClickHold = true;
+					this.FighterState.LeftClick = true;
+				}
 				break;
 			}
 		case 2: // Attacking
@@ -168,7 +195,7 @@ public class NPC : FighterChar {
 
 	protected override void FixedUpdateProcessInput()
 	{
-		m_Impact = false;
+		m_WorldImpact = false;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
@@ -323,34 +350,28 @@ public class NPC : FighterChar {
 			FighterState.LeftClickRelease = false;
 		}	
 
-		//		if(FighterState.LeftClickHold)
-		//		{
-		//			//i_LeftClickHoldDuration += Time.fixedDeltaTime;
-		//			if(g_VelocityPunching)
-		//			{
-		//				if(FighterState.Vel.magnitude <= 70||g_VelocityPunchExpended)
-		//				{
-		//					g_VelocityPunching = false;
-		//					o_VelocityPunch.inUse = false;
-		//					g_VelocityPunchExpended = true;
-		//				}
-		//			}
-		//			else
-		//			{
-		//				if((FighterState.Vel.magnitude > 70)&&(!g_VelocityPunchExpended)&&(i_LeftClickHoldDuration>=0.5f)) //If going fast enough and holding click for long enough.
-		//				{
-		//					g_VelocityPunching = true;
-		//					o_VelocityPunch.inUse = true;
-		//				}
-		//			}
-		//		}
-		//		else
-		//		{
-		//			//i_LeftClickHoldDuration = 0;
-		//			g_VelocityPunching = false;
-		//			o_VelocityPunch.inUse = false;
-		//			g_VelocityPunchExpended = false;
-		//		}
+		if(FighterState.LeftClickHold)
+		{
+			i_LeftClickHoldDuration += Time.fixedDeltaTime;
+			g_Stance = 1;
+
+			if((i_LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
+			{
+				g_VelocityPunching = true;
+				o_VelocityPunch.inUse = true;
+			}
+			else
+			{
+				g_VelocityPunching = false;
+				o_VelocityPunch.inUse = false;
+			}
+		}
+		else
+		{
+			i_LeftClickHoldDuration = 0;
+			g_VelocityPunching = false;
+			o_VelocityPunch.inUse = false;
+		}
 	}
 
 

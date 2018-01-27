@@ -49,13 +49,13 @@ public class Breakable : MonoBehaviour {
 		float speed = velocitee.magnitude;
 		if(hitter.IsVelocityPunching())
 		{
-			print("breakable would recieve a blow of force: "+speed);
-			print("POWER BOOST!!");
+			//print("breakable would recieve a blow of force: "+speed);
+			//print("POWER BOOST!!");
 			velocitee *= 1.5f;
 		}
 		speed = velocitee.magnitude;
 		//this.gameObject.SetActive(false);
-		print("breakable recieved a blow of force: "+speed);
+		//print("breakable recieved a blow of force: "+speed);
 		if(speed >= maxForce)
 		{
 			//this.gameObject.SetActive(false);

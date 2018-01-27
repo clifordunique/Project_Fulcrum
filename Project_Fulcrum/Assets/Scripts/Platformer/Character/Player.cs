@@ -45,10 +45,10 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
-	[SerializeField] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
+	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;										// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
-	[SerializeField] private GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
+	[SerializeField] private GameObject p_ZonPulse;									// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -132,15 +132,10 @@ public class Player : FighterChar
 		print("Executing post-scenelaunch code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
-//		if(v_CameraMode==0)
-//		{
-//			o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
-//			o_MainCamera.transform.parent.SetParent(this.transform);
-//		}
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
-
+		o_Spooler = this.gameObject.GetComponentInChildren<Spooler>();
 	}
 
 	protected void Start()
@@ -188,36 +183,34 @@ public class Player : FighterChar
 
 		FixedUpdateLogic();			// Deals with variables such as life and zon power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
+		if(isLocalPlayer)
+		{
+			FixedUpdatePlayerAnimation();
+		}
 		FighterState.RightClick = false;
 		FighterState.LeftClick = false;
 		FighterState.ZonKey = false;
 		FighterState.DisperseKey = false;
 		FighterState.JumpKey = false;
-
-		if(isLocalPlayer)
-		{
-			if(v_CameraMode==0)
-			{
-				CameraControlTypeA(); //Player-locked velocity size-reactive camera
-			}
-			else
-			{
-				CameraControlTypeB(); //Mouse Directed Camera
-			}
-		}
 	}
 
 	protected override void Update()
 	{
+		//
+		// Any player code.
+		//
+		UpdateAnimation();
+		//
+		// Local player code.
+		//
 		if(!sceneIsReady){return;}
 		if(!isLocalPlayer){return;}
 		UpdateInput();
-
 		if(o_Speedometer != null)
 		{
 			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
 		}
-		if(o_ZonCounter != null)
+		if(o_ZonCounter!=null)
 		{
 			o_ZonCounter.text = ""+g_ZonLevel;
 		}
@@ -298,7 +291,7 @@ public class Player : FighterChar
 
 	protected override void FixedUpdateProcessInput()
 	{
-		m_Impact = false;
+		m_WorldImpact = false;
 		g_Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
@@ -396,6 +389,7 @@ public class Player : FighterChar
 		}
 		if(i_DevKey6)
 		{
+			g_CurStun = 4f;
 			i_DevKey6 = false;
 		}
 		if(i_DevKey7)
@@ -429,6 +423,8 @@ public class Player : FighterChar
 		if(IsDisabled())
 		{
 			FighterState.RightClick = false;
+			FighterState.RightClickRelease = false;
+			FighterState.RightClickHold = false;
 			FighterState.LeftClick = false;
 			FighterState.LeftClickRelease = false;
 			FighterState.LeftClickHold = false;
@@ -449,7 +445,7 @@ public class Player : FighterChar
 		if((FighterState.LeftKey && FighterState.RightKey) || !(FighterState.LeftKey||FighterState.RightKey))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoPressLeft||autoPressRight))
+			if(!(autoPressLeft||autoPressRight)|| IsDisabled())
 			{
 				CtrlH = 0;
 			}
@@ -486,7 +482,7 @@ public class Player : FighterChar
 		if((FighterState.DownKey && FighterState.UpKey) || !(FighterState.UpKey||FighterState.DownKey))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoPressDown||autoPressUp))
+			if(!(autoPressDown||autoPressUp)||IsDisabled())
 			{
 				CtrlV = 0;
 			}
@@ -560,45 +556,41 @@ public class Player : FighterChar
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
 			//print("Leftclick detected");
-			g_VelocityPunchExpended = false;
 			FighterState.LeftClickRelease = false;
-		}	
+		}
+
+		if(FighterState.RightClickHold)
+		{
+			g_Stance = 2;
+		}
+
+		if(FighterState.DisperseKey)
+		{
+			ZonPulse();
+			FighterState.DisperseKey = false;
+		}
 
 		if(FighterState.LeftClickHold)
 		{
 			i_LeftClickHoldDuration += Time.fixedDeltaTime;
 			g_Stance = 1;
 
-			if(i_LeftClickHoldDuration>=g_VelocityPunchChargeTime)
+			if((i_LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
 				g_VelocityPunching = true;
 				o_VelocityPunch.inUse = true;
 			}
-
-//			if(g_VelocityPunching)
-//			{
-//				if(FighterState.Vel.magnitude <= 70||g_VelocityPunchExpended)
-//				{
-//					g_VelocityPunching = false;
-//					o_VelocityPunch.inUse = false;
-//					g_VelocityPunchExpended = true;
-//				}
-//			}
-//			else
-//			{
-//				if((FighterState.Vel.magnitude > 70)&&(!g_VelocityPunchExpended)&&(i_LeftClickHoldDuration>=0.5f)) //If going fast enough and holding click for long enough.
-//				{
-//					g_VelocityPunching = true;
-//					o_VelocityPunch.inUse = true;
-//				}
-//			}
+			else
+			{
+				g_VelocityPunching = false;
+				o_VelocityPunch.inUse = false;
+			}
 		}
 		else
 		{
 			i_LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
 			o_VelocityPunch.inUse = false;
-			g_VelocityPunchExpended = false;
 		}
 			
 		if(FighterState.DisperseKey)
@@ -611,7 +603,6 @@ public class Player : FighterChar
 	protected override void UpdateInput()
 	{
 		if(!isLocalPlayer){return;}
-
 		//
 		// Individual keydown presses
 		//
@@ -692,6 +683,7 @@ public class Player : FighterChar
 		// Key-Up Unpresses
 		//
 		FighterState.LeftClickRelease = Input.GetMouseButtonUp(0);
+		FighterState.RightClickRelease = Input.GetMouseButtonUp(1);
 			
 		//
 		// Key Hold-Downs
@@ -701,6 +693,7 @@ public class Player : FighterChar
 		FighterState.UpKey = Input.GetButton("Up");
 		FighterState.DownKey = Input.GetButton("Down");
 		FighterState.LeftClickHold = Input.GetMouseButton(0);
+		FighterState.RightClickHold = Input.GetMouseButton(1);
 
 		// Mouse position in world space
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -708,146 +701,16 @@ public class Player : FighterChar
 
 	}
 
-	protected override void FixedUpdateAnimation()
+	protected void FixedUpdatePlayerAnimation()
 	{
-		v_FighterGlow = g_ZonLevel;
-		if (v_FighterGlow > 7){v_FighterGlow = 7;}
-
-		if(v_FighterGlow>0)
+		o_Healthbar.SetCurHealth(FighterState.CurHealth);
+		if(v_CameraMode==0)
 		{
-			//o_TempLight.color = new Color(1,1,0,1);
-			o_SpriteRenderer.color = new Color(1,1,(1f-(v_FighterGlow/7f)),1);
-			//o_TempLight.intensity = (v_FighterGlow)+(UnityEngine.Random.Range(0,1f));
+			CameraControlTypeA(); //Player-locked velocity size-reactive camera
 		}
 		else
 		{
-			o_SpriteRenderer.color = Color.white;
-			//o_TempLight.color = new Color(1,1,1,1);
-			//o_TempLight.intensity = 2;
-		}
-
-		o_Anim.SetBool("Walled", false);
-
-		if(m_LeftWalled&&!m_Grounded)
-		{
-			o_Anim.SetBool("Walled", true);
-			facingDirection = true;
-			//o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
-		}
-
-		if(m_RightWalled&&!m_Grounded)
-		{
-			o_Anim.SetBool("Walled", true);
-			facingDirection = false;
-			//o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
-		}
-
-		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
-		{
-			//o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
-		}
-
-		if (!facingDirection) //If facing left
-		{
-			//print("FACING LEFT!");
-			o_Anim.SetBool("IsFacingRight", false);
-			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
-			o_SpriteRenderer.flipX = true;
-			//print(o_SpriteRenderer.flipX);
-			if(FighterState.Vel.x > 0 && m_Spd >= v_ReversingSlideT)
-			{
-				o_Anim.SetBool("Crouch", true);
-			}
-			else
-			{
-				o_Anim.SetBool("Crouch", false);
-			}
-		} 
-		else //If facing right
-		{
-			//print("FACING RIGHT!");
-			o_Anim.SetBool("IsFacingRight", true);
-			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
-			o_SpriteRenderer.flipX = false;
-			//print(o_SpriteRenderer.flipX);
-			if(FighterState.Vel.x < 0 && m_Spd >= v_ReversingSlideT)
-			{
-				o_Anim.SetBool("Crouch", true);
-			}
-			else
-			{
-				o_Anim.SetBool("Crouch", false);
-			}
-		}
-
-		if(m_Kneeling||(g_CurFallStun>0))
-		{
-			o_Anim.SetBool("Crouch", true);
-
-			if((FighterState.MouseWorldPos.x-this.transform.position.x)<0)
-			{
-				facingDirection = false;
-			}
-			else
-			{
-				facingDirection = true;
-			}
-		}
-
-		Vector3[] debugLineVector = new Vector3[3];
-
-		debugLineVector[0].x = -m_DistanceTravelled.x;
-		debugLineVector[0].y = -(m_DistanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
-		debugLineVector[0].z = 0f;
-
-		debugLineVector[1].x = 0f;
-		debugLineVector[1].y = -(m_GroundFootLength-m_MaxEmbed);
-		debugLineVector[1].z = 0f;
-
-		debugLineVector[2].x = m_RemainingMovement.x;
-		debugLineVector[2].y = (m_RemainingMovement.y)-(m_GroundFootLength-m_MaxEmbed);
-		debugLineVector[2].z = 0f;
-
-		m_DebugLine.SetPositions(debugLineVector);
-
-		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
-		o_Anim.SetFloat("hSpeed", FighterState.Vel.x);
-		o_Anim.SetFloat("vSpeed", FighterState.Vel.y);
-		o_Anim.SetInteger("Stance", g_Stance);
-
-
-		if(FighterState.Vel.magnitude >= m_TractionChangeT )
-		{
-			m_DebugLine.endColor = Color.white;
-			m_DebugLine.startColor = Color.white;
-		}   
-		else
-		{   
-			m_DebugLine.endColor = Color.blue;
-			m_DebugLine.startColor = Color.blue;
-		}
-
-		float multiplier = 1; // Animation playspeed multiplier that increases with higher velocity
-
-		if(FighterState.Vel.magnitude > 20.0f)
-		{
-			multiplier = ((FighterState.Vel.magnitude - 20) / 20)+1;
-		}
-
-		o_Anim.SetFloat("Multiplier", multiplier);
-
-		if (!m_Grounded&&!m_LeftWalled&!m_RightWalled) 
-		{
-			o_Anim.SetBool("Ground", false);
-		}
-		else
-		{
-			o_Anim.SetBool("Ground", true);
-		}
-
-		if(isLocalPlayer)
-		{
-			o_Healthbar.SetCurHealth(FighterState.CurHealth);
+			CameraControlTypeB(); //Mouse Directed Camera
 		}
 	}
 

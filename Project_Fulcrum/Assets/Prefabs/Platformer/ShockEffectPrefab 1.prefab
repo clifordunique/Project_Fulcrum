@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4026411316874232}
   m_Layer: 2
-  m_Name: ShockEffectPrefab
+  m_Name: ShockEffectPrefab 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
