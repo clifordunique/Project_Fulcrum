@@ -1124,8 +1124,8 @@ MonoBehaviour:
   showContactIndicators: 0
   recoverFromFullEmbed: 1
   d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 0
-  d_SendTractionMessages: 0
+  d_SendCollisionMessages: 1
+  d_SendTractionMessages: 1
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
   m_Acceleration: 0.6
@@ -1280,10 +1280,8 @@ MonoBehaviour:
   v_DistFromLastDust: 0
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
-  g_ZonJumpCharge: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
-  g_ZonStance: -1
   g_MaxHealth: 100
   g_MinSlamDMG: 5
   g_MaxSlamDMG: 30

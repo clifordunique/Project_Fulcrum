@@ -71,17 +71,12 @@ public class Spooler : NetworkBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		i_GoodStance = false;
-		if(o_Player.GetZonStance() >= 0)
-		{
-			i_GoodStance = true;
-		}
+		i_GoodStance = true;
 
 		i_ZonKey = Input.GetButtonDown("Spooling");
 
 		if((!i_GoodStance)&&(r_Active))
 		{
-			//o_Player.DissipateZon();
 			Reset();
 		}
 
@@ -359,6 +354,7 @@ public class Spooler : NetworkBehaviour
 	private void DevEndScore()
 	{
 		r_Paused = true;
+		Reset();
 		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
 
 //		o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";

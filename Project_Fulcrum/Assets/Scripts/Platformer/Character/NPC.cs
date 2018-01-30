@@ -198,7 +198,6 @@ public class NPC : FighterChar {
 		m_WorldImpact = false;
 		m_Landing = false;
 		m_Kneeling = false;
-		g_ZonStance = -1;
 
 		//		if(FighterState.RightClick&&(FighterState.DevMode))
 		//		{
@@ -320,12 +319,8 @@ public class NPC : FighterChar {
 		{
 			m_Kneeling = true;
 			CtrlH = 0;
-			g_ZonStance = 0; // Kneeling stance.
 		}
-		else
-		{
-			g_ZonJumpCharge=0;
-		}
+
 
 		if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{

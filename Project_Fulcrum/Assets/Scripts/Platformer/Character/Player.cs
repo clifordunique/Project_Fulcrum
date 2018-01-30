@@ -285,7 +285,6 @@ public class Player : FighterChar
 		g_Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
-		g_ZonStance = -1;
 
 		if(FighterState.RightClickPress&&(FighterState.DevMode))
 		{
@@ -510,22 +509,23 @@ public class Player : FighterChar
 		{
 			m_Kneeling = true;
 			CtrlH = 0;
-			g_ZonStance = 0; // Kneeling stance.
 			v_CameraMode = 2;
 		}
 		else
 		{
 			v_CameraMode = 1;
-			g_ZonJumpCharge=0;
 		}
 			
 		//if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		if(FighterState.JumpKeyPress)
 		{
 			FighterState.JumpKeyPress = false;
-			if(m_Kneeling&&(FighterState.ZonLevel>0))
+			if(m_Kneeling)
 			{
-				ZonJump(FighterState.PlayerMouseVector.normalized);
+				if(FighterState.ZonLevel>0)
+				{
+					ZonJump(FighterState.PlayerMouseVector.normalized);
+				}
 			}
 			else if(m_JumpBufferG>0 || m_JumpBufferC>0 || m_JumpBufferL>0 || m_JumpBufferR>0)
 			{
