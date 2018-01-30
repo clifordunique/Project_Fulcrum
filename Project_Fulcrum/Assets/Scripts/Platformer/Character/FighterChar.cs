@@ -507,9 +507,24 @@ public class FighterChar : NetworkBehaviour
 
 		if(m_WorldImpact)
 		{
-			if(m_IGF >= m_CraterT)
+			float craterThreshold;
+			float slamThreshold;
+			float velPunchThreshold;
+			if(g_Stance == 2) // If guarding, more resistant to landing damage.
 			{
-				float impactStrengthM = ((m_IGF-m_CraterT)/(1000f-m_CraterT));
+				craterThreshold = m_GuardCraterT;
+				slamThreshold = m_GuardSlamT;
+				velPunchThreshold = m_VelPunchT;
+			}
+			else
+			{
+				craterThreshold = m_CraterT;
+				slamThreshold = m_SlamT;
+				velPunchThreshold = m_VelPunchT;
+			}
+			if(m_IGF >= craterThreshold)
+			{
+				float impactStrengthM = ((m_IGF-craterThreshold)/(1000f-craterThreshold));
 				if(impactStrengthM > 1){impactStrengthM = 1;}
 
 				Crater(m_IGF);
@@ -521,11 +536,10 @@ public class FighterChar : NetworkBehaviour
 				g_Stunned = true;
 				FighterState.CurHealth -= (int)damagedealt;		// Damaged by fall.
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
-
 			}
-			else if(m_IGF >= m_SlamT)
+			else if(m_IGF >= slamThreshold)
 			{
-				float impactStrengthM = ((m_IGF-m_SlamT)/(m_CraterT-m_SlamT));
+				float impactStrengthM = ((m_IGF-slamThreshold)/(craterThreshold-slamThreshold)); // Linear scaling between slamThreshold and craterThreshold, value between 0 and 1.
 
 				Slam(m_IGF);
 
@@ -541,9 +555,9 @@ public class FighterChar : NetworkBehaviour
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 
 			}
-			else if(m_IGF >= m_VelPunchT&&g_VelocityPunching)
+			else if(m_IGF >= velPunchThreshold&&g_VelocityPunching)
 			{
-				float impactStrengthM = ((m_IGF-m_VelPunchT)/(m_CraterT-m_VelPunchT));
+				float impactStrengthM = ((m_IGF-velPunchThreshold)/(craterThreshold-velPunchThreshold));
 
 				Slam(m_IGF);
 
