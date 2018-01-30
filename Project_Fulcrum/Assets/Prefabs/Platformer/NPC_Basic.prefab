@@ -212,7 +212,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271522054906898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -148.33, y: -6.5, z: 0}
+  m_LocalPosition: {x: 199.2907, y: -68.90414, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4400483855208910}
@@ -926,9 +926,16 @@ MonoBehaviour:
   g_MaxClashDisparity: 500
   g_MaxClashDamage: 300
   g_MaxClashDamageForce: 1000
-  g_MinClashStaggerT: 0.05
-  g_ClashStaggerStunT: 0.1
-  g_MaxClashStunT: 0.25
+  g_MaxGuardClassDamageForce: 2000
+  g_MinAttackStaggerT: 0.1
+  g_MinAttackStunT: 0.25
+  g_MaxAttackStunT: 0.4
+  g_MinNeutStaggerT: 0.05
+  g_MinNeutStunT: 0.125
+  g_MaxNeutStunT: 0.2
+  g_MinGuardStaggerT: 0.2
+  g_MinGuardStunT: 0.5
+  g_MaxGuardStunT: 0.8
   i_LeftClickHoldDuration: 0
   enemyTarget: {fileID: 0}
   distanceToTarget: 0
@@ -1514,8 +1521,8 @@ SpriteRenderer:
   m_SortingLayerID: -270496717
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300002, guid: a45d01033d0618744963d206c552080b, type: 3}
-  m_Color: {r: 0.9264706, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300002, guid: a51a9f3b49ebb5b4791463008a4e4f16, type: 3}
+  m_Color: {r: 0.875, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

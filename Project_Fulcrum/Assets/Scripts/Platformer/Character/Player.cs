@@ -54,28 +54,17 @@ public class Player : FighterChar
 	// PHYSICS&RAYCASTING
 	//###########################################################################################################################################################################
 	#region PHYSICS&RAYCASTING
-	[Header("Player State:")]
 	#endregion
 	//##########################################################################################################################################################################
 	// PLAYER INPUT VARIABLES
 	//###########################################################################################################################################################################
 	#region PLAYERINPUT
+	[Header("Player Input:")]
+	[SerializeField] public float i_DoubleTapDelayTime; // How short the time between presses must be to count as a doubletap.
 	public int inputBufferSize = 2;
 	[SerializeField] public Queue<FighterState> inputBuffer;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevkeyTilde;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey1;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey2;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey3;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey4;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey5;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey6;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey7;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey8;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey9;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey10;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey11;
-	[SerializeField][ReadOnlyAttribute]public bool i_DevKey12;
-	[SerializeField][ReadOnlyAttribute]public float i_LeftClickHoldDuration;
+
+
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
@@ -135,7 +124,7 @@ public class Player : FighterChar
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
-		o_Spooler = this.gameObject.GetComponentInChildren<Spooler>();
+		o_Spooler = this.gameObject.GetComponent<Spooler>();
 	}
 
 	protected void Start()
@@ -152,6 +141,31 @@ public class Player : FighterChar
 	protected override void FixedUpdate()
 	{
 		if(!sceneIsReady){return;}
+
+		if(!isLocalPlayer)
+		{
+			if(inputBuffer.Count > 0)
+			{
+				FighterState = inputBuffer.Dequeue();
+			}
+		}
+
+		FixedUpdateProcessInput();
+		if(k_IsKinematic)
+		{
+			FixedUpdateKinematic();	//If the player is in kinematic mode, physics are disabled while animations are played.
+		}
+		else
+		{
+			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
+		}
+		FixedUpdateLogic();			// Deals with variables such as life and zon power
+		FixedUpdateAnimation();		// Animates the character based on movement and input.
+		if(isLocalPlayer)
+		{
+			FixedUpdatePlayerAnimation();
+		}
+			
 		if(isLocalPlayer)
 		{
 			inputBuffer.Enqueue(FighterState);
@@ -162,36 +176,12 @@ public class Player : FighterChar
 				inputBuffer.Clear();
 			}
 		}
-		else
-		{
-			if(inputBuffer.Count > 0)
-			{
-				FighterState = inputBuffer.Dequeue();
-			}
-		}
 
-		FixedUpdateProcessInput();
-
-		if(k_IsKinematic)
-		{
-			FixedUpdateKinematic();	//If the player is in kinematic mode, physics are disabled while animations are played.
-		}
-		else
-		{
-			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
-		}
-
-		FixedUpdateLogic();			// Deals with variables such as life and zon power
-		FixedUpdateAnimation();		// Animates the character based on movement and input.
-		if(isLocalPlayer)
-		{
-			FixedUpdatePlayerAnimation();
-		}
-		FighterState.RightClick = false;
-		FighterState.LeftClick = false;
-		FighterState.ZonKey = false;
-		FighterState.DisperseKey = false;
-		FighterState.JumpKey = false;
+//		FighterState.RightClick = false;
+//		FighterState.LeftClick = false;
+//		FighterState.ZonKey = false;
+//		FighterState.DisperseKey = false;
+//		FighterState.JumpKey = false;
 	}
 
 	protected override void Update()
@@ -212,7 +202,7 @@ public class Player : FighterChar
 		}
 		if(o_ZonCounter!=null)
 		{
-			o_ZonCounter.text = ""+g_ZonLevel;
+			o_ZonCounter.text = ""+FighterState.ZonLevel;
 		}
 	}
 
@@ -289,56 +279,52 @@ public class Player : FighterChar
 		}
 	}
 
-	protected override void FixedUpdateProcessInput()
+	protected override void FixedUpdateProcessInput() // FUPI
 	{
-		m_WorldImpact = false;
+		m_WorldImpact = false; //Placeholder??
 		g_Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
 		g_ZonStance = -1;
 
-		if(FighterState.RightClick&&(FighterState.DevMode))
+		if(FighterState.RightClickPress&&(FighterState.DevMode))
 		{
 			GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, FighterState.MouseWorldPos, Quaternion.identity);
 			newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70, 0.2f, 250); 
 
-			FighterState.RightClick = false;
+			FighterState.RightClickPress = false;
 			float Magnitude = 2f;
-			//float Magnitude = 0.5f;
 			float Roughness = 10f;
-			//float FadeOutTime = 0.6f;
 			float FadeOutTime = 5f;
 			float FadeInTime = 0f;
-			//Vector3 RotInfluence = new Vector3(0,0,0);
-			//Vector3 PosInfluence = new Vector3(1,1,0);
 			Vector3 RotInfluence = new Vector3(1,1,1);
 			Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockFighter))
+		if(FighterState.LeftClickPress&&(FighterState.DevMode||d_ClickToKnockFighter))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*10;
 			//print("Knocking the fighter.");
-			FighterState.LeftClick = false;
+			FighterState.LeftClickPress = false;
 		}	
 
 		// Automatic input options.
 		if(autoJump)
 		{
-			FighterState.JumpKey = true;
+			FighterState.JumpKeyPress = true;
 		}
 		if(autoLeftClick)
 		{
-			FighterState.LeftClick = true;
+			FighterState.LeftClickPress = true;
 			FighterState.LeftClickHold = true;
 		}
-		if(i_DevkeyTilde)
+		if(FighterState.DevkeyTilde)
 		{
 			o_Reporter.doShow();
-			i_DevkeyTilde = false;
+			FighterState.DevkeyTilde = false;
 		}
-		if(i_DevKey1)
+		if(FighterState.DevKey1)
 		{
 			if(FighterState.DevMode)
 			{
@@ -349,17 +335,17 @@ public class Player : FighterChar
 				o_ProximityLiner.DetectAllFighters();
 				FighterState.DevMode = true;
 			}
-			i_DevKey1 = false;
+			FighterState.DevKey1 = false;
 		}
 
 
-		if(i_DevKey2)
+		if(FighterState.DevKey2)
 		{
 			this.Respawn();
-			i_DevKey2 = false;
+			FighterState.DevKey2 = false;
 		}
 
-		if(i_DevKey3)
+		if(FighterState.DevKey3)
 		{
 			if(autoPressLeft==false)
 			{
@@ -369,52 +355,52 @@ public class Player : FighterChar
 			{
 				autoPressLeft = false;
 			}
-			i_DevKey3 = false;
+			FighterState.DevKey3 = false;
 		}
 
-		if(i_DevKey4)
+		if(FighterState.DevKey4)
 		{
 			FighterState.CurHealth -= 10;
-			g_ZonLevel = 8;
-			i_DevKey4 = false;
+			FighterState.ZonLevel = 8;
+			FighterState.DevKey4 = false;
 		}
-		if(i_DevKey5)
+		if(FighterState.DevKey5)
 		{
 			v_CameraMode++;
 			if(v_CameraMode>1)
 			{
 				v_CameraMode = 0;
 			}
-			i_DevKey5 = false;
+			FighterState.DevKey5 = false;
 		}
-		if(i_DevKey6)
+		if(FighterState.DevKey6)
 		{
 			g_CurStun = 4f;
-			i_DevKey6 = false;
+			FighterState.DevKey6 = false;
 		}
-		if(i_DevKey7)
+		if(FighterState.DevKey7)
 		{
-			i_DevKey7 = false;
+			FighterState.DevKey7 = false;
 		}
-		if(i_DevKey8)
+		if(FighterState.DevKey8)
 		{
-			i_DevKey8 = false;
+			FighterState.DevKey8 = false;
 		}
-		if(i_DevKey9)
+		if(FighterState.DevKey9)
 		{
-			i_DevKey9 = false;
+			FighterState.DevKey9 = false;
 		}
-		if(i_DevKey10)
+		if(FighterState.DevKey10)
 		{
-			i_DevKey10 = false;
+			FighterState.DevKey10 = false;
 		}
-		if(i_DevKey11)
+		if(FighterState.DevKey11)
 		{
-			i_DevKey11 = false;
+			FighterState.DevKey11 = false;
 		}
-		if(i_DevKey12)
+		if(FighterState.DevKey12)
 		{
-			i_DevKey12 = false;
+			FighterState.DevKey12 = false;
 			#if UNITY_EDITOR
 			EditorApplication.isPaused = true;
 			#endif
@@ -422,19 +408,19 @@ public class Player : FighterChar
 
 		if(IsDisabled())
 		{
-			FighterState.RightClick = false;
+			FighterState.RightClickPress = false;
 			FighterState.RightClickRelease = false;
 			FighterState.RightClickHold = false;
-			FighterState.LeftClick = false;
+			FighterState.LeftClickPress = false;
 			FighterState.LeftClickRelease = false;
 			FighterState.LeftClickHold = false;
-			FighterState.UpKey = false;
-			FighterState.LeftKey = false;
-			FighterState.DownKey = false;
-			FighterState.RightKey = false;
-			FighterState.JumpKey = false;
-			FighterState.ZonKey = false;
-			FighterState.DisperseKey = false;
+			FighterState.UpKeyHold = false;
+			FighterState.LeftKeyHold = false;
+			FighterState.DownKeyHold = false;
+			FighterState.RightKeyHold = false;
+			FighterState.JumpKeyPress = false;
+			FighterState.ZonKeyPress = false;
+			FighterState.DisperseKeyPress = false;
 		}
 
 		//#################################################################################
@@ -442,7 +428,7 @@ public class Player : FighterChar
 		//#################################################################################
 		//Horizontal button pressing
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if((FighterState.LeftKey && FighterState.RightKey) || !(FighterState.LeftKey||FighterState.RightKey))
+		if((FighterState.LeftKeyHold && FighterState.RightKeyHold) || !(FighterState.LeftKeyHold||FighterState.RightKeyHold))
 		{
 			//print("BOTH OR NEITHER");
 			if(!(autoPressLeft||autoPressRight)|| IsDisabled())
@@ -458,7 +444,7 @@ public class Player : FighterChar
 				CtrlH = 1;
 			}
 		}
-		else if(FighterState.LeftKey)
+		else if(FighterState.LeftKeyHold)
 		{
 			//print("LEFT");
 			CtrlH = -1;
@@ -479,7 +465,7 @@ public class Player : FighterChar
 		}
 
 		//Vertical button pressing
-		if((FighterState.DownKey && FighterState.UpKey) || !(FighterState.UpKey||FighterState.DownKey))
+		if((FighterState.DownKeyHold && FighterState.UpKeyHold) || !(FighterState.UpKeyHold||FighterState.DownKeyHold))
 		{
 			//print("BOTH OR NEITHER");
 			if(!(autoPressDown||autoPressUp)||IsDisabled())
@@ -495,7 +481,7 @@ public class Player : FighterChar
 				CtrlV = 1;
 			}
 		}
-		else if(FighterState.DownKey)
+		else if(FighterState.DownKeyHold)
 		{
 			//print("LEFT");
 			CtrlV = -1;
@@ -520,7 +506,7 @@ public class Player : FighterChar
 		}
 
 		//print("CTRLH=" + CtrlH);
-		if(FighterState.DownKey&&m_Grounded)
+		if(FighterState.DownKeyHold&&m_Grounded)
 		{
 			m_Kneeling = true;
 			CtrlH = 0;
@@ -531,10 +517,10 @@ public class Player : FighterChar
 			g_ZonJumpCharge=0;
 		}
 			
-		//if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
-		if(FighterState.JumpKey)
+		//if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if(FighterState.JumpKeyPress)
 		{
-			FighterState.JumpKey = false;
+			FighterState.JumpKeyPress = false;
 			if(m_Kneeling)
 			{
 				ZonJump(FighterState.PlayerMouseVector.normalized);
@@ -543,19 +529,164 @@ public class Player : FighterChar
 			{
 				Jump(CtrlH);
 			}
+		}
+
+		//
+		// Strand Jump key double-taps
+		//
+
+		if(FighterState.LeftKeyDoubleTapReady){FighterState.LeftKeyDoubleTapDelay += Time.deltaTime;} 	// If player pressed key, time how long since it was pressed.
+		if(FighterState.RightKeyDoubleTapReady){FighterState.RightKeyDoubleTapDelay += Time.deltaTime;} // If player pressed key, time how long since it was pressed.
+		if(FighterState.UpKeyDoubleTapReady){FighterState.UpKeyDoubleTapDelay += Time.deltaTime;} 		// If player pressed key, time how long since it was pressed.
+		if(FighterState.DownKeyDoubleTapReady){FighterState.DownKeyDoubleTapDelay += Time.deltaTime;}	// If player pressed key, time how long since it was pressed.
+			
+		int strandJumpHorz = 0;
+		int strandJumpVert = 0;
+
+
+		if(FighterState.LeftKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.LeftKeyDoubleTapReady = false;
+		}
+		if(FighterState.RightKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.RightKeyDoubleTapReady = false;
+		}
+		if(FighterState.UpKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.UpKeyDoubleTapReady = false;
+		}
+		if(FighterState.DownKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.DownKeyDoubleTapReady = false;
+		}
+
+		if(FighterState.LeftKeyPress) 
+		{
+			FighterState.RightKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.UpKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.DownKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			if(FighterState.LeftKeyDoubleTapReady) // If double tap, strand jump. If not, prime double tap.
+			{
+				FighterState.LeftKeyDoubleTapReady = false;
+				strandJumpHorz = -1;
+				//print("LeftKeyDoubleTapDelay "+FighterState.LeftKeyDoubleTapDelay);
+			}
 			else
 			{
-				StrandJumpTypeA(CtrlH, CtrlV);
+				FighterState.LeftKeyDoubleTapReady = true;
+				FighterState.RightKeyDoubleTapReady = false;
+			}
+		}
+
+		if(FighterState.RightKeyPress)
+		{
+			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.UpKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.DownKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			if(FighterState.RightKeyDoubleTapReady) // If double tap, strand jump. If not, prime double tap.
+			{
+				FighterState.RightKeyDoubleTapReady = false;
+				strandJumpHorz = 1;
+				//print("RightKeyDoubleTapDelay "+FighterState.RightKeyDoubleTapDelay);
+			}
+			else
+			{
+				FighterState.RightKeyDoubleTapReady = true;
+				FighterState.LeftKeyDoubleTapReady = false;
+			}
+		}
+
+		if(FighterState.UpKeyPress)
+		{
+			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.RightKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.DownKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			if(FighterState.UpKeyDoubleTapReady) // If double tap, strand jump. If not, prime double tap.
+			{
+				FighterState.UpKeyDoubleTapReady = false;
+				strandJumpVert = 1;
+				//print("UpKeyDoubleTapDelay "+FighterState.UpKeyDoubleTapDelay);
+			}
+			else
+			{
+				FighterState.UpKeyDoubleTapReady = true;
+				FighterState.DownKeyDoubleTapReady = false;
+			}
+		}
+		if(FighterState.DownKeyPress)
+		{
+			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.RightKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			FighterState.UpKeyDoubleTapReady = false; // Other keys interrupt double taps.
+			if(FighterState.DownKeyDoubleTapReady) // If double tap, strand jump. If not, prime double tap.
+			{
+				FighterState.DownKeyDoubleTapReady = false;
+				strandJumpVert = -1;
+				//print("DownKeyDoubleTapDelay "+FighterState.DownKeyDoubleTapDelay);
+			}
+			else
+			{
+				FighterState.DownKeyDoubleTapReady = true;
+				FighterState.UpKeyDoubleTapReady = false;
 			}
 		}
 			
+
+//		if(FighterState.LeftKeyPress) 
+//		{
+//			if(!FighterState.RightKeyPress){FighterState.RightKeyDoubleTapReady = false;} // Other keys interrupt double taps. 
+//			if(!FighterState.UpKeyPress){FighterState.UpKeyDoubleTapReady = false;} // Other keys interrupt double taps.
+//			if(!FighterState.DownKeyPress){FighterState.DownKeyDoubleTapReady = false;} // Other keys interrupt double taps.
+//		}
+//		if(FighterState.RightKeyPress) //Must come after double tap detection code so that simultaneous doubletaps don't block each other, but chains of conflicting keypresses will stop doubletaps.
+//		{
+//			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.UpKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.DownKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//		}
+//		if(FighterState.UpKeyPress) //Must come after double tap detection code so that simultaneous doubletaps don't block each other, but chains of conflicting keypresses will stop doubletaps.
+//		{
+//			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.RightKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.DownKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//		}
+//		if(FighterState.DownKeyPress) //Must come after double tap detection code so that simultaneous doubletaps don't block each other, but chains of conflicting keypresses will stop doubletaps.
+//		{
+//			FighterState.LeftKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.RightKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//			FighterState.UpKeyDoubleTapReady = false; // Other keys interrupt double taps.
+//		}
+
+		if(FighterState.LeftKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.LeftKeyDoubleTapReady = false;
+		}
+		if(FighterState.RightKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.RightKeyDoubleTapReady = false;
+		}
+		if(FighterState.UpKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.UpKeyDoubleTapReady = false;
+		}
+		if(FighterState.DownKeyDoubleTapDelay>i_DoubleTapDelayTime) // If over the time limit, next keypress won't count as a doubletap.
+		{
+			FighterState.DownKeyDoubleTapReady = false;
+		}
+
+		if((strandJumpHorz != 0)||(strandJumpVert != 0))
+		{
+			StrandJumpTypeA(strandJumpHorz, strandJumpVert);
+		}
+
 		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
 		{
-			if(!(FighterState.LeftKey&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKey&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			if(!(FighterState.LeftKeyHold&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKeyHold&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
-			//print("Leftclick detected");
+			print("Leftclick detected");
 			FighterState.LeftClickRelease = false;
 		}
 
@@ -564,18 +695,18 @@ public class Player : FighterChar
 			g_Stance = 2;
 		}
 
-		if(FighterState.DisperseKey)
+		if(FighterState.DisperseKeyPress)
 		{
 			ZonPulse();
-			FighterState.DisperseKey = false;
+			FighterState.DisperseKeyPress = false;
 		}
 
 		if(FighterState.LeftClickHold)
 		{
-			i_LeftClickHoldDuration += Time.fixedDeltaTime;
+			FighterState.LeftClickHoldDuration += Time.fixedDeltaTime;
 			g_Stance = 1;
 
-			if((i_LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
+			if((FighterState.LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
 				g_VelocityPunching = true;
 				o_VelocityPunch.inUse = true;
@@ -588,16 +719,52 @@ public class Player : FighterChar
 		}
 		else
 		{
-			i_LeftClickHoldDuration = 0;
+			FighterState.LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
 			o_VelocityPunch.inUse = false;
 		}
 			
-		if(FighterState.DisperseKey)
+		if(FighterState.DisperseKeyPress)
 		{
 			ZonPulse();
-			FighterState.DisperseKey = false;
+			FighterState.DisperseKeyPress = false;
 		}
+
+		// Once the input has been processed, set the press inputs to false so they don't run several times before being changed by update() again. 
+		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
+		FighterState.LeftClickPress = false; 	
+		FighterState.RightClickPress = false;
+		FighterState.ZonKeyPress = false;				
+		FighterState.DisperseKeyPress = false;				
+		FighterState.JumpKeyPress = false;				
+		FighterState.LeftKeyPress = false;
+		FighterState.RightKeyPress = false;
+		FighterState.UpKeyPress = false;
+		FighterState.DownKeyPress = false;
+
+		FighterState.LeftClickRelease = false; 	
+		FighterState.RightClickRelease = false;
+//		FighterState.ZonKeyRelease = false;				
+//		FighterState.DisperseKeyRelease = false;				
+//		FighterState.JumpKeyRelease = false;				
+		FighterState.LeftKeyRelease = false;
+		FighterState.RightKeyRelease = false;
+		FighterState.UpKeyRelease = false;
+		FighterState.DownKeyRelease = false;
+
+		FighterState.DevkeyTilde = false;				
+		FighterState.DevKey1 = false;				
+		FighterState.DevKey2  = false;				
+		FighterState.DevKey3  = false;				
+		FighterState.DevKey4  = false;				
+		FighterState.DevKey5  = false;				
+		FighterState.DevKey6  = false;				
+		FighterState.DevKey7  = false;				
+		FighterState.DevKey8  = false;				
+		FighterState.DevKey9  = false;
+		FighterState.DevKey10  = false;				
+		FighterState.DevKey11  = false;				
+		FighterState.DevKey12 = false;				
 	}
 
 	protected override void UpdateInput()
@@ -608,94 +775,142 @@ public class Player : FighterChar
 		//
 		if(Input.GetMouseButtonDown(0))
 		{
-			FighterState.LeftClick = true;
+			FighterState.LeftClickPress = true;
 		}
 		if(Input.GetMouseButtonDown(1))
 		{
-			FighterState.RightClick = true;
+			FighterState.RightClickPress = true;
 		}
 		if(Input.GetButtonDown("Spooling"))
 		{
-			FighterState.ZonKey = true;				
+			FighterState.ZonKeyPress = true;				
 		}
 		if(Input.GetButtonDown("Disperse"))
 		{
-			FighterState.DisperseKey = true;				
+			FighterState.DisperseKeyPress = true;				
 		}
 		if(Input.GetButtonDown("Jump"))
 		{
-			FighterState.JumpKey = true;				
+			FighterState.JumpKeyPress = true;				
 		}
+		if(Input.GetButtonDown("Left"))
+		{
+			FighterState.LeftKeyPress = true;
+			FighterState.LeftKeyDoubleTapDelay = 0;
+		}
+		if(Input.GetButtonDown("Right"))
+		{
+			FighterState.RightKeyPress = true;
+			FighterState.RightKeyDoubleTapDelay = 0;
+		}
+		if(Input.GetButtonDown("Up"))
+		{
+			FighterState.UpKeyPress = true;
+			FighterState.UpKeyDoubleTapDelay = 0;
+		}
+		if(Input.GetButtonDown("Down"))
+		{
+			FighterState.DownKeyPress = true;
+			FighterState.DownKeyDoubleTapDelay = 0;
+		}
+	
+		//
+		// Dev Keys
+		//
 		if(Input.GetButtonDown("Tilde"))
 		{
-			i_DevkeyTilde = true;				
+			FighterState.DevkeyTilde = true;				
 		}
 		if(Input.GetButtonDown("F1"))
 		{
-			i_DevKey1 = true;				
+			FighterState.DevKey1 = true;				
 		}
 		if(Input.GetButtonDown("F2"))
 		{
-			i_DevKey2  = true;				
+			FighterState.DevKey2  = true;				
 		}
 		if(Input.GetButtonDown("F3"))
 		{
-			i_DevKey3  = true;				
+			FighterState.DevKey3  = true;				
 		}
 		if(Input.GetButtonDown("F4"))
 		{
-			i_DevKey4  = true;				
+			FighterState.DevKey4  = true;				
 		}
 		if(Input.GetButtonDown("F5"))
 		{
-			i_DevKey5  = true;				
+			FighterState.DevKey5  = true;				
 		}
 		if(Input.GetButtonDown("F6"))
 		{
-			i_DevKey6  = true;				
+			FighterState.DevKey6  = true;				
 		}
 		if(Input.GetButtonDown("F7"))
 		{
-			i_DevKey7  = true;				
+			FighterState.DevKey7  = true;				
 		}
 		if(Input.GetButtonDown("F8"))
 		{
-			i_DevKey8  = true;				
+			FighterState.DevKey8  = true;				
 		}
 		if(Input.GetButtonDown("F9"))
 		{
-			i_DevKey9  = true;				
+			FighterState.DevKey9  = true;				
 		}
 		if(Input.GetButtonDown("F10"))
 		{
-			i_DevKey10  = true;				
+			FighterState.DevKey10  = true;				
 		}
 		if(Input.GetButtonDown("F11"))
 		{
-			i_DevKey11  = true;				
+			FighterState.DevKey11  = true;				
 		}
 		if(Input.GetButtonDown("F12"))
 		{
-			i_DevKey12 = true;				
+			FighterState.DevKey12 = true;				
 		}
 
 		//
 		// Key-Up Unpresses
 		//
-		FighterState.LeftClickRelease = Input.GetMouseButtonUp(0);
-		FighterState.RightClickRelease = Input.GetMouseButtonUp(1);
-			
+		if(Input.GetMouseButtonUp(0))
+		{
+			FighterState.LeftClickRelease = true;
+		}
+		if(Input.GetMouseButtonUp(1))
+		{
+			FighterState.RightClickRelease = true;
+		}
+		if( Input.GetButtonUp("Left"))
+		{
+			FighterState.LeftKeyRelease = true;
+		}
+		if(Input.GetButtonUp("Right"))
+		{
+			FighterState.RightKeyRelease = true;
+		}
+		if(Input.GetButtonUp("Up"))
+		{
+			FighterState.UpKeyRelease = true;
+		}
+		if(Input.GetButtonUp("Down"))
+		{
+			FighterState.DownKeyRelease = true;
+		}
+
 		//
 		// Key Hold-Downs
 		//
-		FighterState.LeftKey = Input.GetButton("Left");
-		FighterState.RightKey = Input.GetButton("Right");
-		FighterState.UpKey = Input.GetButton("Up");
-		FighterState.DownKey = Input.GetButton("Down");
+		FighterState.LeftKeyHold = Input.GetButton("Left");
+		FighterState.RightKeyHold = Input.GetButton("Right");
+		FighterState.UpKeyHold = Input.GetButton("Up");
+		FighterState.DownKeyHold = Input.GetButton("Down");
 		FighterState.LeftClickHold = Input.GetMouseButton(0);
 		FighterState.RightClickHold = Input.GetMouseButton(1);
 
+		//
 		// Mouse position in world space
+		//
 		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		FighterState.MouseWorldPos = Vec2(mousePoint);
 
@@ -844,17 +1059,17 @@ public class Player : FighterChar
 
 	protected void ZonPulse()
 	{
-		if(g_ZonLevel <= 0)
+		if(FighterState.ZonLevel <= 0)
 		{
 			return;
 		}
 
-		g_ZonLevel--;
+		FighterState.ZonLevel--;
 		o_ProximityLiner.ClearAllFighters();
 		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
 		newZonPulse.GetComponentInChildren<ZonPulse>().originPlayer = this;
-		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(g_ZonLevel*50);
-		//o_ProximityLiner.outerRange = 100+(g_ZonLevel*25);
+		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
+		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
 		o_FighterAudio.ZonPulseSound();
 	}
 		

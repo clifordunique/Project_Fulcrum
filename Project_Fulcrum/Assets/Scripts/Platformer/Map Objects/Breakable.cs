@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Breakable : MonoBehaviour {
+public class Breakable : NetworkBehaviour {
 
-	[SerializeField]private Transform spriteObject;
-	[SerializeField]private AudioSource breakNoiseEmitter;
+	[SerializeField][ReadOnlyAttribute]private Transform spriteObject;
+	[SerializeField][ReadOnlyAttribute]private AudioSource breakNoiseEmitter;
 
 	Vector3 trueSpritePosition;
-	private float duration = 1f;
+	private float duration = 0;
 	private float maxDuration = 1f; //Max shake, scales linearly from minforce to maxforce;
 	[SerializeField]private int minForce = 60; // min force before shaking.
 	[SerializeField]private int maxForce = 250; // max force before breaking.

@@ -56,9 +56,9 @@ public class NPC : FighterChar {
 		}
 		FixedUpdateLogic();
 		FixedUpdateAnimation();
-		FighterState.RightClick = false;
-		FighterState.LeftClick = false;
-		FighterState.ZonKey = false;
+		FighterState.RightClickPress = false;
+		FighterState.LeftClickPress = false;
+		FighterState.ZonKeyPress = false;
 	}
 	#endregion
 	//###################################################################################################################################
@@ -135,40 +135,40 @@ public class NPC : FighterChar {
 				if(d_aiDebug){print("Chasing!");}
 				if(goalLocation.x < 0)
 				{
-					this.FighterState.LeftKey = true;
-					this.FighterState.RightKey = false;
+					this.FighterState.LeftKeyHold = true;
+					this.FighterState.RightKeyHold = false;
 				}
 				else if(goalLocation.x > 0)
 				{
-					this.FighterState.RightKey = true;
-					this.FighterState.LeftKey = false;
+					this.FighterState.RightKeyHold = true;
+					this.FighterState.LeftKeyHold = false;
 				}
 				else
 				{
-					this.FighterState.RightKey = false;
-					this.FighterState.LeftKey = false;
+					this.FighterState.RightKeyHold = false;
+					this.FighterState.LeftKeyHold = false;
 				}
 
 				if(goalLocation.y > 5f)
 				{
-					this.FighterState.JumpKey = true;
+					this.FighterState.JumpKeyPress = true;
 				}
 				else
 				{
-					this.FighterState.JumpKey = false;
+					this.FighterState.JumpKeyPress = false;
 				}
 				if(this.GetSpeed() >= 30)
 				{
 					this.FighterState.LeftClickHold = true;
-					this.FighterState.LeftClick = true;
+					this.FighterState.LeftClickPress = true;
 				}
 				break;
 			}
 		case 2: // Attacking
 			{
 				if(d_aiDebug){print("ATTACKING!");}
-				this.FighterState.RightKey = false;
-				this.FighterState.LeftKey = false;
+				this.FighterState.RightKeyHold = false;
+				this.FighterState.LeftKeyHold = false;
 				if(PunchCooldown <= 0)
 				{
 					this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
@@ -193,7 +193,7 @@ public class NPC : FighterChar {
 		o_SpriteRenderer.color = new Color(1,0.6f,0,1);
 	}
 
-	protected override void FixedUpdateProcessInput()
+	protected override void FixedUpdateProcessInput() // FUPI
 	{
 		m_WorldImpact = false;
 		m_Landing = false;
@@ -264,14 +264,14 @@ public class NPC : FighterChar {
 
 		if(IsDisabled())
 		{
-			FighterState.RightClick = false;
-			FighterState.LeftClick = false;
-			FighterState.UpKey = false;
-			FighterState.LeftKey = false;
-			FighterState.DownKey = false;
-			FighterState.RightKey = false;
-			FighterState.JumpKey = false;
-			FighterState.ZonKey = false;
+			FighterState.RightClickPress = false;
+			FighterState.LeftClickPress = false;
+			FighterState.UpKeyHold = false;
+			FighterState.LeftKeyHold = false;
+			FighterState.DownKeyHold = false;
+			FighterState.RightKeyHold = false;
+			FighterState.JumpKeyPress = false;
+			FighterState.ZonKeyPress = false;
 		}
 
 		//################################################################################
@@ -279,7 +279,7 @@ public class NPC : FighterChar {
 		//################################################################################
 
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
-		if(!(FighterState.LeftKey||FighterState.RightKey) || (FighterState.LeftKey && FighterState.RightKey))
+		if(!(FighterState.LeftKeyHold||FighterState.RightKeyHold) || (FighterState.LeftKeyHold && FighterState.RightKeyHold))
 		{
 			//print("BOTH OR NEITHER");
 			if(!(autoPressLeft||autoPressRight))
@@ -295,7 +295,7 @@ public class NPC : FighterChar {
 				CtrlH = 1;
 			}
 		}
-		else if(FighterState.LeftKey)
+		else if(FighterState.LeftKeyHold)
 		{
 			//print("LEFT");
 			CtrlH = -1;
@@ -316,7 +316,7 @@ public class NPC : FighterChar {
 		}
 
 		//print("CTRLH=" + CtrlH);
-		if(FighterState.DownKey&&m_Grounded)
+		if(FighterState.DownKeyHold&&m_Grounded)
 		{
 			m_Kneeling = true;
 			CtrlH = 0;
@@ -327,7 +327,7 @@ public class NPC : FighterChar {
 			g_ZonJumpCharge=0;
 		}
 
-		if(FighterState.JumpKey&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		{
 			if(m_Kneeling)
 			{
@@ -341,7 +341,7 @@ public class NPC : FighterChar {
 
 		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
 		{
-			if(!(FighterState.LeftKey&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKey&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			if(!(FighterState.LeftKeyHold&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKeyHold&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
 			{
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
@@ -372,6 +372,18 @@ public class NPC : FighterChar {
 			g_VelocityPunching = false;
 			o_VelocityPunch.inUse = false;
 		}
+
+		// Once the input has been processed, set the press inputs to false so they don't run several times before being changed by update() again. 
+		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
+		FighterState.LeftClickPress = false; 	
+		FighterState.RightClickPress = false;
+		FighterState.ZonKeyPress = false;				
+		FighterState.DisperseKeyPress = false;				
+		FighterState.JumpKeyPress = false;				
+		FighterState.LeftKeyPress = false;
+		FighterState.RightKeyPress = false;
+		FighterState.UpKeyPress = false;
+		FighterState.DownKeyPress = false;
 	}
 
 

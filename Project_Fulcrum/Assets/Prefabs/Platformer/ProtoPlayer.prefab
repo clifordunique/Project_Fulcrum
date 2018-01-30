@@ -83,7 +83,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4039223620323396}
-  - component: {fileID: 114580475300824124}
   - component: {fileID: 82669907216120822}
   m_Layer: 5
   m_Name: SpoolerPrefab
@@ -162,6 +161,7 @@ GameObject:
   - component: {fileID: 212429933696817022}
   - component: {fileID: 114132217005915654}
   - component: {fileID: 114326552090613504}
+  - component: {fileID: 114826143416564554}
   m_Layer: 13
   m_Name: ProtoPlayer
   m_TagString: Player
@@ -505,7 +505,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300001, guid: 409d6b2b7ed1409479c72b59cb8ae89b,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 9b20a1bc5c7fd4f40a2afd2b2f04157c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 54abd4fd0bef51145818c81f07e296f5, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0
   m_Pitch: 1
@@ -1026,7 +1026,7 @@ MonoBehaviour:
   slamVolM: 0.3
   crtrVolM: 0.3
   windVolM: 0.843
-  slideVolM: 0.15
+  slideVolM: 0.3
   stepVolM: 0.3
   punchVolM: 0.2
   punchHitVolM: 0.4
@@ -1153,10 +1153,10 @@ MonoBehaviour:
   m_ZonJumpForcePerCharge: 5
   m_ZonJumpForceBase: 40
   m_VelPunchT: 60
-  m_SlamT: 100
-  m_CraterT: 200
-  m_GuardSlamT: 200
-  m_GuardCraterT: 400
+  m_SlamT: 60
+  m_CraterT: 150
+  m_GuardSlamT: 120
+  m_GuardCraterT: 300
   m_JumpBufferG: 10
   m_JumpBufferC: 0
   m_JumpBufferL: 0
@@ -1170,8 +1170,7 @@ MonoBehaviour:
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
   k_StrandJumpSlowdownLinear: 5
-  o_TempLight: {fileID: 108262091546041426, guid: 720c2df8147148a41b81cf834ca47e52,
-    type: 2}
+  o_TempLight: {fileID: 0}
   o_FighterAudio: {fileID: 114126041391509338}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
     type: 2}
@@ -1217,22 +1216,53 @@ MonoBehaviour:
   m_Kneeling: 0
   m_WorldImpact: 0
   FighterState:
+    ZonLevel: 0
     DevMode: 0
     CurHealth: 100
     Dead: 0
-    JumpKey: 0
-    LeftClick: 0
+    JumpKeyPress: 0
+    LeftClickPress: 0
+    RightClickPress: 0
+    LeftKeyPress: 0
+    RightKeyPress: 0
+    UpKeyPress: 0
+    DownKeyPress: 0
     LeftClickHold: 0
-    LeftClickRelease: 0
-    RightClick: 0
     RightClickHold: 0
+    LeftKeyHold: 0
+    RightKeyHold: 0
+    UpKeyHold: 0
+    DownKeyHold: 0
     RightClickRelease: 0
-    LeftKey: 0
-    RightKey: 0
-    UpKey: 0
-    DownKey: 0
-    ZonKey: 0
-    DisperseKey: 0
+    LeftClickRelease: 0
+    LeftKeyRelease: 0
+    RightKeyRelease: 0
+    UpKeyRelease: 0
+    DownKeyRelease: 0
+    LeftKeyDoubleTapReady: 0
+    RightKeyDoubleTapReady: 0
+    UpKeyDoubleTapReady: 0
+    DownKeyDoubleTapReady: 0
+    LeftKeyDoubleTapDelay: 0
+    RightKeyDoubleTapDelay: 0
+    UpKeyDoubleTapDelay: 0
+    DownKeyDoubleTapDelay: 0
+    ZonKeyPress: 0
+    DisperseKeyPress: 0
+    DevkeyTilde: 0
+    DevKey1: 0
+    DevKey2: 0
+    DevKey3: 0
+    DevKey4: 0
+    DevKey5: 0
+    DevKey6: 0
+    DevKey7: 0
+    DevKey8: 0
+    DevKey9: 0
+    DevKey10: 0
+    DevKey11: 0
+    DevKey12: 0
+    LeftClickHoldDuration: 0
     MouseWorldPos: {x: 0, y: 0}
     PlayerMouseVector: {x: 413, y: 5.201796}
     Vel: {x: 0, y: 0}
@@ -1250,7 +1280,6 @@ MonoBehaviour:
   v_DistFromLastDust: 0
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
-  g_ZonLevel: 0
   g_ZonJumpCharge: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
@@ -1275,9 +1304,16 @@ MonoBehaviour:
   g_MaxClashDisparity: 500
   g_MaxClashDamage: 300
   g_MaxClashDamageForce: 1000
-  g_MinClashStaggerT: 0.05
-  g_ClashStaggerStunT: 0.1
-  g_MaxClashStunT: 0.25
+  g_MaxGuardClassDamageForce: 2000
+  g_MinAttackStaggerT: 0.1
+  g_MinAttackStunT: 0.25
+  g_MaxAttackStunT: 0.4
+  g_MinNeutStaggerT: 0.05
+  g_MinNeutStunT: 0.125
+  g_MaxNeutStunT: 0.2
+  g_MinGuardStaggerT: 0.2
+  g_MinGuardStunT: 0.5
+  g_MaxGuardStunT: 0.8
   o_Speedometer: {fileID: 0}
   o_Reporter: {fileID: 0}
   o_ZonCounter: {fileID: 0}
@@ -1288,28 +1324,29 @@ MonoBehaviour:
   o_Healthbar: {fileID: 0}
   o_ProximityLiner: {fileID: 0}
   p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
+  i_DoubleTapDelayTime: 0.5
   inputBufferSize: 2
-  i_DevkeyTilde: 0
-  i_DevKey1: 0
-  i_DevKey2: 0
-  i_DevKey3: 0
-  i_DevKey4: 0
-  i_DevKey5: 0
-  i_DevKey6: 0
-  i_DevKey7: 0
-  i_DevKey8: 0
-  i_DevKey9: 0
-  i_DevKey10: 0
-  i_DevKey11: 0
-  i_DevKey12: 0
-  i_LeftClickHoldDuration: 0
   sceneIsReady: 1
---- !u!114 &114580475300824124
+--- !u!114 &114629398634733958
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1295362650204448}
+  m_GameObject: {fileID: 1845145940187950}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478a2083ad114a07d000fbfb8d76c639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
+  blurAmount: 0.25
+  extraBlur: 0
+--- !u!114 &114826143416564554
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779611444237324}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d71ff8d521b0c704c89d24270318aef4, type: 3}
@@ -1396,20 +1433,6 @@ MonoBehaviour:
   r_Paused: 1
   r_Active: 0
   i_GoodStance: 0
---- !u!114 &114629398634733958
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1845145940187950}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 478a2083ad114a07d000fbfb8d76c639, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
-  blurAmount: 0.25
-  extraBlur: 0
 --- !u!120 &120180239579081978
 LineRenderer:
   m_ObjectHideFlags: 1

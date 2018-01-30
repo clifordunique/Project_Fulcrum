@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
 
-public class Spooler : MonoBehaviour
+public class Spooler : NetworkBehaviour
 {
 	#region OBJECT REFERENCES
 	[SerializeField]private GameObject p_SpoolRingPrefab;
@@ -48,15 +48,10 @@ public class Spooler : MonoBehaviour
 	private bool facingDirection; 	// True means Right (the direction), false means Left.
 	#endregion
 
-	void OnStartLocalPlayer()
-	{
-		NetworkServer.Spawn(this.gameObject);
-	}
-
 	// Use this for initialization
 	void Start () 
 	{
-		o_Player = this.GetComponentInParent<FighterChar>();
+		o_Player = this.gameObject.GetComponent<FighterChar>();
 		i_GoodStance = false;
 		r_Paused = true;
 		r_CurTime = 0;
@@ -67,15 +62,15 @@ public class Spooler : MonoBehaviour
 		r_Accuracy = 0;
 		//o_FeedbackText = GameObject.Find("Dev_SpoolScore").GetComponent<Text>();
 	}
+
+	void Awake() 
+	{
+		o_Player = this.gameObject.GetComponent<FighterChar>();
+	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-//		if(!isClient)
-//		{
-//			//print("NOT CLIENT");
-//			return;
-//		}
 		i_GoodStance = false;
 		if(o_Player.GetZonStance() >= 0)
 		{

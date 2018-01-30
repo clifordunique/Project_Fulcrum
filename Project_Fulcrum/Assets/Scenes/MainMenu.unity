@@ -4187,7 +4187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   titleMusic: {fileID: 8300000, guid: 1e4b38d8e3e56064dbe5ab007e20b7b2, type: 3}
-  mainMusic: {fileID: 8300000, guid: 1e4b38d8e3e56064dbe5ab007e20b7b2, type: 3}
+  mainMusic: {fileID: 8300000, guid: ef6495ea2ba4bf5469652928abda4df9, type: 3}
   volumeDown: {fileID: 24519918, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
   volumeUp: {fileID: 245902259399498814, guid: 0ac7fb39e445048d89688f69c2a1839a, type: 2}
 --- !u!82 &1145733198
@@ -4205,7 +4205,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -4471,11 +4471,10 @@ MonoBehaviour:
   m_OfflineScene: 
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 1779611444237324, guid: 9453cc379df85c24da2c179adafcbe4a, type: 2}
-  - {fileID: 1271522054906898, guid: 14369a266bf78a14bbabc8cee1530780, type: 2}
-  - {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147, type: 2}
-  - {fileID: 1011966117557460, guid: ca8a5646855efea4c9da346ed2dd9259, type: 2}
+  - {fileID: 1072316695980208, guid: a596415193a67dd45af7ffa8aefda183, type: 2}
   - {fileID: 1779611444237324, guid: 70d85a773a7580f44ae52d77e5128fad, type: 2}
+  - {fileID: 1512946014622738, guid: ca8a5646855efea4c9da346ed2dd9259, type: 2}
+  - {fileID: 1271522054906898, guid: 14369a266bf78a14bbabc8cee1530780, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -6389,8 +6388,8 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: -80
   m_MaxValue: 0
-  m_WholeNumbers: 0
-  m_Value: -40.3
+  m_WholeNumbers: 1
+  m_Value: -40
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
