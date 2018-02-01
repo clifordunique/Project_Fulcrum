@@ -1,0 +1,22 @@
+Switch Group	ID	Name			Wwise Object Path	Notes
+	472853913	Sliding			\Default Work Unit\Sliding	
+
+Switch	ID	Name	Switch Group			Notes
+	472853913	Sliding	Sliding			
+	2190485205	WallSliding	Sliding			
+	3078077546	NotSliding	Sliding			
+
+State Group	ID	Name			Wwise Object Path	Notes
+	725599200	FighterChar			\Default Work Unit\FighterChar	
+
+State	ID	Name	State Group			Notes
+	748895195	None	FighterChar			
+	3519441192	Velocity	FighterChar			
+
+Audio Bus	ID	Name			Wwise Object Path	Notes
+	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	
+
+Audio Devices	ID	Name	Type				Notes
+	2317455096	No_Output	No Output			
+	3859886410	System	System			
+

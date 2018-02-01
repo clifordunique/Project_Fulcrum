@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{EE082732-7104-4433-8F48-C87E70A099B2}" SchemaVersion="85">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{EE082732-7104-4433-8F48-C87E70A099B2}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="StartWindLoop" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}">
+					<ChildrenList>
+						<Action Name="" ID="{FDC7CB5F-F281-4FB8-A3DD-F7874476E555}" ShortID="345719384">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Windloop1" ID="{BF9B8CBB-13CF-4AB8-B5BE-F5BDA3C47D03}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="StartSlideLoop" ID="{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}">
+					<ChildrenList>
+						<Action Name="" ID="{9C43F41E-19AD-4338-9848-114BC79392B7}" ShortID="660919193">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="concreteslide02" ID="{8F227350-EB42-41FD-868B-22EC692F8B35}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="EnergyPulse" ID="{AB3CAA24-D8F9-402B-88C1-A5AF022D82B6}">
+					<ChildrenList>
+						<Action Name="" ID="{E928BBD9-D45B-4072-8ACA-C0EC02F36BDD}" ShortID="240192970">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ZonPulse" ID="{8E77A81A-3761-4873-A024-D7E511D1D113}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="PunchHit" ID="{3F8476E9-3EE2-402F-9118-F5F7AD8A30C1}">
+					<ChildrenList>
+						<Action Name="" ID="{9BC0B5DE-EB32-48EB-83C7-1934F2AFE21E}" ShortID="913132945">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="fist_impact01" ID="{E010D6B3-7423-4828-82CC-FF5C92159B54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="PunchSwing" ID="{45A20D95-22CE-444F-88A8-1F91E6ADBD8C}">
+					<ChildrenList>
+						<Action Name="" ID="{D2C7B0CA-187D-430D-AC23-CB1C7F496820}" ShortID="652217505">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="fist_swing01" ID="{3E2B0D39-3376-4A99-9AD6-D7ACF9CC657A}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Landing" ID="{18B75C48-022E-4D63-A6ED-6C8A16FECB2B}">
+					<ChildrenList>
+						<Action Name="" ID="{376549A8-FAFA-4BFA-A6B0-7E374B90B4A1}" ShortID="660137506">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="softland01" ID="{5A5DABC0-13BB-425E-B756-F83C5903E466}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Impact_Slam" ID="{59034A69-AAB6-476B-80D9-1DA2BFC36721}">
+					<Comment>Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase.
+</Comment>
+					<ChildrenList>
+						<Action Name="" ID="{206001FD-F50F-4F89-97BC-BF5FBF655791}" ShortID="645622939">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="hardland02" ID="{BBE7AF70-A09A-467B-A84D-36FBC7F947E4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}">
+					<Comment>Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase.
+</Comment>
+					<ChildrenList>
+						<Action Name="" ID="{3F147900-A2CF-4C0B-946C-4ED7F14E3F37}" ShortID="423822326">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="hardland01" ID="{AD34DD10-8E36-488F-B0DD-BBDA0FEDCCF7}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="PlayMusic" ID="{6E59EE28-79D6-4E5A-91BE-0963CBD13CFE}">
+					<ChildrenList>
+						<Action Name="" ID="{3FEDB5F2-E501-432B-9B00-4DD70875C7CE}" ShortID="460531747">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="IridescenceV2" ID="{AC9D4A98-D098-432F-8D9B-ACEB9D3F5CA0}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Jump" ID="{947D9AA3-E8AD-4BA7-81AE-3A3B3FBAB9FA}">
+					<Comment>Just using the punch sound as a placeholder.
+</Comment>
+					<ChildrenList>
+						<Action Name="" ID="{B3C25265-098A-4240-9DAD-A489733CF550}" ShortID="115956765">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="fist_swing01" ID="{3E2B0D39-3376-4A99-9AD6-D7ACF9CC657A}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="StrandJump" ID="{3742140F-2B78-4AFA-9FE6-53EE34BC53FA}">
+					<ChildrenList>
+						<Action Name="" ID="{868C970F-564E-4893-8AC2-C613D81461A6}" ShortID="323939692">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="StrandJump" ID="{C4E5F96F-CF54-4B3A-BE39-85F2D3A77CB6}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Footstep" ID="{D886AC26-622F-4C26-BB8B-CBE28C6D6151}">
+					<ChildrenList>
+						<Action Name="" ID="{03E4BF6A-FDEE-4E2A-98E5-482902072AA1}" ShortID="655784368">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Concrete" ID="{56A6B177-9415-4FB9-A538-293F268351C8}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

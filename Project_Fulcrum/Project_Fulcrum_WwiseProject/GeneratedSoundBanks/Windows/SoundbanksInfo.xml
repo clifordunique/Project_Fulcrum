@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
+	<RootPaths>
+		<ProjectRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="725599200" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\FighterChar</ObjectPath>
+			<ShortName>FighterChar</ShortName>
+			<Path>FighterChar.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse"/>
+				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep"/>
+				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
+				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
+				<Event Id="3833651337" Name="Jump" ObjectPath="\Events\Default Work Unit\Jump"/>
+				<Event Id="2548270042" Name="Landing" ObjectPath="\Events\Default Work Unit\Landing"/>
+				<Event Id="417627684" Name="PlayMusic" ObjectPath="\Events\Default Work Unit\PlayMusic"/>
+				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit"/>
+				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
+				<Event Id="1242415940" Name="StartSlideLoop" ObjectPath="\Events\Default Work Unit\StartSlideLoop"/>
+				<Event Id="1825604527" Name="StartWindLoop" ObjectPath="\Events\Default Work Unit\StartWindLoop"/>
+				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="64029838" Language="SFX">
+					<ShortName>Player\Pain\hardland02.wav</ShortName>
+					<Path>SFX\Player\Pain\hardland02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="83032304" Language="SFX">
+					<ShortName>Player\Landing\softland01.wav</ShortName>
+					<Path>SFX\Player\Landing\softland01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="143060330" Language="SFX">
+					<ShortName>Player\Footsteps\concrete2.wav</ShortName>
+					<Path>SFX\Player\Footsteps\concrete2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="175817835" Language="SFX">
+					<ShortName>Environment\Wind\Windloop1.wav</ShortName>
+					<Path>SFX\Environment\Wind\Windloop1_F17FB28C.wem</Path>
+				</File>
+				<File Id="242927875" Language="SFX">
+					<ShortName>Player\Punch\fist_swing01.wav</ShortName>
+					<Path>SFX\Player\Punch\fist_swing01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="384925656" Language="SFX">
+					<ShortName>Player\Sliding\concreteslide02.wav</ShortName>
+					<Path>SFX\Player\Sliding\concreteslide02_F17FB28C.wem</Path>
+				</File>
+				<File Id="495418215" Language="SFX">
+					<ShortName>Player\Pain\hardland01.wav</ShortName>
+					<Path>SFX\Player\Pain\hardland01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="513005174" Language="SFX">
+					<ShortName>Player\Footsteps\concrete4.wav</ShortName>
+					<Path>SFX\Player\Footsteps\concrete4_1C9C67B2.wem</Path>
+				</File>
+				<File Id="559853862" Language="SFX">
+					<ShortName>Player\Punch\fist_impact01.wav</ShortName>
+					<Path>SFX\Player\Punch\fist_impact01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="724510864" Language="SFX">
+					<ShortName>Player\Footsteps\concrete1.wav</ShortName>
+					<Path>SFX\Player\Footsteps\concrete1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="797947007" Language="SFX">
+					<ShortName>Player\Footsteps\concrete3.wav</ShortName>
+					<Path>SFX\Player\Footsteps\concrete3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="802216845" Language="SFX">
+					<ShortName>Abilities\StrandJump.wav</ShortName>
+					<Path>SFX\Abilities\StrandJump_1C9C67B2.wem</Path>
+				</File>
+				<File Id="946167769" Language="SFX">
+					<ShortName>Abilities\ZonPulse.wav</ShortName>
+					<Path>SFX\Abilities\ZonPulse_1C9C67B2.wem</Path>
+				</File>
+				<File Id="947756603" Language="SFX">
+					<ShortName>Music\IridescenceV2.wav</ShortName>
+					<Path>SFX\Music\IridescenceV2_1C9C67B2.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
