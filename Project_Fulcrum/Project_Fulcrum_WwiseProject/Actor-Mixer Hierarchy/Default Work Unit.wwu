@@ -45,17 +45,17 @@
 															</Point>
 															<Point>
 																<XPos>100</XPos>
-																<YPos>25</YPos>
+																<YPos>35</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
 																<XPos>249.39567</XPos>
-																<YPos>2</YPos>
+																<YPos>35</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
 																<XPos>4000</XPos>
-																<YPos>0</YPos>
+																<YPos>35</YPos>
 																<Flags>37</Flags>
 															</Point>
 														</PointList>
@@ -102,17 +102,17 @@
 															</Point>
 															<Point>
 																<XPos>250</XPos>
-																<YPos>-3.3153</YPos>
+																<YPos>-4</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
 																<XPos>749.39467</XPos>
-																<YPos>0.04942</YPos>
+																<YPos>-3</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
 																<XPos>4000</XPos>
-																<YPos>0.09759</YPos>
+																<YPos>-3</YPos>
 																<Flags>37</Flags>
 															</Point>
 														</PointList>
@@ -143,6 +143,11 @@
 						</ActorMixer>
 						<RandomSequenceContainer Name="Crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" ShortID="32916087">
 							<PropertyList>
+								<Property Name="Highpass" Type="int16">
+									<ValueList>
+										<Value>15</Value>
+									</ValueList>
+								</Property>
 								<Property Name="Pitch" Type="int32">
 									<ModifierList>
 										<ModifierInfo>
@@ -158,7 +163,7 @@
 								</Property>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>-10</Value>
+										<Value>-14</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -259,6 +264,11 @@
 						</RandomSequenceContainer>
 						<RandomSequenceContainer Name="Slam" ID="{DC3D48A9-7007-446D-8E3E-450C1C3D6407}" ShortID="746799344">
 							<PropertyList>
+								<Property Name="Highpass" Type="int16">
+									<ValueList>
+										<Value>15</Value>
+									</ValueList>
+								</Property>
 								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 								<Property Name="Pitch" Type="int32">
 									<ModifierList>
@@ -276,7 +286,7 @@
 								<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>-10</Value>
+										<Value>-14</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -502,42 +512,6 @@
 													</Modifier>
 												</ModifierInfo>
 											</ModifierList>
-											<RTPCList>
-												<RTPC Name="" ID="{2671362A-7651-4EE6-8C51-73FC8AB01933}" ShortID="505129420">
-													<ReferenceList>
-														<Reference Name="ControlInput">
-															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
-														</Reference>
-													</ReferenceList>
-													<Curve Name="" ID="{2898CCA6-F9E9-401C-9114-1FB8CEBECEC6}">
-														<PropertyList>
-															<Property Name="Flags" Type="int32" Value="65537"/>
-														</PropertyList>
-														<PointList>
-															<Point>
-																<XPos>0</XPos>
-																<YPos>0</YPos>
-																<Flags>5</Flags>
-															</Point>
-															<Point>
-																<XPos>100</XPos>
-																<YPos>10</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>250</XPos>
-																<YPos>25</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>4000</XPos>
-																<YPos>25</YPos>
-																<Flags>37</Flags>
-															</Point>
-														</PointList>
-													</Curve>
-												</RTPC>
-											</RTPCList>
 										</Property>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -554,44 +528,6 @@
 											</ModifierList>
 										</Property>
 										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
-										<Property Name="Volume" Type="Real64">
-											<RTPCList>
-												<RTPC Name="" ID="{BF433066-79F4-450A-B0A6-B3BDE40C4758}" ShortID="596054330">
-													<ReferenceList>
-														<Reference Name="ControlInput">
-															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
-														</Reference>
-													</ReferenceList>
-													<Curve Name="" ID="{25DC3012-3728-4EEB-BA93-67AB77EAF520}">
-														<PropertyList>
-															<Property Name="Flags" Type="int32" Value="3"/>
-														</PropertyList>
-														<PointList>
-															<Point>
-																<XPos>0</XPos>
-																<YPos>0</YPos>
-																<Flags>5</Flags>
-															</Point>
-															<Point>
-																<XPos>100</XPos>
-																<YPos>-2</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>250</XPos>
-																<YPos>-5</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>4000</XPos>
-																<YPos>-5</YPos>
-																<Flags>37</Flags>
-															</Point>
-														</PointList>
-													</Curve>
-												</RTPC>
-											</RTPCList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -1971,10 +1907,111 @@
 										<ItemRef Name="Grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}"/>
 									</GroupingBehavior>
 								</GroupingBehaviorList>
+								<GroupingList>
+									<Grouping>
+										<SwitchRef Name="Wade" ID="{B3A4A41A-A412-41DA-8334-7E6488005812}"/>
+										<ItemList>
+											<ItemRef Name="Wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Mud" ID="{3BF93621-F4C5-4951-A0B0-DB788DD4B945}"/>
+										<ItemList>
+											<ItemRef Name="Mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Concrete" ID="{5F54F82B-64C0-4219-BC97-88C7A5595553}"/>
+										<ItemList>
+											<ItemRef Name="Concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Wood" ID="{51737B43-FDC5-4070-BF55-4521677F3A87}"/>
+										<ItemList>
+											<ItemRef Name="Wood" ID="{7E8382AF-332C-4BFE-9F13-37544420E2DC}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Grass" ID="{D472C583-B7EF-4EDE-86C5-ACB34EC854FD}"/>
+										<ItemList>
+											<ItemRef Name="Grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Metal" ID="{DC7C968C-7A57-44DE-AFDB-533773CE4918}"/>
+										<ItemList>
+											<ItemRef Name="Metal" ID="{36A52C70-6CEC-47B1-ABEA-9BAE19B2F81E}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Sand" ID="{87FC4998-C815-4E83-8C89-F51FB763456E}"/>
+										<ItemList>
+											<ItemRef Name="Sand" ID="{2F4C79ED-5AD1-419E-807D-82559165F096}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Gravel" ID="{A1198CA3-6250-48ED-8DCC-FA0BC58ECA13}"/>
+										<ItemList>
+											<ItemRef Name="Gravel" ID="{F008D326-B883-4740-913B-58EBB952159B}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Slosh" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
+										<ItemList>
+											<ItemRef Name="Slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Dirt" ID="{DC6FAAB6-5F15-41CA-9A38-1D45E5ADC99A}"/>
+										<ItemList>
+											<ItemRef Name="Dirt" ID="{A2939EC1-FF10-4404-997B-2B5D9F4738B2}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Tile" ID="{6C0F42E8-4A3C-476A-A0A0-E1D98310D8BA}"/>
+										<ItemList>
+											<ItemRef Name="Tile" ID="{0D4CC7CF-55EB-4EB1-885F-2ECEC571C3AB}"/>
+										</ItemList>
+									</Grouping>
+								</GroupingList>
 							</GroupingInfo>
 						</SwitchContainer>
 						<RandomSequenceContainer Name="Landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" ShortID="632189129">
 							<PropertyList>
+								<Property Name="Highpass" Type="int16">
+									<RTPCList>
+										<RTPC Name="" ID="{AA8A9689-31A1-4B93-9FF2-97C20B17158C}" ShortID="108980690">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{426A33B2-BE5E-4B52-9EA0-2E783C5AE860}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="65537"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>1</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>100</XPos>
+														<YPos>40</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>4000</XPos>
+														<YPos>40</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
+								</Property>
 								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 								<Property Name="Pitch" Type="int32">
 									<ModifierList>
@@ -1994,6 +2031,37 @@
 									<ValueList>
 										<Value>-10</Value>
 									</ValueList>
+									<RTPCList>
+										<RTPC Name="" ID="{87F30903-8738-42DA-8295-41A13EC4E793}" ShortID="329606555">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{19D21B69-5574-46BD-A8B5-F99FCC9BD907}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>0</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>100</XPos>
+														<YPos>-6</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>4000</XPos>
+														<YPos>-6</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
 								</Property>
 							</PropertyList>
 							<ReferenceList>
@@ -2452,6 +2520,9 @@
 									</ModifierList>
 								</Property>
 								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-5</Value>
+									</ValueList>
 									<RTPCList>
 										<RTPC Name="" ID="{A607820F-3FEB-48BD-94C9-D0D4E68A9FAB}" ShortID="469066037">
 											<ReferenceList>

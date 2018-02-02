@@ -30,21 +30,53 @@
 				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
+				<File Id="31642490" Language="SFX">
+					<ShortName>wood4.wav</ShortName>
+					<Path>SFX\wood4_1C9C67B2.wem</Path>
+				</File>
 				<File Id="42607697" Language="SFX">
 					<ShortName>crater01.wav</ShortName>
 					<Path>SFX\crater01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="60099494" Language="SFX">
+					<ShortName>wood3.wav</ShortName>
+					<Path>SFX\wood3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="78779771" Language="SFX">
+					<ShortName>slosh3.wav</ShortName>
+					<Path>SFX\slosh3_1C9C67B2.wem</Path>
 				</File>
 				<File Id="78951858" Language="SFX">
 					<ShortName>slam01.wav</ShortName>
 					<Path>SFX\slam01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="81321767" Language="SFX">
+					<ShortName>dirt3.wav</ShortName>
+					<Path>SFX\dirt3_1C9C67B2.wem</Path>
+				</File>
 				<File Id="87920875" Language="SFX">
 					<ShortName>concreteslide02.wav</ShortName>
 					<Path>SFX\concreteslide02_F17FB28C.wem</Path>
 				</File>
+				<File Id="94025848" Language="SFX">
+					<ShortName>gravel2.wav</ShortName>
+					<Path>SFX\gravel2_1C9C67B2.wem</Path>
+				</File>
 				<File Id="110099929" Language="SFX">
 					<ShortName>fist_impact01.wav</ShortName>
 					<Path>SFX\fist_impact01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="137911468" Language="SFX">
+					<ShortName>metal2.wav</ShortName>
+					<Path>SFX\metal2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="142103737" Language="SFX">
+					<ShortName>gravel1.wav</ShortName>
+					<Path>SFX\gravel1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="167239099" Language="SFX">
+					<ShortName>wade5.wav</ShortName>
+					<Path>SFX\wade5_1C9C67B2.wem</Path>
 				</File>
 				<File Id="170303264" Language="SFX">
 					<ShortName>softland03.wav</ShortName>
@@ -53,6 +85,10 @@
 				<File Id="172000020" Language="SFX">
 					<ShortName>concreteslide01.wav</ShortName>
 					<Path>SFX\concreteslide01_F17FB28C.wem</Path>
+				</File>
+				<File Id="189837631" Language="SFX">
+					<ShortName>dirt4.wav</ShortName>
+					<Path>SFX\dirt4_1C9C67B2.wem</Path>
 				</File>
 				<File Id="215579800" Language="SFX">
 					<ShortName>fist_impact04.wav</ShortName>
@@ -66,13 +102,69 @@
 					<ShortName>crater02.wav</ShortName>
 					<Path>SFX\crater02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="230312548" Language="SFX">
+					<ShortName>wade1.wav</ShortName>
+					<Path>SFX\wade1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="233717914" Language="SFX">
+					<ShortName>sand2.wav</ShortName>
+					<Path>SFX\sand2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="241591546" Language="SFX">
+					<ShortName>grass03.wav</ShortName>
+					<Path>SFX\grass03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="273180413" Language="SFX">
+					<ShortName>wade8.wav</ShortName>
+					<Path>SFX\wade8_1C9C67B2.wem</Path>
+				</File>
+				<File Id="278556067" Language="SFX">
+					<ShortName>mud1.wav</ShortName>
+					<Path>SFX\mud1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="293432445" Language="SFX">
+					<ShortName>tile1.wav</ShortName>
+					<Path>SFX\tile1_1C9C67B2.wem</Path>
+				</File>
 				<File Id="312555540" Language="SFX">
 					<ShortName>concrete1.wav</ShortName>
 					<Path>SFX\concrete1_1C9C67B2.wem</Path>
 				</File>
+				<File Id="319543437" Language="SFX">
+					<ShortName>tile3.wav</ShortName>
+					<Path>SFX\tile3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="354114667" Language="SFX">
+					<ShortName>wade2.wav</ShortName>
+					<Path>SFX\wade2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="364092348" Language="SFX">
+					<ShortName>tile2.wav</ShortName>
+					<Path>SFX\tile2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="370305255" Language="SFX">
+					<ShortName>dirt1.wav</ShortName>
+					<Path>SFX\dirt1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="380716120" Language="SFX">
+					<ShortName>slosh2.wav</ShortName>
+					<Path>SFX\slosh2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="396329686" Language="SFX">
+					<ShortName>sand4.wav</ShortName>
+					<Path>SFX\sand4_1C9C67B2.wem</Path>
+				</File>
 				<File Id="396858650" Language="SFX">
 					<ShortName>slam03.wav</ShortName>
 					<Path>SFX\slam03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="397683266" Language="SFX">
+					<ShortName>slosh1.wav</ShortName>
+					<Path>SFX\slosh1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="428146438" Language="SFX">
+					<ShortName>mud2.wav</ShortName>
+					<Path>SFX\mud2_1C9C67B2.wem</Path>
 				</File>
 				<File Id="432745082" Language="SFX">
 					<ShortName>concrete2.wav</ShortName>
@@ -90,9 +182,25 @@
 					<ShortName>fist_swing01.wav</ShortName>
 					<Path>SFX\fist_swing01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="476681807" Language="SFX">
+					<ShortName>wade3.wav</ShortName>
+					<Path>SFX\wade3_1C9C67B2.wem</Path>
+				</File>
 				<File Id="480740440" Language="SFX">
 					<ShortName>Windloop1.wav</ShortName>
 					<Path>SFX\Windloop1_F17FB28C.wem</Path>
+				</File>
+				<File Id="492965762" Language="SFX">
+					<ShortName>gravel3.wav</ShortName>
+					<Path>SFX\gravel3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="501415006" Language="SFX">
+					<ShortName>grass02.wav</ShortName>
+					<Path>SFX\grass02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="568435598" Language="SFX">
+					<ShortName>wood2.wav</ShortName>
+					<Path>SFX\wood2_1C9C67B2.wem</Path>
 				</File>
 				<File Id="584392103" Language="SFX">
 					<ShortName>slam02.wav</ShortName>
@@ -102,17 +210,45 @@
 					<ShortName>jump01.wav</ShortName>
 					<Path>SFX\jump01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="592407740" Language="SFX">
+					<ShortName>metal4.wav</ShortName>
+					<Path>SFX\metal4_1C9C67B2.wem</Path>
+				</File>
 				<File Id="594003366" Language="SFX">
 					<ShortName>fist_swing03.wav</ShortName>
 					<Path>SFX\fist_swing03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="596181694" Language="SFX">
+					<ShortName>grass01.wav</ShortName>
+					<Path>SFX\grass01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="607872902" Language="SFX">
+					<ShortName>gravel4.wav</ShortName>
+					<Path>SFX\gravel4_1C9C67B2.wem</Path>
+				</File>
+				<File Id="625765824" Language="SFX">
+					<ShortName>wade7.wav</ShortName>
+					<Path>SFX\wade7_1C9C67B2.wem</Path>
+				</File>
+				<File Id="648441843" Language="SFX">
+					<ShortName>tile4.wav</ShortName>
+					<Path>SFX\tile4_1C9C67B2.wem</Path>
 				</File>
 				<File Id="671620621" Language="SFX">
 					<ShortName>jump03.wav</ShortName>
 					<Path>SFX\jump03_1C9C67B2.wem</Path>
 				</File>
+				<File Id="693323205" Language="SFX">
+					<ShortName>slosh4.wav</ShortName>
+					<Path>SFX\slosh4_1C9C67B2.wem</Path>
+				</File>
 				<File Id="726817041" Language="SFX">
 					<ShortName>slam04.wav</ShortName>
 					<Path>SFX\slam04_1C9C67B2.wem</Path>
+				</File>
+				<File Id="729360042" Language="SFX">
+					<ShortName>sand3.wav</ShortName>
+					<Path>SFX\sand3_1C9C67B2.wem</Path>
 				</File>
 				<File Id="743948716" Language="SFX">
 					<ShortName>softland02.wav</ShortName>
@@ -121,6 +257,22 @@
 				<File Id="755049182" Language="SFX">
 					<ShortName>softland01.wav</ShortName>
 					<Path>SFX\softland01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="765222796" Language="SFX">
+					<ShortName>wade4.wav</ShortName>
+					<Path>SFX\wade4_1C9C67B2.wem</Path>
+				</File>
+				<File Id="775019293" Language="SFX">
+					<ShortName>mud3.wav</ShortName>
+					<Path>SFX\mud3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="805397464" Language="SFX">
+					<ShortName>wade6.wav</ShortName>
+					<Path>SFX\wade6_1C9C67B2.wem</Path>
+				</File>
+				<File Id="859141929" Language="SFX">
+					<ShortName>metal1.wav</ShortName>
+					<Path>SFX\metal1_1C9C67B2.wem</Path>
 				</File>
 				<File Id="883356947" Language="SFX">
 					<ShortName>crater03.wav</ShortName>
@@ -134,9 +286,21 @@
 					<ShortName>concrete4.wav</ShortName>
 					<Path>SFX\concrete4_1C9C67B2.wem</Path>
 				</File>
+				<File Id="935333550" Language="SFX">
+					<ShortName>mud4.wav</ShortName>
+					<Path>SFX\mud4_1C9C67B2.wem</Path>
+				</File>
 				<File Id="938966706" Language="SFX">
 					<ShortName>concrete3.wav</ShortName>
 					<Path>SFX\concrete3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="995229020" Language="SFX">
+					<ShortName>metal3.wav</ShortName>
+					<Path>SFX\metal3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1003144440" Language="SFX">
+					<ShortName>dirt2.wav</ShortName>
+					<Path>SFX\dirt2_1C9C67B2.wem</Path>
 				</File>
 				<File Id="1041206388" Language="SFX">
 					<ShortName>StrandJump.wav</ShortName>
@@ -146,9 +310,21 @@
 					<ShortName>fist_impact02.wav</ShortName>
 					<Path>SFX\fist_impact02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="1047274906" Language="SFX">
+					<ShortName>grass04.wav</ShortName>
+					<Path>SFX\grass04_1C9C67B2.wem</Path>
+				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>
 					<Path>SFX\fist_impact03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1057404706" Language="SFX">
+					<ShortName>sand1.wav</ShortName>
+					<Path>SFX\sand1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1058103826" Language="SFX">
+					<ShortName>wood1.wav</ShortName>
+					<Path>SFX\wood1_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
