@@ -5,13 +5,13 @@
 			<ChildrenList>
 				<Event Name="StartWindLoop" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}">
 					<ChildrenList>
-						<Action Name="" ID="{FDC7CB5F-F281-4FB8-A3DD-F7874476E555}" ShortID="345719384">
+						<Action Name="" ID="{206CAAD5-D572-4221-9D59-56FC112969A8}" ShortID="672488683">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Windloop1" ID="{BF9B8CBB-13CF-4AB8-B5BE-F5BDA3C47D03}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Windloop1" ID="{FF2F5717-74A3-4AB2-9C75-88378F4F8635}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -25,7 +25,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="concreteslide02" ID="{8F227350-EB42-41FD-868B-22EC692F8B35}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -39,7 +39,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="ZonPulse" ID="{8E77A81A-3761-4873-A024-D7E511D1D113}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="ZonPulse" ID="{CFB0DD52-A3E4-4962-BC15-0F3D2AB86F74}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -53,7 +53,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="fist_impact01" ID="{E010D6B3-7423-4828-82CC-FF5C92159B54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="impact" ID="{F1AA64CE-65D7-4A2B-8779-E2AE59E3D12D}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -67,7 +67,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="fist_swing01" ID="{3E2B0D39-3376-4A99-9AD6-D7ACF9CC657A}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="swing" ID="{DC28E71E-4D13-4E9D-8D0A-23EAE30114EA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -81,7 +81,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="softland01" ID="{5A5DABC0-13BB-425E-B756-F83C5903E466}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -97,7 +97,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="hardland02" ID="{BBE7AF70-A09A-467B-A84D-36FBC7F947E4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="hardland02" ID="{6791211A-CA4F-4548-9934-F6A8654CF561}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -113,7 +113,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="hardland01" ID="{AD34DD10-8E36-488F-B0DD-BBDA0FEDCCF7}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="hardland01" ID="{F1D2E055-452A-41ED-BC02-ED114A70ACA2}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -127,7 +127,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="RuinsOfMarsa" ID="{A03614A2-4C2C-4E70-AC77-AE42EA393607}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="RuinsOfMarsa" ID="{E995EEE9-F48A-4AC1-B2C4-2B3EABC1930E}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -143,7 +143,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="fist_swing01" ID="{3E2B0D39-3376-4A99-9AD6-D7ACF9CC657A}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="swing" ID="{DC28E71E-4D13-4E9D-8D0A-23EAE30114EA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -157,7 +157,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="StrandJump" ID="{C4E5F96F-CF54-4B3A-BE39-85F2D3A77CB6}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="StrandJump" ID="{ED0A1045-CF8C-468B-A20A-45BD4CC9BE55}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -165,13 +165,13 @@
 				</Event>
 				<Event Name="Footstep" ID="{D886AC26-622F-4C26-BB8B-CBE28C6D6151}">
 					<ChildrenList>
-						<Action Name="" ID="{03E4BF6A-FDEE-4E2A-98E5-482902072AA1}" ShortID="655784368">
+						<Action Name="" ID="{73B479CD-A4D4-4867-9E7A-1CC35C9FDACF}" ShortID="460154201">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Concrete" ID="{56A6B177-9415-4FB9-A538-293F268351C8}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
