@@ -1204,8 +1204,8 @@ MonoBehaviour:
   showContactIndicators: 0
   recoverFromFullEmbed: 1
   d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 1
-  d_SendTractionMessages: 1
+  d_SendCollisionMessages: 0
+  d_SendTractionMessages: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
   m_Acceleration: 0.6

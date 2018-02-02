@@ -726,10 +726,6 @@ public class FighterChar : NetworkBehaviour
 		{
 			AkSoundEngine.SetSwitch("TerrainType", "Grass", gameObject);
 		}
-		else
-		{
-			AkSoundEngine.SetSwitch("TerrainType", "Concrete", gameObject);
-		}
 	}
 
 	protected virtual void FixedUpdateAnimation() //FUA
@@ -1311,6 +1307,15 @@ public class FighterChar : NetworkBehaviour
 					{
 						DirectionChange(m_GroundNormal);
 					}
+
+					String test = predictedLoc[0].collider.sharedMaterial.name;
+					if(test == null)
+					{
+						test = "Concrete";
+					} 
+					AkSoundEngine.SetSwitch("TerrainType", test, gameObject);
+					print(test);
+
 					return;
 				}
 				else // When the slope you're hitting is the same as your current slope, no action is needed.
