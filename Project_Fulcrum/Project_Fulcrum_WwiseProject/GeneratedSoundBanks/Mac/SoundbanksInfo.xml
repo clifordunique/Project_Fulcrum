@@ -35,61 +35,97 @@
 				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
-				<File Id="64029838" Language="SFX">
-					<ShortName>Player\Pain\hardland02.wav</ShortName>
-					<Path>SFX\Player\Pain\hardland02_1C9C67B2.wem</Path>
+				<File Id="87920875" Language="SFX">
+					<ShortName>concreteslide02.wav</ShortName>
+					<Path>SFX\concreteslide02_F17FB28C.wem</Path>
 				</File>
-				<File Id="83032304" Language="SFX">
-					<ShortName>Player\Landing\softland01.wav</ShortName>
-					<Path>SFX\Player\Landing\softland01_1C9C67B2.wem</Path>
+				<File Id="110099929" Language="SFX">
+					<ShortName>fist_impact01.wav</ShortName>
+					<Path>SFX\fist_impact01_1C9C67B2.wem</Path>
 				</File>
-				<File Id="143060330" Language="SFX">
-					<ShortName>Player\Footsteps\concrete2.wav</ShortName>
-					<Path>SFX\Player\Footsteps\concrete2_1C9C67B2.wem</Path>
+				<File Id="170303264" Language="SFX">
+					<ShortName>softland03.wav</ShortName>
+					<Path>SFX\softland03_1C9C67B2.wem</Path>
 				</File>
-				<File Id="175817835" Language="SFX">
-					<ShortName>Environment\Wind\Windloop1.wav</ShortName>
-					<Path>SFX\Environment\Wind\Windloop1_F17FB28C.wem</Path>
+				<File Id="172000020" Language="SFX">
+					<ShortName>concreteslide01.wav</ShortName>
+					<Path>SFX\concreteslide01_F17FB28C.wem</Path>
 				</File>
-				<File Id="242927875" Language="SFX">
-					<ShortName>Player\Punch\fist_swing01.wav</ShortName>
-					<Path>SFX\Player\Punch\fist_swing01_1C9C67B2.wem</Path>
+				<File Id="187369939" Language="SFX">
+					<ShortName>fist_swing02.wav</ShortName>
+					<Path>SFX\fist_swing02_1C9C67B2.wem</Path>
 				</File>
-				<File Id="384925656" Language="SFX">
-					<ShortName>Player\Sliding\concreteslide02.wav</ShortName>
-					<Path>SFX\Player\Sliding\concreteslide02_F17FB28C.wem</Path>
+				<File Id="215579800" Language="SFX">
+					<ShortName>fist_impact04.wav</ShortName>
+					<Path>SFX\fist_impact04_1C9C67B2.wem</Path>
 				</File>
-				<File Id="495418215" Language="SFX">
-					<ShortName>Player\Pain\hardland01.wav</ShortName>
-					<Path>SFX\Player\Pain\hardland01_1C9C67B2.wem</Path>
+				<File Id="220609359" Language="SFX">
+					<ShortName>ZonPulse.wav</ShortName>
+					<Path>SFX\ZonPulse_1C9C67B2.wem</Path>
 				</File>
-				<File Id="513005174" Language="SFX">
-					<ShortName>Player\Footsteps\concrete4.wav</ShortName>
-					<Path>SFX\Player\Footsteps\concrete4_1C9C67B2.wem</Path>
+				<File Id="312555540" Language="SFX">
+					<ShortName>concrete1.wav</ShortName>
+					<Path>SFX\concrete1_1C9C67B2.wem</Path>
 				</File>
-				<File Id="559853862" Language="SFX">
-					<ShortName>Player\Punch\fist_impact01.wav</ShortName>
-					<Path>SFX\Player\Punch\fist_impact01_1C9C67B2.wem</Path>
+				<File Id="432745082" Language="SFX">
+					<ShortName>concrete2.wav</ShortName>
+					<Path>SFX\concrete2_1C9C67B2.wem</Path>
 				</File>
-				<File Id="574411339" Language="SFX">
-					<ShortName>Music\RuinsOfMarsa.wav</ShortName>
-					<Path>SFX\Music\RuinsOfMarsa_1C9C67B2.wem</Path>
+				<File Id="452241784" Language="SFX">
+					<ShortName>RuinsOfMarsa.wav</ShortName>
+					<Path>SFX\RuinsOfMarsa_1C9C67B2.wem</Path>
 				</File>
-				<File Id="724510864" Language="SFX">
-					<ShortName>Player\Footsteps\concrete1.wav</ShortName>
-					<Path>SFX\Player\Footsteps\concrete1_1C9C67B2.wem</Path>
+				<File Id="462557226" Language="SFX">
+					<ShortName>softland04.wav</ShortName>
+					<Path>SFX\softland04_1C9C67B2.wem</Path>
 				</File>
-				<File Id="797947007" Language="SFX">
-					<ShortName>Player\Footsteps\concrete3.wav</ShortName>
-					<Path>SFX\Player\Footsteps\concrete3_1C9C67B2.wem</Path>
+				<File Id="480740440" Language="SFX">
+					<ShortName>Windloop1.wav</ShortName>
+					<Path>SFX\Windloop1_F17FB28C.wem</Path>
 				</File>
-				<File Id="802216845" Language="SFX">
-					<ShortName>Abilities\StrandJump.wav</ShortName>
-					<Path>SFX\Abilities\StrandJump_1C9C67B2.wem</Path>
+				<File Id="716866082" Language="SFX">
+					<ShortName>hardland01.wav</ShortName>
+					<Path>SFX\hardland01_1C9C67B2.wem</Path>
 				</File>
-				<File Id="946167769" Language="SFX">
-					<ShortName>Abilities\ZonPulse.wav</ShortName>
-					<Path>SFX\Abilities\ZonPulse_1C9C67B2.wem</Path>
+				<File Id="743948716" Language="SFX">
+					<ShortName>softland02.wav</ShortName>
+					<Path>SFX\softland02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="755049182" Language="SFX">
+					<ShortName>softland01.wav</ShortName>
+					<Path>SFX\softland01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="779043127" Language="SFX">
+					<ShortName>fist_swing03.wav</ShortName>
+					<Path>SFX\fist_swing03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="918777720" Language="SFX">
+					<ShortName>concrete4.wav</ShortName>
+					<Path>SFX\concrete4_1C9C67B2.wem</Path>
+				</File>
+				<File Id="938966706" Language="SFX">
+					<ShortName>concrete3.wav</ShortName>
+					<Path>SFX\concrete3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="961952567" Language="SFX">
+					<ShortName>fist_swing01.wav</ShortName>
+					<Path>SFX\fist_swing01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1041206388" Language="SFX">
+					<ShortName>StrandJump.wav</ShortName>
+					<Path>SFX\StrandJump_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1047189338" Language="SFX">
+					<ShortName>fist_impact02.wav</ShortName>
+					<Path>SFX\fist_impact02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1055253707" Language="SFX">
+					<ShortName>fist_impact03.wav</ShortName>
+					<Path>SFX\fist_impact03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1072303627" Language="SFX">
+					<ShortName>hardland02.wav</ShortName>
+					<Path>SFX\hardland02_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>

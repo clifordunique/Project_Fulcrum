@@ -36,5 +36,5 @@ ExportedObj/
 *.info
 *.resource
 *.meta
-*.wav
 Project_Fulcrum/Assets/Wwise/*
+*.prof

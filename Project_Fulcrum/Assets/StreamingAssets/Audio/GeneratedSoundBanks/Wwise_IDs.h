@@ -29,6 +29,26 @@ namespace AK
 
     namespace SWITCHES
     {
+        namespace FOOTSTEPS
+        {
+            static const AkUniqueID GROUP = 2385628198U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID CONCRETE = 841620460U;
+                static const AkUniqueID DIRT = 2195636714U;
+                static const AkUniqueID GRASS = 4248645337U;
+                static const AkUniqueID GRAVEL = 2185786256U;
+                static const AkUniqueID METAL = 2473969246U;
+                static const AkUniqueID MUD = 712897245U;
+                static const AkUniqueID SAND = 803837735U;
+                static const AkUniqueID SLOSH = 3972658458U;
+                static const AkUniqueID TILE = 2637588553U;
+                static const AkUniqueID WADE = 2243000840U;
+                static const AkUniqueID WOOD = 2058049674U;
+            } // namespace SWITCH
+        } // namespace FOOTSTEPS
+
         namespace LIVING
         {
             static const AkUniqueID GROUP = 892771914U;
