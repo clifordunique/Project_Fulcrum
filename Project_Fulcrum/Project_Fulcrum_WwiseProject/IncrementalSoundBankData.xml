@@ -4,14 +4,14 @@
 		<Banks>
 			<Language ID="393239870">
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="4192044403" Timestamp="1517612262"/>
+				<File Name="FighterChar" Hash="509709131" Timestamp="1517612815"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
-				<File Name="Init" Hash="3348963830" Timestamp="1517611815"/>
+				<File Name="Init" Hash="3348963830" Timestamp="1517612490"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="3078130259" Timestamp="1517612262"/>
+				<File Name="" Hash="26105943" Timestamp="1517612815"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
@@ -19,14 +19,14 @@
 		<Banks>
 			<Language ID="393239870">
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="3855392254" Timestamp="1517605574"/>
+				<File Name="FighterChar" Hash="509709131" Timestamp="1517612815"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532515"/>
-				<File Name="Init" Hash="4866138" Timestamp="1517604164"/>
+				<File Name="Init" Hash="1329970952" Timestamp="1517612488"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="4075415814" Timestamp="1517605574"/>
+				<File Name="" Hash="1574513109" Timestamp="1517612815"/>
 			</Language>
 		</XMLInfo>
 	</Platform>

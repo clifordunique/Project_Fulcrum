@@ -82,9 +82,8 @@ namespace AK
                 static const AkUniqueID METAL = 2473969246U;
                 static const AkUniqueID MUD = 712897245U;
                 static const AkUniqueID SAND = 803837735U;
-                static const AkUniqueID SLOSH = 3972658458U;
                 static const AkUniqueID TILE = 2637588553U;
-                static const AkUniqueID WADE = 2243000840U;
+                static const AkUniqueID WATER = 2654748154U;
                 static const AkUniqueID WOOD = 2058049674U;
             } // namespace SWITCH
         } // namespace TERRAINTYPE

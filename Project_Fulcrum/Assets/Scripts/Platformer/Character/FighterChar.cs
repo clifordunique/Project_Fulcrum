@@ -1308,13 +1308,12 @@ public class FighterChar : NetworkBehaviour
 						DirectionChange(m_GroundNormal);
 					}
 
-					String test = predictedLoc[0].collider.sharedMaterial.name;
-					if(test == null)
+					String terrainType = predictedLoc[0].collider.sharedMaterial.name;
+					if(terrainType == null||terrainType == "")
 					{
-						test = "Concrete";
+						terrainType = "Concrete";
 					} 
-					AkSoundEngine.SetSwitch("TerrainType", test, gameObject);
-					print(test);
+					AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
 
 					return;
 				}
@@ -1329,6 +1328,12 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 1: //Ceiling collision
 			{
+				String terrainType = predictedLoc[1].collider.sharedMaterial.name;
+				if(terrainType == null||terrainType == "")
+				{
+					terrainType = "Concrete";
+				} 
+				AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
 
 				if ((moveDirectionNormal != predictedLoc[1].normal) && (invertedDirectionNormal != predictedLoc[1].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
@@ -1350,6 +1355,15 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 2: //Left contact collision
 			{
+
+				String terrainType = predictedLoc[2].collider.sharedMaterial.name;
+				if(terrainType == null||terrainType == "")
+				{
+					terrainType = "Concrete";
+				} 
+				AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
+
+
 				if ((moveDirectionNormal != predictedLoc[2].normal) && (invertedDirectionNormal != predictedLoc[2].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					//print("LEFT_IMPACT");
@@ -1370,6 +1384,13 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 3: //Right contact collision
 			{
+				String terrainType = predictedLoc[3].collider.sharedMaterial.name;
+				if(terrainType == null||terrainType == "")
+				{
+					terrainType = "Concrete";
+				} 
+				AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
+
 				if ((moveDirectionNormal != predictedLoc[3].normal) && (invertedDirectionNormal != predictedLoc[3].normal)) 
 				{ // If the slope you're hitting is different than your current slope.
 					//print("RIGHT_IMPACT");

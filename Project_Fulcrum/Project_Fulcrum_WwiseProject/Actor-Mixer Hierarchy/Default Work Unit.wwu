@@ -1909,12 +1909,6 @@
 								</GroupingBehaviorList>
 								<GroupingList>
 									<Grouping>
-										<SwitchRef Name="Wade" ID="{B3A4A41A-A412-41DA-8334-7E6488005812}"/>
-										<ItemList>
-											<ItemRef Name="Wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}"/>
-										</ItemList>
-									</Grouping>
-									<Grouping>
 										<SwitchRef Name="Mud" ID="{3BF93621-F4C5-4951-A0B0-DB788DD4B945}"/>
 										<ItemList>
 											<ItemRef Name="Mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}"/>
@@ -1957,7 +1951,7 @@
 										</ItemList>
 									</Grouping>
 									<Grouping>
-										<SwitchRef Name="Slosh" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
+										<SwitchRef Name="Water" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
 										<ItemList>
 											<ItemRef Name="Slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}"/>
 										</ItemList>
