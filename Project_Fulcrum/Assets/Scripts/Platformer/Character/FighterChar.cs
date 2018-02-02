@@ -721,6 +721,15 @@ public class FighterChar : NetworkBehaviour
 		//Bools
 		AkSoundEngine.SetRTPCValue("Sliding", Convert.ToSingle(isSliding()), this.gameObject);
 
+		//Switches
+		if(g_IsInGrass>0)
+		{
+			AkSoundEngine.SetSwitch("TerrainType", "Grass", gameObject);
+		}
+		else
+		{
+			AkSoundEngine.SetSwitch("TerrainType", "Concrete", gameObject);
+		}
 	}
 
 	protected virtual void FixedUpdateAnimation() //FUA

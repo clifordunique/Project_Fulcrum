@@ -163,6 +163,8 @@ GameObject:
   - component: {fileID: 114326552090613504}
   - component: {fileID: 114826143416564554}
   - component: {fileID: 114739014657272698}
+  - component: {fileID: 114097838302721424}
+  - component: {fileID: 114166397268456874}
   m_Layer: 13
   m_Name: ProtoPlayer
   m_TagString: Player
@@ -974,6 +976,31 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114097838302721424
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779611444237324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcb508719d22ce49b456fbf0cae93b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  valueGuid: d77fdad262e5094fbf09a46aa3a0d55b
+  eventID: 1119192506
+  soundEmitterObject: {fileID: 0}
+  enableActionOnEvent: 0
+  actionOnEventType: 0
+  curveInterpolation: 4
+  transitionDuration: 0
+  m_callbackData: {fileID: 0}
+  playingId: 0
+  multiPositionTypeLabel: 0
+  multiPositionArray: []
+  MultiPositionType: 1
 --- !u!114 &114126041391509338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1085,6 +1112,31 @@ MonoBehaviour:
   outerRange: 0
   p_ProxLinePrefab: {fileID: 1668062377593090, guid: 44702be4c164a6c488b844409989f1fa,
     type: 2}
+--- !u!114 &114166397268456874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779611444237324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcb508719d22ce49b456fbf0cae93b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  valueGuid: 01f9805aeded7f4daa89cbe8e07af099
+  eventID: 1721707775
+  soundEmitterObject: {fileID: 0}
+  enableActionOnEvent: 0
+  actionOnEventType: 0
+  curveInterpolation: 4
+  transitionDuration: 0
+  m_callbackData: {fileID: 0}
+  playingId: 0
+  multiPositionTypeLabel: 0
+  multiPositionArray: []
+  MultiPositionType: 1
 --- !u!114 &114326552090613504
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -11,8 +11,11 @@
 				</GameParameter>
 				<GameParameter Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}">
 					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
 						<Property Name="Max" Type="Real64" Value="4000"/>
+						<Property Name="RTPCRamping" Type="int16" Value="1"/>
+						<Property Name="SlewRateDown" Type="Real64" Value="150"/>
+						<Property Name="SlewRateUp" Type="Real64" Value="1000"/>
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="Velocity_X" ID="{6D121325-4F1E-4D5D-900E-1919FEBD1367}">

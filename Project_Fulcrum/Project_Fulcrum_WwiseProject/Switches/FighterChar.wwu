@@ -58,17 +58,17 @@
 				<SwitchGroup Name="TerrainType" ID="{4BC8EB7E-A3F9-410F-96FC-1448D8CD8C86}">
 					<Comment>Renamed from footsteps to TerrainType, cause it might be applicable to sliding and other sounds.</Comment>
 					<ChildrenList>
-						<Switch Name="concrete" ID="{5F54F82B-64C0-4219-BC97-88C7A5595553}"/>
-						<Switch Name="dirt" ID="{DC6FAAB6-5F15-41CA-9A38-1D45E5ADC99A}"/>
-						<Switch Name="grass" ID="{D472C583-B7EF-4EDE-86C5-ACB34EC854FD}"/>
-						<Switch Name="gravel" ID="{A1198CA3-6250-48ED-8DCC-FA0BC58ECA13}"/>
-						<Switch Name="metal" ID="{DC7C968C-7A57-44DE-AFDB-533773CE4918}"/>
-						<Switch Name="mud" ID="{3BF93621-F4C5-4951-A0B0-DB788DD4B945}"/>
-						<Switch Name="sand" ID="{87FC4998-C815-4E83-8C89-F51FB763456E}"/>
-						<Switch Name="slosh" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
-						<Switch Name="tile" ID="{6C0F42E8-4A3C-476A-A0A0-E1D98310D8BA}"/>
-						<Switch Name="wade" ID="{B3A4A41A-A412-41DA-8334-7E6488005812}"/>
-						<Switch Name="wood" ID="{51737B43-FDC5-4070-BF55-4521677F3A87}"/>
+						<Switch Name="Concrete" ID="{5F54F82B-64C0-4219-BC97-88C7A5595553}"/>
+						<Switch Name="Dirt" ID="{DC6FAAB6-5F15-41CA-9A38-1D45E5ADC99A}"/>
+						<Switch Name="Grass" ID="{D472C583-B7EF-4EDE-86C5-ACB34EC854FD}"/>
+						<Switch Name="Gravel" ID="{A1198CA3-6250-48ED-8DCC-FA0BC58ECA13}"/>
+						<Switch Name="Metal" ID="{DC7C968C-7A57-44DE-AFDB-533773CE4918}"/>
+						<Switch Name="Mud" ID="{3BF93621-F4C5-4951-A0B0-DB788DD4B945}"/>
+						<Switch Name="Sand" ID="{87FC4998-C815-4E83-8C89-F51FB763456E}"/>
+						<Switch Name="Slosh" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
+						<Switch Name="Tile" ID="{6C0F42E8-4A3C-476A-A0A0-E1D98310D8BA}"/>
+						<Switch Name="Wade" ID="{B3A4A41A-A412-41DA-8334-7E6488005812}"/>
+						<Switch Name="Wood" ID="{51737B43-FDC5-4070-BF55-4521677F3A87}"/>
 					</ChildrenList>
 				</SwitchGroup>
 			</ChildrenList>
