@@ -74,7 +74,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="swing" ID="{DC28E71E-4D13-4E9D-8D0A-23EAE30114EA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="swing" ID="{BC6EBC94-F0F7-415B-9418-8AE6404AB726}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -104,7 +104,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="hardland02" ID="{6791211A-CA4F-4548-9934-F6A8654CF561}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="slam" ID="{DC3D48A9-7007-446D-8E3E-450C1C3D6407}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -120,7 +120,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="hardland01" ID="{F1D2E055-452A-41ED-BC02-ED114A70ACA2}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -150,7 +150,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="swing" ID="{DC28E71E-4D13-4E9D-8D0A-23EAE30114EA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="jump" ID="{73D64723-8A09-48E0-A597-E82E011FF5FF}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
