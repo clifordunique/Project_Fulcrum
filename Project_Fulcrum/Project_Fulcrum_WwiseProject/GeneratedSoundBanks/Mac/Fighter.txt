@@ -16,27 +16,27 @@ Game Parameter	ID	Name			Wwise Object Path	Notes
 	640949982	Speed			\FighterChar\Speed	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	87920875	concreteslide02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide02_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\sliding\concreteslide02		0
-	110099929	fist_impact01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact01		0
-	170303264	softland03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland03		0
-	172000020	concreteslide01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide01_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\sliding\concreteslide01		0
-	187369939	fist_swing02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing02		0
-	215579800	fist_impact04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact04		0
-	220609359	ZonPulse	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ZonPulse_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\abilities\ZonPulse		0
-	312555540	concrete1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete1		0
-	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete2		0
-	452241784	RuinsOfMarsa	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\RuinsOfMarsa_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\music\RuinsOfMarsa		0
-	462557226	softland04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland04		0
-	480740440	Windloop1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Windloop1_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\environment\wind\Windloop1		0
-	716866082	hardland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\hardland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\pain\hardland01		0
-	743948716	softland02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland02		0
-	755049182	softland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland01		0
-	779043127	fist_swing03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing03		0
-	918777720	concrete4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete4		0
-	938966706	concrete3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete3		0
-	961952567	fist_swing01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing01		0
+	87920875	concreteslide02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide02_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\sliding\concreteslide02		338616
+	110099929	fist_impact01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact01		24526
+	170303264	softland03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland03		34874
+	172000020	concreteslide01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide01_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\sliding\concreteslide01		390720
+	187369939	fist_swing02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing02		29406
+	215579800	fist_impact04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact04		24526
+	220609359	ZonPulse	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ZonPulse_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\abilities\ZonPulse		105066
+	312555540	concrete1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete1		79936
+	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete2		79040
+	452241784	RuinsOfMarsa	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\RuinsOfMarsa_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\music\RuinsOfMarsa		7125928
+	462557226	softland04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland04		40520
+	480740440	Windloop1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Windloop1_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\environment\wind\Windloop1		1519220
+	716866082	hardland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\hardland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\pain\hardland01		39814
+	743948716	softland02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland02		40520
+	755049182	softland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\landing\softland01		34874
+	779043127	fist_swing03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing03		29406
+	918777720	concrete4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete4		97856
+	938966706	concrete3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\footsteps\concrete\concrete3		52240
+	961952567	fist_swing01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\swing\fist_swing01		29406
 	1041206388	StrandJump	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\StrandJump_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\abilities\StrandJump		93776
-	1047189338	fist_impact02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact02		0
-	1055253707	fist_impact03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact03		0
-	1072303627	hardland02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\hardland02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\pain\hardland02		0
+	1047189338	fist_impact02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact02		24526
+	1055253707	fist_impact03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\punch\impact\fist_impact03		24526
+	1072303627	hardland02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\hardland02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\player\pain\hardland02		25232
 
