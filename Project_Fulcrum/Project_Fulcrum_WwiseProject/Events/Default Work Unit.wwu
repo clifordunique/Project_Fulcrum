@@ -188,7 +188,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Footsteps" ID="{C4D59FDD-BFF1-4C43-A876-AB1C4ACA0F0A}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
