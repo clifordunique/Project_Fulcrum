@@ -419,12 +419,12 @@
 													</Point>
 													<Point>
 														<XPos>250</XPos>
-														<YPos>25</YPos>
+														<YPos>30</YPos>
 														<Flags>0</Flags>
 													</Point>
 													<Point>
 														<XPos>4000</XPos>
-														<YPos>25</YPos>
+														<YPos>30</YPos>
 														<Flags>37</Flags>
 													</Point>
 												</PointList>
@@ -467,12 +467,12 @@
 													</Point>
 													<Point>
 														<XPos>250</XPos>
-														<YPos>-5</YPos>
+														<YPos>-8</YPos>
 														<Flags>0</Flags>
 													</Point>
 													<Point>
 														<XPos>4000</XPos>
-														<YPos>-5</YPos>
+														<YPos>-8</YPos>
 														<Flags>37</Flags>
 													</Point>
 												</PointList>
