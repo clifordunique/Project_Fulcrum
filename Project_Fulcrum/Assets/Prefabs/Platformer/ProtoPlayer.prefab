@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 114132217005915654}
   - component: {fileID: 114326552090613504}
   - component: {fileID: 114826143416564554}
+  - component: {fileID: 114739014657272698}
   m_Layer: 13
   m_Name: ProtoPlayer
   m_TagString: Player
@@ -1366,6 +1367,26 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: e9ba2083ad114a07d000fbfb8d76c639, type: 3}
   blurAmount: 0.25
   extraBlur: 0
+--- !u!114 &114739014657272698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1779611444237324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a990924974c57dd4eb7afa962ea886ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_positionOffsetData:
+    positionOffset: {x: 0, y: 0, z: 0}
+    KeepMe: 0
+  isEnvironmentAware: 0
+  isStaticObject: 0
+  m_listeners:
+    initialListenerList: []
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
 --- !u!114 &114826143416564554
 MonoBehaviour:
   m_ObjectHideFlags: 1

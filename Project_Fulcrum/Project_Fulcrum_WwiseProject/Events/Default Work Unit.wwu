@@ -3,11 +3,18 @@
 	<Events>
 		<WorkUnit Name="Default Work Unit" ID="{EE082732-7104-4433-8F48-C87E70A099B2}" PersistMode="Standalone">
 			<ChildrenList>
-				<Event Name="StartWindLoop" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}">
+				<Event Name="WindLoopStart" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}">
 					<ChildrenList>
 						<Action Name="" ID="{206CAAD5-D572-4221-9D59-56FC112969A8}" ShortID="672488683">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
+								<Property Name="FadeTime" Type="Real64">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{FF9C6C8D-0E68-4470-9690-3A840B51A4BA}"/>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
@@ -17,7 +24,7 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="StartSlideLoop" ID="{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}">
+				<Event Name="SlideLoopStart" ID="{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}">
 					<ChildrenList>
 						<Action Name="" ID="{9C43F41E-19AD-4338-9848-114BC79392B7}" ShortID="660919193">
 							<PropertyList>
@@ -25,7 +32,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -81,7 +88,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -147,6 +154,16 @@
 								</Reference>
 							</ReferenceList>
 						</Action>
+						<Action Name="" ID="{DD131642-B3CC-4859-8070-AC06F256FA0C}" ShortID="784860757">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="23"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Airborne" ID="{D8C49393-1818-46A6-962D-3A4E087E4A19}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 					</ChildrenList>
 				</Event>
 				<Event Name="StrandJump" ID="{3742140F-2B78-4AFA-9FE6-53EE34BC53FA}">
@@ -171,7 +188,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

@@ -22,16 +22,56 @@ namespace AK
         static const AkUniqueID PLAYMUSIC = 417627684U;
         static const AkUniqueID PUNCHHIT = 3343194546U;
         static const AkUniqueID PUNCHSWING = 2180951687U;
-        static const AkUniqueID STARTSLIDELOOP = 1242415940U;
-        static const AkUniqueID STARTWINDLOOP = 1825604527U;
+        static const AkUniqueID SLIDELOOPSTART = 1119192506U;
         static const AkUniqueID STRANDJUMP = 187194041U;
+        static const AkUniqueID WINDLOOPSTART = 1721707775U;
     } // namespace EVENTS
 
     namespace SWITCHES
     {
-        namespace FOOTSTEPS
+        namespace LIFESTATE
         {
-            static const AkUniqueID GROUP = 2385628198U;
+            static const AkUniqueID GROUP = 761044930U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID ALIVE = 655265632U;
+                static const AkUniqueID DEAD = 2044049779U;
+                static const AkUniqueID STUNNED = 124361234U;
+            } // namespace SWITCH
+        } // namespace LIFESTATE
+
+        namespace MOVETYPE
+        {
+            static const AkUniqueID GROUP = 4160739938U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID IDLE = 1874288895U;
+                static const AkUniqueID RUNNING = 3863236874U;
+                static const AkUniqueID SLIDING = 472853913U;
+                static const AkUniqueID WALKING = 340271938U;
+                static const AkUniqueID WALLSLIDING = 2190485205U;
+            } // namespace SWITCH
+        } // namespace MOVETYPE
+
+        namespace SURFACECONTACTS
+        {
+            static const AkUniqueID GROUP = 2055121345U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID AIRBORNE = 1785231519U;
+                static const AkUniqueID CEILING = 3504694206U;
+                static const AkUniqueID GROUND = 2528658256U;
+                static const AkUniqueID LEFTWALL = 4239551170U;
+                static const AkUniqueID RIGHTWALL = 1022564501U;
+            } // namespace SWITCH
+        } // namespace SURFACECONTACTS
+
+        namespace TERRAINTYPE
+        {
+            static const AkUniqueID GROUP = 25772016U;
 
             namespace SWITCH
             {
@@ -47,44 +87,7 @@ namespace AK
                 static const AkUniqueID WADE = 2243000840U;
                 static const AkUniqueID WOOD = 2058049674U;
             } // namespace SWITCH
-        } // namespace FOOTSTEPS
-
-        namespace LIVING
-        {
-            static const AkUniqueID GROUP = 892771914U;
-
-            namespace SWITCH
-            {
-                static const AkUniqueID ALIVE = 655265632U;
-                static const AkUniqueID DEAD = 2044049779U;
-            } // namespace SWITCH
-        } // namespace LIVING
-
-        namespace SLIDING
-        {
-            static const AkUniqueID GROUP = 472853913U;
-
-            namespace SWITCH
-            {
-                static const AkUniqueID NOTSLIDING = 3078077546U;
-                static const AkUniqueID SLIDING = 472853913U;
-                static const AkUniqueID WALLSLIDING = 2190485205U;
-            } // namespace SWITCH
-        } // namespace SLIDING
-
-        namespace SURFACECONTACTS
-        {
-            static const AkUniqueID GROUP = 2055121345U;
-
-            namespace SWITCH
-            {
-                static const AkUniqueID AIRBORNE = 1785231519U;
-                static const AkUniqueID CEILING = 3504694206U;
-                static const AkUniqueID GROUND = 2528658256U;
-                static const AkUniqueID LEFTWALL = 4239551170U;
-                static const AkUniqueID RIGHTWALL = 1022564501U;
-            } // namespace SWITCH
-        } // namespace SURFACECONTACTS
+        } // namespace TERRAINTYPE
 
     } // namespace SWITCHES
 
@@ -104,7 +107,6 @@ namespace AK
         static const AkUniqueID KNEELING = 2487913616U;
         static const AkUniqueID SLIDING = 472853913U;
         static const AkUniqueID SPEED = 640949982U;
-        static const AkUniqueID TEST = 3157003241U;
         static const AkUniqueID VELOCITY_X = 164475293U;
         static const AkUniqueID VELOCITY_Y = 164475292U;
         static const AkUniqueID WALLSLIDING = 2190485205U;
@@ -113,7 +115,7 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
-        static const AkUniqueID FIGHTER = 1396550684U;
+        static const AkUniqueID FIGHTERCHAR = 725599200U;
     } // namespace BANKS
 
     namespace BUSSES

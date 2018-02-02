@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="85">
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1517537062" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1517597364" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
@@ -9,23 +9,23 @@
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Effects\Factory Effects.wwu" DateLow="1517529087" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Events\Default Work Unit.wwu" DateLow="1517537062" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1517532554" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Events\Default Work Unit.wwu" DateLow="1517593117" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1517597364" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Game Parameters\FighterChar.wwu" DateLow="1517532554" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Project_Fulcrum_WwiseProject.Sean McFarlane.wsettings" DateLow="1517537881" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Project_Fulcrum_WwiseProject.wproj" DateLow="1517531554" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Project_Fulcrum_WwiseProject.Sean McFarlane.wsettings" DateLow="1517593841" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Project_Fulcrum_WwiseProject.wproj" DateLow="1517593295" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Queries\Factory Queries.wwu" DateLow="1517529087" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1517532754" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1517593016" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\States\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\States\Default Work Unit.wwu" DateLow="1517592682" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1517532677" DateHigh="0"/>
-	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Switches\FighterChar.wwu" DateLow="1517537062" DateHigh="0"/>
+	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Switches\FighterChar.wwu" DateLow="1517593096" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1517523828" DateHigh="0"/>
 	<ValidationCacheItem File="C:\GameDev\Project_Fulcrum\Project_Fulcrum_WwiseIntegrationTemp\Project_Fulcrum_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1517529044" DateHigh="0"/>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{3883467C-6E84-4F42-AAA5-80A3E4AD5D47}" SchemaVersion="85" RootDocumentID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}">
+	<GameParameters>
+		<WorkUnit Name="Unimplemented" ID="{3883467C-6E84-4F42-AAA5-80A3E4AD5D47}" OwnerID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}" PersistMode="Nested">
+			<ChildrenList>
+				<GameParameter Name="GForce_Instant" ID="{EC1DA244-2562-4B43-8A33-5CE5DEAE129B}">
+					<Comment>GForce incurred at exactly this game frame, typically from an impact.</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="WallSliding" ID="{48EFA5AA-A361-48E5-921C-848C4B40B20B}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_Ceiling" ID="{8E0DC4DA-3C5C-48EC-9B2E-346A9C58617C}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_Airborne" ID="{EABEB91B-A567-4123-877F-6ED3C6544C9F}">
+					<Comment>Equals 1 when the player is in the air, not touching any surfaces.
+</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_Leftwall" ID="{1D6488BC-D60F-4F69-B0FB-E5C276DC2BAD}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Alive" ID="{A3543FEB-A26A-491C-A913-797C733187D9}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Velocity_Y" ID="{877783ED-4C05-426B-83AE-DE3AEDA1F87D}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_SurfaceCling" ID="{15AFA33F-38EE-45C0-9A98-262F1E775245}">
+					<Comment>Default is 0. It equals 1 when the player hits a wall and has a very short grace period where they cling to the wall against the laws of physics, to give them a chance to walljump off of it before falling.</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_Ground" ID="{32BCC74F-01D3-4B90-BFE8-36B015C087B3}">
+					<Comment>0 is false, 1 is true</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Contact_RightWall" ID="{88FD25A4-D9DB-4960-81E2-148CA64E8923}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="GForce_Continuous" ID="{A49F4644-DFA2-4EF2-B49A-08C531692F45}">
+					<Comment>Continuous GForce incurred over the last second or so. Most useful when hitting a ramp or other slow direction changing force that doesn't apply GForce all at once.
+</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Kneeling" ID="{EEA0DCF4-3C99-4FFE-A8FF-5C649AE4A3EC}">
+					<Comment>Equals 1 when true</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>

@@ -4,6 +4,7 @@ using UnityEngine;
 
 using EZCameraShake;
 using UnityEngine.Networking;
+using AK.Wwise;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -28,6 +29,7 @@ using UnityEditor;
 [System.Serializable]
 public class FighterChar : NetworkBehaviour
 {        
+
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
 	//##########################################################################################################################################################################
@@ -293,6 +295,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		FixedUpdateLogic();
 		FixedUpdateAnimation();
+		FixedUpdateWwiseAudio();
 //		FighterState.RightClick = false;
 //		FighterState.LeftClick = false;
 //		FighterState.ZonKey = false;
@@ -706,6 +709,18 @@ public class FighterChar : NetworkBehaviour
 				v_DistFromLastDust -= this.GetSpeed()*Time.deltaTime;
 			}
 		}
+	}
+
+	protected virtual void FixedUpdateWwiseAudio() // FUWA
+	{
+		AkSoundEngine.SetRTPCValue("Health", FighterState.CurHealth, this.gameObject);
+		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
+		AkSoundEngine.SetRTPCValue("EnergyLevel", FighterState.ZonLevel, this.gameObject);
+		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
+
+		//Bools
+		AkSoundEngine.SetRTPCValue("Sliding", Convert.ToSingle(isSliding()), this.gameObject);
+
 	}
 
 	protected virtual void FixedUpdateAnimation() //FUA

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}" SchemaVersion="85">
 	<GameParameters>
-		<WorkUnit Name="Default Work Unit" ID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}" PersistMode="Standalone">
+			<ChildrenList>
+				<WorkUnit Name="FighterChar" ID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}" PersistMode="Reference"/>
+				<WorkUnit Name="Unimplemented" ID="{3883467C-6E84-4F42-AAA5-80A3E4AD5D47}" PersistMode="Reference"/>
+			</ChildrenList>
+		</WorkUnit>
 	</GameParameters>
 </WwiseDocument>

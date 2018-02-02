@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
      <Compile Include="Assets\Editor\GrassColourerInterface.cs" />
+     <Compile Include="Assets\Editor\PFBuildHandler.cs" />
      <Compile Include="Assets\Editor\ParallaxOptionEditor.cs" />
      <Compile Include="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" />
      <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />

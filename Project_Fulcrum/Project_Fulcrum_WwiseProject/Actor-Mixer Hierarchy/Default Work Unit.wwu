@@ -3,7 +3,7 @@
 	<AudioObjects>
 		<WorkUnit Name="Default Work Unit" ID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}" PersistMode="Standalone">
 			<ChildrenList>
-				<ActorMixer Name="environment" ID="{527D2384-9AAC-4FC9-9DD9-8099524CDF6E}" ShortID="386518703">
+				<ActorMixer Name="Environment" ID="{527D2384-9AAC-4FC9-9DD9-8099524CDF6E}" ShortID="386518703">
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -13,7 +13,7 @@
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<ActorMixer Name="wind" ID="{3E528552-260E-4FA6-A7EA-ADFFB5CAD64D}" ShortID="258175636">
+						<ActorMixer Name="Wind" ID="{3E528552-260E-4FA6-A7EA-ADFFB5CAD64D}" ShortID="258175636">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -25,86 +25,39 @@
 							<ChildrenList>
 								<Sound Name="Windloop1" ID="{FF2F5717-74A3-4AB2-9C75-88378F4F8635}" ShortID="32489348">
 									<PropertyList>
-										<Property Name="Highpass" Type="int16">
-											<RTPCList>
-												<RTPC Name="" ID="{59A8B675-3E81-4D60-A4FF-8E2FB20252A5}" ShortID="538688076">
-													<ReferenceList>
-														<Reference Name="ControlInput">
-															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{8C13CD99-E84D-4A01-82AB-D3D00866EEED}"/>
-														</Reference>
-													</ReferenceList>
-													<Curve Name="" ID="{8CA3E5F2-2139-428C-BE20-36FC8BC03CEB}">
-														<PropertyList>
-															<Property Name="Flags" Type="int32" Value="65537"/>
-														</PropertyList>
-														<PointList>
-															<Point>
-																<XPos>0</XPos>
-																<YPos>100</YPos>
-																<Flags>5</Flags>
-															</Point>
-															<Point>
-																<XPos>99.87893</XPos>
-																<YPos>34</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>250.60533</XPos>
-																<YPos>30</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>501.21065</XPos>
-																<YPos>19</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>3000</XPos>
-																<YPos>14</YPos>
-																<Flags>37</Flags>
-															</Point>
-														</PointList>
-													</Curve>
-												</RTPC>
-											</RTPCList>
-										</Property>
+										<Property Name="IgnoreParentMaxSoundInstance" Type="bool" Value="True"/>
 										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<RTPCList>
-												<RTPC Name="" ID="{5FEDA00A-C7EB-4CD8-8EE4-5AFB14A5612B}" ShortID="636792218">
+												<RTPC Name="" ID="{B5BF4AE0-D744-4404-AA45-93F2193666B9}" ShortID="646561517">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{8C13CD99-E84D-4A01-82AB-D3D00866EEED}"/>
+															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
 														</Reference>
 													</ReferenceList>
-													<Curve Name="" ID="{64084C6F-68A0-489B-AB2E-FE1D9A15EE7B}">
+													<Curve Name="" ID="{591FF599-7362-4A12-885B-D2A244E8C50B}">
 														<PropertyList>
 															<Property Name="Flags" Type="int32" Value="3"/>
 														</PropertyList>
 														<PointList>
 															<Point>
 																<XPos>0</XPos>
-																<YPos>-200</YPos>
+																<YPos>-198.99999</YPos>
 																<Flags>5</Flags>
 															</Point>
 															<Point>
-																<XPos>103.5109</XPos>
-																<YPos>-12.08962</YPos>
+																<XPos>59.0147536884221</XPos>
+																<YPos>-198.99998</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>250.60533</XPos>
-																<YPos>-2.82863</YPos>
+																<XPos>1500</XPos>
+																<YPos>5.97371</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>499.39467</XPos>
-																<YPos>0.03644</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>3000</XPos>
-																<YPos>0</YPos>
+																<XPos>4000</XPos>
+																<YPos>5.87623</YPos>
 																<Flags>37</Flags>
 															</Point>
 														</PointList>
@@ -135,7 +88,10 @@
 						</ActorMixer>
 					</ChildrenList>
 				</ActorMixer>
-				<ActorMixer Name="player" ID="{6ECE91B4-829F-4DE2-9C26-10B08DF40A66}" ShortID="373597702">
+				<ActorMixer Name="FighterChar" ID="{6ECE91B4-829F-4DE2-9C26-10B08DF40A66}" ShortID="373597702">
+					<PropertyList>
+						<Property Name="EnablePanner" Type="bool" Value="True"/>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -145,7 +101,7 @@
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<SwitchContainer Name="footsteps" ID="{C4D59FDD-BFF1-4C43-A876-AB1C4ACA0F0A}" ShortID="938994959">
+						<SwitchContainer Name="Footsteps" ID="{C4D59FDD-BFF1-4C43-A876-AB1C4ACA0F0A}" ShortID="938994959">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -155,7 +111,7 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<RandomSequenceContainer Name="concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" ShortID="902376535">
+								<RandomSequenceContainer Name="Concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}" ShortID="902376535">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -260,7 +216,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="dirt" ID="{A2939EC1-FF10-4404-997B-2B5D9F4738B2}" ShortID="173801660">
+								<RandomSequenceContainer Name="Dirt" ID="{A2939EC1-FF10-4404-997B-2B5D9F4738B2}" ShortID="173801660">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -370,7 +326,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}" ShortID="779950197">
+								<RandomSequenceContainer Name="Grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}" ShortID="779950197">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -475,7 +431,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="gravel" ID="{F008D326-B883-4740-913B-58EBB952159B}" ShortID="110654658">
+								<RandomSequenceContainer Name="Gravel" ID="{F008D326-B883-4740-913B-58EBB952159B}" ShortID="110654658">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -585,7 +541,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="metal" ID="{36A52C70-6CEC-47B1-ABEA-9BAE19B2F81E}" ShortID="965043949">
+								<RandomSequenceContainer Name="Metal" ID="{36A52C70-6CEC-47B1-ABEA-9BAE19B2F81E}" ShortID="965043949">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -693,7 +649,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="metalgrate" ID="{B73C6478-E748-42F3-A636-E3BE98387BDA}" ShortID="754649153">
+								<RandomSequenceContainer Name="MetalGrate" ID="{B73C6478-E748-42F3-A636-E3BE98387BDA}" ShortID="754649153">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -798,7 +754,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}" ShortID="671475392">
+								<RandomSequenceContainer Name="Mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}" ShortID="671475392">
 									<PropertyList>
 										<Property Name="Pitch" Type="int32">
 											<ModifierList>
@@ -906,7 +862,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="sand" ID="{2F4C79ED-5AD1-419E-807D-82559165F096}" ShortID="723278953">
+								<RandomSequenceContainer Name="Sand" ID="{2F4C79ED-5AD1-419E-807D-82559165F096}" ShortID="723278953">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -1011,7 +967,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}" ShortID="925690789">
+								<RandomSequenceContainer Name="Slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}" ShortID="925690789">
 									<PropertyList>
 										<Property Name="Highpass" Type="int16">
 											<ValueList>
@@ -1121,7 +1077,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="tile" ID="{0D4CC7CF-55EB-4EB1-885F-2ECEC571C3AB}" ShortID="788784445">
+								<RandomSequenceContainer Name="Tile" ID="{0D4CC7CF-55EB-4EB1-885F-2ECEC571C3AB}" ShortID="788784445">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -1226,7 +1182,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}" ShortID="383615977">
+								<RandomSequenceContainer Name="Wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}" ShortID="383615977">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -1406,7 +1362,7 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="wood" ID="{7E8382AF-332C-4BFE-9F13-37544420E2DC}" ShortID="287179442">
+								<RandomSequenceContainer Name="Wood" ID="{7E8382AF-332C-4BFE-9F13-37544420E2DC}" ShortID="287179442">
 									<PropertyList>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -1515,45 +1471,45 @@
 							<GroupingInfo>
 								<GroupingBehaviorList>
 									<GroupingBehavior>
-										<ItemRef Name="wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}"/>
+										<ItemRef Name="Wade" ID="{EB1FC70A-06CE-47E7-8290-801C44BAA484}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}"/>
+										<ItemRef Name="Mud" ID="{68E58913-3326-43CE-BEDA-A5C564A929F4}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="gravel" ID="{F008D326-B883-4740-913B-58EBB952159B}"/>
+										<ItemRef Name="Gravel" ID="{F008D326-B883-4740-913B-58EBB952159B}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}"/>
+										<ItemRef Name="Slosh" ID="{B044D869-27EF-4DFB-BFB6-EC2F94000656}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="metal" ID="{36A52C70-6CEC-47B1-ABEA-9BAE19B2F81E}"/>
+										<ItemRef Name="Metal" ID="{36A52C70-6CEC-47B1-ABEA-9BAE19B2F81E}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="metalgrate" ID="{B73C6478-E748-42F3-A636-E3BE98387BDA}"/>
+										<ItemRef Name="MetalGrate" ID="{B73C6478-E748-42F3-A636-E3BE98387BDA}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="wood" ID="{7E8382AF-332C-4BFE-9F13-37544420E2DC}"/>
+										<ItemRef Name="Wood" ID="{7E8382AF-332C-4BFE-9F13-37544420E2DC}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}"/>
+										<ItemRef Name="Concrete" ID="{E82989B0-343D-4FD3-934F-5D8773925FA4}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="dirt" ID="{A2939EC1-FF10-4404-997B-2B5D9F4738B2}"/>
+										<ItemRef Name="Dirt" ID="{A2939EC1-FF10-4404-997B-2B5D9F4738B2}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="tile" ID="{0D4CC7CF-55EB-4EB1-885F-2ECEC571C3AB}"/>
+										<ItemRef Name="Tile" ID="{0D4CC7CF-55EB-4EB1-885F-2ECEC571C3AB}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="sand" ID="{2F4C79ED-5AD1-419E-807D-82559165F096}"/>
+										<ItemRef Name="Sand" ID="{2F4C79ED-5AD1-419E-807D-82559165F096}"/>
 									</GroupingBehavior>
 									<GroupingBehavior>
-										<ItemRef Name="grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}"/>
+										<ItemRef Name="Grass" ID="{8EF9D3EF-A2B3-4FC1-9539-16AA2FD03B7C}"/>
 									</GroupingBehavior>
 								</GroupingBehaviorList>
 							</GroupingInfo>
 						</SwitchContainer>
-						<RandomSequenceContainer Name="landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" ShortID="632189129">
+						<RandomSequenceContainer Name="Landing" ID="{7AB090B0-62C8-4E6F-9945-339C24054EC1}" ShortID="632189129">
 							<PropertyList>
 								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 								<Property Name="Pitch" Type="int32">
@@ -1658,7 +1614,7 @@
 								</Sound>
 							</ChildrenList>
 						</RandomSequenceContainer>
-						<RandomSequenceContainer Name="pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" ShortID="53455839">
+						<RandomSequenceContainer Name="Pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" ShortID="53455839">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -1723,7 +1679,7 @@
 								</Sound>
 							</ChildrenList>
 						</RandomSequenceContainer>
-						<RandomSequenceContainer Name="punch" ID="{05401B92-4A02-412E-AE25-2994402C85C4}" ShortID="150442915">
+						<RandomSequenceContainer Name="Punch" ID="{05401B92-4A02-412E-AE25-2994402C85C4}" ShortID="150442915">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -1925,78 +1881,7 @@
 								</RandomSequenceContainer>
 							</ChildrenList>
 						</RandomSequenceContainer>
-						<RandomSequenceContainer Name="sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" ShortID="418710265">
-							<PropertyList>
-								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
-								<Property Name="Pitch" Type="int32">
-									<ModifierList>
-										<ModifierInfo>
-											<Modifier Name="" ID="{201D5422-CB46-4D8A-9E51-7CDF9FBC644A}">
-												<PropertyList>
-													<Property Name="Enabled" Type="bool" Value="True"/>
-													<Property Name="Min" Type="Real64" Value="-600"/>
-												</PropertyList>
-											</Modifier>
-										</ModifierInfo>
-									</ModifierList>
-								</Property>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Conversion">
-									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-								</Reference>
-								<Reference Name="OutputBus">
-									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<Sound Name="concreteslide01" ID="{710B7782-00C3-4E14-A8F4-73E5D5F29980}" ShortID="233624477">
-									<PropertyList>
-										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="concreteslide01" ID="{83F97B57-17E1-43E9-959D-9D2055D99D1D}" ShortID="172000020">
-											<Language>SFX</Language>
-											<AudioFile>concreteslide01.wav</AudioFile>
-										</AudioFileSource>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="concreteslide01" ID="{83F97B57-17E1-43E9-959D-9D2055D99D1D}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-								<Sound Name="concreteslide02" ID="{EEAA6FE6-F29A-4265-A36F-657B8448AB6B}" ShortID="127604070">
-									<PropertyList>
-										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="concreteslide02" ID="{D4252D10-B3EA-42D3-93C8-0E3A58178A31}" ShortID="87920875">
-											<Language>SFX</Language>
-											<AudioFile>concreteslide02.wav</AudioFile>
-										</AudioFileSource>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="concreteslide02" ID="{D4252D10-B3EA-42D3-93C8-0E3A58178A31}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-							</ChildrenList>
-						</RandomSequenceContainer>
-						<ActorMixer Name="abilities" ID="{4CD73219-FAC4-492E-9302-355E07A60028}" ShortID="1071360140">
+						<ActorMixer Name="Abilities" ID="{4CD73219-FAC4-492E-9302-355E07A60028}" ShortID="1071360140">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -2065,9 +1950,147 @@
 								</Sound>
 							</ChildrenList>
 						</ActorMixer>
+						<RandomSequenceContainer Name="Sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" ShortID="418710265">
+							<PropertyList>
+								<Property Name="EnablePanner" Type="bool" Value="True"/>
+								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+								<Property Name="Pitch" Type="int32">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{201D5422-CB46-4D8A-9E51-7CDF9FBC644A}">
+												<PropertyList>
+													<Property Name="Enabled" Type="bool" Value="True"/>
+													<Property Name="Min" Type="Real64" Value="-600"/>
+												</PropertyList>
+											</Modifier>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<RTPCList>
+										<RTPC Name="" ID="{A607820F-3FEB-48BD-94C9-D0D4E68A9FAB}" ShortID="469066037">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Sliding" ID="{71315490-2447-4BC6-882A-5547D8F03405}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{4AEBC116-315F-401B-9A88-7B86CA2CF6E0}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>-200</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>1</XPos>
+														<YPos>0</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+										<RTPC Name="" ID="{5DDEAF5C-5F3E-44DB-8B05-33010EA6C402}" ShortID="616834958">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{BF2BBB82-C23B-4953-B602-D695E9FC1558}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>-200</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>4000</XPos>
+														<YPos>0</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="concreteslide01" ID="{710B7782-00C3-4E14-A8F4-73E5D5F29980}" ShortID="233624477">
+									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="concreteslide01" ID="{83F97B57-17E1-43E9-959D-9D2055D99D1D}" ShortID="172000020">
+											<Language>SFX</Language>
+											<AudioFile>concreteslide01.wav</AudioFile>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="concreteslide01" ID="{83F97B57-17E1-43E9-959D-9D2055D99D1D}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="concreteslide02" ID="{EEAA6FE6-F29A-4265-A36F-657B8448AB6B}" ShortID="127604070">
+									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="concreteslide02" ID="{D4252D10-B3EA-42D3-93C8-0E3A58178A31}" ShortID="87920875">
+											<Language>SFX</Language>
+											<AudioFile>concreteslide02.wav</AudioFile>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="concreteslide02" ID="{D4252D10-B3EA-42D3-93C8-0E3A58178A31}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+							<PositioningInfo>
+								<Panner Name="" ID="{63404CC8-288B-4762-AA0D-FE2461D0CA7A}">
+									<PropertyList>
+										<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
+									</PropertyList>
+								</Panner>
+							</PositioningInfo>
+						</RandomSequenceContainer>
 					</ChildrenList>
+					<PositioningInfo>
+						<Panner Name="" ID="{75249CB3-EB4C-4557-A910-E3073DD7A21F}">
+							<PropertyList>
+								<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
+							</PropertyList>
+						</Panner>
+					</PositioningInfo>
 				</ActorMixer>
-				<ActorMixer Name="music" ID="{5F180063-B77D-42B5-8607-E721CA7A5281}" ShortID="307928921">
+				<ActorMixer Name="Music" ID="{5F180063-B77D-42B5-8607-E721CA7A5281}" ShortID="307928921">
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>

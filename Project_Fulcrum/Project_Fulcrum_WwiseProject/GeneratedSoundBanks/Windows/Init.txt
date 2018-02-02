@@ -1,10 +1,12 @@
 Switch Group	ID	Name			Wwise Object Path	Notes
-	472853913	Sliding			\Default Work Unit\Sliding	
+	4160739938	MoveType			\FighterChar\MoveType	Current parameters implemented: Sliding and Idle 
 
 Switch	ID	Name	Switch Group			Notes
-	472853913	Sliding	Sliding			
-	2190485205	WallSliding	Sliding			
-	3078077546	NotSliding	Sliding			
+	340271938	Walking	MoveType			
+	472853913	Sliding	MoveType			
+	1874288895	Idle	MoveType			
+	2190485205	WallSliding	MoveType			
+	3863236874	Running	MoveType			
 
 Audio Bus	ID	Name			Wwise Object Path	Notes
 	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	

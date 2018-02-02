@@ -11,15 +11,10 @@
 	<StreamedFiles/>
 	<MediaFilesNotInAnyBank/>
 	<SoundBanks>
-		<SoundBank Id="1355168291" Language="SFX">
-			<ObjectPath>Init</ObjectPath>
-			<ShortName>Init</ShortName>
-			<Path>Init.bnk</Path>
-		</SoundBank>
-		<SoundBank Id="1396550684" Language="SFX">
-			<ObjectPath>\SoundBanks\Default Work Unit\Fighter</ObjectPath>
-			<ShortName>Fighter</ShortName>
-			<Path>Fighter.bnk</Path>
+		<SoundBank Id="725599200" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\FighterChar</ObjectPath>
+			<ShortName>FighterChar</ShortName>
+			<Path>FighterChar.bnk</Path>
 			<IncludedEvents>
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep"/>
@@ -30,9 +25,9 @@
 				<Event Id="417627684" Name="PlayMusic" ObjectPath="\Events\Default Work Unit\PlayMusic"/>
 				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit"/>
 				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
-				<Event Id="1242415940" Name="StartSlideLoop" ObjectPath="\Events\Default Work Unit\StartSlideLoop"/>
-				<Event Id="1825604527" Name="StartWindLoop" ObjectPath="\Events\Default Work Unit\StartWindLoop"/>
+				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart"/>
 				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
+				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
 				<File Id="87920875" Language="SFX">
@@ -128,6 +123,11 @@
 					<Path>SFX\hardland02_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
 		</SoundBank>
 	</SoundBanks>
 </SoundBanksInfo>

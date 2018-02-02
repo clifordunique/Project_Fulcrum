@@ -165,7 +165,9 @@ public class Player : FighterChar
 		{
 			FixedUpdatePlayerAnimation();
 		}
-			
+		FixedUpdateWwiseAudio();
+
+
 		if(isLocalPlayer)
 		{
 			inputBuffer.Enqueue(FighterState);
@@ -176,12 +178,6 @@ public class Player : FighterChar
 				inputBuffer.Clear();
 			}
 		}
-
-//		FighterState.RightClick = false;
-//		FighterState.LeftClick = false;
-//		FighterState.ZonKey = false;
-//		FighterState.DisperseKey = false;
-//		FighterState.JumpKey = false;
 	}
 
 	protected override void Update()

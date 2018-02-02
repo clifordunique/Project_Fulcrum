@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: e4c5ff704f6585843837e05eb9ba34e7
+labels:
+- Audio
 timeCreated: 1517446299
 licenseType: Free
 AudioImporter:
@@ -18,5 +20,5 @@ AudioImporter:
   loadInBackground: 0
   3D: 1
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+  assetBundleName: audio
+  assetBundleVariant: 1
