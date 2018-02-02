@@ -384,6 +384,44 @@
 					<ChildrenList>
 						<SwitchContainer Name="Footsteps" ID="{C4D59FDD-BFF1-4C43-A876-AB1C4ACA0F0A}" ShortID="938994959">
 							<PropertyList>
+								<Property Name="Highpass" Type="int16">
+									<RTPCList>
+										<RTPC Name="" ID="{DB90CCB1-2BB0-47D4-AB72-5E3EBB9EF91F}" ShortID="723651921">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{845A3493-A42C-4A1C-9AE5-5397FFD1199E}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="65537"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>0</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>100</XPos>
+														<YPos>10</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>250</XPos>
+														<YPos>25</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>4000</XPos>
+														<YPos>25</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
+								</Property>
 								<Property Name="Pitch" Type="int32">
 									<ModifierList>
 										<ModifierInfo>
@@ -395,6 +433,42 @@
 									<ValueList>
 										<Value>-10</Value>
 									</ValueList>
+									<RTPCList>
+										<RTPC Name="" ID="{C6B713E0-7980-41B0-ABC2-389253520AB1}" ShortID="312750064">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{F17117F2-B7EE-454A-B18C-C81BA61625E7}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>0</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>100</XPos>
+														<YPos>-2</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>250</XPos>
+														<YPos>-5</YPos>
+														<Flags>0</Flags>
+													</Point>
+													<Point>
+														<XPos>4000</XPos>
+														<YPos>-5</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
 								</Property>
 							</PropertyList>
 							<ReferenceList>
@@ -428,6 +502,42 @@
 													</Modifier>
 												</ModifierInfo>
 											</ModifierList>
+											<RTPCList>
+												<RTPC Name="" ID="{2671362A-7651-4EE6-8C51-73FC8AB01933}" ShortID="505129420">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{2898CCA6-F9E9-401C-9114-1FB8CEBECEC6}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="65537"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>0</YPos>
+																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>100</XPos>
+																<YPos>10</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>250</XPos>
+																<YPos>25</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>4000</XPos>
+																<YPos>25</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
 										</Property>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
@@ -444,6 +554,44 @@
 											</ModifierList>
 										</Property>
 										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+										<Property Name="Volume" Type="Real64">
+											<RTPCList>
+												<RTPC Name="" ID="{BF433066-79F4-450A-B0A6-B3BDE40C4758}" ShortID="596054330">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{25DC3012-3728-4EEB-BA93-67AB77EAF520}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="3"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>0</YPos>
+																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>100</XPos>
+																<YPos>-2</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>250</XPos>
+																<YPos>-5</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>4000</XPos>
+																<YPos>-5</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -2010,6 +2158,13 @@
 							</ChildrenList>
 						</RandomSequenceContainer>
 						<RandomSequenceContainer Name="Punch" ID="{05401B92-4A02-412E-AE25-2994402C85C4}" ShortID="150442915">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-11</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -2441,6 +2596,11 @@
 										</ModifierInfo>
 									</ModifierList>
 								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-15</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -2464,11 +2624,6 @@
 													<Modifier Name="" ID="{40DC0A9B-AA28-4494-850D-F81EFB0ABD5A}"/>
 												</ModifierInfo>
 											</ModifierList>
-										</Property>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-15</Value>
-											</ValueList>
 										</Property>
 									</PropertyList>
 									<ReferenceList>
@@ -2535,11 +2690,6 @@
 													<Modifier Name="" ID="{AE45DCF4-384E-4878-A923-D433953B9E38}"/>
 												</ModifierInfo>
 											</ModifierList>
-										</Property>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-15</Value>
-											</ValueList>
 										</Property>
 									</PropertyList>
 									<ReferenceList>
