@@ -1,0 +1,112 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Audiokinetic Wwise generated include file. Do not edit.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#ifndef __WWISE_IDS_H__
+#define __WWISE_IDS_H__
+
+#include <AK/SoundEngine/Common/AkTypes.h>
+
+namespace AK
+{
+    namespace EVENTS
+    {
+        static const AkUniqueID ENERGYPULSE = 1403055964U;
+        static const AkUniqueID FOOTSTEP = 1866025847U;
+        static const AkUniqueID IMPACT_CRATER = 1796283983U;
+        static const AkUniqueID IMPACT_SLAM = 3485259485U;
+        static const AkUniqueID JUMP = 3833651337U;
+        static const AkUniqueID LANDING = 2548270042U;
+        static const AkUniqueID PLAYMUSIC = 417627684U;
+        static const AkUniqueID PUNCHHIT = 3343194546U;
+        static const AkUniqueID PUNCHSWING = 2180951687U;
+        static const AkUniqueID STARTSLIDELOOP = 1242415940U;
+        static const AkUniqueID STARTWINDLOOP = 1825604527U;
+        static const AkUniqueID STRANDJUMP = 187194041U;
+    } // namespace EVENTS
+
+    namespace SWITCHES
+    {
+        namespace LIVING
+        {
+            static const AkUniqueID GROUP = 892771914U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID ALIVE = 655265632U;
+                static const AkUniqueID DEAD = 2044049779U;
+            } // namespace SWITCH
+        } // namespace LIVING
+
+        namespace SLIDING
+        {
+            static const AkUniqueID GROUP = 472853913U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID NOTSLIDING = 3078077546U;
+                static const AkUniqueID SLIDING = 472853913U;
+                static const AkUniqueID WALLSLIDING = 2190485205U;
+            } // namespace SWITCH
+        } // namespace SLIDING
+
+        namespace SURFACECONTACTS
+        {
+            static const AkUniqueID GROUP = 2055121345U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID AIRBORNE = 1785231519U;
+                static const AkUniqueID CEILING = 3504694206U;
+                static const AkUniqueID GROUND = 2528658256U;
+                static const AkUniqueID LEFTWALL = 4239551170U;
+                static const AkUniqueID RIGHTWALL = 1022564501U;
+            } // namespace SWITCH
+        } // namespace SURFACECONTACTS
+
+    } // namespace SWITCHES
+
+    namespace GAME_PARAMETERS
+    {
+        static const AkUniqueID ALIVE = 655265632U;
+        static const AkUniqueID CONTACT_AIRBORNE = 1214482312U;
+        static const AkUniqueID CONTACT_CEILING = 2615974827U;
+        static const AkUniqueID CONTACT_GROUND = 1693494255U;
+        static const AkUniqueID CONTACT_LEFTWALL = 512381289U;
+        static const AkUniqueID CONTACT_RIGHTWALL = 3748983100U;
+        static const AkUniqueID CONTACT_SURFACECLING = 589832086U;
+        static const AkUniqueID ENERGYLEVEL = 2286036297U;
+        static const AkUniqueID GFORCE_CONTINUOUS = 714279773U;
+        static const AkUniqueID GFORCE_INSTANT = 2916501359U;
+        static const AkUniqueID HEALTH = 3677180323U;
+        static const AkUniqueID KNEELING = 2487913616U;
+        static const AkUniqueID SLIDING = 472853913U;
+        static const AkUniqueID SPEED = 640949982U;
+        static const AkUniqueID TEST = 3157003241U;
+        static const AkUniqueID VELOCITY_X = 164475293U;
+        static const AkUniqueID VELOCITY_Y = 164475292U;
+        static const AkUniqueID WALLSLIDING = 2190485205U;
+    } // namespace GAME_PARAMETERS
+
+    namespace BANKS
+    {
+        static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID FIGHTER = 1396550684U;
+    } // namespace BANKS
+
+    namespace BUSSES
+    {
+        static const AkUniqueID MASTER_AUDIO_BUS = 3803692087U;
+    } // namespace BUSSES
+
+    namespace AUDIO_DEVICES
+    {
+        static const AkUniqueID NO_OUTPUT = 2317455096U;
+        static const AkUniqueID SYSTEM = 3859886410U;
+    } // namespace AUDIO_DEVICES
+
+}// namespace AK
+
+#endif // __WWISE_IDS_H__

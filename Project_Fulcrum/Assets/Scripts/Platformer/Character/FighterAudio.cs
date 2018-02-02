@@ -2,8 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using AK.Wwise;
 public class FighterAudio : NetworkBehaviour {
+
+	[SerializeField]private AK.Wwise.Event e_Step = null;
+	[SerializeField]private AK.Wwise.Event e_ZonPulse = null;
+	[SerializeField]private AK.Wwise.Event e_Punch = null;
+	[SerializeField]private AK.Wwise.Event e_PunchHit = null;
+	[SerializeField]private AK.Wwise.Event e_Landing = null;
+	[SerializeField]private AK.Wwise.Event e_Slam = null;
+	[SerializeField]private AK.Wwise.Event e_Crater = null;
+	[SerializeField]private AK.Wwise.Event e_Jump = null;
+	[SerializeField]private AK.Wwise.Event e_StrandJump = null;
 
 	[SerializeField]private AudioSource charAudioSource;
 	[SerializeField]private AudioSource windSource;
@@ -64,12 +74,15 @@ public class FighterAudio : NetworkBehaviour {
 		{
 			charAudioSource.PlayOneShot(footstepSounds[1], volume);
 		}
+
+		e_Step.Post(this.gameObject);
 	}
 
 	public void ZonPulseSound()
 	{
 		float volume = sfxVolM;
 		charAudioSource.PlayOneShot(sfxSounds[0], volume);
+		e_ZonPulse.Post(this.gameObject);
 	}
 
 	public void PunchSound()
@@ -79,6 +92,7 @@ public class FighterAudio : NetworkBehaviour {
 		float volume = punchVolM;
 		whichSound = (int)Random.Range(0,4);
 		charAudioSource.PlayOneShot(punchSounds[whichSound], volume);
+		e_Punch.Post(this.gameObject);
 		//CmdPunchSound(volume);
 	}
 
@@ -90,28 +104,29 @@ public class FighterAudio : NetworkBehaviour {
 		float volume = punchHitVolM;
 		whichSound = (int)Random.Range(0,4);
 		charAudioSource.PlayOneShot(punchHitSounds[whichSound], volume);
+		e_PunchHit.Post(this.gameObject);
 	}
 
-//	[Command] public void CmdPunchSound(float theVolume)
-//	{
-//		RpcPunchSound(theVolume);
-//	}
-//	[ClientRpc] public void RpcPunchSound(float theVolume)
-//	{
-//		//print("RPCSTEPSOUND ACTIVATED");
-//		//if(isLocalPlayer){return;}
-//		if(isLocalPlayer)
-//		{
-//			return;
-//		}
-//		if(isClient)
-//		{
-//			int whichSound = 0;
-//			float volume = punchVolM;
-//			whichSound = (int)Random.Range(0,4);
-//			charAudioSource.PlayOneShot(punchSounds[whichSound], theVolume);
-//		}
-//	}
+	//	[Command] public void CmdPunchSound(float theVolume)
+	//	{
+	//		RpcPunchSound(theVolume);
+	//	}
+	//	[ClientRpc] public void RpcPunchSound(float theVolume)
+	//	{
+	//		//print("RPCSTEPSOUND ACTIVATED");
+	//		//if(isLocalPlayer){return;}
+	//		if(isLocalPlayer)
+	//		{
+	//			return;
+	//		}
+	//		if(isClient)
+	//		{
+	//			int whichSound = 0;
+	//			float volume = punchVolM;
+	//			whichSound = (int)Random.Range(0,4);
+	//			charAudioSource.PlayOneShot(punchSounds[whichSound], theVolume);
+	//		}
+	//	}
 
 
 	public void LandingSound(float impactGForce)
@@ -131,18 +146,19 @@ public class FighterAudio : NetworkBehaviour {
 		{
 			charAudioSource.PlayOneShot(landingSounds[whichSound], volume);
 		}
+		e_Landing.Post(this.gameObject);
 		//CmdLandingSound(volume);
 	}
-//	[Command] public void CmdLandingSound(float volume)
-//	{
-//		RpcLandingSound(volume);
-//	}
-//	[ClientRpc] public void RpcLandingSound(float volume)
-//	{
-//		if(isLocalPlayer){return;}
-//		charAudioSource.PlayOneShot(landingSounds[1], volume);
-//	}
-//
+	//	[Command] public void CmdLandingSound(float volume)
+	//	{
+	//		RpcLandingSound(volume);
+	//	}
+	//	[ClientRpc] public void RpcLandingSound(float volume)
+	//	{
+	//		if(isLocalPlayer){return;}
+	//		charAudioSource.PlayOneShot(landingSounds[1], volume);
+	//	}
+	//
 
 	public void SlamSound(float impactGForce, float minT, float maxT)
 	{
@@ -156,45 +172,48 @@ public class FighterAudio : NetworkBehaviour {
 		volume = slamVolM+((slamVolM/10)*((impactGForce-minT)/(maxT-minT)));
 		//CmdSlamSound(volume);
 		charAudioSource.PlayOneShot(landingSounds[2], volume);
+		e_Slam.Post(this.gameObject);
 	}
-//	[Command] public void CmdSlamSound(float volume)
-//	{
-//		RpcSlamSound(volume);
-//	}
-//	[ClientRpc] public void RpcSlamSound(float volume)
-//	{
-//		if(isLocalPlayer){return;}
-//		charAudioSource.PlayOneShot(landingSounds[2], volume);
-//	}
+	//	[Command] public void CmdSlamSound(float volume)
+	//	{
+	//		RpcSlamSound(volume);
+	//	}
+	//	[ClientRpc] public void RpcSlamSound(float volume)
+	//	{
+	//		if(isLocalPlayer){return;}
+	//		charAudioSource.PlayOneShot(landingSounds[2], volume);
+	//	}
 
 	public void CraterSound(float impactGForce, float minT, float maxT)
 	{
 		//if(!isLocalPlayer){return;}
 		float volume = crtrVolM;
 		volume = crtrVolM+((crtrVolM/10)*((impactGForce-minT)/(maxT-minT)));
-//		print("Volume: "+volume);
-//		print("impactGForce: "+impactGForce);
-//		print("minT: "+minT);
-//		print("maxT: "+maxT);
-//		print("(impactGForce-minT)/(maxT-minT)="+(impactGForce-minT)/(maxT-minT));
+		//		print("Volume: "+volume);
+		//		print("impactGForce: "+impactGForce);
+		//		print("minT: "+minT);
+		//		print("maxT: "+maxT);
+		//		print("(impactGForce-minT)/(maxT-minT)="+(impactGForce-minT)/(maxT-minT));
 		charAudioSource.PlayOneShot(landingSounds[4], volume);
+		e_Crater.Post(this.gameObject);
 		//CmdCraterSound(volume);
 	}
-//	[Command] public void CmdCraterSound(float volume)
-//	{
-//		RpcCraterSound(volume);
-//	}
-//	[ClientRpc] public void RpcCraterSound(float volume)
-//	{
-//		charAudioSource.PlayOneShot(landingSounds[4], volume);
-//	}
-//
+	//	[Command] public void CmdCraterSound(float volume)
+	//	{
+	//		RpcCraterSound(volume);
+	//	}
+	//	[ClientRpc] public void RpcCraterSound(float volume)
+	//	{
+	//		charAudioSource.PlayOneShot(landingSounds[4], volume);
+	//	}
+	//
 
 	public void JumpSound()
 	{
 		if(!isLocalPlayer){return;}
 		charAudioSource.PlayOneShot(jumpSounds[0], jumpVolM);
 		CmdJumpSound(jumpVolM);
+		e_Jump.Post(this.gameObject);
 	}
 	[Command] public void CmdJumpSound(float volume)
 	{
@@ -206,15 +225,15 @@ public class FighterAudio : NetworkBehaviour {
 		charAudioSource.PlayOneShot(jumpSounds[0], volume);
 	}
 
-//	[Command] public void CmdWindSound(float volume)
-//	{
-//		RpcWindSound(volume);
-//	}
-//	[ClientRpc] public void RpcWindSound(float volume)
-//	{
-//		if(isLocalPlayer){return;}
-//		windSource.volume = volume;
-//	}
+	//	[Command] public void CmdWindSound(float volume)
+	//	{
+	//		RpcWindSound(volume);
+	//	}
+	//	[ClientRpc] public void RpcWindSound(float volume)
+	//	{
+	//		if(isLocalPlayer){return;}
+	//		windSource.volume = volume;
+	//	}
 
 
 	public void StrandJumpSound()
@@ -222,6 +241,7 @@ public class FighterAudio : NetworkBehaviour {
 		if(!isLocalPlayer){return;}
 		charAudioSource.PlayOneShot(jumpSounds[1], strandJumpVolM);
 		CmdStrandJumpSound(strandJumpVolM);
+		e_StrandJump.Post(this.gameObject);
 	}
 	[Command] public void CmdStrandJumpSound(float volume)
 	{

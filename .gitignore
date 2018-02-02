@@ -2,8 +2,6 @@
 */[Tt]emp/
 */[Oo]bj/
 */[Bb]uild/
-/Assets/Wwise/
-*\[Ww]wise\*
 */[Bb]uilds/
 */Assets/AssetStoreTools*
 
@@ -39,3 +37,4 @@ ExportedObj/
 *.resource
 *.meta
 *.wav
+Project_Fulcrum/Assets/Wwise/*

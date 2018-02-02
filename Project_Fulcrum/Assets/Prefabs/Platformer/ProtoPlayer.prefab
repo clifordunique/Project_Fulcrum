@@ -984,6 +984,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf5f85a0ba985b47b3a3193de2a80a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  e_Step:
+    valueGuid: 26ac86d82f62264cbb8bcbe28c6d6151
+    ID: 1866025847
+  e_ZonPulse:
+    valueGuid: 24aa3cabf9d82b4088c1a5af022d82b6
+    ID: 1403055964
+  e_Punch:
+    valueGuid: 950da245ce224f4488a81f91e6adbd8c
+    ID: -2114015609
+  e_PunchHit:
+    valueGuid: e976843fe23e2f409118f5f7ad8a30c1
+    ID: -951772750
+  e_Landing:
+    valueGuid: 485cb7182e02634da6ed6c8a16fecb2b
+    ID: -1746697254
+  e_Slam:
+    valueGuid: 694a0359b6aa6b4780d91da2bfc36721
+    ID: -809707811
+  e_Crater:
+    valueGuid: e2e26609768a5543896a229fbbb7bef9
+    ID: 1796283983
+  e_Jump:
+    valueGuid: a39a7d94ade8a74b81ae3a3b3fbab9fa
+    ID: -461315959
+  e_StrandJump:
+    valueGuid: 0f144237782bfa4a9fe653ee34bc53fa
+    ID: 187194041
   charAudioSource: {fileID: 82668511716998528}
   windSource: {fileID: 82974305029215952}
   slideSource: {fileID: 82142254750959456}
@@ -991,23 +1018,23 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 484913db82778d643bd3ac44fc3722d6, type: 3}
   - {fileID: 8300000, guid: 9a0f6239ca2bba349bca7a6f617f7a7e, type: 3}
   sfxSounds:
-  - {fileID: 8300000, guid: 8ce393386c0b1c44c89fd67eabf54f54, type: 3}
+  - {fileID: 0}
   slideSounds: []
   footstepSounds:
-  - {fileID: 8300000, guid: bdbf71ea920009e4b9572f0f0f6b60b5, type: 3}
-  - {fileID: 8300000, guid: e8f8eee911739c8469c4bae88e1b4cbf, type: 3}
-  - {fileID: 8300000, guid: 886fadf3dcb9bf74c9284ef55d294eb4, type: 3}
-  - {fileID: 8300000, guid: ebc69eed4dfc72641926ebf8fd6a6a1d, type: 3}
-  - {fileID: 8300000, guid: efa7ac05bcd62004aa151d126cec346c, type: 3}
-  - {fileID: 8300000, guid: d00ca1a12a62fa64f9cc226e9cce9ac0, type: 3}
-  - {fileID: 8300000, guid: 65a4c26798a59e140a26a0b360f1b1f6, type: 3}
-  - {fileID: 8300000, guid: f5687f51dac1bff4583117252b866ba7, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   landingSounds:
-  - {fileID: 8300000, guid: 69765e237e36fdc48a6b7876af68cc3a, type: 3}
-  - {fileID: 8300000, guid: 9a71d5a214898824c9bd3a83d6959a04, type: 3}
-  - {fileID: 8300000, guid: 3ebad1bd1ca34b54ea4aaac3e7147c58, type: 3}
-  - {fileID: 8300000, guid: 500b4714bcf85004ba04404118b08740, type: 3}
-  - {fileID: 8300000, guid: 5b1173f9ceb6faa42b00767aa2ffcd4a, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   punchSounds:
   - {fileID: 8300000, guid: 85cf7859c505b29429c8294dd649cf17, type: 3}
   - {fileID: 8300000, guid: c594c537d9180c7468bc8e137b864d95, type: 3}

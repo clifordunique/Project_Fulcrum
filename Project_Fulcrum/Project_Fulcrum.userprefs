@@ -1,17 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\FighterChar.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Wwise\Deployment\API\Handwritten\AkCallbackManager.cs">
     <Files>
-      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="215" Column="31" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="884" Column="32" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="2081" Column="5" />
-      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="154" Column="31" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="318" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Platformer\Map Objects\Breakable.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\ParallaxOptionEditor.cs" Line="13" Column="2" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="9" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" Line="17" Column="2" />
-      <File FileName="Assets\Editor\GrassColourerInterface.cs" Line="23" Column="19" />
-      <File FileName="Assets\Scripts\GrassColourer.cs" Line="9" Column="56" />
+      <File FileName="Assets\Editor\ParallaxOptionEditor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" Line="1" Column="1" />
+      <File FileName="Assets\Editor\GrassColourerInterface.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GrassColourer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Wwise\Deployment\API\Handwritten\AkCallbackManager.cs" Line="303" Column="57" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

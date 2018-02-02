@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <IncrementalBankBuild Version="6" Flags="878078161">
-	<Platform GUID="{08F69733-0E3C-4101-B4AD-31D9B0F3BB7F}">
+	<Platform GUID="{F1290B89-EB12-45A9-A3B3-498722765758}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="FighterChar" Hash="2515537846" Timestamp="1517450410"/>
-				<File Name="Footsteps" Hash="445664438" Timestamp="1517430180"/>
-				<File Name="Init" Hash="3502775672" Timestamp="1517450410"/>
+				<File Name="Fighter" Hash="2886267899" Timestamp="1517532814"/>
+				<File Name="FighterChar" Hash="190250079" Timestamp="1517532578"/>
+				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
+				<File Name="Init" Hash="1482962329" Timestamp="1517532515"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="2029127517" Timestamp="1517450410"/>
+				<File Name="" Hash="1532611213" Timestamp="1517532814"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
-	<Platform GUID="{CE8DA9BF-F17D-4310-AF52-1CF60641EE41}">
+	<Platform GUID="{B88661B7-53E0-4C42-8618-3526EA9C339A}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="FighterChar" Hash="2515537846" Timestamp="1517450410"/>
-				<File Name="Footsteps" Hash="445664438" Timestamp="1517430181"/>
-				<File Name="Init" Hash="2572045958" Timestamp="1517450410"/>
+				<File Name="Fighter" Hash="2886267899" Timestamp="1517532814"/>
+				<File Name="FighterChar" Hash="190250079" Timestamp="1517532578"/>
+				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532515"/>
+				<File Name="Init" Hash="3954104959" Timestamp="1517532515"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="3720124587" Timestamp="1517450410"/>
+				<File Name="" Hash="432031475" Timestamp="1517532814"/>
 			</Language>
 		</XMLInfo>
 	</Platform>

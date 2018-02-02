@@ -127,7 +127,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="IridescenceV2" ID="{AC9D4A98-D098-432F-8D9B-ACEB9D3F5CA0}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="RuinsOfMarsa" ID="{A03614A2-4C2C-4E70-AC77-AE42EA393607}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

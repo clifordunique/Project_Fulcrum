@@ -1,55 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{BE2B2A88-4E82-40F8-9DDE-FED1396FD814}" SchemaVersion="85">
 	<Switches>
-		<WorkUnit Name="Default Work Unit" ID="{BE2B2A88-4E82-40F8-9DDE-FED1396FD814}" PersistMode="Standalone">
-			<ChildrenList>
-				<SwitchGroup Name="Living" ID="{5F41942D-0D62-4EC2-8C46-E15617FBC141}">
-					<ChildrenList>
-						<Switch Name="Dead" ID="{837C6FFF-F124-4FB6-A13B-869CC0897C1D}"/>
-						<Switch Name="Alive" ID="{C2F96B80-FD60-46FD-8AEB-B584BD15B316}"/>
-					</ChildrenList>
-				</SwitchGroup>
-				<SwitchGroup Name="SurfaceContacts" ID="{87EAA809-E6AA-4792-80BA-A5523F923F5A}">
-					<Comment>Defines which nearby surfaces the player is currently touching.</Comment>
-					<ChildrenList>
-						<Switch Name="Ground" ID="{4391E9EF-79A8-4895-BB89-B3AEA8425DC3}"/>
-						<Switch Name="Ceiling" ID="{22DD7AA9-C206-4979-83EF-DBE3F0251FDB}"/>
-						<Switch Name="Leftwall" ID="{E40AA887-ABDE-4909-8527-277DDCCF3A17}"/>
-						<Switch Name="Rightwall" ID="{A3ECC036-BA38-484B-905A-605F6199DC8F}"/>
-						<Switch Name="Airborne" ID="{D8C49393-1818-46A6-962D-3A4E087E4A19}"/>
-					</ChildrenList>
-				</SwitchGroup>
-				<SwitchGroup Name="Sliding" ID="{6D360175-D045-4107-9ECD-2C137B85DD09}">
-					<PropertyList>
-						<Property Name="UseGameParameter" Type="bool" Value="True"/>
-					</PropertyList>
-					<ChildrenList>
-						<Switch Name="NotSliding" ID="{7786D373-5A07-4620-AC69-3DC601371972}"/>
-						<Switch Name="WallSliding" ID="{4B35BA6A-3309-4C6B-A2AB-178FE3BFC3EC}"/>
-						<Switch Name="Sliding" ID="{6081596B-328E-429D-970F-FE8FD4BF2306}"/>
-					</ChildrenList>
-					<SwitchOnRTPC>
-						<GameParameterRef Name="Sliding" ID="{71315490-2447-4BC6-882A-5547D8F03405}"/>
-						<Curve Name="" ID="{3FC9FAE3-CFEA-473F-866A-C170C73198A4}">
-							<PropertyList>
-								<Property Name="Flags" Type="int32" Value="65537"/>
-							</PropertyList>
-							<PointList>
-								<Point>
-									<XPos>0</XPos>
-									<YPos>1</YPos>
-									<Flags>5</Flags>
-								</Point>
-								<Point>
-									<XPos>1</XPos>
-									<YPos>3</YPos>
-									<Flags>37</Flags>
-								</Point>
-							</PointList>
-						</Curve>
-					</SwitchOnRTPC>
-				</SwitchGroup>
-			</ChildrenList>
-		</WorkUnit>
+		<WorkUnit Name="Default Work Unit" ID="{BE2B2A88-4E82-40F8-9DDE-FED1396FD814}" PersistMode="Standalone"/>
 	</Switches>
 </WwiseDocument>
