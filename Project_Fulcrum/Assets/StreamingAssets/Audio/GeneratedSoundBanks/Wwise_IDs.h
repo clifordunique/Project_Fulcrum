@@ -13,6 +13,7 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID ENERGYCHARGE = 2390935913U;
         static const AkUniqueID ENERGYPULSE = 1403055964U;
         static const AkUniqueID FOOTSTEP = 1866025847U;
         static const AkUniqueID IMPACT_CRATER = 1796283983U;

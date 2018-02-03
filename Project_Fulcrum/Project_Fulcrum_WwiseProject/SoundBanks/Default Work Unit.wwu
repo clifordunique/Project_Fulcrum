@@ -10,6 +10,7 @@
 						<ObjectRef Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PunchSwing" ID="{45A20D95-22CE-444F-88A8-1F91E6ADBD8C}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Impact_Slam" ID="{59034A69-AAB6-476B-80D9-1DA2BFC36721}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="EnergyCharge" ID="{C3E125B2-A822-48D8-8E0E-81B63BDCCD1A}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="StrandJump" ID="{3742140F-2B78-4AFA-9FE6-53EE34BC53FA}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Jump" ID="{947D9AA3-E8AD-4BA7-81AE-3A3B3FBAB9FA}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Footstep" ID="{D886AC26-622F-4C26-BB8B-CBE28C6D6151}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>

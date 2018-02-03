@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using AK.Wwise;
 
 public class Spooler : NetworkBehaviour
 {
@@ -16,6 +17,7 @@ public class Spooler : NetworkBehaviour
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
 	[SerializeField]private Ring o_Limit;
+
 
 	#endregion
 
@@ -198,6 +200,9 @@ public class Spooler : NetworkBehaviour
 
 
 		o_SpoolAudio.Play();
+		AkSoundEngine.PostEvent("EnergyCharge", gameObject);
+		AkSoundEngine.SetRTPCValue("EnergyLevel", o_Player.GetZonLevel(), gameObject);
+
 		float thePitch = 1+(r_RingNum/7f);
 		//print("RINGNUM="+r_RingNum);
 		//print("thePitch"+thePitch);	

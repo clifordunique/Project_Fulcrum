@@ -1,10 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Wwise\Deployment\API\Handwritten\AkCallbackManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\FighterChar.cs">
     <Files>
       <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="318" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="168" Column="24" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="1263" Column="5" />
       <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Platformer\Map Objects\Breakable.cs" Line="1" Column="1" />
       <File FileName="Assets\Editor\ParallaxOptionEditor.cs" Line="1" Column="1" />
@@ -12,7 +12,8 @@
       <File FileName="Assets\Scripts\Platformer\Visual\ParallaxOption.cs" Line="1" Column="1" />
       <File FileName="Assets\Editor\GrassColourerInterface.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\GrassColourer.cs" Line="1" Column="1" />
-      <File FileName="Assets\Wwise\Deployment\API\Handwritten\AkCallbackManager.cs" Line="303" Column="57" />
+      <File FileName="Assets\Scripts\Platformer\Character\Spooler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Map Objects\Grass.cs" Line="48" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

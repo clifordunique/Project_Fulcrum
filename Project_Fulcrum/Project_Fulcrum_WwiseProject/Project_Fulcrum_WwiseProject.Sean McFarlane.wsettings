@@ -19,8 +19,10 @@
 				<Property Name="Event Action List\{AB3CAA24-D8F9-402B-88C1-A5AF022D82B6}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{AC58E3E8-06C7-44EF-B639-BE4CA22173A8}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{C0D9288C-D941-4C2A-A481-97FD1717510E}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{C3E125B2-A822-48D8-8E0E-81B63BDCCD1A}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{D886AC26-622F-4C26-BB8B-CBE28C6D6151}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{E7CCDD92-658F-4D7E-B15D-CE20BA0918A5}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="EventView\FilterMode1" Type="int32" Value="2"/>
 				<Property Name="ExternalSourcesInputPath" Type="string">
 					<ValueList>
@@ -56,7 +58,8 @@
 				<Property Name="Mixing Desk\LastSession" Type="string" Value="{00000000-0000-0000-0000-000000000000}"/>
 				<Property Name="MonitoringManager\WatchMgr\WatchesVersion" Type="int32" Value="6"/>
 				<Property Name="MonitoringManager\WatchMgr\x64_GameSyncWatches" Type="string" Value="OiT0BIFI1kOCCJ7SpNgYZF0yJgJpibJHoF4BuAMlBIM="/>
-				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAIsCAAAAAAAAAAAAABIAUHJvdG9QbGF5ZXIoQ2xvbmUpAAIAAAAAAAAAAAAA8Kgq8YsCAAAvZntJ/H8AAACMT/+LAgAAuBhdSfx/AAACAAAAAAAAADDWX/qLAgAAMNZf+osCAAAeISBR/H8AAAIAAAAAAAAAAgAAAAAAAAAw1l/6iwIAAAAAAAAAAAAAEAAAAAAAAAABFAVF/H8AAA=="/>
+				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAKMBAAAAAAAAAAAAABIAUHJvdG9QbGF5ZXIoQ2xvbmUpAAEAAAAAAAAAAAAAIAxKJ6MBAAAvZtpQ/H8AAMiaUjujAQAAuBi8UPx/AAACAAAAAAAAAHCAdTCjAQAAcIB1MKMBAAAeIVNS/H8AAAIAAAAAAAAAAgAAAAAAAABwgHUwowEAAAAAAAAAAAAAEAAAAAAAAAABFHdS/H8AAA=="/>
+				<Property Name="PluginUserAcknowledge\iZotope Hybrid Reverb" Type="bool" Value="True"/>
 				<Property Name="ProjectExplorer\FirstVisible_10_1" Type="string" Value="{4C96B38B-3DB4-40C7-91C9-665510E38993}"/>
 				<Property Name="ProjectExplorer\FirstVisible_11_1" Type="string" Value="{23EC2DE3-3ED8-4B82-AC99-92E25F2E4C6B}"/>
 				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{4C21A061-283B-4DEF-9C32-9755B9E42368}"/>

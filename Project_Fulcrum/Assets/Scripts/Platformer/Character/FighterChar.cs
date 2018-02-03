@@ -717,6 +717,9 @@ public class FighterChar : NetworkBehaviour
 		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("EnergyLevel", FighterState.ZonLevel, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
+		AkSoundEngine.SetRTPCValue("Velocity_Y", FighterState.Vel.y, this.gameObject);
+		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
+		AkSoundEngine.SetRTPCValue("GForce_Continuous", m_CGF, this.gameObject);
 
 		//Bools
 		AkSoundEngine.SetRTPCValue("Sliding", Convert.ToSingle(isSliding()), this.gameObject);
@@ -1253,6 +1256,7 @@ public class FighterChar : NetworkBehaviour
 
 		Vector2 moveDirectionNormal = Perp(FighterState.Vel.normalized);
 		Vector2 invertedDirectionNormal = -moveDirectionNormal;//This is made in case one of the raycasts is inside the collider, which would cause it to return an inverted normal value.
+		String terrainType = "Concrete";
 
 		switch (shortestRaycast)
 		{
@@ -1266,6 +1270,16 @@ public class FighterChar : NetworkBehaviour
 				//If you're going to hit something with your feet.
 				//print("FOOT_IMPACT");
 				//print("Velocity before impact: "+FighterState.Vel);
+
+				if(predictedLoc[0].collider.sharedMaterial)
+				{
+					terrainType = predictedLoc[0].collider.sharedMaterial.name;
+				}
+				if(terrainType == null||terrainType == "")
+				{
+					terrainType = "Concrete";
+				} 
+				AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
 
 				//print("GroundDist"+predictedLoc[0].distance);
 				//print("RightDist"+predictedLoc[3].distance);
@@ -1308,12 +1322,6 @@ public class FighterChar : NetworkBehaviour
 						DirectionChange(m_GroundNormal);
 					}
 
-					String terrainType = predictedLoc[0].collider.sharedMaterial.name;
-					if(terrainType == null||terrainType == "")
-					{
-						terrainType = "Concrete";
-					} 
-					AkSoundEngine.SetSwitch("TerrainType", terrainType, gameObject);
 
 					return;
 				}
@@ -1328,7 +1336,10 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 1: //Ceiling collision
 			{
-				String terrainType = predictedLoc[1].collider.sharedMaterial.name;
+				if(predictedLoc[1].collider.sharedMaterial)
+				{
+					terrainType = predictedLoc[1].collider.sharedMaterial.name;
+				}
 				if(terrainType == null||terrainType == "")
 				{
 					terrainType = "Concrete";
@@ -1356,7 +1367,10 @@ public class FighterChar : NetworkBehaviour
 		case 2: //Left contact collision
 			{
 
-				String terrainType = predictedLoc[2].collider.sharedMaterial.name;
+				if(predictedLoc[2].collider.sharedMaterial)
+				{
+					terrainType = predictedLoc[2].collider.sharedMaterial.name;
+				}
 				if(terrainType == null||terrainType == "")
 				{
 					terrainType = "Concrete";
@@ -1384,7 +1398,10 @@ public class FighterChar : NetworkBehaviour
 			}
 		case 3: //Right contact collision
 			{
-				String terrainType = predictedLoc[3].collider.sharedMaterial.name;
+				if(predictedLoc[3].collider.sharedMaterial)
+				{
+					terrainType = predictedLoc[3].collider.sharedMaterial.name;
+				}
 				if(terrainType == null||terrainType == "")
 				{
 					terrainType = "Concrete";
@@ -1650,13 +1667,13 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(horizontalInput > 0 && m_LeftWalled && !m_RightWalled) // If pressing input away from wall, detach from it.
 		{
-			print("FALLIN OFF YO!");
+			//print("FALLIN OFF YO!");
 			AirControl(horizontalInput);
 			return;
 		}
 		else if(horizontalInput < 0 && m_RightWalled && !m_LeftWalled)  // If pressing input away from wall, detach from it.
 		{
-			print("FALLIN OFF YO!");
+			//print("FALLIN OFF YO!");
 			AirControl(horizontalInput);
 			return;
 		}

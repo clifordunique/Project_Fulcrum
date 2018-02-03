@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
 	<RootPaths>
-		<ProjectRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -16,6 +16,7 @@
 			<ShortName>FighterChar</ShortName>
 			<Path>FighterChar.bnk</Path>
 			<IncludedEvents>
+				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge"/>
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
@@ -181,6 +182,10 @@
 				<File Id="568435598" Language="SFX">
 					<ShortName>wood2.wav</ShortName>
 					<Path>SFX\wood2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="578949725" Language="SFX">
+					<ShortName>C_Spooling5.wav</ShortName>
+					<Path>SFX\C_Spooling5_1C9C67B2.wem</Path>
 				</File>
 				<File Id="584392103" Language="SFX">
 					<ShortName>slam02.wav</ShortName>

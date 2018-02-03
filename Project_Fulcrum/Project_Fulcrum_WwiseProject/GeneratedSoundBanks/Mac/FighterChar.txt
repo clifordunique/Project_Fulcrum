@@ -7,6 +7,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	1796283983	Impact_Crater			\Default Work Unit\Impact_Crater	Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase. 
 	1866025847	Footstep			\Default Work Unit\Footstep	
 	2180951687	PunchSwing			\Default Work Unit\PunchSwing	
+	2390935913	EnergyCharge			\Default Work Unit\EnergyCharge	
 	2548270042	Landing			\Default Work Unit\Landing	
 	3343194546	PunchHit			\Default Work Unit\PunchHit	
 	3485259485	Impact_Slam			\Default Work Unit\Impact_Slam	Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase. 
@@ -30,6 +31,11 @@ Switch	ID	Name	Switch Group			Notes
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	472853913	Sliding			\Default Work Unit\FighterChar\Sliding	
 	640949982	Speed			\Default Work Unit\FighterChar\Speed	
+	2286036297	EnergyLevel			\Default Work Unit\FighterChar\EnergyLevel	
+
+Effect plug-ins	ID	Name	Type				Notes
+	439978821	Wwise Guitar Distortion (Custom)	Wwise Guitar Distortion			
+	3354577677	Fast_LF_Tremolo	Wwise Tremolo			
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	31642490	wood4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood4		91048
@@ -70,6 +76,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	492965762	gravel3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\gravel3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Gravel\gravel3		101280
 	501415006	grass02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Grass\grass02		23498
 	568435598	wood2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood2		144596
+	578949725	C_Spooling5	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\C_Spooling5_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Abilities\C_Spooling5		70694
 	584392103	slam02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam02		133552
 	585252688	jump01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\jump01		43576
 	592407740	metal4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\metal4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Metal\metal4		111324

@@ -194,6 +194,21 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="EnergyCharge" ID="{C3E125B2-A822-48D8-8E0E-81B63BDCCD1A}">
+					<ChildrenList>
+						<Action Name="" ID="{8F2A4177-15A7-4672-95DD-35C2BC0F45DA}" ShortID="720067776">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="C_Spooling5" ID="{403D08B7-6467-4A82-A227-512DB20C37EF}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Breakable_Break" ID="{E7CCDD92-658F-4D7E-B15D-CE20BA0918A5}"/>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

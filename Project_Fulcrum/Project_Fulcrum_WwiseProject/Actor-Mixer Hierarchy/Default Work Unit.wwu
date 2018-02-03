@@ -25,44 +25,6 @@
 							<ChildrenList>
 								<Sound Name="Windloop1" ID="{FF2F5717-74A3-4AB2-9C75-88378F4F8635}" ShortID="32489348">
 									<PropertyList>
-										<Property Name="Highpass" Type="int16">
-											<RTPCList>
-												<RTPC Name="" ID="{E04DF6EC-1A33-4686-8A53-F266CE6444F5}" ShortID="85776334">
-													<ReferenceList>
-														<Reference Name="ControlInput">
-															<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
-														</Reference>
-													</ReferenceList>
-													<Curve Name="" ID="{1D817701-97BF-4905-9283-F68379C19760}">
-														<PropertyList>
-															<Property Name="Flags" Type="int32" Value="65537"/>
-														</PropertyList>
-														<PointList>
-															<Point>
-																<XPos>0</XPos>
-																<YPos>100</YPos>
-																<Flags>5</Flags>
-															</Point>
-															<Point>
-																<XPos>100</XPos>
-																<YPos>35</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>249.39567</XPos>
-																<YPos>35</YPos>
-																<Flags>0</Flags>
-															</Point>
-															<Point>
-																<XPos>4000</XPos>
-																<YPos>35</YPos>
-																<Flags>37</Flags>
-															</Point>
-														</PointList>
-													</Curve>
-												</RTPC>
-											</RTPCList>
-										</Property>
 										<Property Name="IgnoreParentMaxSoundInstance" Type="bool" Value="True"/>
 										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 										<Property Name="Pitch" Type="int32">
@@ -91,23 +53,33 @@
 																<Flags>5</Flags>
 															</Point>
 															<Point>
-																<XPos>51.75083</XPos>
-																<YPos>-12.18801</YPos>
+																<XPos>62.1118</XPos>
+																<YPos>-200</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>100</XPos>
-																<YPos>-8.38264</YPos>
+																<XPos>113.86264</XPos>
+																<YPos>-12.34863</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>250</XPos>
-																<YPos>-4</YPos>
+																<XPos>186.33541</XPos>
+																<YPos>-7.35597</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>749.39467</XPos>
-																<YPos>-3</YPos>
+																<XPos>186.95653</XPos>
+																<YPos>-7.31621</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>312.11181</XPos>
+																<YPos>-4.16062</YPos>
+																<Flags>0</Flags>
+															</Point>
+															<Point>
+																<XPos>811.50648</XPos>
+																<YPos>-3.16062</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
@@ -2436,9 +2408,84 @@
 							</ReferenceList>
 							<ChildrenList>
 								<Sound Name="C_Spooling5" ID="{403D08B7-6467-4A82-A227-512DB20C37EF}" ShortID="853117169">
+									<PropertyList>
+										<Property Name="OverrideEffect" Type="bool" Value="True"/>
+										<Property Name="Pitch" Type="int32">
+											<RTPCList>
+												<RTPC Name="" ID="{1E823FF7-6B1D-411C-BD0E-19B4F9635D4F}" ShortID="285700968">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="EnergyLevel" ID="{6944CE28-B7E0-4A2B-825F-58FCA7817D03}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{3F60EC4B-DB33-446C-926A-C70CF35D5FBD}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="65537"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>-600</YPos>
+																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>15</XPos>
+																<YPos>400</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="Effect0">
+											<Custom>
+												<Effect Name="Wwise Guitar Distortion (Custom)" ID="{D538E521-F5B3-4F6F-B2F4-7238272CC2AD}" ShortID="439978821" PluginName="Wwise Guitar Distortion" CompanyID="0" PluginID="126" PluginType="3">
+													<PropertyList>
+														<Property Name="DistortionDrive" Type="Real32" Value="47"/>
+														<Property Name="DistortionTone" Type="Real32" Value="75"/>
+														<Property Name="DistortionType" Type="int32" Value="1"/>
+														<Property Name="PreEQBand1FilterType" Type="int32" Value="5"/>
+														<Property Name="Rectification" Type="Real32" Value="100"/>
+														<Property Name="WetDryMix" Type="Real32">
+															<RTPCList>
+																<RTPC Name="" ID="{62E7760D-4525-466A-93BC-3F06A7658247}" ShortID="659143134">
+																	<ReferenceList>
+																		<Reference Name="ControlInput">
+																			<ObjectRef Name="EnergyLevel" ID="{6944CE28-B7E0-4A2B-825F-58FCA7817D03}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<Curve Name="" ID="{8CBC4436-F2C2-479E-ADBF-8BCB35A6399C}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="1"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>-100</YPos>
+																				<Flags>5</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>15</XPos>
+																				<YPos>-51.5625</YPos>
+																				<Flags>37</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</RTPC>
+															</RTPCList>
+														</Property>
+													</PropertyList>
+												</Effect>
+											</Custom>
+										</Reference>
+										<Reference Name="Effect1" PluginName="Wwise Tremolo" CompanyID="0" PluginID="131" PluginType="3">
+											<ObjectRef Name="Fast_LF_Tremolo" ID="{3B09A271-D9D4-4A4E-B545-F681E8313E5F}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
@@ -2834,7 +2881,7 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<Sound Name="highlightmenu" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" ShortID="231378126">
+								<Sound Name="Menu_Highlight" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" ShortID="231378126">
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -2853,7 +2900,7 @@
 										<ActiveSource Name="highlightmenu" ID="{7940B3B7-3400-411F-92F9-1FC99A23D175}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="pausemenu" ID="{D3C84B4A-00AA-491D-B18E-DA03851C01E4}" ShortID="617984257">
+								<Sound Name="Menu_Pause" ID="{D3C84B4A-00AA-491D-B18E-DA03851C01E4}" ShortID="617984257">
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -2872,7 +2919,7 @@
 										<ActiveSource Name="pausemenu" ID="{87DD5E83-1B44-4E3A-AD1E-BAB13C81063D}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="selectmenu" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" ShortID="82047918">
+								<Sound Name="Menu_Select" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" ShortID="82047918">
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -2893,6 +2940,73 @@
 								</Sound>
 							</ChildrenList>
 						</ActorMixer>
+					</ChildrenList>
+				</ActorMixer>
+				<ActorMixer Name="Breakable" ID="{77F8E950-653B-49F7-9646-79F5DC7CFA79}" ShortID="176860101">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<SwitchContainer Name="Break" ID="{FFFC48C9-0736-4C7C-B367-876F0E080EEA}" ShortID="418560099">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<RandomSequenceContainer Name="Break_Wood" ID="{3B0287CC-E3A6-4C3E-8108-EC72CFEEE2FD}" ShortID="807759493">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="Break_Glass" ID="{7ED7A410-D8C9-4FE3-A8D1-D83F6C4E7FF6}" ShortID="562760874">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="Break_Stone" ID="{ED66C4A6-A9C1-4F02-B13C-485020667B72}" ShortID="860339386">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+								</RandomSequenceContainer>
+							</ChildrenList>
+							<GroupingInfo>
+								<GroupingBehaviorList>
+									<GroupingBehavior>
+										<ItemRef Name="Break_Glass" ID="{7ED7A410-D8C9-4FE3-A8D1-D83F6C4E7FF6}"/>
+									</GroupingBehavior>
+									<GroupingBehavior>
+										<ItemRef Name="Break_Stone" ID="{ED66C4A6-A9C1-4F02-B13C-485020667B72}"/>
+									</GroupingBehavior>
+									<GroupingBehavior>
+										<ItemRef Name="Break_Wood" ID="{3B0287CC-E3A6-4C3E-8108-EC72CFEEE2FD}"/>
+									</GroupingBehavior>
+								</GroupingBehaviorList>
+							</GroupingInfo>
+						</SwitchContainer>
 					</ChildrenList>
 				</ActorMixer>
 			</ChildrenList>

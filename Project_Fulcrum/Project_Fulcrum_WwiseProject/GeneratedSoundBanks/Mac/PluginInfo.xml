@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PluginInfo Project="Project_Fulcrum_WwiseProject" Platform="Mac" BasePlatform="Mac">
 	<Plugins>
+		<Plugin Name="Wwise Guitar Distortion" ID="8257539" DLL="AkGuitarDistortion"/>
+		<Plugin Name="Wwise Tremolo" ID="8585219" DLL="AkTremolo"/>
 		<Plugin Name="System" ID="11403271" DLL="DefaultSink"/>
 		<Plugin Name="No Output" ID="11862023" DLL="DefaultSink"/>
 	</Plugins>

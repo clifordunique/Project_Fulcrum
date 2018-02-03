@@ -100,8 +100,8 @@
 					<ChildrenList>
 						<Effect Name="Light_Expander" ID="{C7E71A3B-745F-47B0-8F31-276DD413F83C}" PluginName="Wwise Expander" CompanyID="0" PluginID="109" PluginType="3">
 							<PropertyList>
-								<Property Name="Ratio" Type="Real32" Value="1.5"/>
-								<Property Name="Threshold" Type="Real32" Value="0"/>
+								<Property Name="OutputGain" Type="Real32" Value="-0.3"/>
+								<Property Name="Ratio" Type="Real32" Value="1"/>
 							</PropertyList>
 						</Effect>
 						<Effect Name="Noise_Gate_Fast_Attack" ID="{747A6B61-E953-474C-8227-672C884DA616}" PluginName="Wwise Expander" CompanyID="0" PluginID="109" PluginType="3">
@@ -1924,12 +1924,40 @@
 						</Effect>
 						<Effect Name="Fast_LF_Tremolo" ID="{3B09A271-D9D4-4A4E-B545-F681E8313E5F}" PluginName="Wwise Tremolo" CompanyID="0" PluginID="131" PluginType="3">
 							<PropertyList>
-								<Property Name="ModFrequency" Type="Real32" Value="19.84"/>
+								<Property Name="ModDepth" Type="Real32" Value="50"/>
+								<Property Name="ModFrequency" Type="Real32" Value="17">
+									<RTPCList>
+										<RTPC Name="" ID="{2E7EEC9F-9D6C-4CEE-809B-FB0673552729}" ShortID="19666748">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="EnergyLevel" ID="{6944CE28-B7E0-4A2B-825F-58FCA7817D03}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{E0BCEF71-A317-4964-8B62-5FFC955A0286}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="5"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>10</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>15</XPos>
+														<YPos>30</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
+								</Property>
 								<Property Name="ModPWM" Type="Real32" Value="4"/>
+								<Property Name="ModPhaseMode" Type="int32" Value="2"/>
 								<Property Name="ModPhaseOffset" Type="Real32" Value="87"/>
 								<Property Name="ModPhaseSpread" Type="Real32" Value="121"/>
-								<Property Name="ModSmoothing" Type="Real32" Value="100"/>
-								<Property Name="ModWaveform" Type="int32" Value="3"/>
+								<Property Name="ModSmoothing" Type="Real32" Value="82"/>
 							</PropertyList>
 						</Effect>
 						<Effect Name="Fast_LF_Tremolo_No_Smoothing" ID="{D972718E-231C-4DBF-9288-FCAF4BF47B50}" PluginName="Wwise Tremolo" CompanyID="0" PluginID="131" PluginType="3">

@@ -6,7 +6,7 @@
 				<GameParameter Name="EnergyLevel" ID="{6944CE28-B7E0-4A2B-825F-58FCA7817D03}">
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="20"/>
+						<Property Name="Max" Type="Real64" Value="15"/>
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}">
@@ -14,6 +14,7 @@
 						<Property Name="InitialValue" Type="Real64" Value="0"/>
 						<Property Name="Max" Type="Real64" Value="4000"/>
 						<Property Name="RTPCRamping" Type="int16" Value="1"/>
+						<Property Name="SlewRateDown" Type="Real64" Value="200"/>
 						<Property Name="SlewRateUp" Type="Real64" Value="1000"/>
 					</PropertyList>
 				</GameParameter>
@@ -32,6 +33,27 @@
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
 						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="GForce_Instant" ID="{EC1DA244-2562-4B43-8A33-5CE5DEAE129B}">
+					<Comment>GForce incurred at exactly this game frame, typically from an impact.</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="GForce_Continuous" ID="{A49F4644-DFA2-4EF2-B49A-08C531692F45}">
+					<Comment>Continuous GForce incurred over the last second or so. Most useful when hitting a ramp or other slow direction changing force that doesn't apply GForce all at once.
+</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Velocity_Y" ID="{877783ED-4C05-426B-83AE-DE3AEDA1F87D}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="3000"/>
 					</PropertyList>
 				</GameParameter>
 			</ChildrenList>
