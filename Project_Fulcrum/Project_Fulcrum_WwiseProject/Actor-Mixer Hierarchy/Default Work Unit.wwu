@@ -143,11 +143,7 @@
 						</ActorMixer>
 						<RandomSequenceContainer Name="Crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" ShortID="32916087">
 							<PropertyList>
-								<Property Name="Highpass" Type="int16">
-									<ValueList>
-										<Value>15</Value>
-									</ValueList>
-								</Property>
+								<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 								<Property Name="Pitch" Type="int32">
 									<ModifierList>
 										<ModifierInfo>
@@ -161,9 +157,10 @@
 										</ModifierInfo>
 									</ModifierList>
 								</Property>
+								<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>-14</Value>
+										<Value>-8</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
