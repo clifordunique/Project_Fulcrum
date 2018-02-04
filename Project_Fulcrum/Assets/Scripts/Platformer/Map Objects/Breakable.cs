@@ -79,6 +79,7 @@ public class Breakable : NetworkBehaviour {
 		this.transform.GetComponent<Rigidbody2D>().AddForce(hitForce, ForceMode2D.Impulse);
 		//print("Hit with speed:"+hitForce);
 		breakNoiseEmitter.Play();
+		AkSoundEngine.PostEvent("Breakable_Break", gameObject);
 		this.gameObject.layer = 2;
 		broken = true;
 	}

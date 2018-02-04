@@ -47,9 +47,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
-     <Compile Include="Assets\Editor\GrassColourerInterface.cs" />
-     <Compile Include="Assets\Editor\PFBuildHandler.cs" />
-     <Compile Include="Assets\Editor\ParallaxOptionEditor.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\CutoutMeshHandler.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\GrassColourerInterface.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\ParallaxOptionEditor.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\TEST_PFBuildHandler.cs" />
      <Compile Include="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" />
      <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />
      <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAssetPostProcessor.cs" />
@@ -188,6 +189,7 @@
      <None Include="Assets\Text\TEST1.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
+     <None Include="Assets\Images\Shaders\CutoutShader2D.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\DLAA.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
