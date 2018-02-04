@@ -45,6 +45,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	31642490	wood4	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood4		91048
 	42607697	crater01	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\crater01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Crater\crater01		441772
 	60099494	wood3	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood3		133940
+	72036157	jump04	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\jump04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\jump04		87560
 	78951858	slam01	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\slam01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam01		129972
 	81321767	dirt3	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\dirt3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Dirt\dirt3		91048
 	87920875	concreteslide02	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concreteslide02_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Sliding\concreteslide02		338616
@@ -114,4 +115,5 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	1055253707	fist_impact03	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\fist_impact03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact03		24526
 	1057404706	sand1	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\sand1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand1		86592
 	1058103826	wood1	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood1		118524
+	1073627297	jump05	C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\jump05_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\jump05		64040
 

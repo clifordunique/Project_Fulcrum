@@ -55,6 +55,10 @@
 					<ShortName>wood3.wav</ShortName>
 					<Path>SFX\wood3_1C9C67B2.wem</Path>
 				</File>
+				<File Id="72036157" Language="SFX">
+					<ShortName>jump04.wav</ShortName>
+					<Path>SFX\jump04_1C9C67B2.wem</Path>
+				</File>
 				<File Id="78951858" Language="SFX">
 					<ShortName>slam01.wav</ShortName>
 					<Path>SFX\slam01_1C9C67B2.wem</Path>
@@ -330,6 +334,10 @@
 				<File Id="1058103826" Language="SFX">
 					<ShortName>wood1.wav</ShortName>
 					<Path>SFX\wood1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1073627297" Language="SFX">
+					<ShortName>jump05.wav</ShortName>
+					<Path>SFX\jump05_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
