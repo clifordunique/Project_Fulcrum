@@ -68,6 +68,7 @@
 						<Switch Name="Water" ID="{B5E7F4AB-8E86-465A-9A74-1B4C1540B1D0}"/>
 						<Switch Name="Tile" ID="{6C0F42E8-4A3C-476A-A0A0-E1D98310D8BA}"/>
 						<Switch Name="Wood" ID="{51737B43-FDC5-4070-BF55-4521677F3A87}"/>
+						<Switch Name="Glass" ID="{C833884D-F1C3-4AD7-9C30-E2A5E199AF90}"/>
 					</ChildrenList>
 				</SwitchGroup>
 			</ChildrenList>
