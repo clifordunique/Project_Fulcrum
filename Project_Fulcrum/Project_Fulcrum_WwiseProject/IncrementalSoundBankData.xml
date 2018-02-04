@@ -4,14 +4,14 @@
 		<Banks>
 			<Language ID="393239870">
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="1854929333" Timestamp="1517684344"/>
+				<File Name="FighterChar" Hash="2979992840" Timestamp="1517706398"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
-				<File Name="Init" Hash="3019862371" Timestamp="1517684399"/>
+				<File Name="Init" Hash="1944598190" Timestamp="1517704580"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="3569251011" Timestamp="1517684399"/>
+				<File Name="" Hash="1347019239" Timestamp="1517706398"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
