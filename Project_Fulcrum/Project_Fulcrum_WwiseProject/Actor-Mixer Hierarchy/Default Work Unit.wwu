@@ -3169,6 +3169,28 @@
 									</ChildrenList>
 								</RandomSequenceContainer>
 								<RandomSequenceContainer Name="Break_Concrete" ID="{ED66C4A6-A9C1-4F02-B13C-485020667B72}" ShortID="860339386">
+									<PropertyList>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>25</Value>
+											</ValueList>
+										</Property>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{EF22BA9C-2B87-47B9-8C1E-8A5BBB6E58CB}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="200"/>
+															<Property Name="Min" Type="Real64" Value="-200"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3236,6 +3258,12 @@
 										<SwitchRef Name="Concrete" ID="{5F54F82B-64C0-4219-BC97-88C7A5595553}"/>
 										<ItemList>
 											<ItemRef Name="Break_Concrete" ID="{ED66C4A6-A9C1-4F02-B13C-485020667B72}"/>
+										</ItemList>
+									</Grouping>
+									<Grouping>
+										<SwitchRef Name="Wood" ID="{51737B43-FDC5-4070-BF55-4521677F3A87}"/>
+										<ItemList>
+											<ItemRef Name="Break_Wood" ID="{3B0287CC-E3A6-4C3E-8108-EC72CFEEE2FD}"/>
 										</ItemList>
 									</Grouping>
 									<Grouping>
