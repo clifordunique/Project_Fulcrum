@@ -192,10 +192,6 @@
 					<ShortName>concrete2.wav</ShortName>
 					<Path>SFX\concrete2_1C9C67B2.wem</Path>
 				</File>
-				<File Id="452241784" Language="SFX">
-					<ShortName>RuinsOfMarsa.wav</ShortName>
-					<Path>SFX\RuinsOfMarsa_1C9C67B2.wem</Path>
-				</File>
 				<File Id="475327629" Language="SFX">
 					<ShortName>fist_swing01.wav</ShortName>
 					<Path>SFX\fist_swing01_1C9C67B2.wem</Path>
@@ -351,6 +347,10 @@
 				<File Id="1047274906" Language="SFX">
 					<ShortName>grass04.wav</ShortName>
 					<Path>SFX\grass04_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1050534839" Language="SFX">
+					<ShortName>Music\DeusExodus.wav</ShortName>
+					<Path>SFX\Music\DeusExodus_1C9C67B2.wem</Path>
 				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>

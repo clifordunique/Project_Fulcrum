@@ -3378,6 +3378,32 @@
 								<ActiveSource Name="RuinsOfMarsa" ID="{9A7CC742-067E-4F74-9A14-0D876556E949}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<Sound Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" ShortID="758368311">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-6</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="DeusExodus" ID="{3266CC3A-F45C-4005-8AD7-13D5D0A76E5F}" ShortID="1050534839">
+									<Language>SFX</Language>
+									<AudioFile>Music\DeusExodus.wav</AudioFile>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="DeusExodus" ID="{3266CC3A-F45C-4005-8AD7-13D5D0A76E5F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
 				</ActorMixer>
 				<ActorMixer Name="Ui" ID="{6850FAA4-990F-4771-A954-F93E49E21BC9}" ShortID="298523858">

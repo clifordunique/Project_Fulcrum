@@ -14,10 +14,6 @@ public class IndoorFader : MonoBehaviour {
 	void Start () 
 	{
 		sprites = this.GetComponentsInChildren<SpriteRenderer>();
-		if(invertOpacity)
-		{
-			isPlayerIndoors = true;
-		}
 	}
 	
 	// Update is called once per frame

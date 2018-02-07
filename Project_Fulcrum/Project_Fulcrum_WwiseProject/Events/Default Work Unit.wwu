@@ -134,7 +134,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="RuinsOfMarsa" ID="{E995EEE9-F48A-4AC1-B2C4-2B3EABC1930E}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

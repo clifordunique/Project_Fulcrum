@@ -80,7 +80,6 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	396329686	sand4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand4		92992
 	396858650	slam03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam03		133552
 	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Concrete\concrete2		79040
-	452241784	RuinsOfMarsa	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\RuinsOfMarsa_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music\RuinsOfMarsa		7125928
 	475327629	fist_swing01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\swing\fist_swing01		29406
 	480740440	Windloop1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Windloop1_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Wind\Windloop1		5268300
 	482966669	mud02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud02		103552
@@ -120,6 +119,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	1041206388	StrandJump	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\StrandJump_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Abilities\StrandJump		93776
 	1047189338	fist_impact02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact02		24526
 	1047274906	grass04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Grass\grass04		23586
+	1050534839	DeusExodus	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Music\DeusExodus_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music\DeusExodus		25754464
 	1055253707	fist_impact03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact03		24526
 	1057404706	sand1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand1		86592
 	1058103826	wood1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood1		118524
