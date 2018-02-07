@@ -15,9 +15,19 @@
 						<ObjectRef Name="Jump" ID="{947D9AA3-E8AD-4BA7-81AE-3A3B3FBAB9FA}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Footstep" ID="{D886AC26-622F-4C26-BB8B-CBE28C6D6151}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Landing" ID="{18B75C48-022E-4D63-A6ED-6C8A16FECB2B}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Breakable_Break" ID="{E7CCDD92-658F-4D7E-B15D-CE20BA0918A5}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="WindLoopStart" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PlayMusic" ID="{6E59EE28-79D6-4E5A-91BE-0963CBD13CFE}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SlideLoopStart" ID="{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="UI" ID="{543A62B3-4C78-4C04-9DF7-548AAA9B35F6}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Menu_Highlight" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Menu_Pause" ID="{D3C84B4A-00AA-491D-B18E-DA03851C01E4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Menu_Select" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

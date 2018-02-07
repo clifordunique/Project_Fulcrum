@@ -50,6 +50,10 @@ public class StartOptions : NetworkBehaviour {
 	public void OnMatchList(bool b, string s, List<MatchInfoSnapshot> matchBook)
 	{
 		print(matchBook.Count);
+		foreach(Transform oldMatchButton in o_MatchSelectScrollbar.transform)
+		{
+			GameObject.Destroy(oldMatchButton.gameObject);
+		}
 		foreach(MatchInfoSnapshot match in matchBook)
 		{
 			print(match.name+"-("+match.currentSize+"/"+match.maxSize+")");
@@ -105,7 +109,7 @@ public class StartOptions : NetworkBehaviour {
 	public void SingleplayerButtonClicked()
 	{
 		playMusic.FadeDown(fadeColorAnimationClip.length);
-		ChangeSceneMultiplayer();
+		ChangeSceneMultiplayer(true);
 		inMainMenu = false;
 		showPanels.HideMenu();
 	}
@@ -117,12 +121,9 @@ public class StartOptions : NetworkBehaviour {
 
 	public void LobbyIDSubmitted()
 	{
-		if(Input.GetKeyDown(KeyCode.Return))
-		{
-			ChangeSceneMultiplayer();
-			inMainMenu = false;
-			showPanels.HideMenu();
-		}
+		ChangeSceneMultiplayer(false);
+		inMainMenu = false;
+		showPanels.HideMenu();
 	}
 
 	public void MultiplayerButtonClicked()
@@ -135,12 +136,13 @@ public class StartOptions : NetworkBehaviour {
 		SceneManager.LoadScene("Scenes/MultiplayerTest");
 	}
 
-	public void ChangeSceneMultiplayer()
+	public void ChangeSceneMultiplayer(bool randomName)
 	{
 		string matchName;
-		if(inputField.text == null)
+		if(inputField.text == null||randomName)
 		{
-			matchName = "Default";
+			int random = (int)Random.Range(0, 20);
+			matchName = "Default#"+random.ToString();
 		}
 		else
 		{

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 [DisallowMultipleComponent]
+[ExecuteInEditMode]
 public class Cutout2D : MonoBehaviour {
 
 	[SerializeField] public Color color = Color.gray;

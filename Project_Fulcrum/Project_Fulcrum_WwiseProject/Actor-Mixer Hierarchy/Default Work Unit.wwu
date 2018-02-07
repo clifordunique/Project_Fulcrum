@@ -2959,11 +2959,6 @@
 						</SwitchContainer>
 						<SwitchContainer Name="Jump" ID="{208E5057-E6F2-475F-8C42-A1C0FBA378A3}" ShortID="58939134">
 							<PropertyList>
-								<Property Name="Inclusion" Type="bool">
-									<ValueList>
-										<Value>False</Value>
-									</ValueList>
-								</Property>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
 										<Value>-10</Value>
@@ -3406,6 +3401,13 @@
 							</ReferenceList>
 							<ChildrenList>
 								<Sound Name="Menu_Highlight" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" ShortID="231378126">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-6</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>

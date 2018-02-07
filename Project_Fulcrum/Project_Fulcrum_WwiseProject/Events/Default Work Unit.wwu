@@ -222,6 +222,48 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Menu_Highlight" ID="{A15710F9-1803-4E74-A943-722DC89774CD}">
+					<ChildrenList>
+						<Action Name="" ID="{A281E820-A107-4A90-B674-7A75ACA0D6DC}" ShortID="879850988">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Menu_Highlight" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Menu_Pause" ID="{E3E0AB6D-D01C-4FCA-B330-871F18A3173B}">
+					<ChildrenList>
+						<Action Name="" ID="{A3C0179B-7BC8-4944-9B87-773B84BA149D}" ShortID="616266340">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Menu_Pause" ID="{D3C84B4A-00AA-491D-B18E-DA03851C01E4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Menu_Select" ID="{E27EE8C8-A4F5-4212-9F4A-DFA7B1EDFC6A}">
+					<ChildrenList>
+						<Action Name="" ID="{2EDC2F61-8C1A-46D5-A1D3-7D62C9594E8B}" ShortID="310911161">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Menu_Select" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

@@ -13,6 +13,7 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID BREAKABLE_BREAK = 4052040634U;
         static const AkUniqueID ENERGYCHARGE = 2390935913U;
         static const AkUniqueID ENERGYPULSE = 1403055964U;
         static const AkUniqueID FOOTSTEP = 1866025847U;
@@ -20,6 +21,9 @@ namespace AK
         static const AkUniqueID IMPACT_SLAM = 3485259485U;
         static const AkUniqueID JUMP = 3833651337U;
         static const AkUniqueID LANDING = 2548270042U;
+        static const AkUniqueID MENU_HIGHLIGHT = 29030485U;
+        static const AkUniqueID MENU_PAUSE = 2170009975U;
+        static const AkUniqueID MENU_SELECT = 4203375351U;
         static const AkUniqueID PLAYMUSIC = 417627684U;
         static const AkUniqueID PUNCHHIT = 3343194546U;
         static const AkUniqueID PUNCHSWING = 2180951687U;
@@ -78,6 +82,7 @@ namespace AK
             {
                 static const AkUniqueID CONCRETE = 841620460U;
                 static const AkUniqueID DIRT = 2195636714U;
+                static const AkUniqueID GLASS = 2449969375U;
                 static const AkUniqueID GRASS = 4248645337U;
                 static const AkUniqueID GRAVEL = 2185786256U;
                 static const AkUniqueID METAL = 2473969246U;
@@ -116,6 +121,7 @@ namespace AK
     {
         static const AkUniqueID INIT = 1355168291U;
         static const AkUniqueID FIGHTERCHAR = 725599200U;
+        static const AkUniqueID UI = 1551306167U;
     } // namespace BANKS
 
     namespace BUSSES

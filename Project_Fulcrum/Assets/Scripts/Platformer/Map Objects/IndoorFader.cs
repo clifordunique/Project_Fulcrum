@@ -5,6 +5,7 @@ using UnityEngine;
 public class IndoorFader : MonoBehaviour {
 	SpriteRenderer[] sprites;
 	private bool isPlayerIndoors = false;
+	[SerializeField]private bool invertOpacity = false; // When true, this object becomes visible when the player enters it, rather than becoming invisible
 	private float transitionTime = 0;
 	private float MaxDuration = 2;
 	private float opacity = 1;
@@ -13,12 +14,15 @@ public class IndoorFader : MonoBehaviour {
 	void Start () 
 	{
 		sprites = this.GetComponentsInChildren<SpriteRenderer>();
+		if(invertOpacity)
+		{
+			isPlayerIndoors = true;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-
 		if(transitionTime >0)
 		{
 			transitionTime -= Time.deltaTime;
@@ -57,6 +61,10 @@ public class IndoorFader : MonoBehaviour {
 			Debug.Log("Player went indoors.");
 			isPlayerIndoors = true;
 			transitionTime = 0.5f;
+			if(invertOpacity)
+			{
+				isPlayerIndoors = !isPlayerIndoors;
+			}
 		}
 	}
 
@@ -69,6 +77,10 @@ public class IndoorFader : MonoBehaviour {
 			Debug.Log("Player went outdoors.");
 			isPlayerIndoors = false;
 			transitionTime = 0.5f;
+			if(invertOpacity)
+			{
+				isPlayerIndoors = !isPlayerIndoors;
+			}
 		}
 	}
 }

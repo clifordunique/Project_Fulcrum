@@ -68,6 +68,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\MenuAudio.cs" />
      <Compile Include="Assets\Scripts\Cutout2D.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FulcrumNetworkManager.cs" />

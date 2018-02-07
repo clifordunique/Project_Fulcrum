@@ -12,6 +12,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	3343194546	PunchHit			\Default Work Unit\PunchHit	
 	3485259485	Impact_Slam			\Default Work Unit\Impact_Slam	Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase. 
 	3833651337	Jump			\Default Work Unit\Jump	Just using the punch sound as a placeholder. 
+	4052040634	Breakable_Break			\Default Work Unit\Breakable_Break	
 
 Switch Group	ID	Name			Wwise Object Path	Notes
 	25772016	TerrainType			\FighterChar\TerrainType	Renamed from footsteps to TerrainType, cause it might be applicable to sliding and other sounds.
@@ -23,6 +24,7 @@ Switch	ID	Name	Switch Group			Notes
 	2058049674	Wood	TerrainType			
 	2185786256	Gravel	TerrainType			
 	2195636714	Dirt	TerrainType			
+	2449969375	Glass	TerrainType			
 	2473969246	Metal	TerrainType			
 	2637588553	Tile	TerrainType			
 	2654748154	Water	TerrainType			
@@ -38,10 +40,14 @@ Effect plug-ins	ID	Name	Type				Notes
 	3354577677	Fast_LF_Tremolo	Wwise Tremolo			
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	1218733	water01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Water\water01		129792
+	3688924	water03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Water\water03		102156
+	19531390	concrete_break01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_break01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Breakable\Break\Break_Concrete\concrete_break01		385164
+	29079363	water04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Water\water04		165880
 	31642490	wood4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood4		91048
 	42607697	crater01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\crater01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Crater\crater01		441772
 	60099494	wood3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood3		133940
-	78779771	slosh3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slosh3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Slosh\slosh3		129596
+	72036157	jump04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\generic\jump04		87560
 	78951858	slam01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam01		129972
 	81321767	dirt3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\dirt3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Dirt\dirt3		91048
 	87920875	concreteslide02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide02_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Sliding\concreteslide02		338616
@@ -49,54 +55,66 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	110099929	fist_impact01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact01		24526
 	137911468	metal2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\metal2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Metal\metal2		87372
 	142103737	gravel1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\gravel1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Gravel\gravel1		52416
-	170303264	softland03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Landing\softland03		34874
+	145235255	glass_break02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\glass_break02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Breakable\Break\Break_Glass\glass_break02		249452
+	148141930	grass_land01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass_land01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\grass\grass_land01		74912
 	172000020	concreteslide01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concreteslide01_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Sliding\concreteslide01		390720
 	189837631	dirt4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\dirt4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Dirt\dirt4		97284
+	200616888	mud01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud01		89584
 	215579800	fist_impact04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact04		24526
 	220609359	ZonPulse	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ZonPulse_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Abilities\ZonPulse		105066
 	223544122	crater02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\crater02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Crater\crater02		517536
 	233717914	sand2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand2		101184
+	237994977	jump_water03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump_water03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\water\jump_water03		122368
 	241591546	grass03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Grass\grass03		25746
-	278556067	mud1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud1		138652
+	263774897	concrete_land01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_land01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\concrete\concrete_land01		34874
+	274421274	water_land04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water_land04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\water\water_land04		128240
 	293432445	tile1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\tile1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Tile\tile1		61604
+	298075942	water_land01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water_land01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\water\water_land01		154324
+	304183638	concrete_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\concrete\concrete_land02		40520
 	312555540	concrete1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Concrete\concrete1		79936
+	312622319	jump_water02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump_water02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\water\jump_water02		150592
 	319543437	tile3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\tile3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Tile\tile3		44372
 	364092348	tile2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\tile2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Tile\tile2		68864
 	370305255	dirt1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\dirt1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Dirt\dirt1		99888
-	380716120	slosh2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slosh2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Slosh\slosh2		91456
+	393478770	mud03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud03		91324
 	396329686	sand4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand4		92992
 	396858650	slam03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam03		133552
-	397683266	slosh1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slosh1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Slosh\slosh1		112512
-	428146438	mud2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud2		115764
 	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Concrete\concrete2		79040
 	452241784	RuinsOfMarsa	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\RuinsOfMarsa_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Music\RuinsOfMarsa		7125928
-	462557226	softland04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Landing\softland04		40520
 	475327629	fist_swing01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\swing\fist_swing01		29406
 	480740440	Windloop1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Windloop1_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Wind\Windloop1		5268300
+	482966669	mud02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud02		103552
+	491008900	concrete_land03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_land03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\concrete\concrete_land03		34874
 	492965762	gravel3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\gravel3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Gravel\gravel3		101280
 	501415006	grass02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Grass\grass02		23498
+	520341629	water_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\water\water_land02		179384
 	568435598	wood2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood2		144596
 	578949725	C_Spooling5	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\C_Spooling5_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Abilities\C_Spooling5		70694
 	584392103	slam02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam02		133552
-	585252688	jump01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\jump01		43576
+	585252688	jump01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\generic\jump01		43576
+	588140118	water_land03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water_land03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\water\water_land03		145840
 	592407740	metal4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\metal4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Metal\metal4		111324
 	594003366	fist_swing03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\swing\fist_swing03		29406
 	596181694	grass01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Grass\grass01		20312
 	607872902	gravel4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\gravel4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Gravel\gravel4		85084
+	639158175	water02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\water02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Water\water02		94680
 	648441843	tile4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\tile4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Tile\tile4		47680
-	671620621	jump03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\jump03		90384
-	693323205	slosh4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slosh4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Slosh\slosh4		126452
+	671620621	jump03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\generic\jump03		90384
+	690463890	glass_break01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\glass_break01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Breakable\Break\Break_Glass\glass_break01		324408
+	720647445	jump_water04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump_water04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\water\jump_water04		117664
 	726817041	slam04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\slam04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Slam\slam04		129972
 	729360042	sand3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand3		78656
-	743948716	softland02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Landing\softland02		40520
-	755049182	softland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\softland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Landing\softland01		34874
-	775019293	mud3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud3		123348
+	764159760	jump_water01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump_water01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\water\jump_water01		126132
 	859141929	metal1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\metal1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Metal\metal1		73908
+	878371206	concrete_land04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_land04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\concrete\concrete_land04		40520
 	883356947	crater03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\crater03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Environment\Crater\crater03		529736
+	886636942	mud04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud04		123312
+	913278187	grass_land04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass_land04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\grass\grass_land04		71532
 	917801640	fist_swing02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_swing02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\swing\fist_swing02		29406
 	918777720	concrete4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Concrete\concrete4		97856
-	935333550	mud4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\mud4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Mud\mud4		96416
+	924096670	grass_land03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass_land03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\grass\grass_land03		77092
 	938966706	concrete3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Concrete\concrete3		52240
+	945796388	grass_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\grass_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\landing\grass\grass_land02		89804
 	995229020	metal3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\metal3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Metal\metal3		51504
 	1003144440	dirt2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\dirt2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Dirt\dirt2		64012
 	1041206388	StrandJump	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\StrandJump_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Abilities\StrandJump		93776
@@ -105,4 +123,6 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	1055253707	fist_impact03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\fist_impact03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Punch\impact\fist_impact03		24526
 	1057404706	sand1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\sand1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Sand\sand1		86592
 	1058103826	wood1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\wood1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Footsteps\Wood\wood1		118524
+	1071075805	concrete_break02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\concrete_break02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Breakable\Break\Break_Concrete\concrete_break02		340160
+	1073627297	jump05	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\jump05_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\FighterChar\Jump\generic\jump05		64040
 

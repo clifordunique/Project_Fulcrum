@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using AK.Wwise;
 
 public class Pause : MonoBehaviour {
 
@@ -25,12 +26,14 @@ public class Pause : MonoBehaviour {
 		{
 			//Call the DoPause function to pause the game
 			DoPause();
+			AkSoundEngine.PostEvent("Menu_Pause", gameObject);
 		} 
 		//If the button is pressed and the game is paused and not in main menu
 		else if (Input.GetButtonDown ("Cancel") && isPaused && !startScript.inMainMenu) 
 		{
 			//Call the UnPause function to unpause the game
 			UnPause ();
+			AkSoundEngine.PostEvent("Menu_Pause", gameObject);
 		}
 	
 	}
