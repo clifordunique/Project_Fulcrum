@@ -161,10 +161,6 @@ public class Player : FighterChar
 		}
 		FixedUpdateLogic();			// Deals with variables such as life and zon power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
-		if(isLocalPlayer)
-		{
-			FixedUpdatePlayerAnimation();
-		}
 		FixedUpdateWwiseAudio();
 
 
@@ -191,15 +187,9 @@ public class Player : FighterChar
 		//
 		if(!sceneIsReady){return;}
 		if(!isLocalPlayer){return;}
+
+		UpdatePlayerAnimation();
 		UpdateInput();
-		if(o_Speedometer != null)
-		{
-			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
-		}
-		if(o_ZonCounter!=null)
-		{
-			o_ZonCounter.text = ""+FighterState.ZonLevel;
-		}
 	}
 
 	protected override void LateUpdate()
@@ -337,6 +327,9 @@ public class Player : FighterChar
 		if(FighterState.DevKey2)
 		{
 			this.Respawn();
+			g_CurStun = 0;
+			g_Stunned = false;
+			g_Staggered = false;
 			FighterState.DevKey2 = false;
 		}
 
@@ -361,16 +354,17 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey5)
 		{
-			v_CameraMode++;
-			if(v_CameraMode>1)
+			v_DefaultCameraMode++;
+			if(v_DefaultCameraMode>1)
 			{
-				v_CameraMode = 0;
+				v_DefaultCameraMode = 0;
 			}
 			FighterState.DevKey5 = false;
 		}
 		if(FighterState.DevKey6)
 		{
-			g_CurStun = 4f;
+			g_CurStun = 2f;
+			g_Stunned = true;
 			FighterState.DevKey6 = false;
 		}
 		if(FighterState.DevKey7)
@@ -509,7 +503,7 @@ public class Player : FighterChar
 		}
 		else
 		{
-			v_CameraMode = 1;
+			v_CameraMode = v_DefaultCameraMode;
 		}
 			
 		//if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
@@ -914,9 +908,22 @@ public class Player : FighterChar
 
 	}
 
-	protected void FixedUpdatePlayerAnimation()
+	protected void UpdatePlayerAnimation() // UPA
 	{
+		float alpha = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
+		if(alpha>1){print("Alpha:"+alpha);}
+		this.transform.position = (Vector3)Vector2.Lerp(v_LastFramePosition, FighterState.FinalPos, alpha);
+
 		o_Healthbar.SetCurHealth(FighterState.CurHealth);
+
+		if(o_Speedometer != null)
+		{
+			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
+		}
+		if(o_ZonCounter!=null)
+		{
+			o_ZonCounter.text = ""+FighterState.ZonLevel;
+		}
 
 		switch(v_CameraMode)
 		{

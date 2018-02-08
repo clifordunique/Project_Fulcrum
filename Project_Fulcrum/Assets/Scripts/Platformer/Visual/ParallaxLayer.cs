@@ -11,7 +11,7 @@ public class ParallaxLayer : MonoBehaviour {
 	public float speedX;
 	public float speedY;
 	public float parallaxMovement; // full movement at 1, no movement at 0
-	public float distanceKM = -1;
+	[Range(0, 100)]public float distanceKM = -1;
 	public bool moveInOppositeDirection;
 
 	private Transform cameraTransform;
@@ -19,9 +19,14 @@ public class ParallaxLayer : MonoBehaviour {
 	private bool previousMoveParallax;
 	private ParallaxOption options;
 
+	GameObject gameCamera;
+	[SerializeField] private bool isNewStyle;
+	[SerializeField] private Vector3 worldSpaceCoords;
+	[SerializeField] private Vector3 cameraSpaceCoords;
+
 	void OnEnable() 
 	{
-		GameObject gameCamera = GameObject.Find("Main Camera");
+		gameCamera = GameObject.Find("Main Camera");
 		if(gameCamera == null)
 		{
 			print("CAMERA NOT HERE!");
@@ -37,7 +42,32 @@ public class ParallaxLayer : MonoBehaviour {
 
 	void Update () 
 	{
-		if(distanceKM > 0)
+		if(!isNewStyle)
+		{
+			OldStyleUpdate();
+		}
+		else
+		{
+			WorldSpaceUpdate();
+		}
+	}
+
+	void WorldSpaceUpdate()
+	{
+		float distanceFactor = Mathf.Pow((distanceKM/100f)-1, 2);
+		//this.transform.localScale = new Vector3((1.0f/(1.0f+(distanceKM/2f))),(1.0f/(1.0f+(distanceKM/2f))),1);
+		this.transform.localScale = new Vector3(distanceFactor/2,distanceFactor/2,distanceFactor/2);
+		//parallaxMovement = 1-Mathf.Pow((distanceKM/100f)-1, 2);// Mathf.Log10(distanceKM);
+		speedX = 1-distanceFactor;
+		speedY = 1-distanceFactor;
+		if(!Application.isPlaying && !options.moveParallax){return;}
+		cameraSpaceCoords = worldSpaceCoords+(gameCamera.transform.position*speedX);
+		transform.position = cameraSpaceCoords;
+	}
+
+	void OldStyleUpdate()
+	{
+		if(distanceKM > 0.005f)
 		{
 			this.transform.localScale = new Vector3((1.0f/(1.0f+distanceKM)),(1.0f/(1.0f+distanceKM)),1);
 			parallaxMovement = 1/distanceKM;

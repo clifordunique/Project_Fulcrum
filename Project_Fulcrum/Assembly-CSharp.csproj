@@ -69,10 +69,8 @@
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
      <Compile Include="Assets\MenuAudio.cs" />
-     <Compile Include="Assets\Scripts\Cutout2D.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FulcrumNetworkManager.cs" />
-     <Compile Include="Assets\Scripts\GrassColourer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
@@ -92,8 +90,10 @@
      <Compile Include="Assets\Scripts\Platformer\Character\StrandJumpEffect.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VelocityPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\ZonPulse.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Cutout2D.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\DeformMeshTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\TextureGenerator.cs" />
+     <Compile Include="Assets\Scripts\Platformer\GrassColourer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Breakable.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudLayer.cs" />
@@ -123,7 +123,6 @@
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SocialManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
-     <Compile Include="Assets\Scripts\testNetworkScript.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />

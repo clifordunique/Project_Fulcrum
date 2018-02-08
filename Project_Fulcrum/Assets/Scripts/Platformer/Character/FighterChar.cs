@@ -215,6 +215,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,3)] protected int v_FighterGlow;			 	// Amount of fighter "energy glow" effect.
 	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	 	// Amount of camera zoom.
 	[SerializeField][Range(0,1)] protected int v_CameraMode; 			 	// What camera control type is in use.
+	[SerializeField][Range(0,1)] protected int v_DefaultCameraMode; 		// What camera control type to default to in normal gameplay.
 	[SerializeField][Range(0,1)] protected float v_CameraXLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
 	[SerializeField][Range(0,1)] protected float v_CameraYLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
 	[SerializeField][Range(0,1)] protected float v_CameraXLeashLim; 	 	// MUST BE SET HIGHER THAN LEASHM. Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
@@ -224,6 +225,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
+	[SerializeField][ReadOnlyAttribute] protected Vector3 v_LastFramePosition; 	// Set to the position of the player in the last physics frame. Used for linear interpolation.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -432,7 +434,9 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdatePhysics() //FUP
 	{
 		this.transform.position = FighterState.FinalPos;
+		v_LastFramePosition = FighterState.FinalPos;
 		m_DistanceTravelled = Vector2.zero;
+
 		initialVel = FighterState.Vel;
 
 		if(m_Grounded)
@@ -585,11 +589,11 @@ public class FighterChar : NetworkBehaviour
 //
 //		DebugUCN();
 
-		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
-
 		UpdateContactNormals(true);
 
-		FighterState.FinalPos = this.transform.position;
+		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+
+		//this.GetComponent<Rigidbody2D>().velocity = (Vector3)FighterState.Vel;
 
 		if(FighterState.DevMode&&d_SendCollisionMessages)
 		{
