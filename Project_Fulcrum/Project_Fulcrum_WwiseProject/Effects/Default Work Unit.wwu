@@ -1,6 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}" SchemaVersion="85">
 	<Effects>
-		<WorkUnit Name="Default Work Unit" ID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}" PersistMode="Standalone">
+			<ChildrenList>
+				<Effect Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+					<PropertyList>
+						<Property Name="TimeStretch" Type="Real32">
+							<RTPCList>
+								<RTPC Name="" ID="{712B0782-9926-487B-BAE6-32BE31E65023}" ShortID="470080918">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="TimeDilation" ID="{1D516627-F215-4B69-8BD3-7A31D2408C52}" WorkUnitID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{C6B01C5C-05FB-4345-9FA6-13B647FA3905}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="1"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>300</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>100</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+					</PropertyList>
+				</Effect>
+				<Effect Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+					<PropertyList>
+						<Property Name="DelayTime" Type="Real32" Value="20"/>
+						<Property Name="FilterFrequency" Type="Real32" Value="500">
+							<RTPCList>
+								<RTPC Name="" ID="{AC61B39A-AA6C-446B-A910-51C78EB6F07E}" ShortID="329857977">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="TimeDilation" ID="{1D516627-F215-4B69-8BD3-7A31D2408C52}" WorkUnitID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{3C1D5ECB-81F8-40AE-A43D-437F6E8F1DEE}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="5"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>500</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>0.25</XPos>
+												<YPos>500</YPos>
+												<Flags>0</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>20000</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="FilterType" Type="int32" Value="4"/>
+						<Property Name="Pitch" Type="Real32">
+							<RTPCList>
+								<RTPC Name="" ID="{BC139062-9639-4808-BEA7-CFD6945F1B8F}" ShortID="631541347">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="TimeDilation" ID="{1D516627-F215-4B69-8BD3-7A31D2408C52}" WorkUnitID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{FD60E8E9-006E-47AD-849C-C03427650C4D}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="1"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>-3000</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>0</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+					</PropertyList>
+				</Effect>
+			</ChildrenList>
+		</WorkUnit>
 	</Effects>
 </WwiseDocument>

@@ -70,11 +70,11 @@
 				<Property Name="Mixing Desk\LastSession" Type="string" Value="{00000000-0000-0000-0000-000000000000}"/>
 				<Property Name="MonitoringManager\WatchMgr\WatchesVersion" Type="int32" Value="6"/>
 				<Property Name="MonitoringManager\WatchMgr\x64_GameSyncWatches" Type="string" Value="OiT0BIFI1kOCCJ7SpNgYZF0yJgJpibJHoF4BuAMlBIM="/>
-				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAJUCAAAAAAAAAAAAABIAUHJvdG9QbGF5ZXIoQ2xvbmUpAAIAAAAAAAAAAAAAsB1SS5UCAAAvZuBU/H8AAICjs16VAgAAuBjCVPx/AAACAAAAAAAAAIBJ+1OVAgAAgEn7U5UCAAAeIYRZ/H8AAAIAAAAAAAAAAgAAAAAAAACASftTlQIAAAAAAAAAAAAAEAAAAAAAAAABFHJW/H8AAA=="/>
+				<Property Name="MonitoringManager\WatchMgr\x64_Watches" Type="string" Value="AAAAAMUBAAAAAAAAAAAAABIAUHJvdG9QbGF5ZXIoQ2xvbmUpAAEAAAAAAAAAAAAAkGXUMsUBAAAvZnNW/H8AABjCz0bFAQAAuBhVVvx/AAACAAAAAAAAALAr8TvFAQAAsCvxO8UBAAAeIbVg/H8AAAIAAAAAAAAAAgAAAAAAAACwK/E7xQEAAAAAAAAAAAAAEAAAAAAAAAABFCdX/H8AAA=="/>
 				<Property Name="PluginUserAcknowledge\iZotope Hybrid Reverb" Type="bool" Value="True"/>
 				<Property Name="ProjectExplorer\FirstVisible_10_1" Type="string" Value="{4C96B38B-3DB4-40C7-91C9-665510E38993}"/>
 				<Property Name="ProjectExplorer\FirstVisible_11_1" Type="string" Value="{23EC2DE3-3ED8-4B82-AC99-92E25F2E4C6B}"/>
-				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{EEAA6FE6-F29A-4265-A36F-657B8448AB6B}"/>
+				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{DC3D48A9-7007-446D-8E3E-450C1C3D6407}"/>
 				<Property Name="ProjectExplorer\FirstVisible_3_1" Type="string" Value="{A69BF0FC-D84A-487C-ABDD-56F71CB2A126}"/>
 				<Property Name="ProjectExplorer\FirstVisible_4_1" Type="string" Value="{CB6175F1-6080-4A23-92EF-0807E304D0C1}"/>
 				<Property Name="ProjectExplorer\FirstVisible_6_1" Type="string" Value="{C98E673F-A24C-48A8-960F-10565FFE70A0}"/>
@@ -86,22 +86,23 @@
 				<Property Name="ProjectExplorer\x64_Expanded_14_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_15_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_16_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_17_1" Type="string" Value=""/>
+				<Property Name="ProjectExplorer\x64_Expanded_17_1" Type="string" Value="DIiy9uWF+kehJmRbXf2azMFQlAo3nJlMi48MQz738qA="/>
 				<Property Name="ProjectExplorer\x64_Expanded_18_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_19_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value="T1LHTYTQGU6yaQblMbjDjw=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_20_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_21_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="wmB+F+2Wh0Kwyxv9GrRpB2MAGF99t7VChgfnIcp6UoFXUI4g8uZfR4xCocD7o3ijpPpQaA+ZcUepVPk+SeIbyVDp+Hc7ZfdJlkZ59dx8+nl5OC64gw0yS7cTajyR0EQJ3Z/VxPG/Q0yodqscSsoPCslI/P82B3xMs2eHbw4IDuptSW/icLvKTab2RVHayO3ptJHObp+C4k2cJhCwjfQKZlKFUj4OJqZPp+qt/7XK1k2EI31SrJrJT53ZgJlSTN9u"/>
+				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="khtABQJKLkGuJSmUQCyFxMJgfhftlodCsMsb/Rq0aQdjABhffbe1QoYH5yHKelKBvcLmy2MOIEOB8shzWvZiZFdQjiDy5l9HjEKhwPujeKOk+lBoD5lxR6lU+T5J4hvJHo3+U2btE0iTweVa9qwjqRky10zE+i5JkwI1XgemAChrmR/9kQweS6rzfpzdagK8bUlv4nC7yk2m9kVR2sjt6bSRzm6fguJNnCYQsI30CmaEI31SrJrJT53ZgJlSTN9u"/>
 				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value="MicI7gRxM0SPSMh+cKCZsg=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_4_1" Type="string" Value="miiazfIYY0CTdJ2nlTxcDIgqK76CTvhAnd7+0Tlv2BQ="/>
 				<Property Name="ProjectExplorer\x64_Expanded_5_1" Type="string" Value="6Np3va//1E6vX/bTzNiGzQ=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_6_1" Type="string" Value="yj6iJCtjlkm5HuOmEy74XA=="/>
-				<Property Name="ProjectExplorer\x64_Expanded_7_1" Type="string" Value="ua4TUxuq/kKaZGNiMg8zAMXmmC/8sUxDoDEqf3L8/gN8RoM4hG5CT6qlgKPkrV1H"/>
-				<Property Name="ProjectExplorer\x64_Expanded_8_1" Type="string" Value=""/>
+				<Property Name="ProjectExplorer\x64_Expanded_7_1" Type="string" Value="xeaYL/yxTEOgMSp/cvz+AylVpsrDzL1Foh8QXGunOug="/>
+				<Property Name="ProjectExplorer\x64_Expanded_8_1" Type="string" Value="goI5K6KSBEi/9gDo7Ha4sQ=="/>
 				<Property Name="RTPC\GameParameterSimValue\{0226325D-8969-47B2-A05E-01B803250483}" Type="Real64" Value="4000"/>
 				<Property Name="RTPC\GameParameterSimValue\{04F4243A-4881-43D6-8208-9ED2A4D81864}" Type="Real64" Value="100"/>
 				<Property Name="RTPC\GameParameterSimValue\{15AFA33F-38EE-45C0-9A98-262F1E775245}" Type="Real64" Value="1"/>
+				<Property Name="RTPC\GameParameterSimValue\{1D516627-F215-4B69-8BD3-7A31D2408C52}" Type="Real64" Value="0.122194513715711"/>
 				<Property Name="RTPC\GameParameterSimValue\{1D6488BC-D60F-4F69-B0FB-E5C276DC2BAD}" Type="Real64" Value="1"/>
 				<Property Name="RTPC\GameParameterSimValue\{32BCC74F-01D3-4B90-BFE8-36B015C087B3}" Type="Real64" Value="0"/>
 				<Property Name="RTPC\GameParameterSimValue\{48EFA5AA-A361-48E5-921C-848C4B40B20B}" Type="Real64" Value="0"/>

@@ -128,6 +128,7 @@
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SocialManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
+     <Compile Include="Assets\TimeManager.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />

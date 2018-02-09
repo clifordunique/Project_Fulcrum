@@ -264,10 +264,6 @@
 					<ShortName>tile4.wav</ShortName>
 					<Path>SFX\tile4_1C9C67B2.wem</Path>
 				</File>
-				<File Id="671620621" Language="SFX">
-					<ShortName>jump03.wav</ShortName>
-					<Path>SFX\jump03_1C9C67B2.wem</Path>
-				</File>
 				<File Id="690463890" Language="SFX">
 					<ShortName>glass_break01.wav</ShortName>
 					<Path>SFX\glass_break01_1C9C67B2.wem</Path>

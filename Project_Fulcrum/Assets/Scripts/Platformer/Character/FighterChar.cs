@@ -225,7 +225,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
-	[SerializeField][ReadOnlyAttribute] protected Vector3 v_LastFramePosition; 	// Set to the position of the player in the last physics frame. Used for linear interpolation.
+	[SerializeField][ReadOnlyAttribute] protected float v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -434,7 +434,6 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdatePhysics() //FUP
 	{
 		this.transform.position = FighterState.FinalPos;
-		v_LastFramePosition = FighterState.FinalPos;
 		m_DistanceTravelled = Vector2.zero;
 
 		initialVel = FighterState.Vel;
@@ -514,6 +513,7 @@ public class FighterChar : NetworkBehaviour
 			float craterThreshold;
 			float slamThreshold;
 			float velPunchThreshold;
+
 			if(g_Stance == 2) // If guarding, more resistant to landing damage.
 			{
 				craterThreshold = m_GuardCraterT;
@@ -526,8 +526,10 @@ public class FighterChar : NetworkBehaviour
 				slamThreshold = m_SlamT;
 				velPunchThreshold = m_VelPunchT;
 			}
+
 			if(m_IGF >= craterThreshold)
 			{
+				//Time.timeScale = 0.25f;
 				float impactStrengthM = ((m_IGF-craterThreshold)/(1000f-craterThreshold));
 				if(impactStrengthM > 1){impactStrengthM = 1;}
 
@@ -727,8 +729,14 @@ public class FighterChar : NetworkBehaviour
 		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 		AkSoundEngine.SetRTPCValue("GForce_Continuous", m_CGF, this.gameObject);
 
+
 		//Bools
 		AkSoundEngine.SetRTPCValue("Sliding", Convert.ToSingle(isSliding()), this.gameObject);
+		AkSoundEngine.SetRTPCValue("Contact_Airborne", Convert.ToSingle(m_Airborne), this.gameObject);
+		AkSoundEngine.SetRTPCValue("Contact_Ceiling", Convert.ToSingle(m_Ceilinged), this.gameObject);
+		AkSoundEngine.SetRTPCValue("Contact_Ground", Convert.ToSingle(m_Grounded), this.gameObject);
+		AkSoundEngine.SetRTPCValue("Contact_Leftwall", Convert.ToSingle(m_LeftWalled), this.gameObject);
+		AkSoundEngine.SetRTPCValue("Contact_Rightwall", Convert.ToSingle(m_RightWalled), this.gameObject);
 
 		//Switches
 		if(g_IsInGrass>0)
@@ -866,6 +874,17 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetInteger("Stance", g_Stance);
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
+
+		if(v_PunchHitting>0)
+		{
+			o_Anim.SetBool("PunchHit", true);
+			v_PunchHitting -= Time.fixedUnscaledDeltaTime;
+		}
+		else
+		{
+			o_Anim.SetBool("PunchHit", false);
+			v_PunchHitting = 0;
+		}
 	
 
 		if(FighterState.Vel.magnitude >= m_TractionChangeT )
@@ -1090,7 +1109,7 @@ public class FighterChar : NetworkBehaviour
 				{
 					if(hit.collider.GetComponent<FighterChar>().isAlive())
 					{
-						FighterCollision(hit.collider.GetComponent<FighterChar>());
+						bool isFighterCol = FighterCollision(hit.collider.GetComponent<FighterChar>());
 					}
 				}
 			}
@@ -2156,7 +2175,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected bool FighterCollision(FighterChar fighterCollidedWith) //FC
 	{ // Handles collisions with another Fighter.
-		if(g_Stance == 0)
+		if(g_Stance == 0) // If neutral, check if other fighter is attacking.
 		{
 			if(fighterCollidedWith.g_Stance==0)
 			{
@@ -2261,8 +2280,10 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		//
-		// Special effects
+		// Visual/Audio effects
 		//
+		v_PunchHitting = 0.5f;
+		Time.timeScale = 0.1f;
 		if(combinedSpeed >= m_CraterT)
 		{
 			//opponent.Crater(combinedSpeed);
@@ -2282,6 +2303,9 @@ public class FighterChar : NetworkBehaviour
 		//
 		opponent.InstantForce(myVelocity, combinedSpeed*0.6f);
 		this.InstantForce(yourVelocity, combinedSpeed*0.2f);
+
+		this.FighterState.Vel.y += 20*impactDamageM;
+		opponent.FighterState.Vel.y += 20*impactDamageM;
 
 		print("Clashing strike!\nOpponent got knocked in direction "+yourVelocity+"\nI got knocked in direction "+myVelocity);
 		print("Opponent took "+myTotalDamageDealt+" damage");

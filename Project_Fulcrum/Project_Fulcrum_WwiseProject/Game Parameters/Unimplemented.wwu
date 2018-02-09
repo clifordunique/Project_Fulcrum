@@ -9,26 +9,6 @@
 						<Property Name="Max" Type="Real64" Value="1"/>
 					</PropertyList>
 				</GameParameter>
-				<GameParameter Name="Contact_Ceiling" ID="{8E0DC4DA-3C5C-48EC-9B2E-346A9C58617C}">
-					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
-					</PropertyList>
-				</GameParameter>
-				<GameParameter Name="Contact_Airborne" ID="{EABEB91B-A567-4123-877F-6ED3C6544C9F}">
-					<Comment>Equals 1 when the player is in the air, not touching any surfaces.
-</Comment>
-					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
-					</PropertyList>
-				</GameParameter>
-				<GameParameter Name="Contact_Leftwall" ID="{1D6488BC-D60F-4F69-B0FB-E5C276DC2BAD}">
-					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
-					</PropertyList>
-				</GameParameter>
 				<GameParameter Name="Alive" ID="{A3543FEB-A26A-491C-A913-797C733187D9}">
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
@@ -37,19 +17,6 @@
 				</GameParameter>
 				<GameParameter Name="Contact_SurfaceCling" ID="{15AFA33F-38EE-45C0-9A98-262F1E775245}">
 					<Comment>Default is 0. It equals 1 when the player hits a wall and has a very short grace period where they cling to the wall against the laws of physics, to give them a chance to walljump off of it before falling.</Comment>
-					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
-					</PropertyList>
-				</GameParameter>
-				<GameParameter Name="Contact_Ground" ID="{32BCC74F-01D3-4B90-BFE8-36B015C087B3}">
-					<Comment>0 is false, 1 is true</Comment>
-					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="0"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
-					</PropertyList>
-				</GameParameter>
-				<GameParameter Name="Contact_RightWall" ID="{88FD25A4-D9DB-4960-81E2-148CA64E8923}">
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
 						<Property Name="Max" Type="Real64" Value="1"/>

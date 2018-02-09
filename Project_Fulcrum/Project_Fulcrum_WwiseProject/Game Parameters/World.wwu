@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}" SchemaVersion="85" RootDocumentID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}">
+	<GameParameters>
+		<WorkUnit Name="World" ID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}" OwnerID="{2F98E6C5-B1FC-434C-A031-2A7F72FCFE03}" PersistMode="Nested">
+			<ChildrenList>
+				<GameParameter Name="TimeDilation" ID="{1D516627-F215-4B69-8BD3-7A31D2408C52}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>

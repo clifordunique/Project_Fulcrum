@@ -2,7 +2,9 @@
 <PluginInfo Project="Project_Fulcrum_WwiseProject" Platform="Windows" BasePlatform="Windows">
 	<Plugins>
 		<Plugin Name="Wwise Guitar Distortion" ID="8257539" DLL="AkGuitarDistortion"/>
+		<Plugin Name="Wwise Time Stretch" ID="8519683" DLL="AkTimeStretch"/>
 		<Plugin Name="Wwise Tremolo" ID="8585219" DLL="AkTremolo"/>
+		<Plugin Name="Wwise Pitch Shifter" ID="8912899" DLL="AkPitchShifter"/>
 		<Plugin Name="System" ID="11403271" DLL="DefaultSink"/>
 		<Plugin Name="No Output" ID="11862023" DLL="DefaultSink"/>
 	</Plugins>

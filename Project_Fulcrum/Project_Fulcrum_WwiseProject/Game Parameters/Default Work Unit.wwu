@@ -5,6 +5,7 @@
 			<ChildrenList>
 				<WorkUnit Name="FighterChar" ID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}" PersistMode="Reference"/>
 				<WorkUnit Name="Unimplemented" ID="{3883467C-6E84-4F42-AAA5-80A3E4AD5D47}" PersistMode="Reference"/>
+				<WorkUnit Name="World" ID="{CAA65529-CCC3-45BD-A21F-105C6BA73AE8}" PersistMode="Reference"/>
 			</ChildrenList>
 		</WorkUnit>
 	</GameParameters>

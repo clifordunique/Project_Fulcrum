@@ -40,6 +40,7 @@ public class Player : FighterChar
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
+	[SerializeField][ReadOnlyAttribute] private TimeManager o_TimeManager;      	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] private Reporter o_Reporter;      			// Reference to the console (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
@@ -120,6 +121,7 @@ public class Player : FighterChar
 		if(!isLocalPlayer||!isClient){return;}
 		print("Executing post-scenelaunch code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		v_DefaultCameraMode = 1;
 		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
 		o_MainCameraTransform.SetParent(this.transform);
@@ -351,7 +353,6 @@ public class Player : FighterChar
 
 		if(FighterState.DevKey4)
 		{
-			FighterState.CurHealth -= 10;
 			FighterState.ZonLevel = 8;
 			FighterState.DevKey4 = false;
 		}
@@ -366,12 +367,27 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey6)
 		{
+			FighterState.CurHealth -= 10;
 			g_CurStun = 2f;
 			g_Stunned = true;
 			FighterState.DevKey6 = false;
 		}
 		if(FighterState.DevKey7)
 		{
+			float timeSpeed = o_TimeManager.GetTimeDilationM();
+
+			if(timeSpeed<=0.1f)
+			{
+				o_TimeManager.TimeDilation(0.25f);
+			}
+			else if(timeSpeed<=0.25f)
+			{
+				o_TimeManager.TimeDilation(1);
+			}
+			else
+			{
+				o_TimeManager.TimeDilation(0.1f);
+			}
 			FighterState.DevKey7 = false;
 		}
 		if(FighterState.DevKey8)
@@ -530,10 +546,10 @@ public class Player : FighterChar
 		// Strand Jump key double-taps
 		//
 
-		if(FighterState.LeftKeyDoubleTapReady){FighterState.LeftKeyDoubleTapDelay += Time.deltaTime;} 	// If player pressed key, time how long since it was pressed.
-		if(FighterState.RightKeyDoubleTapReady){FighterState.RightKeyDoubleTapDelay += Time.deltaTime;} // If player pressed key, time how long since it was pressed.
-		if(FighterState.UpKeyDoubleTapReady){FighterState.UpKeyDoubleTapDelay += Time.deltaTime;} 		// If player pressed key, time how long since it was pressed.
-		if(FighterState.DownKeyDoubleTapReady){FighterState.DownKeyDoubleTapDelay += Time.deltaTime;}	// If player pressed key, time how long since it was pressed.
+		if(FighterState.LeftKeyDoubleTapReady){FighterState.LeftKeyDoubleTapDelay += Time.unscaledDeltaTime;} 	// If player pressed key, time how long since it was pressed.
+		if(FighterState.RightKeyDoubleTapReady){FighterState.RightKeyDoubleTapDelay += Time.unscaledDeltaTime;} // If player pressed key, time how long since it was pressed.
+		if(FighterState.UpKeyDoubleTapReady){FighterState.UpKeyDoubleTapDelay += Time.unscaledDeltaTime;} 		// If player pressed key, time how long since it was pressed.
+		if(FighterState.DownKeyDoubleTapReady){FighterState.DownKeyDoubleTapDelay += Time.unscaledDeltaTime;}	// If player pressed key, time how long since it was pressed.
 			
 		int strandJumpHorz = 0;
 		int strandJumpVert = 0;
@@ -917,10 +933,6 @@ public class Player : FighterChar
 
 	protected void UpdatePlayerAnimation() // UPA
 	{
-//		float alpha = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
-//		if(alpha>1){print("Alpha:"+alpha);}
-//		this.transform.position = (Vector3)Vector2.Lerp(v_LastFramePosition, FighterState.FinalPos, alpha);
-
 		switch(v_CameraMode)
 		{
 		case 0: 
@@ -960,7 +972,7 @@ public class Player : FighterChar
 	{
 		#region zoom
 		if(!o_MainCamera){return;}
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, 0.1f);
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
 		//v_CameraZoom = FighterState.Vel.magnitude;
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
@@ -989,7 +1001,7 @@ public class Player : FighterChar
 	protected void CameraControlTypeB() //CCTB
 	{
 		if(!o_MainCamera){return;}
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, 0.1f);
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
@@ -1050,7 +1062,7 @@ public class Player : FighterChar
 //
 		Vector3 camGoalLocation = new Vector3(camAverageX, camAverageY, -10f);
 
-		o_MainCameraTransform.localPosition = Vector3.Lerp(o_MainCameraTransform.localPosition, camGoalLocation, 0.1f); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
+		o_MainCameraTransform.localPosition = Vector3.Lerp(o_MainCameraTransform.localPosition, camGoalLocation, 10*Time.unscaledDeltaTime); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
 	
 		//
 		// The following block of code is for when the player hits the maximum bounds. The camera will instantly snap to the edge and won't go any further. Does not use lerp.

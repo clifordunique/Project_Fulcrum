@@ -112,6 +112,7 @@ namespace AK
         static const AkUniqueID KNEELING = 2487913616U;
         static const AkUniqueID SLIDING = 472853913U;
         static const AkUniqueID SPEED = 640949982U;
+        static const AkUniqueID TIMEDILATION = 2881936400U;
         static const AkUniqueID VELOCITY_X = 164475293U;
         static const AkUniqueID VELOCITY_Y = 164475292U;
         static const AkUniqueID WALLSLIDING = 2190485205U;
