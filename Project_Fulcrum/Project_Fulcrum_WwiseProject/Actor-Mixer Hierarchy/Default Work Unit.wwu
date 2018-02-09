@@ -3816,6 +3816,786 @@
 												</GroupingList>
 											</GroupingInfo>
 										</SwitchContainer>
+										<SwitchContainer Name="attack" ID="{865C1099-8BD2-4825-BBB5-22AD2B590AF5}" ShortID="502120170">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="male" ID="{C466E9DD-71E2-4EC3-A9F0-37A29C7884E8}" ShortID="261298032">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="female" ID="{DC0BD148-E21E-4583-A5C5-445F00FEC2E6}" ShortID="525012801">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_attack01" ID="{3E6DA0DA-8E2D-45D8-A36C-CCB49A8BD9C0}" ShortID="155024779">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_attack01" ID="{BAEAD5BE-DF64-4305-B85A-54A8FAFCE73E}" ShortID="960348555">
+																	<Language>SFX</Language>
+																	<AudioFile>female_attack01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_attack01" ID="{BAEAD5BE-DF64-4305-B85A-54A8FAFCE73E}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_attack02" ID="{CEDD3DB1-B104-417D-89B5-912153C81538}" ShortID="485817947">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_attack02" ID="{6C21558C-328F-413F-8C1C-9917E31387D8}" ShortID="659023129">
+																	<Language>SFX</Language>
+																	<AudioFile>female_attack02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_attack02" ID="{6C21558C-328F-413F-8C1C-9917E31387D8}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_attack03" ID="{957A9F16-04C4-41BF-877F-74D9AC0D2F7A}" ShortID="443254410">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_attack03" ID="{FD6B18E5-A0A4-4867-90F6-A500F6CEDFFF}" ShortID="552922879">
+																	<Language>SFX</Language>
+																	<AudioFile>female_attack03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_attack03" ID="{FD6B18E5-A0A4-4867-90F6-A500F6CEDFFF}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_attack04" ID="{442731F0-CBEA-4B6E-91CC-4257872CE0E8}" ShortID="876178899">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_attack04" ID="{6775F9F9-E95D-43CF-A8BA-4EF6423D0A6F}" ShortID="822964172">
+																	<Language>SFX</Language>
+																	<AudioFile>female_attack04.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_attack04" ID="{6775F9F9-E95D-43CF-A8BA-4EF6423D0A6F}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{DC0BD148-E21E-4583-A5C5-445F00FEC2E6}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{C466E9DD-71E2-4EC3-A9F0-37A29C7884E8}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{C466E9DD-71E2-4EC3-A9F0-37A29C7884E8}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{DC0BD148-E21E-4583-A5C5-445F00FEC2E6}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+										<SwitchContainer Name="death" ID="{8B9F6E84-A4EC-48AE-906F-BD4A1672FCE4}" ShortID="111046197">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="female" ID="{EAD1D3BE-1D23-47A7-819C-41D3CDE9ED89}" ShortID="785703367">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_death01" ID="{97CD944D-52E5-46EB-898E-F967D888154B}" ShortID="603980993">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_death01" ID="{79A7D7E1-5D17-417E-8F17-75A60E76D90F}" ShortID="1003687408">
+																	<Language>SFX</Language>
+																	<AudioFile>female_death01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_death01" ID="{79A7D7E1-5D17-417E-8F17-75A60E76D90F}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_death02" ID="{8019D044-B715-4F96-B6CF-44763DB15C13}" ShortID="129783741">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_death02" ID="{0CA900B7-2814-472C-A5D8-886395DFBEE4}" ShortID="932232218">
+																	<Language>SFX</Language>
+																	<AudioFile>female_death02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_death02" ID="{0CA900B7-2814-472C-A5D8-886395DFBEE4}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_death03" ID="{2CE8775C-18A3-47ED-9CBF-9D19BAF28679}" ShortID="764868319">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_death03" ID="{7A55DB1C-F09E-4D0F-8D2A-711C453137AA}" ShortID="515307306">
+																	<Language>SFX</Language>
+																	<AudioFile>female_death03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_death03" ID="{7A55DB1C-F09E-4D0F-8D2A-711C453137AA}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="male" ID="{43847A40-AEA0-48B4-9EE5-C7F982351D93}" ShortID="486358886">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{43847A40-AEA0-48B4-9EE5-C7F982351D93}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{EAD1D3BE-1D23-47A7-819C-41D3CDE9ED89}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{43847A40-AEA0-48B4-9EE5-C7F982351D93}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{EAD1D3BE-1D23-47A7-819C-41D3CDE9ED89}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+										<SwitchContainer Name="breath" ID="{AA79E678-1B81-40D8-943C-07CFF517B3FD}" ShortID="1136541">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="female" ID="{B36175AB-5AAE-46AF-BC12-894CC4C8A44D}" ShortID="741019277">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_breath01" ID="{299090B7-0E49-443B-9C26-5AE0B5063FF3}" ShortID="471556967">
+															<PropertyList>
+																<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_breath01" ID="{D4CF9683-1FED-472A-B12E-D000C4690C43}" ShortID="785410896">
+																	<Language>SFX</Language>
+																	<AudioFile>female_breath01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_breath01" ID="{D4CF9683-1FED-472A-B12E-D000C4690C43}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_breath02" ID="{EED37751-4F8D-4EE5-BEE8-DB46277FE768}" ShortID="240705123">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_breath02" ID="{6EBF2A1A-3AB6-4868-A286-BB943BD7BE61}" ShortID="111650265">
+																	<Language>SFX</Language>
+																	<AudioFile>female_breath02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_breath02" ID="{6EBF2A1A-3AB6-4868-A286-BB943BD7BE61}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="male" ID="{AAA2CB2C-46B8-4063-A802-44D66E584F29}" ShortID="73254990">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{AAA2CB2C-46B8-4063-A802-44D66E584F29}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{B36175AB-5AAE-46AF-BC12-894CC4C8A44D}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{AAA2CB2C-46B8-4063-A802-44D66E584F29}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{B36175AB-5AAE-46AF-BC12-894CC4C8A44D}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+										<SwitchContainer Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" ShortID="999918740">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="female" ID="{E68F8C40-B70E-4249-9461-3981BBA3A731}" ShortID="949783832">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+														<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_pain01" ID="{A6D124EC-9181-4392-AB17-A66B8A8E7B51}" ShortID="263328959">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain01" ID="{91122DF2-70A4-47E4-909B-524565F6B869}" ShortID="769383008">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain01" ID="{91122DF2-70A4-47E4-909B-524565F6B869}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pain02" ID="{95ADDE53-93B7-4421-BF18-C57E749BDC1C}" ShortID="21825336">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain02" ID="{74633D55-42B5-4075-9666-0332C37D82A6}" ShortID="806865958">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain02" ID="{74633D55-42B5-4075-9666-0332C37D82A6}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pain03" ID="{C7A91C20-F947-4CC5-B832-DDC632B0C1BB}" ShortID="44952611">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain03" ID="{D794720A-7251-4075-8B3E-F895A1C7D9B8}" ShortID="4644601">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain03" ID="{D794720A-7251-4075-8B3E-F895A1C7D9B8}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pain04" ID="{E60FD082-0CBC-43FD-824A-C3D8E94E7CE5}" ShortID="393602769">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain04" ID="{945969AB-52C6-4829-A430-519416DE49C3}" ShortID="860066375">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain04.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain04" ID="{945969AB-52C6-4829-A430-519416DE49C3}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pain05" ID="{7975CF04-EB86-48D6-982D-BDADAA67ED81}" ShortID="460169803">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain05" ID="{CF45B7B1-00E0-4DB7-866E-F8109C29648C}" ShortID="680911957">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain05.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain05" ID="{CF45B7B1-00E0-4DB7-866E-F8109C29648C}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pain06" ID="{3556C441-0910-45C6-B229-23663AA75AA5}" ShortID="386339910">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pain06" ID="{7BFD1348-655E-441F-A58D-86E5BC4BD361}" ShortID="865922351">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pain06.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pain06" ID="{7BFD1348-655E-441F-A58D-86E5BC4BD361}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="male" ID="{10BD31B5-0CBF-419D-861C-CBED71C783BC}" ShortID="790830376">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{E68F8C40-B70E-4249-9461-3981BBA3A731}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{10BD31B5-0CBF-419D-861C-CBED71C783BC}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{10BD31B5-0CBF-419D-861C-CBED71C783BC}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{E68F8C40-B70E-4249-9461-3981BBA3A731}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+										<SwitchContainer Name="pickup" ID="{FE457CFA-F6FA-4F9C-84E6-DBF1E87F39DB}" ShortID="914519187">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="female" ID="{7A09BC2B-A900-44E1-80C9-7ABF09C3D556}" ShortID="197199766">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_pickup01" ID="{B8FEC3D1-BD11-4F29-AAB3-E2626D2FC18D}" ShortID="253222250">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pickup01" ID="{EC9EA8C1-DC5B-45C7-9996-FC1C2C15ED3A}" ShortID="996535475">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pickup01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pickup01" ID="{EC9EA8C1-DC5B-45C7-9996-FC1C2C15ED3A}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pickup02" ID="{DCAEC9E0-837D-4F22-A6C6-90F1247F2190}" ShortID="425252135">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pickup02" ID="{EBA35E5C-F267-4660-BDE8-F3B1F8A149A4}" ShortID="716795891">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pickup02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pickup02" ID="{EBA35E5C-F267-4660-BDE8-F3B1F8A149A4}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_pickup03" ID="{79C2B645-81C8-429C-BA2D-4B7CB73FA9BE}" ShortID="848575291">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_pickup03" ID="{72268A12-0469-4F57-95D0-4DEABBE84AAE}" ShortID="263914239">
+																	<Language>SFX</Language>
+																	<AudioFile>female_pickup03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_pickup03" ID="{72268A12-0469-4F57-95D0-4DEABBE84AAE}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="male" ID="{77442503-DAAF-48A3-8E0B-3FD26662B112}" ShortID="90043706">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{77442503-DAAF-48A3-8E0B-3FD26662B112}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{7A09BC2B-A900-44E1-80C9-7ABF09C3D556}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{77442503-DAAF-48A3-8E0B-3FD26662B112}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{7A09BC2B-A900-44E1-80C9-7ABF09C3D556}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+										<SwitchContainer Name="tired" ID="{FFE78A17-6550-4FE6-9C2E-89293E540444}" ShortID="722899328">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="female" ID="{E883CBBB-D153-4BA5-A522-C402BFE53920}" ShortID="352680359">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="female_tired02" ID="{84DF7CE9-5D85-499E-9322-0BF9C6F4CDC9}" ShortID="222770039">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_tired02" ID="{7A64AB88-60C4-4F88-B1B4-E61A669FB050}" ShortID="479438779">
+																	<Language>SFX</Language>
+																	<AudioFile>female_tired02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_tired02" ID="{7A64AB88-60C4-4F88-B1B4-E61A669FB050}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="female_tired03" ID="{064CB5F5-C504-44A2-8854-0709B326E0FB}" ShortID="277395951">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="female_tired03" ID="{551DAA8A-E73F-4601-83C5-47BF5AB35E38}" ShortID="243321392">
+																	<Language>SFX</Language>
+																	<AudioFile>female_tired03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="female_tired03" ID="{551DAA8A-E73F-4601-83C5-47BF5AB35E38}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="male" ID="{34BF5EF4-E5F4-4429-B5B7-A3A72DAA501B}" ShortID="505513896">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{E883CBBB-D153-4BA5-A522-C402BFE53920}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{34BF5EF4-E5F4-4429-B5B7-A3A72DAA501B}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{34BF5EF4-E5F4-4429-B5B7-A3A72DAA501B}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{E883CBBB-D153-4BA5-A522-C402BFE53920}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
 									</ChildrenList>
 								</ActorMixer>
 							</ChildrenList>
@@ -3868,11 +4648,6 @@
 								</Sound>
 								<Sound Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" ShortID="758368311">
 									<PropertyList>
-										<Property Name="Inclusion" Type="bool">
-											<ValueList>
-												<Value>False</Value>
-											</ValueList>
-										</Property>
 										<Property Name="InitialDelay" Type="Real64">
 											<ValueList>
 												<Value>3</Value>
