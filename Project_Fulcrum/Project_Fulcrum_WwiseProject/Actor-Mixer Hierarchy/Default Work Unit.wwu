@@ -55,6 +55,18 @@
 									</ActiveSourceList>
 								</Sound>
 								<Sound Name="Menu_Pause" ID="{D3C84B4A-00AA-491D-B18E-DA03851C01E4}" ShortID="617984257">
+									<PropertyList>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>20</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-4</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -718,7 +730,7 @@
 										</Property>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>-15</Value>
 											</ValueList>
 											<RTPCList>
 												<RTPC Name="" ID="{C6B713E0-7980-41B0-ABC2-389253520AB1}" ShortID="312750064">
@@ -2066,6 +2078,11 @@
 												</ModifierInfo>
 											</ModifierList>
 										</Property>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-15</Value>
+											</ValueList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -3115,7 +3132,7 @@
 									<PropertyList>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-15</Value>
+												<Value>-17</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -3780,6 +3797,60 @@
 																<ActiveSource Name="femalejump07" ID="{D32F93D9-DCD6-4D96-B77C-0CA93037FFEA}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
+														<Sound Name="silence" ID="{B18270D6-0E74-40B1-BEDD-56B26372EE0A}" ShortID="755080949">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{341D8D90-1592-441F-94BB-4161C549D0F1}" ShortID="40464402" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{341D8D90-1592-441F-94BB-4161C549D0F1}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_01" ID="{A8AC1CB0-69E0-4C24-9187-F00001365C28}" ShortID="494330224">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{94C9B231-116F-4AD3-A34F-029176BE4F87}" ShortID="458296896" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{94C9B231-116F-4AD3-A34F-029176BE4F87}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_02" ID="{6DA4D3FA-3F6F-4261-834C-186C5DD4622E}" ShortID="981582826">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{9A1D1101-FF0D-45F1-AD03-E5BEE8895E1D}" ShortID="529757721" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{9A1D1101-FF0D-45F1-AD03-E5BEE8895E1D}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
 													</ChildrenList>
 												</RandomSequenceContainer>
 											</ChildrenList>
@@ -3817,6 +3888,13 @@
 											</GroupingInfo>
 										</SwitchContainer>
 										<SwitchContainer Name="attack" ID="{865C1099-8BD2-4825-BBB5-22AD2B590AF5}" ShortID="502120170">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-15</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3845,6 +3923,7 @@
 												<RandomSequenceContainer Name="female" ID="{DC0BD148-E21E-4583-A5C5-445F00FEC2E6}" ShortID="525012801">
 													<PropertyList>
 														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+														<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
@@ -3929,6 +4008,78 @@
 															</ChildrenList>
 															<ActiveSourceList>
 																<ActiveSource Name="female_attack04" ID="{6775F9F9-E95D-43CF-A8BA-4EF6423D0A6F}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence" ID="{4585EBF2-E77E-44FC-9767-7F00DDCDDF32}" ShortID="978418275">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{106509A7-F04A-4160-BA92-CB3561DA0070}" ShortID="680110236" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{106509A7-F04A-4160-BA92-CB3561DA0070}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_01" ID="{C519D1F1-7EE3-43A5-A9DE-AA1C20143A1C}" ShortID="322002388">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{C90F52D5-F96C-4830-8797-5CF5E8AD605B}" ShortID="491776369" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{C90F52D5-F96C-4830-8797-5CF5E8AD605B}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_02" ID="{044195C0-47AA-4E67-BD84-0A264ED8AE61}" ShortID="39114753">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{AD689C47-F664-4F90-8D28-DA4F04775967}" ShortID="116121870" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{AD689C47-F664-4F90-8D28-DA4F04775967}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_03" ID="{07F6556C-82EB-48C3-BFDF-028218885466}" ShortID="328586259">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{8904FA02-5E18-4798-8413-76E8CE9B2519}" ShortID="387867255" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{8904FA02-5E18-4798-8413-76E8CE9B2519}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
 													</ChildrenList>
@@ -4192,6 +4343,13 @@
 											</GroupingInfo>
 										</SwitchContainer>
 										<SwitchContainer Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" ShortID="999918740">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-9</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -4335,6 +4493,60 @@
 																<ActiveSource Name="female_pain06" ID="{7BFD1348-655E-441F-A58D-86E5BC4BD361}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
+														<Sound Name="silence" ID="{04142097-F33A-40AF-AF34-059A133B3968}" ShortID="94387103">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{7DF42535-7104-49D6-847D-67BEFE84CAB3}" ShortID="682542888" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{7DF42535-7104-49D6-847D-67BEFE84CAB3}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_01" ID="{EE21E9BF-ABDF-4DAC-89BA-5B1DF8A85539}" ShortID="876510055">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{A49B6E8A-A052-4FAC-A115-7D8AC6C80F9B}" ShortID="279510896" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{A49B6E8A-A052-4FAC-A115-7D8AC6C80F9B}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence_02" ID="{DCBC8AF6-8777-412C-BE14-6E31A6D3D117}" ShortID="816652461">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{17D9E0CF-5BC5-4B05-8D98-5E0D06C1C83C}" ShortID="361859253" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{17D9E0CF-5BC5-4B05-8D98-5E0D06C1C83C}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
 													</ChildrenList>
 												</RandomSequenceContainer>
 												<RandomSequenceContainer Name="male" ID="{10BD31B5-0CBF-419D-861C-CBED71C783BC}" ShortID="790830376">
@@ -4429,6 +4641,9 @@
 															</ReferenceList>
 															<ChildrenList>
 																<AudioFileSource Name="female_pickup02" ID="{EBA35E5C-F267-4660-BDE8-F3B1F8A149A4}" ShortID="716795891">
+																	<PropertyList>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="0.075302326287658"/>
+																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>female_pickup02.wav</AudioFile>
 																</AudioFileSource>
@@ -4511,6 +4726,9 @@
 											</ReferenceList>
 											<ChildrenList>
 												<RandomSequenceContainer Name="female" ID="{E883CBBB-D153-4BA5-A522-C402BFE53920}" ShortID="352680359">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -4556,6 +4774,24 @@
 															</ChildrenList>
 															<ActiveSourceList>
 																<ActiveSource Name="female_tired03" ID="{551DAA8A-E73F-4601-83C5-47BF5AB35E38}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="silence" ID="{D24118D2-8B6C-4967-8486-A38168810C05}" ShortID="22736139">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<SourcePlugin Name="Wwise Silence" ID="{8D316334-13C9-490D-9D16-03EDF94C1CE5}" ShortID="785727471" PluginName="Wwise Silence" CompanyID="0" PluginID="101">
+																	<Language>SFX</Language>
+																</SourcePlugin>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Wwise Silence" ID="{8D316334-13C9-490D-9D16-03EDF94C1CE5}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
 													</ChildrenList>
@@ -4648,6 +4884,11 @@
 								</Sound>
 								<Sound Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" ShortID="758368311">
 									<PropertyList>
+										<Property Name="Inclusion" Type="bool">
+											<ValueList>
+												<Value>False</Value>
+											</ValueList>
+										</Property>
 										<Property Name="InitialDelay" Type="Real64">
 											<ValueList>
 												<Value>3</Value>
@@ -4797,6 +5038,11 @@
 													</ModifierList>
 												</Property>
 												<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-2</Value>
+													</ValueList>
+												</Property>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
@@ -4808,6 +5054,13 @@
 											</ReferenceList>
 											<ChildrenList>
 												<Sound Name="concrete_break01" ID="{0021DA48-1528-4C94-B82E-EAAE379F6182}" ShortID="1042204962">
+													<PropertyList>
+														<Property Name="Volume" Type="Real64">
+															<ValueList>
+																<Value>-4</Value>
+															</ValueList>
+														</Property>
+													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>

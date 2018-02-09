@@ -68,6 +68,16 @@
 				</Event>
 				<Event Name="PunchSwing" ID="{45A20D95-22CE-444F-88A8-1F91E6ADBD8C}">
 					<ChildrenList>
+						<Action Name="" ID="{2DA9ED9D-3E53-4220-96D4-49A3B75A1E16}" ShortID="965582641">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="attack" ID="{865C1099-8BD2-4825-BBB5-22AD2B590AF5}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 						<Action Name="" ID="{D2C7B0CA-187D-430D-AC23-CB1C7F496820}" ShortID="652217505">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
@@ -108,6 +118,26 @@
 								</Reference>
 							</ReferenceList>
 						</Action>
+						<Action Name="" ID="{70D322B1-1A33-40AE-9BA5-0C846DFFC1D1}" ShortID="93045134">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{FD96D1DF-B267-4ED8-BF71-0002079A3E4C}" ShortID="808398573">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 					</ChildrenList>
 				</Event>
 				<Event Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}">
@@ -121,6 +151,16 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{79821FA4-43DD-4C61-9818-4CD8CDA9F4E6}" ShortID="117109133">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
