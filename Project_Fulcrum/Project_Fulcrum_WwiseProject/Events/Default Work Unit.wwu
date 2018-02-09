@@ -144,9 +144,20 @@
 					<Comment>Just using the punch sound as a placeholder.
 </Comment>
 					<ChildrenList>
+						<Action Name="" ID="{FE7C8904-8641-4331-AF80-D7EE6940F8FC}" ShortID="40049079">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="jump" ID="{E8297096-FE1F-42C0-9019-5EF3BC3A2701}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 						<Action Name="" ID="{B3C25265-098A-4240-9DAD-A489733CF550}" ShortID="115956765">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
+								<Property Name="Delay" Type="Real64" Value="0.05"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">

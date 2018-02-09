@@ -87,6 +87,25 @@
 										<ActiveSource Name="selectmenu" ID="{05D9D88B-0824-4A64-82E2-CD0B9E0325CD}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
+								<Sound Name="menu_resume" ID="{5E5FAF99-0B1D-4989-8C7D-8AE34866C9FD}" ShortID="157156670">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="menu_resume" ID="{37336C23-8289-4108-9735-00C012E920EB}" ShortID="239526825">
+											<Language>SFX</Language>
+											<AudioFile>menu_resume.wav</AudioFile>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="menu_resume" ID="{37336C23-8289-4108-9735-00C012E920EB}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
 							</ChildrenList>
 						</ActorMixer>
 					</ChildrenList>
@@ -2318,7 +2337,7 @@
 											<PropertyList>
 												<Property Name="Highpass" Type="int16">
 													<ValueList>
-														<Value>30</Value>
+														<Value>40</Value>
 													</ValueList>
 												</Property>
 												<Property Name="OverrideEffect" Type="bool" Value="True"/>
@@ -3072,7 +3091,7 @@
 									<PropertyList>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>-20</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -3092,6 +3111,28 @@
 									</ReferenceList>
 									<ChildrenList>
 										<RandomSequenceContainer Name="generic" ID="{53FE8D1E-ED66-4813-93C1-E55AF6AC23A9}" ShortID="978688413">
+											<PropertyList>
+												<Property Name="Pitch" Type="int32">
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{EB005AEC-5DDF-4BB5-9961-A9BB1E65C61E}">
+																<PropertyList>
+																	<Property Name="Enabled" Type="bool" Value="True"/>
+																	<Property Name="Max" Type="Real64" Value="400"/>
+																	<Property Name="Min" Type="Real64" Value="-400"/>
+																</PropertyList>
+															</Modifier>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
+												<Property Name="Volume" Type="Real64">
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{CCBF071B-E92D-4D17-B445-2F3CCEC96EEB}"/>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3101,22 +3142,7 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="jump01" ID="{F956D1E5-0599-482D-819C-1123A7F44975}" ShortID="981644634">
-													<PropertyList>
-														<Property Name="DivergenceCenter" Type="int32">
-															<ValueList>
-																<Value>100</Value>
-															</ValueList>
-														</Property>
-														<Property Name="EnablePanner" Type="bool" Value="True"/>
-														<Property Name="Pitch" Type="int32">
-															<ModifierList>
-																<ModifierInfo>
-																	<Modifier Name="" ID="{40DC0A9B-AA28-4494-850D-F81EFB0ABD5A}"/>
-																</ModifierInfo>
-															</ModifierList>
-														</Property>
-													</PropertyList>
+												<Sound Name="jump01" ID="{7FF4D397-52DC-411E-A30E-B4E8E57EE572}" ShortID="1033931405">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3126,34 +3152,21 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump01" ID="{54C725D5-F9E7-4373-B1EC-4A8FA56BF512}" ShortID="585252688">
+														<AudioFileSource Name="jump01" ID="{0E7443E0-FCAE-4B44-A8EB-5AB044EF88E5}" ShortID="324794517">
 															<Language>SFX</Language>
 															<AudioFile>jump01.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
-													<PositioningInfo>
-														<Panner Name="" ID="{5B68E372-DD45-4FED-AF49-79459D0083F7}">
-															<PropertyList>
-																<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
-															</PropertyList>
-														</Panner>
-													</PositioningInfo>
 													<ActiveSourceList>
-														<ActiveSource Name="jump01" ID="{54C725D5-F9E7-4373-B1EC-4A8FA56BF512}" Platform="Linked"/>
+														<ActiveSource Name="jump01" ID="{0E7443E0-FCAE-4B44-A8EB-5AB044EF88E5}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump02" ID="{3B9F3A44-B84F-4D7D-9659-B4EB6678C529}" ShortID="467996181">
+												<Sound Name="jump02" ID="{C3F8D889-A9B3-4836-B37D-690CD6624597}" ShortID="279828866">
 													<PropertyList>
-														<Property Name="EnablePanner" Type="bool" Value="True"/>
-														<Property Name="Inclusion" Type="bool">
-															<ValueList>
-																<Value>False</Value>
-															</ValueList>
-														</Property>
 														<Property Name="Pitch" Type="int32">
 															<ModifierList>
 																<ModifierInfo>
-																	<Modifier Name="" ID="{6CBF803E-9E25-4DC7-9D5C-9222BCCAB782}"/>
+																	<Modifier Name="" ID="{5F208CCB-00C6-4D8A-92D8-C9BC9BEA66F5}"/>
 																</ModifierInfo>
 															</ModifierList>
 														</Property>
@@ -3167,31 +3180,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump02" ID="{B5E8A1D2-3C43-44E9-8E50-72B19CE2722F}" ShortID="239791680">
+														<AudioFileSource Name="jump02" ID="{9FBC8333-888E-4580-A662-C3320F4676E8}" ShortID="1027038814">
 															<Language>SFX</Language>
 															<AudioFile>jump02.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
-													<PositioningInfo>
-														<Panner Name="" ID="{7FBBD932-11F7-44ED-918F-4334019E58CD}">
-															<PropertyList>
-																<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
-															</PropertyList>
-														</Panner>
-													</PositioningInfo>
 													<ActiveSourceList>
-														<ActiveSource Name="jump02" ID="{B5E8A1D2-3C43-44E9-8E50-72B19CE2722F}" Platform="Linked"/>
+														<ActiveSource Name="jump02" ID="{9FBC8333-888E-4580-A662-C3320F4676E8}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump04" ID="{34D81D0E-F6B5-4A2A-A209-90742FECCAAA}" ShortID="510443346">
-													<PropertyList>
-														<Property Name="EnablePanner" Type="bool" Value="True"/>
-														<Property Name="Volume" Type="Real64">
-															<ValueList>
-																<Value>-10</Value>
-															</ValueList>
-														</Property>
-													</PropertyList>
+												<Sound Name="jump03" ID="{198F03C2-3734-440B-B2E9-9CD4F592E9E9}" ShortID="593284092">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3201,95 +3199,51 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump04" ID="{43142B2A-6D8B-4417-A023-CE6FE624E076}" ShortID="72036157">
-															<Language>SFX</Language>
-															<AudioFile>jump04.wav</AudioFile>
-														</AudioFileSource>
-													</ChildrenList>
-													<PositioningInfo>
-														<Panner Name="" ID="{E3460FCD-E4AD-4575-B79B-6FD51F53189D}">
-															<PropertyList>
-																<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
-															</PropertyList>
-														</Panner>
-													</PositioningInfo>
-													<ActiveSourceList>
-														<ActiveSource Name="jump04" ID="{43142B2A-6D8B-4417-A023-CE6FE624E076}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="jump05" ID="{969001FA-39B3-46AC-AF02-29D1A5B73AE5}" ShortID="353736593">
-													<PropertyList>
-														<Property Name="EnablePanner" Type="bool" Value="True"/>
-														<Property Name="Volume" Type="Real64">
-															<ValueList>
-																<Value>-8</Value>
-															</ValueList>
-														</Property>
-													</PropertyList>
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="jump05" ID="{308822D3-739B-4B06-AB55-EFF97B7BC131}" ShortID="1073627297">
-															<Language>SFX</Language>
-															<AudioFile>jump05.wav</AudioFile>
-														</AudioFileSource>
-													</ChildrenList>
-													<PositioningInfo>
-														<Panner Name="" ID="{DAE34D8D-D247-42E6-9ECA-CC1CBED5CF14}">
-															<PropertyList>
-																<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
-															</PropertyList>
-														</Panner>
-													</PositioningInfo>
-													<ActiveSourceList>
-														<ActiveSource Name="jump05" ID="{308822D3-739B-4B06-AB55-EFF97B7BC131}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
-												<Sound Name="jump03" ID="{4C21A061-283B-4DEF-9C32-9755B9E42368}" ShortID="710611656">
-													<PropertyList>
-														<Property Name="EnablePanner" Type="bool" Value="True"/>
-														<Property Name="Inclusion" Type="bool">
-															<ValueList>
-																<Value>False</Value>
-															</ValueList>
-														</Property>
-														<Property Name="Pitch" Type="int32">
-															<ModifierList>
-																<ModifierInfo>
-																	<Modifier Name="" ID="{AE45DCF4-384E-4878-A923-D433953B9E38}"/>
-																</ModifierInfo>
-															</ModifierList>
-														</Property>
-													</PropertyList>
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="jump03" ID="{BBC8572F-37F4-406D-A9DB-C12628CF7D5C}" ShortID="671620621">
+														<AudioFileSource Name="jump03" ID="{62834E22-7E5E-47B0-94A7-66DE223236E6}" ShortID="785104644">
 															<Language>SFX</Language>
 															<AudioFile>jump03.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
-													<PositioningInfo>
-														<Panner Name="" ID="{A3793AEE-8506-4F61-8D07-471EE71E123A}">
-															<PropertyList>
-																<Property Name="PanX" Type="Real64" Value="-5.55111512312578E-17"/>
-															</PropertyList>
-														</Panner>
-													</PositioningInfo>
 													<ActiveSourceList>
-														<ActiveSource Name="jump03" ID="{BBC8572F-37F4-406D-A9DB-C12628CF7D5C}" Platform="Linked"/>
+														<ActiveSource Name="jump03" ID="{62834E22-7E5E-47B0-94A7-66DE223236E6}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="jump04" ID="{8713EAA4-5D5A-4EB1-8381-54C19A695B73}" ShortID="741436217">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="jump04" ID="{DF854939-58FA-4E8B-8A98-CB313C5A736C}" ShortID="327985428">
+															<Language>SFX</Language>
+															<AudioFile>jump04.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="jump04" ID="{DF854939-58FA-4E8B-8A98-CB313C5A736C}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="jump05" ID="{76BE5A0F-72F0-4485-8B08-39EF7E07525A}" ShortID="382981933">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="jump05" ID="{C7D28454-1B8C-481E-97AE-1826BC18E1E2}" ShortID="165094160">
+															<Language>SFX</Language>
+															<AudioFile>jump05.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="jump05" ID="{C7D28454-1B8C-481E-97AE-1826BC18E1E2}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
@@ -3302,6 +3256,19 @@
 													</ValueList>
 												</Property>
 												<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+												<Property Name="Pitch" Type="int32">
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{D2E01F02-185D-4BDF-9A9F-A7FE48639177}">
+																<PropertyList>
+																	<Property Name="Enabled" Type="bool" Value="True"/>
+																	<Property Name="Max" Type="Real64" Value="400"/>
+																	<Property Name="Min" Type="Real64" Value="-400"/>
+																</PropertyList>
+															</Modifier>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
 												<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 											</PropertyList>
 											<ReferenceList>
@@ -3313,7 +3280,7 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="jump_water01" ID="{A2A2475D-5E18-410E-8C7A-A8635F999772}" ShortID="679741148">
+												<Sound Name="jumpwater01" ID="{4638F5AB-F597-44A9-984B-37AB37BB7824}" ShortID="1002867030">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3323,16 +3290,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump_water01" ID="{B1B4FFBD-9853-4E06-852F-BECDC3AE2ED5}" ShortID="764159760">
+														<AudioFileSource Name="jumpwater01" ID="{8AF6BA5B-6F42-4700-99AB-AB12FFB58347}" ShortID="715488134">
 															<Language>SFX</Language>
-															<AudioFile>jump_water01.wav</AudioFile>
+															<AudioFile>jumpwater01.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump_water01" ID="{B1B4FFBD-9853-4E06-852F-BECDC3AE2ED5}" Platform="Linked"/>
+														<ActiveSource Name="jumpwater01" ID="{8AF6BA5B-6F42-4700-99AB-AB12FFB58347}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump_water02" ID="{86877A92-1D4C-4F66-A6CA-AFCCE416909B}" ShortID="204598554">
+												<Sound Name="jumpwater02" ID="{1FDECFE3-011A-4582-A092-5C600DE49AE2}" ShortID="486054156">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3342,16 +3309,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump_water02" ID="{12A32098-F3E1-4702-828E-2922C7DD6AA3}" ShortID="312622319">
+														<AudioFileSource Name="jumpwater02" ID="{0614DF16-C374-443A-B325-EC6053FA8E01}" ShortID="614284397">
 															<Language>SFX</Language>
-															<AudioFile>jump_water02.wav</AudioFile>
+															<AudioFile>jumpwater02.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump_water02" ID="{12A32098-F3E1-4702-828E-2922C7DD6AA3}" Platform="Linked"/>
+														<ActiveSource Name="jumpwater02" ID="{0614DF16-C374-443A-B325-EC6053FA8E01}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump_water03" ID="{85A46803-3E84-4AF2-AA34-1D456774D8AB}" ShortID="800572721">
+												<Sound Name="jumpwater03" ID="{86C5F1DE-97B2-424F-8C1A-FAC4E13F7BAA}" ShortID="64664339">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3361,16 +3328,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump_water03" ID="{5AE6A0EA-721F-4744-B7D0-F632D3F21FE2}" ShortID="237994977">
+														<AudioFileSource Name="jumpwater03" ID="{E82AFD4C-12B8-4D7E-ABE0-65265B5A31B3}" ShortID="306374400">
 															<Language>SFX</Language>
-															<AudioFile>jump_water03.wav</AudioFile>
+															<AudioFile>jumpwater03.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump_water03" ID="{5AE6A0EA-721F-4744-B7D0-F632D3F21FE2}" Platform="Linked"/>
+														<ActiveSource Name="jumpwater03" ID="{E82AFD4C-12B8-4D7E-ABE0-65265B5A31B3}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump_water04" ID="{F826A0F1-4F00-45B2-8E65-E6E84597FB7A}" ShortID="741349206">
+												<Sound Name="jumpwater04" ID="{8195DEBF-6B6E-4309-9DA1-4DAB95E9CF66}" ShortID="311426258">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3380,13 +3347,13 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump_water04" ID="{FD581609-4E0A-4E91-B5B2-C1DC9CBDC75E}" ShortID="720647445">
+														<AudioFileSource Name="jumpwater04" ID="{BBBA7B4A-EDEE-47F0-8BF1-7F1BD8AE7A03}" ShortID="118893268">
 															<Language>SFX</Language>
-															<AudioFile>jump_water04.wav</AudioFile>
+															<AudioFile>jumpwater04.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump_water04" ID="{FD581609-4E0A-4E91-B5B2-C1DC9CBDC75E}" Platform="Linked"/>
+														<ActiveSource Name="jumpwater04" ID="{BBBA7B4A-EDEE-47F0-8BF1-7F1BD8AE7A03}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
@@ -3471,6 +3438,354 @@
 										</GroupingList>
 									</GroupingInfo>
 								</SwitchContainer>
+								<ActorMixer Name="Voice" ID="{71062D5D-799F-456E-A261-E2D97BC13DCA}" ShortID="242622987">
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<SwitchContainer Name="jump" ID="{E8297096-FE1F-42C0-9019-5EF3BC3A2701}" ShortID="557588583">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-30</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<RandomSequenceContainer Name="male" ID="{7CD36D14-866E-4D26-9081-F21E33FA7593}" ShortID="607056516">
+													<PropertyList>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+														<Property Name="Pitch" Type="int32">
+															<ModifierList>
+																<ModifierInfo>
+																	<Modifier Name="" ID="{B0275CE2-6400-4FF0-821D-170574A7C7E5}">
+																		<PropertyList>
+																			<Property Name="Max" Type="Real64" Value="100"/>
+																			<Property Name="Min" Type="Real64" Value="-100"/>
+																		</PropertyList>
+																	</Modifier>
+																</ModifierInfo>
+															</ModifierList>
+														</Property>
+														<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="malejump01" ID="{06F54196-F691-4A1D-AF11-96B27D632CB2}" ShortID="552602508">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="malejump01" ID="{68B4CAB6-3B2A-4F95-8901-784030209202}" ShortID="1003111290">
+																	<Language>SFX</Language>
+																	<AudioFile>malejump01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="malejump01" ID="{68B4CAB6-3B2A-4F95-8901-784030209202}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="malejump03" ID="{8DE9AAB3-7ECB-44AF-B241-ABE28A3A5320}" ShortID="36910395">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="malejump03" ID="{99CF3587-1FD5-4C3A-9A9C-755A1CF06717}" ShortID="243544040">
+																	<Language>SFX</Language>
+																	<AudioFile>malejump03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="malejump03" ID="{99CF3587-1FD5-4C3A-9A9C-755A1CF06717}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="malejump04" ID="{7B344A81-F7EA-4805-A401-5B5763BD39AD}" ShortID="903758504">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="malejump04" ID="{38EEA080-4009-4A90-BB40-52A7441A9802}" ShortID="379034605">
+																	<Language>SFX</Language>
+																	<AudioFile>malejump04.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="malejump04" ID="{38EEA080-4009-4A90-BB40-52A7441A9802}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+												<RandomSequenceContainer Name="female" ID="{8F078F6E-B59A-4DE9-B2A3-ABE7EF326FDF}" ShortID="707866846">
+													<PropertyList>
+														<Property Name="Highpass" Type="int16">
+															<ValueList>
+																<Value>20</Value>
+															</ValueList>
+														</Property>
+														<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+														<Property Name="Pitch" Type="int32">
+															<ModifierList>
+																<ModifierInfo>
+																	<Modifier Name="" ID="{CEB7CE41-BA36-40DA-9CA4-DCB0E14A0A64}">
+																		<PropertyList>
+																			<Property Name="Max" Type="Real64" Value="100"/>
+																			<Property Name="Min" Type="Real64" Value="-100"/>
+																		</PropertyList>
+																	</Modifier>
+																</ModifierInfo>
+															</ModifierList>
+														</Property>
+														<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="femalejump01" ID="{F00E2401-DB08-4E9E-B60F-A6C0A8C423CB}" ShortID="916922337">
+															<PropertyList>
+																<Property Name="Inclusion" Type="bool">
+																	<ValueList>
+																		<Value>False</Value>
+																	</ValueList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump01" ID="{DFBA43F7-8152-4FD9-80D9-016CAF57E36A}" ShortID="719504995">
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump01" ID="{DFBA43F7-8152-4FD9-80D9-016CAF57E36A}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump02" ID="{8997B754-D3CA-40A0-B118-509476892E8B}" ShortID="918231579">
+															<PropertyList>
+																<Property Name="Inclusion" Type="bool">
+																	<ValueList>
+																		<Value>False</Value>
+																	</ValueList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump02" ID="{78DE3B2A-4A55-4A3B-9C01-AA38A3617445}" ShortID="979009026">
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump02.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump02" ID="{78DE3B2A-4A55-4A3B-9C01-AA38A3617445}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump03" ID="{56B0CE64-7301-4C48-AD64-89887E7D5EF3}" ShortID="966409257">
+															<PropertyList>
+																<Property Name="Inclusion" Type="bool">
+																	<ValueList>
+																		<Value>False</Value>
+																	</ValueList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump03" ID="{DA505335-F5B1-4292-BC25-49DCCAD8A5C7}" ShortID="59087296">
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump03.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump03" ID="{DA505335-F5B1-4292-BC25-49DCCAD8A5C7}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump04" ID="{DE927A9D-A84A-48E4-89EB-EDB0A2B8D293}" ShortID="135795560">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump04" ID="{FDB43A64-5A61-40EC-BA1E-AD119A6CC402}" ShortID="580689976">
+																	<PropertyList>
+																		<Property Name="FadeInDuration" Type="Real64" Value="3.07477678571429E-02"/>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="2.92633928571429E-02"/>
+																	</PropertyList>
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump04.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump04" ID="{FDB43A64-5A61-40EC-BA1E-AD119A6CC402}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump05" ID="{A4E59A7C-8B8A-41FC-A47E-F653BCD59B2D}" ShortID="222306201">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump05" ID="{5A1FF6A7-BB51-48C0-A051-AF2B56FCB64B}" ShortID="93860464">
+																	<PropertyList>
+																		<Property Name="FadeInDuration" Type="Real64" Value="2.77127511160714E-02"/>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="0.101127232142857"/>
+																		<Property Name="TrimBegin" Type="Real64" Value="7.39006696428572E-02"/>
+																	</PropertyList>
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump05.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump05" ID="{5A1FF6A7-BB51-48C0-A051-AF2B56FCB64B}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump06" ID="{5BC37999-7851-4EEE-ACB3-E6D275E86ED1}" ShortID="24010140">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump06" ID="{03A96B55-B692-428E-9399-00D1E6C85869}" ShortID="636921483">
+																	<PropertyList>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="6.22661365327381E-02"/>
+																	</PropertyList>
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump06.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump06" ID="{03A96B55-B692-428E-9399-00D1E6C85869}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="femalejump07" ID="{EE9B39BE-CA61-4DE1-A598-2B01F156EE6F}" ShortID="855098509">
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="femalejump07" ID="{D32F93D9-DCD6-4D96-B77C-0CA93037FFEA}" ShortID="847313103">
+																	<PropertyList>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="4.07759835379464E-02"/>
+																	</PropertyList>
+																	<Language>SFX</Language>
+																	<AudioFile>femalejump07.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="femalejump07" ID="{D32F93D9-DCD6-4D96-B77C-0CA93037FFEA}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</RandomSequenceContainer>
+											</ChildrenList>
+											<GroupingInfo>
+												<GroupingBehaviorList>
+													<GroupingBehavior>
+														<ItemRef Name="male" ID="{7CD36D14-866E-4D26-9081-F21E33FA7593}"/>
+													</GroupingBehavior>
+													<GroupingBehavior>
+														<ItemRef Name="female" ID="{8F078F6E-B59A-4DE9-B2A3-ABE7EF326FDF}"/>
+													</GroupingBehavior>
+												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+														<ItemList>
+															<ItemRef Name="male" ID="{7CD36D14-866E-4D26-9081-F21E33FA7593}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+														<ItemList>
+															<ItemRef Name="female" ID="{8F078F6E-B59A-4DE9-B2A3-ABE7EF326FDF}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
+											</GroupingInfo>
+										</SwitchContainer>
+									</ChildrenList>
+								</ActorMixer>
 							</ChildrenList>
 							<PositioningInfo>
 								<Panner Name="" ID="{75249CB3-EB4C-4557-A910-E3073DD7A21F}">
@@ -3521,6 +3836,11 @@
 								</Sound>
 								<Sound Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" ShortID="758368311">
 									<PropertyList>
+										<Property Name="Inclusion" Type="bool">
+											<ValueList>
+												<Value>False</Value>
+											</ValueList>
+										</Property>
 										<Property Name="InitialDelay" Type="Real64">
 											<ValueList>
 												<Value>3</Value>

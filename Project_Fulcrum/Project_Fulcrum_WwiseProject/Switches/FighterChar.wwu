@@ -71,6 +71,12 @@
 						<Switch Name="Glass" ID="{C833884D-F1C3-4AD7-9C30-E2A5E199AF90}"/>
 					</ChildrenList>
 				</SwitchGroup>
+				<SwitchGroup Name="Gender" ID="{76871EDE-A1F2-4C5B-892F-668C1BD42C86}">
+					<ChildrenList>
+						<Switch Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}"/>
+						<Switch Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
+					</ChildrenList>
+				</SwitchGroup>
 			</ChildrenList>
 		</WorkUnit>
 	</Switches>
