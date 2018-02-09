@@ -36,21 +36,22 @@ public class TimeManager : MonoBehaviour {
 	void Update () 
 	{
 		timeSpeed = Time.timeScale;
+		print("Timespeed = "+timeSpeed);
 		AkSoundEngine.SetRTPCValue("TimeDilation", Time.timeScale);
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if(permaSlow){return;}
-		if(slowmoTimer>0)
-		{
-			slowmoTimer -= Time.fixedUnscaledTime;
-		}
-		else
-		{
-			slowmoTimer = 0;
-			Time.timeScale = 1;
-		}
+//		if(permaSlow){return;}
+//		if(slowmoTimer>0)
+//		{
+//			slowmoTimer -= Time.fixedUnscaledTime;
+//		}
+//		else
+//		{
+//			slowmoTimer = 0;
+//			Time.timeScale = 1;
+//		}
 	}
 }

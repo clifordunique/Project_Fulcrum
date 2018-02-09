@@ -34,6 +34,17 @@ namespace AK
 
     namespace SWITCHES
     {
+        namespace GENDER
+        {
+            static const AkUniqueID GROUP = 1776943274U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID FEMALE = 2204441813U;
+                static const AkUniqueID MALE = 3111576190U;
+            } // namespace SWITCH
+        } // namespace GENDER
+
         namespace LIFESTATE
         {
             static const AkUniqueID GROUP = 761044930U;
