@@ -25,6 +25,11 @@
 							<ChildrenList>
 								<Sound Name="Menu_Highlight" ID="{15941A64-1EEA-4133-8F8F-108CE987CA71}" ShortID="231378126">
 									<PropertyList>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>20</Value>
+											</ValueList>
+										</Property>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
 												<Value>-6</Value>
@@ -69,6 +74,18 @@
 									</ActiveSourceList>
 								</Sound>
 								<Sound Name="Menu_Select" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" ShortID="82047918">
+									<PropertyList>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>15</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-5</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -673,12 +690,12 @@
 																<Flags>5</Flags>
 															</Point>
 															<Point>
-																<XPos>100</XPos>
-																<YPos>10</YPos>
+																<XPos>60</XPos>
+																<YPos>20</YPos>
 																<Flags>0</Flags>
 															</Point>
 															<Point>
-																<XPos>250</XPos>
+																<XPos>150</XPos>
 																<YPos>30</YPos>
 																<Flags>0</Flags>
 															</Point>
@@ -2617,6 +2634,13 @@
 									</PositioningInfo>
 								</RandomSequenceContainer>
 								<SwitchContainer Name="landing" ID="{88EDFA2F-343C-443C-BEED-DDE4048BADBC}" ShortID="124828094">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-10</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3091,7 +3115,7 @@
 									<PropertyList>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-20</Value>
+												<Value>-15</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -3450,9 +3474,10 @@
 									<ChildrenList>
 										<SwitchContainer Name="jump" ID="{E8297096-FE1F-42C0-9019-5EF3BC3A2701}" ShortID="557588583">
 											<PropertyList>
+												<Property Name="EnablePositioning" Type="bool" Value="False"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-30</Value>
+														<Value>-15</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>
@@ -3486,7 +3511,6 @@
 																</ModifierInfo>
 															</ModifierList>
 														</Property>
-														<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
@@ -3641,9 +3665,9 @@
 														</Sound>
 														<Sound Name="femalejump03" ID="{56B0CE64-7301-4C48-AD64-89887E7D5EF3}" ShortID="966409257">
 															<PropertyList>
-																<Property Name="Inclusion" Type="bool">
+																<Property Name="Pitch" Type="int32">
 																	<ValueList>
-																		<Value>False</Value>
+																		<Value>120</Value>
 																	</ValueList>
 																</Property>
 															</PropertyList>
@@ -3759,6 +3783,14 @@
 													</ChildrenList>
 												</RandomSequenceContainer>
 											</ChildrenList>
+											<PositioningInfo>
+												<Panner Name="" ID="{720D36E3-E8B3-4717-BC64-0A0A961FCDEE}">
+													<PropertyList>
+														<Property Name="PanX" Type="Real64" Value="70.264765784114"/>
+														<Property Name="PanY" Type="Real64" Value="58.0993520518359"/>
+													</PropertyList>
+												</Panner>
+											</PositioningInfo>
 											<GroupingInfo>
 												<GroupingBehaviorList>
 													<GroupingBehavior>
@@ -3873,6 +3905,13 @@
 							</ChildrenList>
 						</ActorMixer>
 						<ActorMixer Name="Breakable" ID="{77F8E950-653B-49F7-9646-79F5DC7CFA79}" ShortID="176860101">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-3</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>

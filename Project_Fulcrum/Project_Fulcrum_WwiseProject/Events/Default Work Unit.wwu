@@ -157,7 +157,6 @@
 						<Action Name="" ID="{B3C25265-098A-4240-9DAD-A489733CF550}" ShortID="115956765">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="1"/>
-								<Property Name="Delay" Type="Real64" Value="0.05"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
@@ -270,6 +269,20 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Menu_Select" ID="{EFD1A0DE-2F0E-4A67-BBD2-864167133390}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Menu_Resume" ID="{BBC59754-60CF-4AEC-B7B9-57FDE5D7E8B5}">
+					<ChildrenList>
+						<Action Name="" ID="{C8A849FA-044D-4D7C-A940-2E86B30AA50F}" ShortID="377381158">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="menu_resume" ID="{5E5FAF99-0B1D-4989-8C7D-8AE34866C9FD}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

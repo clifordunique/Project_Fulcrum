@@ -56,6 +56,10 @@
 					<ShortName>crater01.wav</ShortName>
 					<Path>SFX\crater01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="59087296" Language="SFX">
+					<ShortName>femalejump03.wav</ShortName>
+					<Path>SFX\femalejump03_1C9C67B2.wem</Path>
+				</File>
 				<File Id="60099494" Language="SFX">
 					<ShortName>wood3.wav</ShortName>
 					<Path>SFX\wood3_1C9C67B2.wem</Path>
@@ -74,7 +78,7 @@
 				</File>
 				<File Id="93860464" Language="SFX">
 					<ShortName>femalejump05.wav</ShortName>
-					<Path>SFX\femalejump05_4FC2ECF6.wem</Path>
+					<Path>SFX\femalejump05_D28E664F.wem</Path>
 				</File>
 				<File Id="94025848" Language="SFX">
 					<ShortName>gravel2.wav</ShortName>
@@ -250,7 +254,7 @@
 				</File>
 				<File Id="580689976" Language="SFX">
 					<ShortName>femalejump04.wav</ShortName>
-					<Path>SFX\femalejump04_E623EEA7.wem</Path>
+					<Path>SFX\femalejump04_34630C51.wem</Path>
 				</File>
 				<File Id="584392103" Language="SFX">
 					<ShortName>slam02.wav</ShortName>
@@ -314,7 +318,7 @@
 				</File>
 				<File Id="847313103" Language="SFX">
 					<ShortName>femalejump07.wav</ShortName>
-					<Path>SFX\femalejump07_4D60DC4A.wem</Path>
+					<Path>SFX\femalejump07_653E54B6.wem</Path>
 				</File>
 				<File Id="859141929" Language="SFX">
 					<ShortName>metal1.wav</ShortName>
