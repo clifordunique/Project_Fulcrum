@@ -320,6 +320,10 @@
 					<ShortName>jumpwater01.wav</ShortName>
 					<Path>SFX\jumpwater01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="716866082" Language="SFX">
+					<ShortName>hardland01.wav</ShortName>
+					<Path>SFX\hardland01_1C9C67B2.wem</Path>
+				</File>
 				<File Id="726817041" Language="SFX">
 					<ShortName>slam04.wav</ShortName>
 					<Path>SFX\slam04_1C9C67B2.wem</Path>
@@ -443,6 +447,10 @@
 				<File Id="1071075805" Language="SFX">
 					<ShortName>concrete_break02.wav</ShortName>
 					<Path>SFX\concrete_break02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="1072303627" Language="SFX">
+					<ShortName>hardland02.wav</ShortName>
+					<Path>SFX\hardland02_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>

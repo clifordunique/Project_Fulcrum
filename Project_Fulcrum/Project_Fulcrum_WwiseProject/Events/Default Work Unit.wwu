@@ -128,6 +128,16 @@
 								</Reference>
 							</ReferenceList>
 						</Action>
+						<Action Name="" ID="{FD96D1DF-B267-4ED8-BF71-0002079A3E4C}" ShortID="808398573">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 					</ChildrenList>
 				</Event>
 				<Event Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}">
