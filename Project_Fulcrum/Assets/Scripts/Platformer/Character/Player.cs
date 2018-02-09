@@ -374,33 +374,20 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey7)
 		{
-//			float timeSpeed = o_TimeManager.GetTimeDilationM();
-//
-//			if(timeSpeed<=0.1f)
-//			{
-//				o_TimeManager.TimeDilation(0.25f);
-//			}
-//			else if(timeSpeed<=0.25f)
-//			{
-//				o_TimeManager.TimeDilation(1);
-//			}
-//			else
-//			{
-//				o_TimeManager.TimeDilation(0.1f);
-//			}
-			if(Time.timeScale<=0.1f)
+			float timeSpeed = o_TimeManager.GetTimeDilationM();
+
+			if(timeSpeed<=0.1f)
 			{
-				Time.timeScale = 0.25f;
+				o_TimeManager.TimeDilation(0.25f);
 			}
-			else if(Time.timeScale<=0.25f)
+			else if(timeSpeed<=0.25f)
 			{
-				Time.timeScale = 1;
+				o_TimeManager.TimeDilation(1);
 			}
 			else
 			{
-				Time.timeScale = 0.1f;
+				o_TimeManager.TimeDilation(0.1f);
 			}
-
 			FighterState.DevKey7 = false;
 		}
 		if(FighterState.DevKey8)

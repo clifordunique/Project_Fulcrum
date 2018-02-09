@@ -38,7 +38,7 @@ public class StartOptions : NetworkBehaviour {
 		showPanels = GetComponent<ShowPanels>();
 
 		//Get a reference to the NetworkManager
-		Mngr = GetComponent<FulcrumNetworkManager>();
+		Mngr = GameObject.Find("PFGameManager").GetComponent<FulcrumNetworkManager>();
 
 		//Get a reference to PlayMusic attached to UI object
 		playMusic = GetComponent<PlayMusic> ();
@@ -167,11 +167,19 @@ public class StartOptions : NetworkBehaviour {
    // Once the level has loaded, check if we want to call PlayLevelMusic
     void SceneWasLoaded(Scene scene, LoadSceneMode mode)
     {
-		if(scene.name == "MainMenu" )
+		Mngr.gameObject.GetComponent<NetworkManagerHUD>().enabled = false;
+		if(scene.name=="MainMenu")
 		{
+			Mngr.gameObject.GetComponent<TimeManager>().enabled = false;
+			Mngr.gameObject.GetComponent<CloudHandler>().enabled = false;
 			playMusic.PlaySelectedMusic(0);
 			print("MainMenu Loaded.");
 			return;
+		}
+		else
+		{
+			Mngr.gameObject.GetComponent<CloudHandler>().enabled = true;
+			Mngr.gameObject.GetComponent<TimeManager>().enabled = true;
 		}
 		if(isMultiplayer)
 		{

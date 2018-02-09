@@ -14,7 +14,7 @@ public class Demonstration : MonoBehaviour
 
     public enum UpdateType { Update, FixedUpdate, InterpolatedFixed }
     public UpdateType updateType = UpdateType.InterpolatedFixed;
-    public int targetFrameRate = 60;
+    public int targetFrameRate = 144;
     public float fixedDeltaTime = 1 / 40.0f;
     public bool simulateSutter = false;
 
