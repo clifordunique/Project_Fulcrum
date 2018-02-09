@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\FramerateLocker.cs" />
      <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
@@ -69,7 +70,11 @@
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
      <Compile Include="Assets\MenuAudio.cs" />
+     <Compile Include="Assets\Scripts\Demonstration.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
+     <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
+     <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransformUpdater.cs" />
+     <Compile Include="Assets\Scripts\FixedInterpolation\InterpolationController.cs" />
      <Compile Include="Assets\Scripts\FulcrumNetworkManager.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />

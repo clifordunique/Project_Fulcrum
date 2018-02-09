@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/MultiplayerTest.unity
+- path: Assets/Emptyworld.unity
   isLoaded: 1
   isActive: 1

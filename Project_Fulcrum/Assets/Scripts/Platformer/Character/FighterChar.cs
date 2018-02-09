@@ -215,7 +215,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,3)] protected int v_FighterGlow;			 	// Amount of fighter "energy glow" effect.
 	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	 	// Amount of camera zoom.
 	[SerializeField][Range(0,1)] protected int v_CameraMode; 			 	// What camera control type is in use.
-	[SerializeField][Range(0,1)] protected int v_DefaultCameraMode; 		// What camera control type to default to in normal gameplay.
+	[SerializeField][Range(0,1)] protected int v_DefaultCameraMode = 1;		// What camera control type to default to in normal gameplay.
 	[SerializeField][Range(0,1)] protected float v_CameraXLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
 	[SerializeField][Range(0,1)] protected float v_CameraYLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
 	[SerializeField][Range(0,1)] protected float v_CameraXLeashLim; 	 	// MUST BE SET HIGHER THAN LEASHM. Same as above, except when it reaches this threshold it instantly stops the camera at the edge rather than interpolating it there.
@@ -589,10 +589,12 @@ public class FighterChar : NetworkBehaviour
 //
 //		DebugUCN();
 
+		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+
 		UpdateContactNormals(true);
 
-		FighterState.FinalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
-
+		FighterState.FinalPos = this.transform.position;
+	
 		//this.GetComponent<Rigidbody2D>().velocity = (Vector3)FighterState.Vel;
 
 		if(FighterState.DevMode&&d_SendCollisionMessages)
@@ -1011,8 +1013,6 @@ public class FighterChar : NetworkBehaviour
 		//print("Corrected remaining movement: "+m_RemainingMovement);
 
 		this.transform.position = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
-
-		UpdateContactNormals(true);
 
 		FighterState.FinalPos = this.transform.position;
 

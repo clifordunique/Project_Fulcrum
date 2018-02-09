@@ -62,6 +62,7 @@ public class ParallaxLayer : MonoBehaviour {
 		speedY = 1-distanceFactor;
 		if(!Application.isPlaying && !options.moveParallax){return;}
 		cameraSpaceCoords = worldSpaceCoords+(gameCamera.transform.position*speedX);
+		cameraSpaceCoords = (Vector2)cameraSpaceCoords;
 		transform.position = cameraSpaceCoords;
 	}
 

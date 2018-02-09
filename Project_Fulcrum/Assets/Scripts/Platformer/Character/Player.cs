@@ -120,7 +120,10 @@ public class Player : FighterChar
 		if(!isLocalPlayer||!isClient){return;}
 		print("Executing post-scenelaunch code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		v_DefaultCameraMode = 1;
 		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
+		o_MainCameraTransform.SetParent(this.transform);
+		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
@@ -163,9 +166,9 @@ public class Player : FighterChar
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
 		FixedUpdateWwiseAudio();
 
-
 		if(isLocalPlayer)
 		{
+			FixedUpdatePlayerAnimation();
 			inputBuffer.Enqueue(FighterState);
 			if(inputBuffer.Count >= inputBufferSize)
 			{
@@ -908,11 +911,38 @@ public class Player : FighterChar
 
 	}
 
+	protected void FixedUpdatePlayerAnimation() // FUPA
+	{
+	}
+
 	protected void UpdatePlayerAnimation() // UPA
 	{
-		float alpha = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
-		if(alpha>1){print("Alpha:"+alpha);}
-		this.transform.position = (Vector3)Vector2.Lerp(v_LastFramePosition, FighterState.FinalPos, alpha);
+//		float alpha = (Time.time - Time.fixedTime) / Time.fixedDeltaTime;
+//		if(alpha>1){print("Alpha:"+alpha);}
+//		this.transform.position = (Vector3)Vector2.Lerp(v_LastFramePosition, FighterState.FinalPos, alpha);
+
+		switch(v_CameraMode)
+		{
+		case 0: 
+			{
+				CameraControlTypeA(); //Player-locked velocity size-reactive camera
+				break;
+			}
+		case 1: 
+			{
+				CameraControlTypeB(); //Mouse Directed Camera
+				break;
+			}
+		case 2:
+			{
+				CameraControlTypeC(); // SuperJump Camera
+				break;
+			}
+		default:
+			{
+				throw new Exception("ERROR: CAMERAMODE UNDEFINED.");
+			}
+		}
 
 		o_Healthbar.SetCurHealth(FighterState.CurHealth);
 
@@ -923,29 +953,6 @@ public class Player : FighterChar
 		if(o_ZonCounter!=null)
 		{
 			o_ZonCounter.text = ""+FighterState.ZonLevel;
-		}
-
-		switch(v_CameraMode)
-		{
-		case 0: //lowercontact is ground
-			{
-				CameraControlTypeA(); //Player-locked velocity size-reactive camera
-				break;
-			}
-		case 1: //lowercontact is ceiling
-			{
-				CameraControlTypeB(); //Mouse Directed Camera
-				break;
-			}
-		case 2: //lowercontact is left
-			{
-				CameraControlTypeC(); // SuperJump Camera
-				break;
-			}
-		default:
-			{
-				throw new Exception("ERROR: CAMERAMODE UNDEFINED.");
-			}
 		}
 	}
 
@@ -973,17 +980,16 @@ public class Player : FighterChar
 		{
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
-		o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
+		//o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion
 	}
-
+		
 	protected void CameraControlTypeB() //CCTB
 	{
 		if(!o_MainCamera){return;}
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, 0.1f);
-		//v_CameraZoom = 50f;
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
@@ -998,8 +1004,8 @@ public class Player : FighterChar
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
 
-		float camAverageX = (this.transform.position.x+this.transform.position.x+FighterState.MouseWorldPos.x)/3;
-		float camAverageY = (this.transform.position.y+this.transform.position.y+FighterState.MouseWorldPos.y)/3;
+		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
+		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
 
 
 		Vector3 topRightEdge= new Vector3((1+v_CameraXLeashM)/2, (1+v_CameraYLeashM)/2, 0f);
@@ -1018,59 +1024,59 @@ public class Player : FighterChar
 		//print("topRightEdge: "+topRightEdge);
 		//print("Player: "+this.transform.position);
 		//print("theMiddle: "+theMiddle);
-		//print("player: "+this.transform.position.x+"\n lefted: "+botLeftEdge.x);
-
-		if(camAverageX-xDistanceToEdge>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
-		{
-			//print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
-			camAverageX = this.transform.position.x+(xDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
-		}
-		if(camAverageX+xDistanceToEdge<this.transform.position.x)
-		{
-			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
-			camAverageX = this.transform.position.x-(xDistanceToEdge);
-		}
-
-		if(camAverageY-yDistanceToEdge>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
-		{
-			//print("Too far down!");
-			camAverageY = this.transform.position.y+(yDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
-		}
-		if(camAverageY+yDistanceToEdge<this.transform.position.y)
-		{
-			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
-			camAverageY = this.transform.position.y-(yDistanceToEdge);
-		}
-
+		//print("player: "+ +"\n lefted: "+botLeftEdge.x);
+//
+//		if(camAverageX-xDistanceToEdge>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
+//		{
+//			//print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
+//			camAverageX = this.transform.position.x+(xDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+//		}
+//		if(camAverageX+xDistanceToEdge<this.transform.position.x)
+//		{
+//			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
+//			camAverageX = this.transform.position.x-(xDistanceToEdge);
+//		}
+//
+//		if(camAverageY-yDistanceToEdge>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
+//		{
+//			//print("Too far down!");
+//			camAverageY = this.transform.position.y+(yDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+//		}
+//		if(camAverageY+yDistanceToEdge<this.transform.position.y)
+//		{
+//			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
+//			camAverageY = this.transform.position.y-(yDistanceToEdge);
+//		}
+//
 		Vector3 camGoalLocation = new Vector3(camAverageX, camAverageY, -10f);
 
-		o_MainCameraTransform.position = Vector3.Lerp(o_MainCameraTransform.position, camGoalLocation, 0.1f); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
-
+		o_MainCameraTransform.localPosition = Vector3.Lerp(o_MainCameraTransform.localPosition, camGoalLocation, 0.1f); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
+	
 		//
 		// The following block of code is for when the player hits the maximum bounds. The camera will instantly snap to the edge and won't go any further. Does not use lerp.
 		//
 
-		if(o_MainCameraTransform.position.x-xDistanceToMax>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
-		{
-			//	print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
-			o_MainCameraTransform.position = new Vector3(this.transform.position.x+(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
-		}
-		if(o_MainCameraTransform.position.x+xDistanceToMax<this.transform.position.x)
-		{
-			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
-			o_MainCameraTransform.position = new Vector3(this.transform.position.x-(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
-		}
-
-		if(o_MainCameraTransform.position.y-yDistanceToMax>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
-		{
-			//print("Too far down!");
-			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y+(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
-		}
-		if(o_MainCameraTransform.position.y+yDistanceToMax<this.transform.position.y)
-		{
-			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
-			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y-(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
-		}
+//		if(o_MainCameraTransform.position.x-xDistanceToMax>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
+//		{
+//			//	print("Too far left! player: "+this.transform.position.x+", edge: "+botLeftEdge.x);
+//			o_MainCameraTransform.position = new Vector3(this.transform.position.x+(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
+//		}
+//		if(o_MainCameraTransform.position.x+xDistanceToMax<this.transform.position.x)
+//		{
+//			//print("Too far Right! player: "+this.transform.position.x+", edge: "+topRightEdge.x);
+//			o_MainCameraTransform.position = new Vector3(this.transform.position.x-(xDistanceToMax),o_MainCameraTransform.position.y, -10f); // CAMERA LOCK X VALUE TO KEEP PLAYER IN FRAME
+//		}
+//
+//		if(o_MainCameraTransform.position.y-yDistanceToMax>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
+//		{
+//			//print("Too far down!");
+//			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y+(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
+//		}
+//		if(o_MainCameraTransform.position.y+yDistanceToMax<this.transform.position.y)
+//		{
+//			//print("Too far up! player: "+this.transform.position.y+", edge: "+topRightEdge.y);
+//			o_MainCameraTransform.position = new Vector3(o_MainCameraTransform.position.x,this.transform.position.y-(yDistanceToMax), -10f); // CAMERA LOCK Y VALUE TO KEEP PLAYER IN FRAME
+//		}
 
 		//o_MainCamera.orthographicSize = 20f; // REMOVE THIS WHEN NOT DEBUGGING.
 
