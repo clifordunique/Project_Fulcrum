@@ -3380,6 +3380,7 @@
 						</Sound>
 						<Sound Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" ShortID="758368311">
 							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
 										<Value>-6</Value>
@@ -3396,6 +3397,9 @@
 							</ReferenceList>
 							<ChildrenList>
 								<AudioFileSource Name="DeusExodus" ID="{3266CC3A-F45C-4005-8AD7-13D5D0A76E5F}" ShortID="1050534839">
+									<PropertyList>
+										<Property Name="TrimEnd" Type="Real64" Value="126.283482142857"/>
+									</PropertyList>
 									<Language>SFX</Language>
 									<AudioFile>Music\DeusExodus.wav</AudioFile>
 								</AudioFileSource>
