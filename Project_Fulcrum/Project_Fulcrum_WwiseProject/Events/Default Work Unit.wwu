@@ -98,7 +98,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="landing" ID="{88EDFA2F-343C-443C-BEED-DDE4048BADBC}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Landing" ID="{88EDFA2F-343C-443C-BEED-DDE4048BADBC}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
