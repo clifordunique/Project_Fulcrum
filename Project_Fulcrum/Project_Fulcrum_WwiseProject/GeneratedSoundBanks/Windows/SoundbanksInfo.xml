@@ -82,7 +82,7 @@
 				</File>
 				<File Id="110099929" Language="SFX">
 					<ShortName>fist_impact01.wav</ShortName>
-					<Path>SFX\fist_impact01_B6B71A35.wem</Path>
+					<Path>SFX\fist_impact01_8F4BB5CC.wem</Path>
 				</File>
 				<File Id="118893268" Language="SFX">
 					<ShortName>jumpwater04.wav</ShortName>
@@ -134,11 +134,11 @@
 				</File>
 				<File Id="210623580" Language="SFX">
 					<ShortName>fist_impact05.wav</ShortName>
-					<Path>SFX\fist_impact05_F9ADC2C7.wem</Path>
+					<Path>SFX\fist_impact05_93F8A3F3.wem</Path>
 				</File>
 				<File Id="215579800" Language="SFX">
 					<ShortName>fist_impact04.wav</ShortName>
-					<Path>SFX\fist_impact04_5CE98AFB.wem</Path>
+					<Path>SFX\fist_impact04_0C9072DF.wem</Path>
 				</File>
 				<File Id="220609359" Language="SFX">
 					<ShortName>ZonPulse.wav</ShortName>
@@ -298,7 +298,7 @@
 				</File>
 				<File Id="580689976" Language="SFX">
 					<ShortName>femalejump04.wav</ShortName>
-					<Path>SFX\femalejump04_34630C51.wem</Path>
+					<Path>SFX\femalejump04_1A8C2BF3.wem</Path>
 				</File>
 				<File Id="584392103" Language="SFX">
 					<ShortName>slam02.wav</ShortName>
@@ -306,7 +306,7 @@
 				</File>
 				<File Id="586298509" Language="SFX">
 					<ShortName>fist_impact08.wav</ShortName>
-					<Path>SFX\fist_impact08_FC7A1968.wem</Path>
+					<Path>SFX\fist_impact08_26F34C8A.wem</Path>
 				</File>
 				<File Id="588140118" Language="SFX">
 					<ShortName>water_land03.wav</ShortName>
@@ -406,7 +406,7 @@
 				</File>
 				<File Id="817514067" Language="SFX">
 					<ShortName>fist_impact06.wav</ShortName>
-					<Path>SFX\fist_impact06_2786BE2F.wem</Path>
+					<Path>SFX\fist_impact06_FD6D7377.wem</Path>
 				</File>
 				<File Id="822964172" Language="SFX">
 					<ShortName>female_attack04.wav</ShortName>
@@ -450,7 +450,7 @@
 				</File>
 				<File Id="913485582" Language="SFX">
 					<ShortName>fist_impact07.wav</ShortName>
-					<Path>SFX\fist_impact07_DDA6AC8C.wem</Path>
+					<Path>SFX\fist_impact07_3E5F825A.wem</Path>
 				</File>
 				<File Id="917801640" Language="SFX">
 					<ShortName>fist_swing02.wav</ShortName>
@@ -502,7 +502,7 @@
 				</File>
 				<File Id="1047189338" Language="SFX">
 					<ShortName>fist_impact02.wav</ShortName>
-					<Path>SFX\fist_impact02_D600CF1A.wem</Path>
+					<Path>SFX\fist_impact02_7531F8CE.wem</Path>
 				</File>
 				<File Id="1047274906" Language="SFX">
 					<ShortName>grass04.wav</ShortName>
@@ -510,7 +510,7 @@
 				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>
-					<Path>SFX\fist_impact03_4FAB030B.wem</Path>
+					<Path>SFX\fist_impact03_BF8465F7.wem</Path>
 				</File>
 				<File Id="1057404706" Language="SFX">
 					<ShortName>sand1.wav</ShortName>

@@ -683,6 +683,7 @@
 							<ChildrenList>
 								<SwitchContainer Name="Footsteps" ID="{C4D59FDD-BFF1-4C43-A876-AB1C4ACA0F0A}" ShortID="938994959">
 									<PropertyList>
+										<Property Name="EnablePanner" Type="bool" Value="True"/>
 										<Property Name="Highpass" Type="int16">
 											<RTPCList>
 												<RTPC Name="" ID="{DB90CCB1-2BB0-47D4-AB72-5E3EBB9EF91F}" ShortID="723651921">
@@ -721,6 +722,7 @@
 												</RTPC>
 											</RTPCList>
 										</Property>
+										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 										<Property Name="Pitch" Type="int32">
 											<ModifierList>
 												<ModifierInfo>
@@ -2068,6 +2070,14 @@
 											</ChildrenList>
 										</RandomSequenceContainer>
 									</ChildrenList>
+									<PositioningInfo>
+										<Panner Name="" ID="{2E4DB803-ED61-449C-ADE2-A6B963C0E4FD}">
+											<PropertyList>
+												<Property Name="PanX" Type="Real64" Value="0.407331975560081"/>
+												<Property Name="PanY" Type="Real64" Value="-42.3326133909287"/>
+											</PropertyList>
+										</Panner>
+									</PositioningInfo>
 									<GroupingInfo>
 										<GroupingBehaviorList>
 											<GroupingBehavior>
@@ -3449,6 +3459,8 @@
 								</SwitchContainer>
 								<SwitchContainer Name="Jump" ID="{208E5057-E6F2-475F-8C42-A1C0FBA378A3}" ShortID="58939134">
 									<PropertyList>
+										<Property Name="EnablePanner" Type="bool" Value="True"/>
+										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
 												<Value>-17</Value>
@@ -3719,6 +3731,14 @@
 											</ChildrenList>
 										</RandomSequenceContainer>
 									</ChildrenList>
+									<PositioningInfo>
+										<Panner Name="" ID="{F2165770-0EDA-45E5-BD3D-FC58C1938629}">
+											<PropertyList>
+												<Property Name="PanX" Type="Real64" Value="-0.203665987780038"/>
+												<Property Name="PanY" Type="Real64" Value="-100"/>
+											</PropertyList>
+										</Panner>
+									</PositioningInfo>
 									<GroupingInfo>
 										<GroupingBehaviorList>
 											<GroupingBehavior>
@@ -3810,7 +3830,9 @@
 									<ChildrenList>
 										<SwitchContainer Name="jump" ID="{E8297096-FE1F-42C0-9019-5EF3BC3A2701}" ShortID="557588583">
 											<PropertyList>
-												<Property Name="EnablePositioning" Type="bool" Value="False"/>
+												<Property Name="3DPositionSource" Type="int16" Value="0"/>
+												<Property Name="OverridePositioning" Type="bool" Value="True"/>
+												<Property Name="PositioningType" Type="int16" Value="1"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>-15</Value>
@@ -4040,6 +4062,10 @@
 													</ReferenceList>
 													<ChildrenList>
 														<Sound Name="female_jump01" ID="{DE927A9D-A84A-48E4-89EB-EDB0A2B8D293}" ShortID="135795560">
+															<PropertyList>
+																<Property Name="EnablePanner" Type="bool" Value="True"/>
+																<Property Name="OverridePositioning" Type="bool" Value="True"/>
+															</PropertyList>
 															<ReferenceList>
 																<Reference Name="Conversion">
 																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -4052,12 +4078,20 @@
 																<AudioFileSource Name="femalejump04" ID="{FDB43A64-5A61-40EC-BA1E-AD119A6CC402}" ShortID="580689976">
 																	<PropertyList>
 																		<Property Name="FadeInDuration" Type="Real64" Value="3.07477678571429E-02"/>
-																		<Property Name="FadeOutDuration" Type="Real64" Value="2.92633928571429E-02"/>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="2.69308035714286E-02"/>
 																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>femalejump04.wav</AudioFile>
 																</AudioFileSource>
 															</ChildrenList>
+															<PositioningInfo>
+																<Panner Name="" ID="{742BEA53-3EF0-4153-9334-0A1C23EE3596}">
+																	<PropertyList>
+																		<Property Name="PanX" Type="Real64" Value="-1.11022302462516E-16"/>
+																		<Property Name="PanY" Type="Real64" Value="43.6285097192225"/>
+																	</PropertyList>
+																</Panner>
+															</PositioningInfo>
 															<ActiveSourceList>
 																<ActiveSource Name="femalejump04" ID="{FDB43A64-5A61-40EC-BA1E-AD119A6CC402}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -4194,6 +4228,11 @@
 														<Property Name="PanY" Type="Real64" Value="58.0993520518359"/>
 													</PropertyList>
 												</Panner>
+												<Position Name="" ID="{0621F388-6BB7-4CF7-8E69-A2B26901D93F}">
+													<PropertyList>
+														<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+													</PropertyList>
+												</Position>
 											</PositioningInfo>
 											<GroupingInfo>
 												<GroupingBehaviorList>
