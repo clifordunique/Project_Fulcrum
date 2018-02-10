@@ -3484,6 +3484,7 @@
 									<ChildrenList>
 										<RandomSequenceContainer Name="generic" ID="{53FE8D1E-ED66-4813-93C1-E55AF6AC23A9}" ShortID="978688413">
 											<PropertyList>
+												<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 												<Property Name="Pitch" Type="int32">
 													<ModifierList>
 														<ModifierInfo>
@@ -3497,6 +3498,7 @@
 														</ModifierInfo>
 													</ModifierList>
 												</Property>
+												<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
 												<Property Name="Volume" Type="Real64">
 													<ModifierList>
 														<ModifierInfo>
@@ -3514,7 +3516,7 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="jump01" ID="{7FF4D397-52DC-411E-A30E-B4E8E57EE572}" ShortID="1033931405">
+												<Sound Name="jump01" ID="{D44A5844-B7D8-4E0E-89B7-BA5F6C4CD9D6}" ShortID="719835315">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3524,25 +3526,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump01" ID="{0E7443E0-FCAE-4B44-A8EB-5AB044EF88E5}" ShortID="324794517">
+														<AudioFileSource Name="jump01" ID="{25357E66-8FAD-4CB8-9612-852A0DFCE7B0}" ShortID="754377790">
 															<Language>SFX</Language>
 															<AudioFile>jump01.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump01" ID="{0E7443E0-FCAE-4B44-A8EB-5AB044EF88E5}" Platform="Linked"/>
+														<ActiveSource Name="jump01" ID="{25357E66-8FAD-4CB8-9612-852A0DFCE7B0}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump02" ID="{C3F8D889-A9B3-4836-B37D-690CD6624597}" ShortID="279828866">
-													<PropertyList>
-														<Property Name="Pitch" Type="int32">
-															<ModifierList>
-																<ModifierInfo>
-																	<Modifier Name="" ID="{5F208CCB-00C6-4D8A-92D8-C9BC9BEA66F5}"/>
-																</ModifierInfo>
-															</ModifierList>
-														</Property>
-													</PropertyList>
+												<Sound Name="jump02" ID="{E2DC054C-8E09-4A10-9DB8-5338FF5CDBD6}" ShortID="224045545">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3552,16 +3545,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump02" ID="{9FBC8333-888E-4580-A662-C3320F4676E8}" ShortID="1027038814">
+														<AudioFileSource Name="jump02" ID="{2D2E00CE-82CC-4711-893A-B027B367334A}" ShortID="447450940">
 															<Language>SFX</Language>
 															<AudioFile>jump02.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump02" ID="{9FBC8333-888E-4580-A662-C3320F4676E8}" Platform="Linked"/>
+														<ActiveSource Name="jump02" ID="{2D2E00CE-82CC-4711-893A-B027B367334A}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump03" ID="{198F03C2-3734-440B-B2E9-9CD4F592E9E9}" ShortID="593284092">
+												<Sound Name="jump03" ID="{F4B79BA2-2A05-48FE-B389-2FEBE229E467}" ShortID="306075829">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3571,16 +3564,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump03" ID="{62834E22-7E5E-47B0-94A7-66DE223236E6}" ShortID="785104644">
+														<AudioFileSource Name="jump03" ID="{A154D0E7-2FEA-44D2-BF93-64682EB8CB62}" ShortID="613586313">
 															<Language>SFX</Language>
 															<AudioFile>jump03.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump03" ID="{62834E22-7E5E-47B0-94A7-66DE223236E6}" Platform="Linked"/>
+														<ActiveSource Name="jump03" ID="{A154D0E7-2FEA-44D2-BF93-64682EB8CB62}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump04" ID="{8713EAA4-5D5A-4EB1-8381-54C19A695B73}" ShortID="741436217">
+												<Sound Name="jump04" ID="{8CCA1323-EA3B-41F9-8F64-96C942453696}" ShortID="304724867">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3590,16 +3583,16 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump04" ID="{DF854939-58FA-4E8B-8A98-CB313C5A736C}" ShortID="327985428">
+														<AudioFileSource Name="jump04" ID="{057DCECE-33A6-4A5F-9253-A08CEC068C0C}" ShortID="393703763">
 															<Language>SFX</Language>
 															<AudioFile>jump04.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump04" ID="{DF854939-58FA-4E8B-8A98-CB313C5A736C}" Platform="Linked"/>
+														<ActiveSource Name="jump04" ID="{057DCECE-33A6-4A5F-9253-A08CEC068C0C}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="jump05" ID="{76BE5A0F-72F0-4485-8B08-39EF7E07525A}" ShortID="382981933">
+												<Sound Name="jump05" ID="{2442079B-1B86-4D6F-A260-D53438D2FAF0}" ShortID="30790787">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -3609,13 +3602,13 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="jump05" ID="{C7D28454-1B8C-481E-97AE-1826BC18E1E2}" ShortID="165094160">
+														<AudioFileSource Name="jump05" ID="{293D64A3-EBC9-4C53-A742-9E3A45ACE14C}" ShortID="175857295">
 															<Language>SFX</Language>
 															<AudioFile>jump05.wav</AudioFile>
 														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="jump05" ID="{C7D28454-1B8C-481E-97AE-1826BC18E1E2}" Platform="Linked"/>
+														<ActiveSource Name="jump05" ID="{293D64A3-EBC9-4C53-A742-9E3A45ACE14C}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
