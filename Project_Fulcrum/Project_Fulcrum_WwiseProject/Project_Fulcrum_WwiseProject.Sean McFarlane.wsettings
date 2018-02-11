@@ -64,7 +64,7 @@
 				<Property Name="GenerateSoundBanks\x64_SelectedPlatforms" Type="string" Value="t2GGuOBTQkyGGDUm6pwzmokLKfES66lFo7NJhyJ2V1g="/>
 				<Property Name="GenerateSoundBanks\x64_SelectedSoundBanks" Type="string" Value="y6ZvBWquEk+b13pXMutzjrNiOlR4TARMnfdUiqqbNfY="/>
 				<Property Name="HardwareController\CurrentSession" Type="string" Value="{2451DD2E-A7B2-45E6-B93B-6F49B9B887AD}"/>
-				<Property Name="HardwareController\{2451DD2E-A7B2-45E6-B93B-6F49B9B887AD}\x64_ActiveGroups" Type="string" Value="snCR5gse7U6Z/ikFcxPN+AD/////////CUN6PmLHk0qzcgJ7057zeAH/////////"/>
+				<Property Name="HardwareController\{2451DD2E-A7B2-45E6-B93B-6F49B9B887AD}\x64_ActiveGroups" Type="string" Value="CUN6PmLHk0qzcgJ7057zeAH/////////snCR5gse7U6Z/ikFcxPN+AD/////////"/>
 				<Property Name="IntegrityReport\AudioFilesAndSources" Type="bool" Value="True"/>
 				<Property Name="IntegrityReport\BrokenReferences" Type="bool" Value="True"/>
 				<Property Name="IntegrityReport\EnableLanguages" Type="bool" Value="True"/>
@@ -100,7 +100,7 @@
 				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value="T1LHTYTQGU6yaQblMbjDjw=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_20_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_21_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="1BTt3mijREO2dRbcaNoN+jcV5+pNgJ9HpjbRofbocK/2HvjhJeUvS654t2q3WEW7cC6sx9TGUUyfhWVgDNSDiW1Jb+Jwu8pNpvZFUdrI7em0kc5un4LiTZwmELCN9Apm"/>
+				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="wmB+F+2Wh0Kwyxv9GrRpB9QU7d5oo0RDtnUW3GjaDfqk+lBoD5lxR6lU+T5J4hvJNxXn6k2An0emNtGh9uhwr/Ye+OEl5S9Lrni3ardYRbtwLqzH1MZRTJ+FZWAM1IOJbUlv4nC7yk2m9kVR2sjt6bSRzm6fguJNnCYQsI30CmY="/>
 				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value="MicI7gRxM0SPSMh+cKCZsg=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_4_1" Type="string" Value="miiazfIYY0CTdJ2nlTxcDIgqK76CTvhAnd7+0Tlv2BQ="/>
 				<Property Name="ProjectExplorer\x64_Expanded_5_1" Type="string" Value="6Np3va//1E6vX/bTzNiGzQ=="/>

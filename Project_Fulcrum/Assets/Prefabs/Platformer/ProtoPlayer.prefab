@@ -1118,6 +1118,7 @@ MonoBehaviour:
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
   v_PunchHitting: 0
+  v_AirForgiveness: 0
   v_Gender: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
