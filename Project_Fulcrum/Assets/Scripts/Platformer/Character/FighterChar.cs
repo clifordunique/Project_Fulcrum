@@ -128,6 +128,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	[SerializeField][ReadOnlyAttribute] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] public Transform o_VelocityPunchHolder;		// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;      	// Reference to the game level's timescale manager.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
 	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the shock visual effect prefab.
@@ -226,6 +228,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
 	[SerializeField][ReadOnlyAttribute] protected float v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
+	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements.
+	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -250,7 +254,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public bool g_fighterCollision = true;				// While true, this fighter will collide with other fighters
 	[SerializeField] public float g_fighterCollisionCD;					// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
 	[SerializeField] public float g_fighterCollisionCDLength = 1f;		// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
-	[SerializeField] public int g_Stance = 0;							// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
 	[SerializeField][ReadOnlyAttribute]protected float g_CurStun = 0;	// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
 	[SerializeField] protected float g_MaxClashDisparity = 500;			// The speed difference at which the damage a clash deals reaches its max. For example, if set to 500, one player must be going 500 Kph faster than their opponent to deal 100% damage. If value is lost, try starting with 500 to test.
 	[SerializeField] protected float g_MaxClashDamage = 300;			// Max damage dealt by any clash of fighters. (A clash is when two fighters collide in attack stance)
@@ -396,6 +399,12 @@ public class FighterChar : NetworkBehaviour
 		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
 	}
 
+	protected virtual void SpawnDustEffect(Vector2 spawnPos)
+	{
+		Vector3 spawnPosV3 = (Vector3)spawnPos;
+		Instantiate(p_DustEffectPrefab, spawnPosV3, Quaternion.identity);
+	}
+
 	protected virtual void SpawnShockEffect(Vector2 hitDirection)
 	{
 		//print("Hit direction = "+hitDirection);
@@ -514,7 +523,7 @@ public class FighterChar : NetworkBehaviour
 			float slamThreshold;
 			float velPunchThreshold;
 
-			if(g_Stance == 2) // If guarding, more resistant to landing damage.
+			if(FighterState.Stance == 2) // If guarding, more resistant to landing damage.
 			{
 				craterThreshold = m_GuardCraterT;
 				slamThreshold = m_GuardSlamT;
@@ -561,7 +570,7 @@ public class FighterChar : NetworkBehaviour
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 
 			}
-			else if(m_IGF >= velPunchThreshold&&g_VelocityPunching)
+			else if(FighterState.Stance == 1)
 			{
 				float impactStrengthM = ((m_IGF-velPunchThreshold)/(craterThreshold-velPunchThreshold));
 
@@ -570,7 +579,7 @@ public class FighterChar : NetworkBehaviour
 				float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
 				float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*impactStrengthM); // Stun duration scales linearly from ...
 
-				g_CurStun = stunTime;				 // Stunned for stunTime.
+				g_CurStun = 0.5f;				 // Stunned for stunTime.
 				g_Staggered = true;
 				if(damagedealt >= 0)
 				{
@@ -799,6 +808,7 @@ public class FighterChar : NetworkBehaviour
 			//print("FACING LEFT!   "+h)
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			o_SpriteRenderer.flipX = true;
+			o_VelocityPunchHolder.localScale = new Vector3 (1f, 1f, 1f);
 			if(FighterState.Vel.x > 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -815,6 +825,7 @@ public class FighterChar : NetworkBehaviour
 			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			o_SpriteRenderer.flipX = false;
+			o_VelocityPunchHolder.localScale = new Vector3 (-1f, 1f, 1f);
 			if(FighterState.Vel.x < 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -871,7 +882,7 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetFloat("vSpeed", Math.Abs(FighterState.Vel.y));
 		o_Anim.SetFloat("hVelocity", FighterState.Vel.x);
 		o_Anim.SetFloat("vVelocity", FighterState.Vel.y);
-		o_Anim.SetInteger("Stance", g_Stance);
+		o_Anim.SetInteger("Stance", FighterState.Stance);
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
 
@@ -940,6 +951,7 @@ public class FighterChar : NetworkBehaviour
 		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
 		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
+		o_VelocityPunchHolder = o_VelocityPunch.gameObject.transform.parent;
 
 		m_GroundFoot = transform.Find("MidFoot");
 		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
@@ -2175,13 +2187,13 @@ public class FighterChar : NetworkBehaviour
 
 	protected bool FighterCollision(FighterChar fighterCollidedWith) //FC
 	{ // Handles collisions with another Fighter.
-		if(g_Stance == 0) // If neutral, check if other fighter is attacking.
+		if(FighterState.Stance == 0) // If neutral, check if other fighter is attacking.
 		{
-			if(fighterCollidedWith.g_Stance==0)
+			if(fighterCollidedWith.FighterState.Stance==0)
 			{
 				return false;
 			}
-			else if(fighterCollidedWith.g_Stance==1)
+			else if(fighterCollidedWith.FighterState.Stance==1)
 			{
 				fighterCollidedWith.FighterStruck(this);
 				return true;
@@ -2191,13 +2203,13 @@ public class FighterChar : NetworkBehaviour
 				return false;
 			}
 		}
-		else if(g_Stance==1) // If attacking, see what stance enemy is, and decide type of impact.
+		else if(FighterState.Stance==1) // If attacking, see what stance enemy is, and decide type of impact.
 		{
-			if(fighterCollidedWith.g_Stance==0)
+			if(fighterCollidedWith.FighterState.Stance==0)
 			{
 				FighterStruck(fighterCollidedWith);
 			}
-			else if(fighterCollidedWith.g_Stance==1)
+			else if(fighterCollidedWith.FighterState.Stance==1)
 			{
 				FighterClash(fighterCollidedWith);
 			}
@@ -2209,11 +2221,11 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			if(fighterCollidedWith.g_Stance==0)
+			if(fighterCollidedWith.FighterState.Stance==0)
 			{
 				return false;
 			}
-			else if(fighterCollidedWith.g_Stance==1)
+			else if(fighterCollidedWith.FighterState.Stance==1)
 			{
 				fighterCollidedWith.FighterGuardStruck(this);
 				return true;
@@ -2282,8 +2294,8 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Visual/Audio effects
 		//
-		v_PunchHitting = 0.5f;
-		Time.timeScale = 0.1f;
+		v_PunchHitting = 0.25f;
+		o_TimeManager.TimeDilation(0.1f, 0.75f);
 		if(combinedSpeed >= m_CraterT)
 		{
 			//opponent.Crater(combinedSpeed);
@@ -2296,18 +2308,20 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			ThrowPunch(myVelocity);
+			//ThrowPunch(myVelocity);
 		}
+		Vector2 inbetween = (opponent.GetPosition()+this.GetPosition())/2;
+		SpawnDustEffect(inbetween);
 		//
 		// Setting new player velocities.
 		//
 		opponent.InstantForce(myVelocity, combinedSpeed*0.6f);
 		this.InstantForce(yourVelocity, combinedSpeed*0.2f);
 
-		this.FighterState.Vel.y += 20*impactDamageM;
-		opponent.FighterState.Vel.y += 20*impactDamageM;
+		//this.FighterState.Vel.y += 20*impactDamageM;
+		//opponent.FighterState.Vel.y += 20*impactDamageM;
 
-		print("Clashing strike!\nOpponent got knocked in direction "+yourVelocity+"\nI got knocked in direction "+myVelocity);
+		print("Opponent struck!\nOpponent got knocked in direction "+yourVelocity+"\nI got knocked in direction "+myVelocity);
 		print("Opponent took "+myTotalDamageDealt+" damage");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
@@ -2405,7 +2419,7 @@ public class FighterChar : NetworkBehaviour
 		opponent.InstantForce(myVelocity, combinedSpeed*0.2f);
 		this.InstantForce(yourVelocity, combinedSpeed*0.1f);
 
-		print("Clashing strike!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
+		print("Guard struck!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
 		print("Opponent took "+myTotalDamageDealt+" damage");
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
 		g_fighterCollisionCD = g_fighterCollisionCDLength;
@@ -2522,7 +2536,7 @@ public class FighterChar : NetworkBehaviour
 		opponent.InstantForce(myVelocity, combinedSpeed*0.5f);
 		this.InstantForce(yourVelocity, combinedSpeed*0.5f);
 
-		print("Clashing strike!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
+		print("Fighters Clashed!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
 		print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
@@ -3681,9 +3695,11 @@ public class FighterChar : NetworkBehaviour
 [System.Serializable] public struct FighterState
 {
 	[SerializeField][ReadOnlyAttribute]public int ZonLevel;					// Level of fighter Zon Power.
-	[SerializeField][ReadOnlyAttribute]public bool DevMode;						// Turns on all dev cheats.
-	[SerializeField][ReadOnlyAttribute]public int CurHealth;						// Current health.
-	[SerializeField][ReadOnlyAttribute]public bool Dead;							// True when the fighter's health reaches 0 and they die.
+	[SerializeField][ReadOnlyAttribute]public bool DevMode;					// Turns on all dev cheats.
+	[SerializeField][ReadOnlyAttribute]public int CurHealth;				// Current health.
+	[SerializeField][ReadOnlyAttribute]public bool Dead;					// True when the fighter's health reaches 0 and they die.
+	[SerializeField][ReadOnlyAttribute]public int Stance;					// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
+
 	[SerializeField][ReadOnlyAttribute]public bool JumpKeyPress;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickPress;
 	[SerializeField][ReadOnlyAttribute]public bool RightClickPress;

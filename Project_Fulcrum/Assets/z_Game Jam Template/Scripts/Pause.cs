@@ -32,8 +32,8 @@ public class Pause : MonoBehaviour {
 		else if (Input.GetButtonDown ("Cancel") && isPaused && !startScript.inMainMenu) 
 		{
 			//Call the UnPause function to unpause the game
-			UnPause ();
-			AkSoundEngine.PostEvent("Menu_Pause", gameObject);
+			UnPause();
+			AkSoundEngine.PostEvent("Menu_Resume", gameObject);
 		}
 	
 	}
@@ -46,7 +46,7 @@ public class Pause : MonoBehaviour {
 		//Set time.timescale to 0, this will cause animations and physics to stop updating
 		Time.timeScale = 0;
 		//call the ShowPausePanel function of the ShowPanels script
-		showPanels.ShowPausePanel ();
+		showPanels.ShowPausePanel();
 	}
 
 
@@ -57,7 +57,7 @@ public class Pause : MonoBehaviour {
 		//Set time.timescale to 1, this will cause animations and physics to continue updating at regular speed
 		Time.timeScale = 1;
 		//call the HidePausePanel function of the ShowPanels script
-		showPanels.HidePausePanel ();
+		showPanels.HidePausePanel();
 	}
 
 

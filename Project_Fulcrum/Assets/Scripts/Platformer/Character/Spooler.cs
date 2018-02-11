@@ -207,7 +207,6 @@ public class Spooler : NetworkBehaviour
 		//print("RINGNUM="+r_RingNum);
 		//print("thePitch"+thePitch);	
 		o_SpoolAudio.pitch = 1f;					// Changes pitch AND tempo based on if ring is in bluemode or not.
-		o_SpoolMixer.SetFloat("Pitch", thePitch);	// Changes the pitch based on how many rings are up.
 		r_CurTime = 0;
 	}
 

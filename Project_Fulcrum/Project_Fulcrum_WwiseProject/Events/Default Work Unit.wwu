@@ -298,6 +298,26 @@
 								</Reference>
 							</ReferenceList>
 						</Action>
+						<Action Name="" ID="{16A44738-EA16-4B52-A8EC-77E4D00577AC}" ShortID="21961125">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="7"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master_Effects" ID="{DEED14D4-A368-4344-B675-16DC68DA0DFA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{1B7E8C7F-36EC-452B-B4D6-7F85E139165F}" ShortID="342116018">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="7"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master_Music" ID="{C7AC2E70-C6D4-4C51-9F85-65600CD48389}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
 					</ChildrenList>
 				</Event>
 				<Event Name="Menu_Select" ID="{E27EE8C8-A4F5-4212-9F4A-DFA7B1EDFC6A}">
@@ -323,6 +343,68 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="menu_resume" ID="{5E5FAF99-0B1D-4989-8C7D-8AE34866C9FD}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{90D5BEBE-D9BC-4956-806D-DEBBE9831D7E}" ShortID="517018198">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="9"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master_Music" ID="{C7AC2E70-C6D4-4C51-9F85-65600CD48389}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{B4973CDC-876B-4D18-9D33-EDEC510317BE}" ShortID="696336426">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="9"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master_Effects" ID="{DEED14D4-A368-4344-B675-16DC68DA0DFA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Set_Gender_Female" ID="{A8D314FA-7D8E-4E84-9AE8-8A04A621FABB}">
+					<ChildrenList>
+						<Action Name="" ID="{11DFED21-AFD5-4E24-9C9A-AA8E501DA443}" ShortID="748555663">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="23"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Set_Gender_Male" ID="{A7F7646A-2BDF-469D-980C-32B5699187AC}">
+					<ChildrenList>
+						<Action Name="" ID="{AFADEC8E-BF8D-44FD-A589-1E9A3827695A}" ShortID="387257072">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="23"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Male" ID="{BE2F0B43-657A-47A1-8B50-5DBDB942F4DB}" WorkUnitID="{CD9A289A-18F2-4063-9374-9DA7953C5C0C}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="SuperJump" ID="{6B0B3AB4-9D88-44FF-AEF9-3DC9C0621D39}">
+					<ChildrenList>
+						<Action Name="" ID="{30CE1FEA-C7BC-4FC5-8B97-B59461600733}" ShortID="893501642">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Jump" ID="{208E5057-E6F2-475F-8C42-A1C0FBA378A3}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

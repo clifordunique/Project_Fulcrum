@@ -39,13 +39,14 @@ public class TimeManager : MonoBehaviour {
 		AkSoundEngine.SetRTPCValue("TimeDilation", Time.timeScale);
 	}
 
-	// Update is called once per frame
+	// FixedUpdate is called once per physics frame
 	void FixedUpdate () 
-	{
+	{		
 		if(permaSlow){return;}
 		if(slowmoTimer>0)
 		{
-			slowmoTimer -= Time.fixedUnscaledTime;
+			print("slowmoTimer = "+slowmoTimer);
+			slowmoTimer -= Time.fixedUnscaledDeltaTime;
 		}
 		else
 		{

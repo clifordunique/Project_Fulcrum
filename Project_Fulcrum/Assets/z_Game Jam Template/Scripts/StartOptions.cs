@@ -18,6 +18,9 @@ public class StartOptions : NetworkBehaviour {
 	public bool changeMusicOnStart;										//Choose whether to continue playing menu music or start a new music clip
 	[SerializeField] private GameObject p_MatchSelectButton;
 	[SerializeField] private RectTransform o_MatchSelectScrollbar;
+	[SerializeField] public float defaultMusicLvl = 75;
+	[SerializeField] public float defaultEffectsLvl = 75;
+
 
 	[HideInInspector] public bool inMainMenu = true;					//If true, pause button disabled in main menu (Cancel in input manager, default escape key)
 	[HideInInspector] public Animator animColorFade; 					//Reference to animator which will fade to and from black when starting game.
@@ -42,6 +45,11 @@ public class StartOptions : NetworkBehaviour {
 
 		//Get a reference to PlayMusic attached to UI object
 		playMusic = GetComponent<PlayMusic> ();
+
+		AkSoundEngine.SetRTPCValue("Volume_Music", defaultMusicLvl);
+		AkSoundEngine.SetRTPCValue("Volume_Effects", defaultEffectsLvl);
+	
+
 		Mngr.StartMatchMaker();
 	}
 
@@ -66,12 +74,7 @@ public class StartOptions : NetworkBehaviour {
 		Mngr.matches = matchBook;
 		//Mngr.OnMatchList(b, s, matchBook);
 	}
-
-//	public void OnMatchCreate(bool b, string s, MatchInfo matchInfo)
-//	{
-//
-//	}
-
+		
 	public void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
 	{
 		if(success)
@@ -106,14 +109,6 @@ public class StartOptions : NetworkBehaviour {
 		animColorFade.SetTrigger("fade");
 	}
 
-//	public void SingleplayerButtonClicked()
-//	{
-//		playMusic.FadeDown(fadeColorAnimationClip.length);
-//		ChangeSceneMultiplayer(true);
-//		inMainMenu = false;
-//		showPanels.HideMenu();
-//	}
-
 	public void JoinMatchButtonClicked()
 	{
 		Mngr.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
@@ -133,7 +128,10 @@ public class StartOptions : NetworkBehaviour {
 	public void ChangeSceneSingleplayer()
 	{
 		isMultiplayer = false;
+		inMainMenu = false;
 		SceneManager.LoadScene("Scenes/MultiplayerTest");
+		//Mngr.ServerChangeScene("Scenes/MultiplayerTest");
+		//NetworkClient localhost = Mngr.StartHost();
 	}
 
 	public void ChangeSceneMultiplayer(bool randomName)
@@ -151,7 +149,7 @@ public class StartOptions : NetworkBehaviour {
 		isMultiplayer = true;
 		Mngr.ServerChangeScene("Scenes/MultiplayerTest");
 		//SceneManager.LoadScene("Scenes/MultiplayerTest");
-		Mngr.matchMaker.CreateMatch(inputField.text, Mngr.matchSize, true, "","","", 0, 0, Mngr.OnMatchCreate);
+		Mngr.matchMaker.CreateMatch(matchName, Mngr.matchSize, true, "","","", 0, 0, Mngr.OnMatchCreate);
 	}
 
     void OnEnable()
@@ -167,6 +165,7 @@ public class StartOptions : NetworkBehaviour {
    // Once the level has loaded, check if we want to call PlayLevelMusic
     void SceneWasLoaded(Scene scene, LoadSceneMode mode)
     {
+		print("Scene Loaded");
 		Mngr.gameObject.GetComponent<NetworkManagerHUD>().enabled = false;
 		if(scene.name=="MainMenu")
 		{
@@ -185,8 +184,6 @@ public class StartOptions : NetworkBehaviour {
 		{
 			print("Multiplayer Loaded.");
 			Invoke("PlayNewMusic", fadeAlphaAnimationClip.length);
-//			ClientScene.Ready(Mngr.client.connection);
-//			ClientScene.AddPlayer(0);
 		}
 		else
 		{

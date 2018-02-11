@@ -23,12 +23,16 @@ namespace AK
         static const AkUniqueID LANDING = 2548270042U;
         static const AkUniqueID MENU_HIGHLIGHT = 29030485U;
         static const AkUniqueID MENU_PAUSE = 2170009975U;
+        static const AkUniqueID MENU_RESUME = 2263363174U;
         static const AkUniqueID MENU_SELECT = 4203375351U;
         static const AkUniqueID PLAYMUSIC = 417627684U;
         static const AkUniqueID PUNCHHIT = 3343194546U;
         static const AkUniqueID PUNCHSWING = 2180951687U;
+        static const AkUniqueID SET_GENDER_FEMALE = 757371536U;
+        static const AkUniqueID SET_GENDER_MALE = 1541588287U;
         static const AkUniqueID SLIDELOOPSTART = 1119192506U;
         static const AkUniqueID STRANDJUMP = 187194041U;
+        static const AkUniqueID SUPERJUMP = 188599998U;
         static const AkUniqueID WINDLOOPSTART = 1721707775U;
     } // namespace EVENTS
 
@@ -126,6 +130,8 @@ namespace AK
         static const AkUniqueID TIMEDILATION = 2881936400U;
         static const AkUniqueID VELOCITY_X = 164475293U;
         static const AkUniqueID VELOCITY_Y = 164475292U;
+        static const AkUniqueID VOLUME_EFFECTS = 3194824364U;
+        static const AkUniqueID VOLUME_MUSIC = 3891337659U;
         static const AkUniqueID WALLSLIDING = 2190485205U;
     } // namespace GAME_PARAMETERS
 

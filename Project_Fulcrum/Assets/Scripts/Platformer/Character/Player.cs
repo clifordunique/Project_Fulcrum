@@ -40,7 +40,6 @@ public class Player : FighterChar
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
-	[SerializeField][ReadOnlyAttribute] private TimeManager o_TimeManager;      	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] private Reporter o_Reporter;      			// Reference to the console (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
@@ -119,7 +118,7 @@ public class Player : FighterChar
 	{
 		sceneIsReady = true;
 		if(!isLocalPlayer||!isClient){return;}
-		print("Executing post-scenelaunch code!");
+		print("Executing post-scenelaunch player code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		v_DefaultCameraMode = 1;
@@ -273,7 +272,7 @@ public class Player : FighterChar
 	protected override void FixedUpdateProcessInput() // FUPI
 	{
 		m_WorldImpact = false; //Placeholder??
-		g_Stance = 0;
+		FighterState.Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
 
@@ -392,6 +391,17 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey8)
 		{
+			v_Gender = (v_Gender) ? false : true;
+
+			if(v_Gender)
+			{
+				AkSoundEngine.PostEvent("Set_Gender_Male", gameObject);
+			}
+			else
+			{
+				AkSoundEngine.PostEvent("Set_Gender_Female", gameObject);
+			}
+
 			FighterState.DevKey8 = false;
 		}
 		if(FighterState.DevKey9)
@@ -697,13 +707,13 @@ public class Player : FighterChar
 			{
 				ThrowPunch(FighterState.PlayerMouseVector.normalized);
 			}
-			print("Leftclick detected");
+			//print("Leftclick detected");
 			FighterState.LeftClickRelease = false;
 		}
 
 		if(FighterState.RightClickHold)
 		{
-			g_Stance = 2;
+			FighterState.Stance = 2;
 		}
 
 		if(FighterState.DisperseKeyPress)
@@ -715,7 +725,7 @@ public class Player : FighterChar
 		if(FighterState.LeftClickHold)
 		{
 			FighterState.LeftClickHoldDuration += Time.fixedDeltaTime;
-			g_Stance = 1;
+			FighterState.Stance = 1;
 
 			if((FighterState.LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
@@ -984,15 +994,16 @@ public class Player : FighterChar
 //			zoomChange = (v_CameraZoom)-5f;
 //		}
 		//o_MainCamera.orthographicSize = 5f+(0.15f*v_CameraZoom);
-		if(8f+zoomChange >= 50f)
+		if(8f+zoomChange >= 20f)
 		{
-			o_MainCamera.orthographicSize = 50f;
+			o_MainCamera.orthographicSize = 20f;
 		}
 		else
 		{
 			o_MainCamera.orthographicSize = 8f+zoomChange;
 		}
 		//o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
+		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
 		//o_MainCamera.orthographicSize = 100f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 		#endregion

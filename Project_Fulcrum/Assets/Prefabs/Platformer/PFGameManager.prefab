@@ -19,16 +19,14 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4750050586635216}
-  - component: {fileID: 114010814285382666}
   - component: {fileID: 114529365685208964}
+  - component: {fileID: 114010814285382666}
   - component: {fileID: 114875267132308746}
   - component: {fileID: 114238483977337252}
   - component: {fileID: 114743143496466830}
   - component: {fileID: 114218043098645578}
   - component: {fileID: 114760271869978916}
   - component: {fileID: 114534534481785002}
-  - component: {fileID: 114378747345238040}
-  - component: {fileID: 114717945175170536}
   - component: {fileID: 114423580197229632}
   - component: {fileID: 114915933450075684}
   m_Layer: 0
@@ -85,25 +83,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c649a7404dfeae47a7445604bc8fdec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114378747345238040
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1431312019477054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4324b278254cf3b41b129362b03742f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerList: f7e1664c
-  useOtherObject: 0
-  valueGuid: cba66f056aae124f9bd77a5732eb738e
-  bankName: FighterChar
-  loadAsynchronous: 0
-  decodeBank: 0
-  saveDecodedBank: 0
-  unloadTriggerList: 958ca0ea
 --- !u!114 &114423580197229632
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,25 +197,6 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 1
---- !u!114 &114717945175170536
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1431312019477054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4324b278254cf3b41b129362b03742f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerList: f7e1664c
-  useOtherObject: 0
-  valueGuid: b3623a54784c044c9df7548aaa9b35f6
-  bankName: UI
-  loadAsynchronous: 0
-  decodeBank: 0
-  saveDecodedBank: 0
-  unloadTriggerList: 958ca0ea
 --- !u!114 &114743143496466830
 MonoBehaviour:
   m_ObjectHideFlags: 1

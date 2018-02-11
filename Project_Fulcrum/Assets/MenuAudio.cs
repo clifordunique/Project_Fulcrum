@@ -17,4 +17,8 @@ public class MenuAudio : MonoBehaviour {
 	{
 		AkSoundEngine.PostEvent("Menu_Pause", gameObject);
 	}
+	public void ResumeSound()
+	{
+		AkSoundEngine.PostEvent("Menu_Pause", gameObject);
+	}
 }

@@ -12,9 +12,9 @@ public class VelocityPunch : MonoBehaviour {
 	private float punchMinThreshold;
 
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
-		myParent = this.transform.parent;
+		myParent = this.transform.root;
 		myFighter = myParent.GetComponent<FighterChar>();
 		mySprite = this.GetComponent<SpriteRenderer>();
 		myTrailRenderer = this.transform.GetComponent<TrailRenderer>();

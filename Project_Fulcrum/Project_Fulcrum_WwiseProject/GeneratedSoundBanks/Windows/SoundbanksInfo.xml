@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
 	<RootPaths>
-		<ProjectRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -27,8 +27,11 @@
 				<Event Id="417627684" Name="PlayMusic" ObjectPath="\Events\Default Work Unit\PlayMusic"/>
 				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit"/>
 				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
+				<Event Id="757371536" Name="Set_Gender_Female" ObjectPath="\Events\Default Work Unit\Set_Gender_Female" MaxAttenuation="0.000000"/>
+				<Event Id="1541588287" Name="Set_Gender_Male" ObjectPath="\Events\Default Work Unit\Set_Gender_Male" MaxAttenuation="0.000000"/>
 				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart"/>
 				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
+				<Event Id="188599998" Name="SuperJump" ObjectPath="\Events\Default Work Unit\SuperJump"/>
 				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -508,6 +511,10 @@
 					<ShortName>grass04.wav</ShortName>
 					<Path>SFX\grass04_1C9C67B2.wem</Path>
 				</File>
+				<File Id="1050534839" Language="SFX">
+					<ShortName>Music\DeusExodus.wav</ShortName>
+					<Path>SFX\Music\DeusExodus_1C9C67B2.wem</Path>
+				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>
 					<Path>SFX\fist_impact03_BF8465F7.wem</Path>
@@ -542,6 +549,7 @@
 			<IncludedEvents>
 				<Event Id="29030485" Name="Menu_Highlight" ObjectPath="\Events\Default Work Unit\Menu_Highlight"/>
 				<Event Id="2170009975" Name="Menu_Pause" ObjectPath="\Events\Default Work Unit\Menu_Pause"/>
+				<Event Id="2263363174" Name="Menu_Resume" ObjectPath="\Events\Default Work Unit\Menu_Resume"/>
 				<Event Id="4203375351" Name="Menu_Select" ObjectPath="\Events\Default Work Unit\Menu_Select"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -552,6 +560,10 @@
 				<File Id="184887075" Language="SFX">
 					<ShortName>highlightmenu.wav</ShortName>
 					<Path>SFX\highlightmenu_1C9C67B2.wem</Path>
+				</File>
+				<File Id="239526825" Language="SFX">
+					<ShortName>menu_resume.wav</ShortName>
+					<Path>SFX\menu_resume_1C9C67B2.wem</Path>
 				</File>
 				<File Id="583020055" Language="SFX">
 					<ShortName>selectmenu.wav</ShortName>

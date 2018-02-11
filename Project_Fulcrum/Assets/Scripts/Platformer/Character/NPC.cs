@@ -348,7 +348,7 @@ public class NPC : FighterChar {
 		if(FighterState.LeftClickHold)
 		{
 			i_LeftClickHoldDuration += Time.fixedDeltaTime;
-			g_Stance = 1;
+			FighterState.Stance = 1;
 
 			if((i_LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{

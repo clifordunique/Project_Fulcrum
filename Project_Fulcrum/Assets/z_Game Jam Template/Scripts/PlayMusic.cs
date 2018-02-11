@@ -12,14 +12,14 @@ public class PlayMusic : MonoBehaviour {
 	public AudioMixerSnapshot volumeUp;				//Reference to Audio mixer snapshot in which the master volume of main mixer is turned up
 
 
-	private AudioSource musicSource;				//Reference to the AudioSource which plays music
+	//private AudioSource musicSource;				//Reference to the AudioSource which plays music
 	private float resetTime = .01f;					//Very short time used to fade in near instantly without a click
 
 
 	void Awake () 
 	{
 		//Get a component reference to the AudioSource attached to the UI game object
-		musicSource = GetComponent<AudioSource>();
+		//musicSource = GetComponent<AudioSource>();
 		//Call the PlayLevelMusic function to start playing music
 		//PlayLevelMusic();
 	}
@@ -32,16 +32,16 @@ public class PlayMusic : MonoBehaviour {
 		{
 			//If scene index is 0 (usually title scene) assign the clip titleMusic to musicSource
 			case 0:
-				musicSource.clip = titleMusic;
+			//	musicSource.clip = titleMusic;
 				break;
 			//If scene index is 1 (usually main scene) assign the clip mainMusic to musicSource
 			case 1:
-				musicSource.clip = mainMusic;
+			//	musicSource.clip = mainMusic;
 				break;
 		}
 		//Play the assigned music clip in musicSource
 		FadeDown(10.0f);
-		musicSource.Play();
+		//musicSource.Play();
 	}
 	
 	//Used if running the game in a single scene, takes an integer music source allowing you to choose a clip by number and play.
@@ -53,15 +53,15 @@ public class PlayMusic : MonoBehaviour {
 		{
 		//if musicChoice is 0 assigns titleMusic to audio source
 		case 0:
-			musicSource.clip = titleMusic;
+//			musicSource.clip = titleMusic;
 			break;
 			//if musicChoice is 1 assigns mainMusic to audio source
 		case 1:
-			musicSource.clip = mainMusic;
+//			musicSource.clip = mainMusic;
 			break;
 		}
 		//Play the selected clip
-		musicSource.Play();
+		//musicSource.Play();
 	}
 
 	//Call this function to very quickly fade up the volume of master mixer

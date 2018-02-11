@@ -27,8 +27,11 @@
 				<Event Id="417627684" Name="PlayMusic" ObjectPath="\Events\Default Work Unit\PlayMusic"/>
 				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit"/>
 				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
+				<Event Id="757371536" Name="Set_Gender_Female" ObjectPath="\Events\Default Work Unit\Set_Gender_Female" MaxAttenuation="0.000000"/>
+				<Event Id="1541588287" Name="Set_Gender_Male" ObjectPath="\Events\Default Work Unit\Set_Gender_Male" MaxAttenuation="0.000000"/>
 				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart"/>
 				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
+				<Event Id="188599998" Name="SuperJump" ObjectPath="\Events\Default Work Unit\SuperJump"/>
 				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -39,6 +42,10 @@
 				<File Id="3688924" Language="SFX">
 					<ShortName>water03.wav</ShortName>
 					<Path>SFX\water03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="4644601" Language="SFX">
+					<ShortName>female_pain03.wav</ShortName>
+					<Path>SFX\female_pain03_1C9C67B2.wem</Path>
 				</File>
 				<File Id="19531390" Language="SFX">
 					<ShortName>concrete_break01.wav</ShortName>
@@ -60,21 +67,17 @@
 					<ShortName>wood3.wav</ShortName>
 					<Path>SFX\wood3_1C9C67B2.wem</Path>
 				</File>
-				<File Id="72036157" Language="SFX">
-					<ShortName>jump04.wav</ShortName>
-					<Path>SFX\jump04_1C9C67B2.wem</Path>
-				</File>
 				<File Id="78951858" Language="SFX">
 					<ShortName>slam01.wav</ShortName>
 					<Path>SFX\slam01_1C9C67B2.wem</Path>
 				</File>
-				<File Id="81321767" Language="SFX">
-					<ShortName>dirt3.wav</ShortName>
-					<Path>SFX\dirt3_1C9C67B2.wem</Path>
-				</File>
 				<File Id="87920875" Language="SFX">
 					<ShortName>concreteslide02.wav</ShortName>
 					<Path>SFX\concreteslide02_F17FB28C.wem</Path>
+				</File>
+				<File Id="93860464" Language="SFX">
+					<ShortName>femalejump05.wav</ShortName>
+					<Path>SFX\femalejump05_D28E664F.wem</Path>
 				</File>
 				<File Id="94025848" Language="SFX">
 					<ShortName>gravel2.wav</ShortName>
@@ -82,7 +85,15 @@
 				</File>
 				<File Id="110099929" Language="SFX">
 					<ShortName>fist_impact01.wav</ShortName>
-					<Path>SFX\fist_impact01_1C9C67B2.wem</Path>
+					<Path>SFX\fist_impact01_8F4BB5CC.wem</Path>
+				</File>
+				<File Id="118893268" Language="SFX">
+					<ShortName>jumpwater04.wav</ShortName>
+					<Path>SFX\jumpwater04_1C9C67B2.wem</Path>
+				</File>
+				<File Id="125703694" Language="SFX">
+					<ShortName>male_pain01.wav</ShortName>
+					<Path>SFX\male_pain01_1C9C67B2.wem</Path>
 				</File>
 				<File Id="137911468" Language="SFX">
 					<ShortName>metal2.wav</ShortName>
@@ -96,25 +107,41 @@
 					<ShortName>glass_break02.wav</ShortName>
 					<Path>SFX\glass_break02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="147775654" Language="SFX">
+					<ShortName>male_jump01.wav</ShortName>
+					<Path>SFX\male_jump01_1C9C67B2.wem</Path>
+				</File>
 				<File Id="148141930" Language="SFX">
 					<ShortName>grass_land01.wav</ShortName>
 					<Path>SFX\grass_land01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="148537627" Language="SFX">
+					<ShortName>dirt05.wav</ShortName>
+					<Path>SFX\dirt05_1C9C67B2.wem</Path>
+				</File>
+				<File Id="159626265" Language="SFX">
+					<ShortName>wood_land04.wav</ShortName>
+					<Path>SFX\wood_land04_1C9C67B2.wem</Path>
 				</File>
 				<File Id="172000020" Language="SFX">
 					<ShortName>concreteslide01.wav</ShortName>
 					<Path>SFX\concreteslide01_F17FB28C.wem</Path>
 				</File>
-				<File Id="189837631" Language="SFX">
-					<ShortName>dirt4.wav</ShortName>
-					<Path>SFX\dirt4_1C9C67B2.wem</Path>
+				<File Id="175857295" Language="SFX">
+					<ShortName>jump05.wav</ShortName>
+					<Path>SFX\jump05_1C9C67B2.wem</Path>
 				</File>
 				<File Id="200616888" Language="SFX">
 					<ShortName>mud01.wav</ShortName>
 					<Path>SFX\mud01_1C9C67B2.wem</Path>
 				</File>
+				<File Id="210623580" Language="SFX">
+					<ShortName>fist_impact05.wav</ShortName>
+					<Path>SFX\fist_impact05_93F8A3F3.wem</Path>
+				</File>
 				<File Id="215579800" Language="SFX">
 					<ShortName>fist_impact04.wav</ShortName>
-					<Path>SFX\fist_impact04_1C9C67B2.wem</Path>
+					<Path>SFX\fist_impact04_0C9072DF.wem</Path>
 				</File>
 				<File Id="220609359" Language="SFX">
 					<ShortName>ZonPulse.wav</ShortName>
@@ -128,13 +155,17 @@
 					<ShortName>sand2.wav</ShortName>
 					<Path>SFX\sand2_1C9C67B2.wem</Path>
 				</File>
-				<File Id="237994977" Language="SFX">
-					<ShortName>jump_water03.wav</ShortName>
-					<Path>SFX\jump_water03_1C9C67B2.wem</Path>
-				</File>
 				<File Id="241591546" Language="SFX">
 					<ShortName>grass03.wav</ShortName>
 					<Path>SFX\grass03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="249795868" Language="SFX">
+					<ShortName>male_attack02.wav</ShortName>
+					<Path>SFX\male_attack02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="255347622" Language="SFX">
+					<ShortName>male_pain05.wav</ShortName>
+					<Path>SFX\male_pain05_1C9C67B2.wem</Path>
 				</File>
 				<File Id="263774897" Language="SFX">
 					<ShortName>concrete_land01.wav</ShortName>
@@ -148,21 +179,33 @@
 					<ShortName>tile1.wav</ShortName>
 					<Path>SFX\tile1_1C9C67B2.wem</Path>
 				</File>
+				<File Id="293830283" Language="SFX">
+					<ShortName>male_jump04.wav</ShortName>
+					<Path>SFX\male_jump04_1C9C67B2.wem</Path>
+				</File>
 				<File Id="298075942" Language="SFX">
 					<ShortName>water_land01.wav</ShortName>
 					<Path>SFX\water_land01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="298524530" Language="SFX">
+					<ShortName>dirt08.wav</ShortName>
+					<Path>SFX\dirt08_1C9C67B2.wem</Path>
 				</File>
 				<File Id="304183638" Language="SFX">
 					<ShortName>concrete_land02.wav</ShortName>
 					<Path>SFX\concrete_land02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="306374400" Language="SFX">
+					<ShortName>jumpwater03.wav</ShortName>
+					<Path>SFX\jumpwater03_1C9C67B2.wem</Path>
+				</File>
 				<File Id="312555540" Language="SFX">
 					<ShortName>concrete1.wav</ShortName>
 					<Path>SFX\concrete1_1C9C67B2.wem</Path>
 				</File>
-				<File Id="312622319" Language="SFX">
-					<ShortName>jump_water02.wav</ShortName>
-					<Path>SFX\jump_water02_1C9C67B2.wem</Path>
+				<File Id="318009043" Language="SFX">
+					<ShortName>male_pain02.wav</ShortName>
+					<Path>SFX\male_pain02_1C9C67B2.wem</Path>
 				</File>
 				<File Id="319543437" Language="SFX">
 					<ShortName>tile3.wav</ShortName>
@@ -172,13 +215,13 @@
 					<ShortName>tile2.wav</ShortName>
 					<Path>SFX\tile2_1C9C67B2.wem</Path>
 				</File>
-				<File Id="370305255" Language="SFX">
-					<ShortName>dirt1.wav</ShortName>
-					<Path>SFX\dirt1_1C9C67B2.wem</Path>
-				</File>
 				<File Id="393478770" Language="SFX">
 					<ShortName>mud03.wav</ShortName>
 					<Path>SFX\mud03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="393703763" Language="SFX">
+					<ShortName>jump04.wav</ShortName>
+					<Path>SFX\jump04_1C9C67B2.wem</Path>
 				</File>
 				<File Id="396329686" Language="SFX">
 					<ShortName>sand4.wav</ShortName>
@@ -188,9 +231,17 @@
 					<ShortName>slam03.wav</ShortName>
 					<Path>SFX\slam03_1C9C67B2.wem</Path>
 				</File>
+				<File Id="432477398" Language="SFX">
+					<ShortName>wood_land02.wav</ShortName>
+					<Path>SFX\wood_land02_1C9C67B2.wem</Path>
+				</File>
 				<File Id="432745082" Language="SFX">
 					<ShortName>concrete2.wav</ShortName>
 					<Path>SFX\concrete2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="447450940" Language="SFX">
+					<ShortName>jump02.wav</ShortName>
+					<Path>SFX\jump02_1C9C67B2.wem</Path>
 				</File>
 				<File Id="475327629" Language="SFX">
 					<ShortName>fist_swing01.wav</ShortName>
@@ -220,21 +271,45 @@
 					<ShortName>water_land02.wav</ShortName>
 					<Path>SFX\water_land02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="524503236" Language="SFX">
+					<ShortName>dirt06.wav</ShortName>
+					<Path>SFX\dirt06_1C9C67B2.wem</Path>
+				</File>
+				<File Id="525476793" Language="SFX">
+					<ShortName>male_attack03.wav</ShortName>
+					<Path>SFX\male_attack03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="540786551" Language="SFX">
+					<ShortName>male_jump02.wav</ShortName>
+					<Path>SFX\male_jump02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="552922879" Language="SFX">
+					<ShortName>female_attack03.wav</ShortName>
+					<Path>SFX\female_attack03_1C9C67B2.wem</Path>
+				</File>
 				<File Id="568435598" Language="SFX">
 					<ShortName>wood2.wav</ShortName>
 					<Path>SFX\wood2_1C9C67B2.wem</Path>
+				</File>
+				<File Id="570596496" Language="SFX">
+					<ShortName>male_pain04.wav</ShortName>
+					<Path>SFX\male_pain04_1C9C67B2.wem</Path>
 				</File>
 				<File Id="578949725" Language="SFX">
 					<ShortName>C_Spooling5.wav</ShortName>
 					<Path>SFX\C_Spooling5_1C9C67B2.wem</Path>
 				</File>
+				<File Id="580689976" Language="SFX">
+					<ShortName>femalejump04.wav</ShortName>
+					<Path>SFX\femalejump04_0B80B666.wem</Path>
+				</File>
 				<File Id="584392103" Language="SFX">
 					<ShortName>slam02.wav</ShortName>
 					<Path>SFX\slam02_1C9C67B2.wem</Path>
 				</File>
-				<File Id="585252688" Language="SFX">
-					<ShortName>jump01.wav</ShortName>
-					<Path>SFX\jump01_1C9C67B2.wem</Path>
+				<File Id="586298509" Language="SFX">
+					<ShortName>fist_impact08.wav</ShortName>
+					<Path>SFX\fist_impact08_26F34C8A.wem</Path>
 				</File>
 				<File Id="588140118" Language="SFX">
 					<ShortName>water_land03.wav</ShortName>
@@ -256,6 +331,30 @@
 					<ShortName>gravel4.wav</ShortName>
 					<Path>SFX\gravel4_1C9C67B2.wem</Path>
 				</File>
+				<File Id="611222863" Language="SFX">
+					<ShortName>male_attack01.wav</ShortName>
+					<Path>SFX\male_attack01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="611272523" Language="SFX">
+					<ShortName>male_pain03.wav</ShortName>
+					<Path>SFX\male_pain03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="613586313" Language="SFX">
+					<ShortName>jump03.wav</ShortName>
+					<Path>SFX\jump03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="614284397" Language="SFX">
+					<ShortName>jumpwater02.wav</ShortName>
+					<Path>SFX\jumpwater02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="625690955" Language="SFX">
+					<ShortName>male_jump03.wav</ShortName>
+					<Path>SFX\male_jump03_1C9C67B2.wem</Path>
+				</File>
+				<File Id="636921483" Language="SFX">
+					<ShortName>femalejump06.wav</ShortName>
+					<Path>SFX\femalejump06_461FDB44.wem</Path>
+				</File>
 				<File Id="639158175" Language="SFX">
 					<ShortName>water02.wav</ShortName>
 					<Path>SFX\water02_1C9C67B2.wem</Path>
@@ -264,13 +363,29 @@
 					<ShortName>tile4.wav</ShortName>
 					<Path>SFX\tile4_1C9C67B2.wem</Path>
 				</File>
+				<File Id="659023129" Language="SFX">
+					<ShortName>female_attack02.wav</ShortName>
+					<Path>SFX\female_attack02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="680911957" Language="SFX">
+					<ShortName>female_pain05.wav</ShortName>
+					<Path>SFX\female_pain05_1C9C67B2.wem</Path>
+				</File>
+				<File Id="681338594" Language="SFX">
+					<ShortName>dirt07.wav</ShortName>
+					<Path>SFX\dirt07_1C9C67B2.wem</Path>
+				</File>
 				<File Id="690463890" Language="SFX">
 					<ShortName>glass_break01.wav</ShortName>
 					<Path>SFX\glass_break01_1C9C67B2.wem</Path>
 				</File>
-				<File Id="720647445" Language="SFX">
-					<ShortName>jump_water04.wav</ShortName>
-					<Path>SFX\jump_water04_1C9C67B2.wem</Path>
+				<File Id="715488134" Language="SFX">
+					<ShortName>jumpwater01.wav</ShortName>
+					<Path>SFX\jumpwater01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="716866082" Language="SFX">
+					<ShortName>hardland01.wav</ShortName>
+					<Path>SFX\hardland01_1C9C67B2.wem</Path>
 				</File>
 				<File Id="726817041" Language="SFX">
 					<ShortName>slam04.wav</ShortName>
@@ -280,13 +395,49 @@
 					<ShortName>sand3.wav</ShortName>
 					<Path>SFX\sand3_1C9C67B2.wem</Path>
 				</File>
-				<File Id="764159760" Language="SFX">
-					<ShortName>jump_water01.wav</ShortName>
-					<Path>SFX\jump_water01_1C9C67B2.wem</Path>
+				<File Id="730531756" Language="SFX">
+					<ShortName>wood_land01.wav</ShortName>
+					<Path>SFX\wood_land01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="754377790" Language="SFX">
+					<ShortName>jump01.wav</ShortName>
+					<Path>SFX\jump01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="769383008" Language="SFX">
+					<ShortName>female_pain01.wav</ShortName>
+					<Path>SFX\female_pain01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="806865958" Language="SFX">
+					<ShortName>female_pain02.wav</ShortName>
+					<Path>SFX\female_pain02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="817514067" Language="SFX">
+					<ShortName>fist_impact06.wav</ShortName>
+					<Path>SFX\fist_impact06_FD6D7377.wem</Path>
+				</File>
+				<File Id="822964172" Language="SFX">
+					<ShortName>female_attack04.wav</ShortName>
+					<Path>SFX\female_attack04_1C9C67B2.wem</Path>
+				</File>
+				<File Id="847313103" Language="SFX">
+					<ShortName>femalejump07.wav</ShortName>
+					<Path>SFX\femalejump07_653E54B6.wem</Path>
+				</File>
+				<File Id="854320810" Language="SFX">
+					<ShortName>male_pain06.wav</ShortName>
+					<Path>SFX\male_pain06_1C9C67B2.wem</Path>
 				</File>
 				<File Id="859141929" Language="SFX">
 					<ShortName>metal1.wav</ShortName>
 					<Path>SFX\metal1_1C9C67B2.wem</Path>
+				</File>
+				<File Id="860066375" Language="SFX">
+					<ShortName>female_pain04.wav</ShortName>
+					<Path>SFX\female_pain04_1C9C67B2.wem</Path>
+				</File>
+				<File Id="865922351" Language="SFX">
+					<ShortName>female_pain06.wav</ShortName>
+					<Path>SFX\female_pain06_1C9C67B2.wem</Path>
 				</File>
 				<File Id="878371206" Language="SFX">
 					<ShortName>concrete_land04.wav</ShortName>
@@ -304,6 +455,10 @@
 					<ShortName>grass_land04.wav</ShortName>
 					<Path>SFX\grass_land04_1C9C67B2.wem</Path>
 				</File>
+				<File Id="913485582" Language="SFX">
+					<ShortName>fist_impact07.wav</ShortName>
+					<Path>SFX\fist_impact07_3E5F825A.wem</Path>
+				</File>
 				<File Id="917801640" Language="SFX">
 					<ShortName>fist_swing02.wav</ShortName>
 					<Path>SFX\fist_swing02_1C9C67B2.wem</Path>
@@ -316,21 +471,33 @@
 					<ShortName>grass_land03.wav</ShortName>
 					<Path>SFX\grass_land03_1C9C67B2.wem</Path>
 				</File>
+				<File Id="928355922" Language="SFX">
+					<ShortName>wood_land03.wav</ShortName>
+					<Path>SFX\wood_land03_1C9C67B2.wem</Path>
+				</File>
 				<File Id="938966706" Language="SFX">
 					<ShortName>concrete3.wav</ShortName>
 					<Path>SFX\concrete3_1C9C67B2.wem</Path>
+				</File>
+				<File Id="943463108" Language="SFX">
+					<ShortName>male_attack04.wav</ShortName>
+					<Path>SFX\male_attack04_1C9C67B2.wem</Path>
 				</File>
 				<File Id="945796388" Language="SFX">
 					<ShortName>grass_land02.wav</ShortName>
 					<Path>SFX\grass_land02_1C9C67B2.wem</Path>
 				</File>
+				<File Id="960348555" Language="SFX">
+					<ShortName>female_attack01.wav</ShortName>
+					<Path>SFX\female_attack01_1C9C67B2.wem</Path>
+				</File>
 				<File Id="995229020" Language="SFX">
 					<ShortName>metal3.wav</ShortName>
 					<Path>SFX\metal3_1C9C67B2.wem</Path>
 				</File>
-				<File Id="1003144440" Language="SFX">
-					<ShortName>dirt2.wav</ShortName>
-					<Path>SFX\dirt2_1C9C67B2.wem</Path>
+				<File Id="1003111290" Language="SFX">
+					<ShortName>malejump01.wav</ShortName>
+					<Path>SFX\malejump01_1C9C67B2.wem</Path>
 				</File>
 				<File Id="1041206388" Language="SFX">
 					<ShortName>StrandJump.wav</ShortName>
@@ -338,7 +505,7 @@
 				</File>
 				<File Id="1047189338" Language="SFX">
 					<ShortName>fist_impact02.wav</ShortName>
-					<Path>SFX\fist_impact02_1C9C67B2.wem</Path>
+					<Path>SFX\fist_impact02_7531F8CE.wem</Path>
 				</File>
 				<File Id="1047274906" Language="SFX">
 					<ShortName>grass04.wav</ShortName>
@@ -350,7 +517,7 @@
 				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>
-					<Path>SFX\fist_impact03_1C9C67B2.wem</Path>
+					<Path>SFX\fist_impact03_BF8465F7.wem</Path>
 				</File>
 				<File Id="1057404706" Language="SFX">
 					<ShortName>sand1.wav</ShortName>
@@ -364,9 +531,9 @@
 					<ShortName>concrete_break02.wav</ShortName>
 					<Path>SFX\concrete_break02_1C9C67B2.wem</Path>
 				</File>
-				<File Id="1073627297" Language="SFX">
-					<ShortName>jump05.wav</ShortName>
-					<Path>SFX\jump05_1C9C67B2.wem</Path>
+				<File Id="1072303627" Language="SFX">
+					<ShortName>hardland02.wav</ShortName>
+					<Path>SFX\hardland02_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
@@ -382,6 +549,7 @@
 			<IncludedEvents>
 				<Event Id="29030485" Name="Menu_Highlight" ObjectPath="\Events\Default Work Unit\Menu_Highlight"/>
 				<Event Id="2170009975" Name="Menu_Pause" ObjectPath="\Events\Default Work Unit\Menu_Pause"/>
+				<Event Id="2263363174" Name="Menu_Resume" ObjectPath="\Events\Default Work Unit\Menu_Resume"/>
 				<Event Id="4203375351" Name="Menu_Select" ObjectPath="\Events\Default Work Unit\Menu_Select"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -392,6 +560,10 @@
 				<File Id="184887075" Language="SFX">
 					<ShortName>highlightmenu.wav</ShortName>
 					<Path>SFX\highlightmenu_1C9C67B2.wem</Path>
+				</File>
+				<File Id="239526825" Language="SFX">
+					<ShortName>menu_resume.wav</ShortName>
+					<Path>SFX\menu_resume_1C9C67B2.wem</Path>
 				</File>
 				<File Id="583020055" Language="SFX">
 					<ShortName>selectmenu.wav</ShortName>
