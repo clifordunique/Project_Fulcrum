@@ -114,30 +114,31 @@ public class FighterChar : NetworkBehaviour
 	// KINEMATIC VARIABLES
 	//###########################################################################################################################################################################
 	#region KINEMATIC VARIABLES
-	[SerializeField] protected bool k_IsKinematic; //Dictates whether the player is moving in physical fighterchar mode or in some sort of specially controlled fashion, such as in cutscenes or strand jumps
-	[SerializeField] protected int k_KinematicAnim; //Designates the kinematic animation being played. 0 is strandjumping.
-	[SerializeField] protected float k_StrandJumpSlowdownM = 0.5f; //Percent of momentum lost per frame when hitting a strand.
-	[SerializeField] protected float k_StrandJumpSlowdownLinear = 5f; //Set amount of momentum lost per frame when hitting a strand.
+	[SerializeField] protected bool k_IsKinematic; 						//Dictates whether the player is moving in physical fighterchar mode or in some sort of specially controlled fashion, such as in cutscenes or strand jumps
+	[SerializeField] protected int k_KinematicAnim; 					//Designates the kinematic animation being played. 0 is strandjumping.
+	[SerializeField] protected float k_StrandJumpSlowdownM = 0.5f; 		//Percent of momentum lost per frame when hitting a strand.
+	[SerializeField] protected float k_StrandJumpSlowdownLinear = 5f; 	//Set amount of momentum lost per frame when hitting a strand.
 	#endregion
 	//############################################################################################################################################################################################################
 	// OBJECT REFERENCES
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Character Components:")]
-	[SerializeField] protected Light o_TempLight;      			// Reference to a spotlight attached to the character.
-	[SerializeField][ReadOnlyAttribute] public FighterAudio o_FighterAudio;		// Reference to the character's audio handler.
-	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
+	[SerializeField][ReadOnlyAttribute] public FighterAudio o_FighterAudio;			// Reference to the character's audio handler.
 	[SerializeField][ReadOnlyAttribute] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
-	[SerializeField][ReadOnlyAttribute] public Transform o_VelocityPunchHolder;		// Reference to the velocity punch visual effect entity attached to the character.
-	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;      	// Reference to the game level's timescale manager.
+	[SerializeField][ReadOnlyAttribute] public Transform o_EffectFlipper;			// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] public Transform o_DustSpawnTransform;		// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;     	// Reference to the game level's timescale manager.
+	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
+	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
-	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the shock visual effect prefab.
+	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the strand jump visual effect prefab.
 	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a radial windforce.
 	[SerializeField] public GameObject p_DustEffectPrefab;		// Reference to the dust visual effect prefab.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
-	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
+
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -317,6 +318,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		
 	}
+
 	#endregion
 	//###################################################################################################################################
 	// CUSTOM FUNCTIONS
@@ -360,7 +362,7 @@ public class FighterChar : NetworkBehaviour
 
 		newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
 		newAirPunch.GetComponentInChildren<AirPunch>().punchThrower = this;
-
+		v_PunchHitting = 0.2f;
 		o_FighterAudio.PunchSound();
 	}
 
@@ -387,15 +389,7 @@ public class FighterChar : NetworkBehaviour
 		
 	protected virtual void SpawnDustEffect()
 	{
-		Vector3 spawnPos = this.m_GroundFoot.position;
-		if(facingDirection)
-		{
-			spawnPos = new Vector3(spawnPos.x-0.5f, spawnPos.y, 0);
-		}
-		else
-		{
-			spawnPos = new Vector3(spawnPos.x+0.5f, spawnPos.y, 0);
-		}
+		Vector3 spawnPos = o_DustSpawnTransform.position;
 		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
 	}
 
@@ -808,7 +802,7 @@ public class FighterChar : NetworkBehaviour
 			//print("FACING LEFT!   "+h)
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 			o_SpriteRenderer.flipX = true;
-			o_VelocityPunchHolder.localScale = new Vector3 (1f, 1f, 1f);
+			o_EffectFlipper.localScale = new Vector3 (1f, 1f, 1f);
 			if(FighterState.Vel.x > 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -825,7 +819,7 @@ public class FighterChar : NetworkBehaviour
 			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 			o_SpriteRenderer.flipX = false;
-			o_VelocityPunchHolder.localScale = new Vector3 (-1f, 1f, 1f);
+			o_EffectFlipper.localScale = new Vector3 (-1f, 1f, 1f);
 			if(FighterState.Vel.x < 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -946,12 +940,14 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FighterAwake()
 	{
+		o_DustSpawnTransform = transform.Find("EffectFlipper/DustEffectTransform");
+		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		FighterState.CurHealth = 100;					// Current health.
 		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
 		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 		m_DebugLine = GetComponent<LineRenderer>();
 		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
-		o_VelocityPunchHolder = o_VelocityPunch.gameObject.transform.parent;
+		o_EffectFlipper = o_VelocityPunch.gameObject.transform.parent;
 
 		m_GroundFoot = transform.Find("MidFoot");
 		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();

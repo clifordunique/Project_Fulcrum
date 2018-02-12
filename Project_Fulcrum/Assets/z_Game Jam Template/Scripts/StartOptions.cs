@@ -49,7 +49,6 @@ public class StartOptions : NetworkBehaviour {
 		AkSoundEngine.SetRTPCValue("Volume_Music", defaultMusicLvl);
 		AkSoundEngine.SetRTPCValue("Volume_Effects", defaultEffectsLvl);
 	
-
 		Mngr.StartMatchMaker();
 	}
 

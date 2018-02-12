@@ -120,7 +120,6 @@ public class Player : FighterChar
 		if(!isLocalPlayer||!isClient){return;}
 		print("Executing post-scenelaunch player code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		v_DefaultCameraMode = 1;
 		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
 		o_MainCameraTransform.SetParent(this.transform);
