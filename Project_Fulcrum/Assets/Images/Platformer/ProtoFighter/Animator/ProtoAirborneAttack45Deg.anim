@@ -19,14 +19,14 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: {x: -0.025, y: 0.297, z: 0}
+        value: {x: -0.0242, y: 0.2965, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: VelocityPunchHolder/VelocityPunch
+    path: EffectFlipper/VelocityPunch
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
@@ -52,7 +52,7 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 3142114739
+      path: 323485899
       attribute: 1
       script: {fileID: 0}
       typeID: 4
@@ -86,7 +86,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: -0.025
+        value: -0.0242
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -94,7 +94,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: VelocityPunchHolder/VelocityPunch
+    path: EffectFlipper/VelocityPunch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -102,7 +102,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 2
         time: 0
-        value: 0.297
+        value: 0.2965
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -110,7 +110,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: VelocityPunchHolder/VelocityPunch
+    path: EffectFlipper/VelocityPunch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -126,7 +126,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: VelocityPunchHolder/VelocityPunch
+    path: EffectFlipper/VelocityPunch
     classID: 4
     script: {fileID: 0}
   m_EulerEditorCurves: []

@@ -23,12 +23,14 @@ public class TimeManager : MonoBehaviour {
 
 	public void ExitTimeDilation()
 	{
-		
+		permaSlow = false;
+		slowmoTimer = 0;
+		Time.timeScale = 1;
 	}
 
 	public float GetTimeDilationM()
 	{
-		print("Timespeed = "+timeSpeed);
+//		print("Timespeed = "+timeSpeed);
 		return timeSpeed;
 	}
 
@@ -50,8 +52,7 @@ public class TimeManager : MonoBehaviour {
 		}
 		else
 		{
-			slowmoTimer = 0;
-			Time.timeScale = 1;
+			ExitTimeDilation();
 		}
 	}
 }

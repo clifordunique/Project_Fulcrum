@@ -7,20 +7,23 @@ using AK.Wwise;
 public class Breakable : NetworkBehaviour {
 
 	[SerializeField][ReadOnlyAttribute]private Transform spriteObject;
-	[SerializeField][ReadOnlyAttribute]private AudioSource breakNoiseEmitter;
+	[SerializeField][ReadOnlyAttribute]private TimeManager timeManager;
 
 	Vector3 trueSpritePosition;
 	private float duration = 0;
 	private float maxDuration = 1f; //Max shake, scales linearly from minforce to maxforce;
 	[SerializeField]private int minForce = 60; // min force before shaking.
 	[SerializeField]private int maxForce = 250; // max force before breaking.
+	[SerializeField]private float slowmoDuration; // slow mo duration upon breaking. If set to 0, no slowmo occurs.
+	[SerializeField]private float slowmoSpeedM = 0.25f; //0 is timestop, 1 is normal motion.
 	private bool broken = false;
+
 
 	// Use this for initialization
 	void Awake() 
 	{
 		spriteObject = transform.Find("Sprite");
-		breakNoiseEmitter = this.transform.GetComponent<AudioSource>();
+		timeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 	}
 	
 	// Update is called once per frame
@@ -75,12 +78,16 @@ public class Breakable : NetworkBehaviour {
 
 	public void Break(Vector2 hitForce)
 	{
+		
 		this.transform.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 		this.transform.GetComponent<Rigidbody2D>().AddForce(hitForce, ForceMode2D.Impulse);
 		//print("Hit with speed:"+hitForce);
-		breakNoiseEmitter.Play();
 		AkSoundEngine.PostEvent("Breakable_Break", gameObject);
 		this.gameObject.layer = 2;
 		broken = true;
+		if(slowmoDuration>0)
+		{
+			timeManager.TimeDilation(slowmoSpeedM, slowmoDuration);
+		}
 	}
 }

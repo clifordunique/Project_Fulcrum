@@ -1,6 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\Spooler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\FighterChar.cs">
     <Files>
       <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\FulcrumNetworkManager.cs" Line="1" Column="1" />
@@ -8,15 +8,17 @@
       <File FileName="Assets\Scripts\Platformer\Map Objects\IndoorFader.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="122" Column="72" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="950" Column="80" />
       <File FileName="Assets\TimeManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Wwise\Deployment\API\Handwritten\AkCallbackManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ShaderTest.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Demonstration.cs" Line="1" Column="1" />
       <File FileName="Assets\MenuAudio.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\Spooler.cs" Line="210" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Spooler.cs" Line="1" Column="1" />
+      <File FileName="Assets\z_Game Jam Template\Scripts\PlayMusic.cs" Line="1" Column="1" />
+      <File FileName="Assets\z_Game Jam Template\Scripts\DontDestroy.cs" Line="1" Column="1" />
+      <File FileName="Assets\z_Game Jam Template\Scripts\SetAudioLevels.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\VelocityPunch.cs" Line="1" Column="1" />
+      <File FileName="Assets\z_Game Jam Template\Scripts\Pause.cs" Line="1" Column="1" />
+      <File FileName="Assets\z_Game Jam Template\Scripts\ShowPanels.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
