@@ -6031,6 +6031,18 @@
 													</ActiveSourceList>
 												</Sound>
 												<Sound Name="menu_resume" ID="{5E5FAF99-0B1D-4989-8C7D-8AE34866C9FD}" ShortID="157156670">
+													<PropertyList>
+														<Property Name="Highpass" Type="int16">
+															<ValueList>
+																<Value>30</Value>
+															</ValueList>
+														</Property>
+														<Property Name="Volume" Type="Real64">
+															<ValueList>
+																<Value>-4</Value>
+															</ValueList>
+														</Property>
+													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
