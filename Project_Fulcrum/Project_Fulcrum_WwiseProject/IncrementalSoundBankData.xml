@@ -3,17 +3,17 @@
 	<Platform GUID="{F1290B89-EB12-45A9-A3B3-498722765758}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="Environment" Hash="399735282" Timestamp="1518481080"/>
+				<File Name="Environment" Hash="696394266" Timestamp="1518492092"/>
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="2583751612" Timestamp="1518481080"/>
+				<File Name="FighterChar" Hash="706760150" Timestamp="1518491585"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
-				<File Name="Init" Hash="1297797697" Timestamp="1518477306"/>
-				<File Name="UI" Hash="2194918780" Timestamp="1518475607"/>
+				<File Name="Init" Hash="1297797697" Timestamp="1518491585"/>
+				<File Name="UI" Hash="1862153000" Timestamp="1518491585"/>
 			</Language>
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="2928472340" Timestamp="1518481080"/>
+				<File Name="" Hash="3839597001" Timestamp="1518492092"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
