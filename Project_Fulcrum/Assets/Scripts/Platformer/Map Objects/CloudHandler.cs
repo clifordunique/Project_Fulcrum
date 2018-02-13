@@ -17,8 +17,8 @@ public class CloudHandler : MonoBehaviour {
 	public float cloudXRandomness = 200; 		// Horizontal "shuffling" of layers.
 
 	[Header("Important Variables")]
-	[Range(1,4)][SerializeField] private float distanceSizeRatio = 0.5f;
-	[Range(0,1)][SerializeField] private float distanceParallaxRatio = 0.5f;
+	[Range(1,4)][SerializeField] private float distanceSizeRatio = 1.25f;
+	[Range(0,1)][SerializeField] private float distanceParallaxRatio = 1f;
 	[SerializeField] private float distributionCurveM = 0;
 
 	private float current_cloudLayerElevation;
@@ -33,7 +33,7 @@ public class CloudHandler : MonoBehaviour {
 	// Use this for initialization
 	void Start() 
 	{
-		parallaxHolder = GameObject.Find("Parallax").transform;
+		parallaxHolder = GameObject.Find("CloudParallax").transform;
 		Vector2 cloudOrigin = new Vector2(0, cloudLayerElevation);
 		GameObject realCloudLayer = (GameObject)Instantiate(p_CloudLayer, cloudOrigin, Quaternion.identity);
 		realCloudLayer.transform.localScale = new Vector3(startScaleX*0.5f,startScaleY*0.5f,1);

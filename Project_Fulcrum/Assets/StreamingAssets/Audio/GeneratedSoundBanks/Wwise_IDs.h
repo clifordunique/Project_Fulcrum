@@ -28,6 +28,7 @@ namespace AK
         static const AkUniqueID PLAYMUSIC = 417627684U;
         static const AkUniqueID PUNCHHIT = 3343194546U;
         static const AkUniqueID PUNCHSWING = 2180951687U;
+        static const AkUniqueID RIVERLOOPSTART = 1718773345U;
         static const AkUniqueID SET_GENDER_FEMALE = 757371536U;
         static const AkUniqueID SET_GENDER_MALE = 1541588287U;
         static const AkUniqueID SLIDELOOPSTART = 1119192506U;
@@ -138,6 +139,7 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID ENVIRONMENT = 1229948536U;
         static const AkUniqueID FIGHTERCHAR = 725599200U;
         static const AkUniqueID UI = 1551306167U;
     } // namespace BANKS
@@ -146,6 +148,12 @@ namespace AK
     {
         static const AkUniqueID MASTER_AUDIO_BUS = 3803692087U;
     } // namespace BUSSES
+
+    namespace AUX_BUSSES
+    {
+        static const AkUniqueID LARGEROOM = 187046019U;
+        static const AkUniqueID SMALLROOM = 2933838247U;
+    } // namespace AUX_BUSSES
 
     namespace AUDIO_DEVICES
     {

@@ -1096,7 +1096,6 @@ MonoBehaviour:
   v_PunchHitting: 0
   v_AirForgiveness: 0
   v_Gender: 0
-  v_DustSpawnPosition: {x: 0, y: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxHealth: 100
@@ -1199,7 +1198,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   p_SpoolRingPrefab: {fileID: 1490407522407120, guid: ef406ec911ba8a147b508370b25c8a54,
     type: 2}
-  o_SpoolAudio: {fileID: 0}
   o_SpoolMixer: {fileID: 0}
   s_SpoolUp:
   - {fileID: 0}

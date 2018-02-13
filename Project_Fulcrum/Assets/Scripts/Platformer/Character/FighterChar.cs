@@ -389,7 +389,15 @@ public class FighterChar : NetworkBehaviour
 		
 	protected virtual void SpawnDustEffect()
 	{
-		Vector3 spawnPos = o_DustSpawnTransform.position;
+		Vector3 spawnPos;
+		if(o_DustSpawnTransform)
+		{
+			spawnPos = o_DustSpawnTransform.position;
+		}
+		else
+		{
+			spawnPos = m_GroundFoot.position;
+		}
 		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
 	}
 

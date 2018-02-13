@@ -2,6 +2,7 @@
 <PluginInfo Project="Project_Fulcrum_WwiseProject" Platform="Mac" BasePlatform="Mac">
 	<Plugins>
 		<Plugin Name="Wwise Silence" ID="6619138" DLL="AkSilenceGenerator"/>
+		<Plugin Name="Wwise RoomVerb" ID="7733251" DLL="AkRoomVerb"/>
 		<Plugin Name="Wwise Guitar Distortion" ID="8257539" DLL="AkGuitarDistortion"/>
 		<Plugin Name="Wwise Time Stretch" ID="8519683" DLL="AkTimeStretch"/>
 		<Plugin Name="Wwise Tremolo" ID="8585219" DLL="AkTremolo"/>

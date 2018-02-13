@@ -40,6 +40,13 @@
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
+				<SoundBank Name="Environment" ID="{C7E2D7BB-6C79-448E-AD3C-A2086F0A5828}">
+					<ObjectInclusionList>
+						<ObjectRef Name="RiverLoopStart" ID="{CA6D9160-ECF8-4B03-A030-93F1B9B74DEF}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
 			</ChildrenList>
 		</WorkUnit>
 	</SoundBanks>

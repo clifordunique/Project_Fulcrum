@@ -54,7 +54,8 @@ public class ParallaxLayer : MonoBehaviour {
 
 	void WorldSpaceUpdate()
 	{
-		float distanceFactor = Mathf.Pow((distanceKM/100f)-1, 2);
+		//float distanceFactor = Mathf.Pow((distanceKM/100f)-1, 2);
+		float distanceFactor = (1.0f/(1.0f+distanceKM));
 		//this.transform.localScale = new Vector3((1.0f/(1.0f+(distanceKM/2f))),(1.0f/(1.0f+(distanceKM/2f))),1);
 		this.transform.localScale = new Vector3(distanceFactor/2,distanceFactor/2,distanceFactor/2);
 		//parallaxMovement = 1-Mathf.Pow((distanceKM/100f)-1, 2);// Mathf.Log10(distanceKM);

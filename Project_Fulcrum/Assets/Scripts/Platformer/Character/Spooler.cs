@@ -9,7 +9,6 @@ public class Spooler : NetworkBehaviour
 {
 	#region OBJECT REFERENCES
 	[SerializeField]private GameObject p_SpoolRingPrefab;
-	[SerializeField]private AudioSource o_SpoolAudio;
 	[SerializeField]private AudioMixer o_SpoolMixer;
 	[SerializeField]private AudioClip[] s_SpoolUp;
 	[SerializeField][ReadOnlyAttribute] private FighterChar o_Player;
@@ -96,7 +95,6 @@ public class Spooler : NetworkBehaviour
 					else
 					{
 						r_TooEarly = true;
-						o_SpoolAudio.pitch = 0.5f;
 						o_Rings[r_RingNum].earlyStop = true;
 					}
 				}
@@ -199,20 +197,17 @@ public class Spooler : NetworkBehaviour
 		o_Rings[r_RingNum].UpdateVisuals();
 
 
-		o_SpoolAudio.Play();
 		AkSoundEngine.PostEvent("EnergyCharge", gameObject);
 		AkSoundEngine.SetRTPCValue("EnergyLevel", o_Player.GetZonLevel(), gameObject);
 
 		float thePitch = 1+(r_RingNum/7f);
 		//print("RINGNUM="+r_RingNum);
 		//print("thePitch"+thePitch);	
-		o_SpoolAudio.pitch = 1f;					// Changes pitch AND tempo based on if ring is in bluemode or not.
 		r_CurTime = 0;
 	}
 
 	private void EndRing()
 	{
-		//o_SpoolAudio.Stop();
 		r_TotalPower++;
 		o_Player.SetZonLevel(r_TotalPower);
 		float thePercent = o_Rings[r_RingNum].getPercentWhite();

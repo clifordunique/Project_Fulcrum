@@ -70,6 +70,8 @@
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
      <Compile Include="Assets\MenuAudio.cs" />
+     <Compile Include="Assets\ParallaxHandler.cs" />
+     <Compile Include="Assets\ScreenFilter.cs" />
      <Compile Include="Assets\Scripts\Demonstration.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
@@ -95,15 +97,15 @@
      <Compile Include="Assets\Scripts\Platformer\Character\StrandJumpEffect.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VelocityPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\ZonPulse.cs" />
-     <Compile Include="Assets\Scripts\Platformer\Cutout2D.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\DeformMeshTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\TextureGenerator.cs" />
-     <Compile Include="Assets\Scripts\Platformer\GrassColourer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Breakable.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudLayer.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\Cutout2D.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\GodModeBox.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Grass.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Map Objects\GrassColourer.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\IndoorFader.cs" />
      <Compile Include="Assets\Scripts\Platformer\RegionLocker.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\AirBurst.cs" />

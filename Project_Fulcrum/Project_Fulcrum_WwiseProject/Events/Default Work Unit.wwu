@@ -410,6 +410,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="RiverLoopStart" ID="{CA6D9160-ECF8-4B03-A030-93F1B9B74DEF}">
+					<ChildrenList>
+						<Action Name="" ID="{42DD38F7-9DF0-4054-9E7B-E34F08474A7A}" ShortID="623325488">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Water" ID="{4E0FD65D-09F4-4777-8308-6C2980DC3A90}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

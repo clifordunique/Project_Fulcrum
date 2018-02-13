@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
 	<RootPaths>
-		<ProjectRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -17,8 +17,8 @@
 			<Path>FighterChar.bnk</Path>
 			<IncludedEvents>
 				<Event Id="4052040634" Name="Breakable_Break" ObjectPath="\Events\Default Work Unit\Breakable_Break"/>
-				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge"/>
-				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse"/>
+				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge" MaxAttenuation="100.000000"/>
+				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse" MaxAttenuation="100.000000"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
@@ -29,8 +29,8 @@
 				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
 				<Event Id="757371536" Name="Set_Gender_Female" ObjectPath="\Events\Default Work Unit\Set_Gender_Female" MaxAttenuation="0.000000"/>
 				<Event Id="1541588287" Name="Set_Gender_Male" ObjectPath="\Events\Default Work Unit\Set_Gender_Male" MaxAttenuation="0.000000"/>
-				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart"/>
-				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump"/>
+				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart" MaxAttenuation="100.000000"/>
+				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump" MaxAttenuation="100.000000"/>
 				<Event Id="188599998" Name="SuperJump" ObjectPath="\Events\Default Work Unit\SuperJump"/>
 				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
@@ -534,6 +534,24 @@
 				<File Id="1072303627" Language="SFX">
 					<ShortName>hardland02.wav</ShortName>
 					<Path>SFX\hardland02_1C9C67B2.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1229948536" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Environment</ObjectPath>
+			<ShortName>Environment</ShortName>
+			<Path>Environment.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1718773345" Name="RiverLoopStart" ObjectPath="\Events\Default Work Unit\RiverLoopStart" MaxAttenuation="80.000000"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="31853508" Language="SFX">
+					<ShortName>riverloop02.wav</ShortName>
+					<Path>SFX\riverloop02_DDA8542A.wem</Path>
+				</File>
+				<File Id="931815851" Language="SFX">
+					<ShortName>riverloop01.wav</ShortName>
+					<Path>SFX\riverloop01_AB9C8EB4.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>
