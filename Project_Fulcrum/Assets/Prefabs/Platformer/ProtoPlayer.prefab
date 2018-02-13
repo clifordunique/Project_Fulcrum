@@ -200,14 +200,14 @@ GameObject:
   - component: {fileID: 61853113723512840}
   - component: {fileID: 95482973168194628}
   - component: {fileID: 212429933696817022}
-  - component: {fileID: 114132217005915654}
   - component: {fileID: 114326552090613504}
-  - component: {fileID: 114826143416564554}
   - component: {fileID: 114739014657272698}
   - component: {fileID: 114097838302721424}
   - component: {fileID: 114166397268456874}
   - component: {fileID: 114690017561395264}
   - component: {fileID: 114018179230205954}
+  - component: {fileID: 114132217005915654}
+  - component: {fileID: 114826143416564554}
   m_Layer: 13
   m_Name: ProtoPlayer
   m_TagString: Player
@@ -1096,6 +1096,7 @@ MonoBehaviour:
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
   v_PunchHitting: 0
   v_AirForgiveness: 0
+  v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5

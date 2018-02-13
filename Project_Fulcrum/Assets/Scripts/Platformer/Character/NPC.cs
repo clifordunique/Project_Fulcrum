@@ -174,16 +174,16 @@ public class NPC : FighterChar {
 				this.FighterState.RightKeyHold = false;
 				this.FighterState.LeftKeyHold = false;
 
-				if( (facingDirection) && (goalLocation.x > 0) )
-				{
-					this.FighterState.RightKeyHold = false;
-					this.FighterState.LeftKeyHold = true;
-				}
-				if( (!facingDirection) && (goalLocation.x < 0) )
-				{
-					this.FighterState.RightKeyHold = true;
-					this.FighterState.LeftKeyHold = false;
-				}
+//				if( (facingDirection) && (goalLocation.x > 0) )
+//				{
+//					this.FighterState.RightKeyHold = false;
+//					this.FighterState.LeftKeyHold = true;
+//				}
+//				if( (!facingDirection) && (goalLocation.x < 0) )
+//				{
+//					this.FighterState.RightKeyHold = true;
+//					this.FighterState.LeftKeyHold = false;
+//				}
 					
 				if(PunchCooldown <= 0)
 				{
@@ -266,6 +266,18 @@ public class NPC : FighterChar {
 		else if (CtrlH > 0)
 		{
 			facingDirection = true; //true means right (the direction), false means left.
+		}
+
+		if(m_Airborne)
+		{
+			if(FighterState.Vel.x>0)
+			{
+				facingDirection = true;
+			}
+			else if(FighterState.Vel.x<0)
+			{
+				facingDirection = false;
+			}
 		}
 
 		//print("CTRLH=" + CtrlH);

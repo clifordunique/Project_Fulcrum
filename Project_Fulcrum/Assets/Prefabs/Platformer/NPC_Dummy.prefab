@@ -118,12 +118,17 @@ GameObject:
   - component: {fileID: 4788423811657578}
   - component: {fileID: 114888093671415240}
   - component: {fileID: 114239980141808992}
-  - component: {fileID: 120209316304188390}
-  - component: {fileID: 95479372362397282}
-  - component: {fileID: 61514109107148586}
-  - component: {fileID: 212605838245193270}
   - component: {fileID: 50092288036125596}
+  - component: {fileID: 120209316304188390}
+  - component: {fileID: 61514109107148586}
+  - component: {fileID: 95479372362397282}
+  - component: {fileID: 212605838245193270}
   - component: {fileID: 114756817115151034}
+  - component: {fileID: 114443586045175828}
+  - component: {fileID: 114399032971613308}
+  - component: {fileID: 114457930085334268}
+  - component: {fileID: 114230421269997510}
+  - component: {fileID: 114307651348943018}
   m_Layer: 13
   m_Name: NPC_Dummy
   m_TagString: Player
@@ -470,6 +475,17 @@ TrailRenderer:
     textureMode: 0
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
+--- !u!114 &114230421269997510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512946014622738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e65849298bdb76a498fa94e056fcb0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114239980141808992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -530,6 +546,17 @@ MonoBehaviour:
   slideMinT: 0
   slideMaxT: 100
   muteFootsteps: 0
+--- !u!114 &114307651348943018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512946014622738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ed1ae3a3fc0224da2ed324a25c879b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114323389394183582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -542,6 +569,76 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inUse: 0
+--- !u!114 &114399032971613308
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512946014622738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcb508719d22ce49b456fbf0cae93b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  valueGuid: 01f9805aeded7f4daa89cbe8e07af099
+  eventID: 1721707775
+  soundEmitterObject: {fileID: 0}
+  enableActionOnEvent: 0
+  actionOnEventType: 0
+  curveInterpolation: 4
+  transitionDuration: 0
+  m_callbackData: {fileID: 0}
+  playingId: 0
+  multiPositionTypeLabel: 0
+  multiPositionArray: []
+  MultiPositionType: 1
+--- !u!114 &114443586045175828
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512946014622738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a990924974c57dd4eb7afa962ea886ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_positionOffsetData:
+    positionOffset: {x: 0, y: 0, z: 0}
+    KeepMe: 0
+  isEnvironmentAware: 1
+  isStaticObject: 0
+  m_listeners:
+    initialListenerList: []
+  m_posOffsetData: {fileID: 0}
+  listenerMask: 1
+--- !u!114 &114457930085334268
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1512946014622738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bcb508719d22ce49b456fbf0cae93b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerList: f7e1664c
+  useOtherObject: 0
+  valueGuid: d77fdad262e5094fbf09a46aa3a0d55b
+  eventID: 1119192506
+  soundEmitterObject: {fileID: 0}
+  enableActionOnEvent: 0
+  actionOnEventType: 0
+  curveInterpolation: 4
+  transitionDuration: 0
+  m_callbackData: {fileID: 0}
+  playingId: 0
+  multiPositionTypeLabel: 0
+  multiPositionArray: []
+  MultiPositionType: 1
 --- !u!114 &114756817115151034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -643,14 +740,16 @@ MonoBehaviour:
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
   k_StrandJumpSlowdownLinear: 5
-  o_TempLight: {fileID: 0}
   o_FighterAudio: {fileID: 114239980141808992}
-  p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
-    type: 2}
   o_VelocityPunch: {fileID: 0}
-  o_VelocityPunchHolder: {fileID: 0}
+  o_EffectFlipper: {fileID: 0}
+  o_DustSpawnTransform: {fileID: 0}
   o_TimeManager: {fileID: 0}
+  o_SpriteRenderer: {fileID: 212605838245193270}
+  p_ZonPulse: {fileID: 0}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
+    type: 2}
+  p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
     type: 2}
   p_ShockEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
     type: 2}
@@ -660,7 +759,6 @@ MonoBehaviour:
     type: 2}
   p_DustEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
     type: 2}
-  o_SpriteRenderer: {fileID: 212605838245193270}
   mask:
     serializedVersion: 2
     m_Bits: 32768
@@ -759,6 +857,7 @@ MonoBehaviour:
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
   v_PunchHitting: 0
   v_AirForgiveness: 0
+  v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5

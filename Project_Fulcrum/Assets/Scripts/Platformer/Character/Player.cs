@@ -480,6 +480,18 @@ public class Player : FighterChar
 			facingDirection = true; //true means right (the direction), false means left.
 		}
 
+		if(m_Airborne)
+		{
+			if(FighterState.Vel.x>0)
+			{
+				facingDirection = true;
+			}
+			else if(FighterState.Vel.x<0)
+			{
+				facingDirection = false;
+			}
+		}
+
 		//Vertical button pressing
 		if((FighterState.DownKeyHold && FighterState.UpKeyHold) || !(FighterState.UpKeyHold||FighterState.DownKeyHold))
 		{

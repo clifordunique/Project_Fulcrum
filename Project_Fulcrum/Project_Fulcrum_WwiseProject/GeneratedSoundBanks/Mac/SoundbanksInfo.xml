@@ -19,19 +19,19 @@
 				<Event Id="4052040634" Name="Breakable_Break" ObjectPath="\Events\Default Work Unit\Breakable_Break"/>
 				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge" MaxAttenuation="100.000000"/>
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse" MaxAttenuation="100.000000"/>
-				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep"/>
+				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep" MaxAttenuation="100.000000"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
 				<Event Id="3833651337" Name="Jump" ObjectPath="\Events\Default Work Unit\Jump"/>
-				<Event Id="2548270042" Name="Landing" ObjectPath="\Events\Default Work Unit\Landing"/>
+				<Event Id="2548270042" Name="Landing" ObjectPath="\Events\Default Work Unit\Landing" MaxAttenuation="100.000000"/>
 				<Event Id="417627684" Name="PlayMusic" ObjectPath="\Events\Default Work Unit\PlayMusic"/>
-				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit"/>
-				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing"/>
+				<Event Id="3343194546" Name="PunchHit" ObjectPath="\Events\Default Work Unit\PunchHit" MaxAttenuation="100.000000"/>
+				<Event Id="2180951687" Name="PunchSwing" ObjectPath="\Events\Default Work Unit\PunchSwing" MaxAttenuation="100.000000"/>
 				<Event Id="757371536" Name="Set_Gender_Female" ObjectPath="\Events\Default Work Unit\Set_Gender_Female" MaxAttenuation="0.000000"/>
 				<Event Id="1541588287" Name="Set_Gender_Male" ObjectPath="\Events\Default Work Unit\Set_Gender_Male" MaxAttenuation="0.000000"/>
 				<Event Id="1119192506" Name="SlideLoopStart" ObjectPath="\Events\Default Work Unit\SlideLoopStart" MaxAttenuation="100.000000"/>
 				<Event Id="187194041" Name="StrandJump" ObjectPath="\Events\Default Work Unit\StrandJump" MaxAttenuation="100.000000"/>
-				<Event Id="188599998" Name="SuperJump" ObjectPath="\Events\Default Work Unit\SuperJump"/>
+				<Event Id="188599998" Name="SuperJump" ObjectPath="\Events\Default Work Unit\SuperJump" MaxAttenuation="100.000000"/>
 				<Event Id="1721707775" Name="WindLoopStart" ObjectPath="\Events\Default Work Unit\WindLoopStart"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>

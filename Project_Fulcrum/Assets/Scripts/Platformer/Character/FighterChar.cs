@@ -2328,8 +2328,8 @@ public class FighterChar : NetworkBehaviour
 		// Visual/Audio effects
 		//
 		v_PunchHitting = true;
-
-		if(this.IsPlayer() || opponent.IsPlayer())
+		o_FighterAudio.PunchHitSound();
+		if((this.IsPlayer() || opponent.IsPlayer())&&(impactDamageM>v_PunchStrengthSlowmoT))
 		{
 			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
 		}
@@ -2432,6 +2432,10 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Special effects
 		//
+		if((this.IsPlayer() || opponent.IsPlayer())&&(impactDamageM>v_PunchStrengthSlowmoT))
+		{
+			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
+		}
 		if(combinedSpeed >= m_CraterT)
 		{
 			print("Fighter crater successful");
@@ -2442,6 +2446,9 @@ public class FighterChar : NetworkBehaviour
 			print("Fighter slam successful");
 			Slam(combinedSpeed);
 		}
+		v_PunchHitting = true;
+		o_FighterAudio.PunchHitSound();
+
 		//
 		// Setting new player velocities.
 		//
@@ -2543,9 +2550,13 @@ public class FighterChar : NetworkBehaviour
 		// Special effects
 		//
 		opponent.v_PunchHitting = true;
-		v_PunchHitting = true;
+		opponent.o_FighterAudio.PunchHitSound();
 
-		if(this.IsPlayer() || opponent.IsPlayer()&&impactDamageM>v_PunchStrengthSlowmoT)
+		v_PunchHitting = true;
+		o_FighterAudio.PunchHitSound();
+
+
+		if((this.IsPlayer() || opponent.IsPlayer())&&(impactDamageM>v_PunchStrengthSlowmoT))
 		{
 			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
 		}

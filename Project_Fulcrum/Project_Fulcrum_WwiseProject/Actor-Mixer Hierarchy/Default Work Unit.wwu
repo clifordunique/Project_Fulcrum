@@ -186,8 +186,10 @@
 							<ChildrenList>
 								<ActorMixer Name="FighterChar" ID="{6ECE91B4-829F-4DE2-9C26-10B08DF40A66}" ShortID="373597702">
 									<PropertyList>
+										<Property Name="OverrideGameAuxSends" Type="bool" Value="True"/>
 										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 										<Property Name="PositioningType" Type="int16" Value="1"/>
+										<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Attenuation">
@@ -320,7 +322,6 @@
 														</RTPC>
 													</RTPCList>
 												</Property>
-												<Property Name="OverridePositioning" Type="bool" Value="True"/>
 												<Property Name="Pitch" Type="int32">
 													<ModifierList>
 														<ModifierInfo>
@@ -1868,7 +1869,6 @@
 														<Value>15</Value>
 													</ValueList>
 												</Property>
-												<Property Name="OverridePositioning" Type="bool" Value="True"/>
 												<Property Name="UseMaxSoundPerInstance" Type="bool">
 													<ValueList>
 														<Value>True</Value>
@@ -2511,7 +2511,6 @@
 													</ValueList>
 												</Property>
 												<Property Name="EnablePanner" Type="bool" Value="True"/>
-												<Property Name="OverridePositioning" Type="bool" Value="True"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>-10</Value>
@@ -3097,7 +3096,6 @@
 										<SwitchContainer Name="Jump" ID="{208E5057-E6F2-475F-8C42-A1C0FBA378A3}" ShortID="58939134">
 											<PropertyList>
 												<Property Name="EnablePanner" Type="bool" Value="True"/>
-												<Property Name="OverridePositioning" Type="bool" Value="True"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>-17</Value>
@@ -3455,7 +3453,6 @@
 													</ValueList>
 												</Property>
 												<Property Name="EnablePanner" Type="bool" Value="True"/>
-												<Property Name="OverridePositioning" Type="bool" Value="True"/>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
