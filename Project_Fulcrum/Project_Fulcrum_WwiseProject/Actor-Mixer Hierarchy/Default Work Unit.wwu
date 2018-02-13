@@ -5952,15 +5952,15 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Attenuation">
-													<Custom>
-														<Attenuation Name="Attenuation (Custom)" ID="{50AC289E-A3FD-4A4A-BBBA-C8B1973F9961}" ShortID="774034989">
+													<Custom CreatedFrom="{FFD54C32-C650-4815-A74D-B0DE72A23D62}">
+														<Attenuation Name="Water Attenuation (Custom)" ID="{9743CBFF-5B71-43B0-B698-A92EE1CDD7F6}" ShortID="326378214">
 															<PropertyList>
 																<Property Name="RadiusMax" Type="Real64" Value="80"/>
 															</PropertyList>
 															<CurveUsageInfoList>
 																<VolumeDryUsage>
 																	<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-																		<Curve Name="VolumeDry" ID="{EA68EEE3-194A-4816-BCDF-ED5F2358BAAD}">
+																		<Curve Name="VolumeDry" ID="{33DA46A1-CAB1-4840-904D-E2FEAFBB114F}">
 																			<PropertyList>
 																				<Property Name="Flags" Type="int32" Value="3"/>
 																			</PropertyList>
@@ -5994,7 +5994,7 @@
 																</VolumeWetGameUsage>
 																<VolumeWetUserUsage>
 																	<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry">
-																		<Curve Name="VolumeWetUser" ID="{F147CDA2-1D9F-4B3A-B16E-6571CBAFE973}">
+																		<Curve Name="VolumeWetUser" ID="{4DADE050-5FB9-4AA2-9FC6-030C1A13A208}">
 																			<PropertyList>
 																				<Property Name="Flags" Type="int32" Value="3"/>
 																			</PropertyList>
@@ -6028,7 +6028,7 @@
 																</LowPassFilterUsage>
 																<HighPassFilterUsage>
 																	<CurveUsageInfo Platform="Linked" CurveToUse="None">
-																		<Curve Name="HighPassFilter" ID="{9746B15B-3A7A-47B4-82DC-14D2EB82EA52}">
+																		<Curve Name="HighPassFilter" ID="{6826C8D6-79FB-4673-B431-52E1C0423CD1}">
 																			<PropertyList>
 																				<Property Name="Flags" Type="int32" Value="65537"/>
 																			</PropertyList>
@@ -6049,7 +6049,7 @@
 																</HighPassFilterUsage>
 																<SpreadUsage>
 																	<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-																		<Curve Name="Spread" ID="{B7963160-027D-4ADC-94E4-7F4C87BF563C}">
+																		<Curve Name="Spread" ID="{9997C5DA-7DBB-4065-B4D5-2FD5481538E1}">
 																			<PropertyList>
 																				<Property Name="Flags" Type="int32" Value="1"/>
 																			</PropertyList>
@@ -6158,7 +6158,7 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="ambience_cave" ID="{3BE9751F-9566-4003-A9C2-0249F49F76C7}" ShortID="77742079">
+												<Sound Name="ambience_cave01" ID="{3BE9751F-9566-4003-A9C2-0249F49F76C7}" ShortID="77742079">
 													<PropertyList>
 														<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 														<Property Name="Lowpass" Type="int16">
@@ -6196,12 +6196,12 @@
 																					<PointList>
 																						<Point>
 																							<XPos>0</XPos>
-																							<YPos>-0</YPos>
+																							<YPos>0</YPos>
 																							<Flags>5</Flags>
 																						</Point>
 																						<Point>
 																							<XPos>6.60318</XPos>
-																							<YPos>-0</YPos>
+																							<YPos>0</YPos>
 																							<Flags>0</Flags>
 																						</Point>
 																						<Point>
@@ -6260,6 +6260,163 @@
 													</ChildrenList>
 													<ActiveSourceList>
 														<ActiveSource Name="ambience_cave" ID="{732606E3-3D77-4320-BAC0-3428479FEB43}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="ambience_cave02" ID="{EC7FC32E-0675-41C5-83F9-3C72273E251F}" ShortID="674796097">
+													<PropertyList>
+														<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+														<Property Name="OverridePositioning" Type="bool" Value="True"/>
+														<Property Name="PositioningType" Type="int16" Value="1"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Attenuation">
+															<Custom CreatedFrom="{FFD54C32-C650-4815-A74D-B0DE72A23D62}">
+																<Attenuation Name="Water Attenuation (Custom)" ID="{112DF91A-D8A6-44AE-9A7A-8059EF48CBC8}" ShortID="521168049">
+																	<PropertyList>
+																		<Property Name="RadiusMax" Type="Real64" Value="80"/>
+																	</PropertyList>
+																	<CurveUsageInfoList>
+																		<VolumeDryUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																				<Curve Name="VolumeDry" ID="{9AE6C044-285F-46A4-BE79-620E576AACF3}">
+																					<PropertyList>
+																						<Property Name="Flags" Type="int32" Value="3"/>
+																					</PropertyList>
+																					<PointList>
+																						<Point>
+																							<XPos>0</XPos>
+																							<YPos>-2.5</YPos>
+																							<Flags>5</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>8.76191</XPos>
+																							<YPos>-2.5</YPos>
+																							<Flags>0</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>27.68254</XPos>
+																							<YPos>-18.812</YPos>
+																							<Flags>0</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>80</XPos>
+																							<YPos>-200</YPos>
+																							<Flags>37</Flags>
+																						</Point>
+																					</PointList>
+																				</Curve>
+																			</CurveUsageInfo>
+																		</VolumeDryUsage>
+																		<VolumeWetGameUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																		</VolumeWetGameUsage>
+																		<VolumeWetUserUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry">
+																				<Curve Name="VolumeWetUser" ID="{2D3F40AA-A5E4-4C4E-9F11-2E8F6DACB2DA}">
+																					<PropertyList>
+																						<Property Name="Flags" Type="int32" Value="3"/>
+																					</PropertyList>
+																					<PointList>
+																						<Point>
+																							<XPos>0</XPos>
+																							<YPos>-8</YPos>
+																							<Flags>5</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>8.76191</XPos>
+																							<YPos>-8</YPos>
+																							<Flags>0</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>27.68254</XPos>
+																							<YPos>-18.81248</YPos>
+																							<Flags>0</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>80</XPos>
+																							<YPos>-200</YPos>
+																							<Flags>37</Flags>
+																						</Point>
+																					</PointList>
+																				</Curve>
+																			</CurveUsageInfo>
+																		</VolumeWetUserUsage>
+																		<LowPassFilterUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																		</LowPassFilterUsage>
+																		<HighPassFilterUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="None">
+																				<Curve Name="HighPassFilter" ID="{18FFAC26-8613-4C24-B902-06FA6F8A5D00}">
+																					<PropertyList>
+																						<Property Name="Flags" Type="int32" Value="65537"/>
+																					</PropertyList>
+																					<PointList>
+																						<Point>
+																							<XPos>0</XPos>
+																							<YPos>0</YPos>
+																							<Flags>5</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>80</XPos>
+																							<YPos>100</YPos>
+																							<Flags>37</Flags>
+																						</Point>
+																					</PointList>
+																				</Curve>
+																			</CurveUsageInfo>
+																		</HighPassFilterUsage>
+																		<SpreadUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																				<Curve Name="Spread" ID="{876DA591-C88B-4871-8D28-B4EA76705EEB}">
+																					<PropertyList>
+																						<Property Name="Flags" Type="int32" Value="1"/>
+																					</PropertyList>
+																					<PointList>
+																						<Point>
+																							<XPos>0</XPos>
+																							<YPos>100</YPos>
+																							<Flags>5</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>20.31746</XPos>
+																							<YPos>100</YPos>
+																							<Flags>0</Flags>
+																						</Point>
+																						<Point>
+																							<XPos>80</XPos>
+																							<YPos>0</YPos>
+																							<Flags>37</Flags>
+																						</Point>
+																					</PointList>
+																				</Curve>
+																			</CurveUsageInfo>
+																		</SpreadUsage>
+																		<FocusUsage>
+																			<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																		</FocusUsage>
+																	</CurveUsageInfoList>
+																</Attenuation>
+															</Custom>
+														</Reference>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="ambience_cave02" ID="{80432E8B-17AE-4FF8-9238-25846384DB07}" ShortID="44504001">
+															<PropertyList>
+																<Property Name="TrimBegin" Type="Real64" Value="2.47369494047619"/>
+																<Property Name="TrimEnd" Type="Real64" Value="38.5801268601191"/>
+															</PropertyList>
+															<Language>SFX</Language>
+															<AudioFile>ambience_cave02.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="ambience_cave02" ID="{80432E8B-17AE-4FF8-9238-25846384DB07}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>

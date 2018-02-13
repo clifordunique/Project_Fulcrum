@@ -3,7 +3,7 @@
 	<Platform GUID="{F1290B89-EB12-45A9-A3B3-498722765758}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="Environment" Hash="696394266" Timestamp="1518492092"/>
+				<File Name="Environment" Hash="1914295577" Timestamp="1518492691"/>
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
 				<File Name="FighterChar" Hash="706760150" Timestamp="1518491585"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
@@ -13,7 +13,7 @@
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="3839597001" Timestamp="1518492092"/>
+				<File Name="" Hash="2674614567" Timestamp="1518492691"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
