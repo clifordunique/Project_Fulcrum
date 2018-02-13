@@ -230,7 +230,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
 	[SerializeField][ReadOnlyAttribute] protected bool v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
-	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements.
+	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
+	[SerializeField][Range(0,1)] protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
 	#endregion 
 	//############################################################################################################################################################################################################
@@ -525,6 +526,8 @@ public class FighterChar : NetworkBehaviour
 			float craterThreshold;
 			float slamThreshold;
 			float velPunchThreshold;
+			AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
+
 
 			if(FighterState.Stance == 2) // If guarding, more resistant to landing damage.
 			{
@@ -575,15 +578,24 @@ public class FighterChar : NetworkBehaviour
 			}
 			else if(FighterState.Stance == 1)
 			{
+				
 				float impactStrengthM = ((m_IGF-velPunchThreshold)/(craterThreshold-velPunchThreshold));
 
-				Slam(m_IGF);
-
-				float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
-				float stunTime = g_MinSlamStun+((g_MaxSlamStun-g_MinSlamStun)*impactStrengthM); // Stun duration scales linearly from ...
-
-				g_CurStun = 0.5f;				 // Stunned for stunTime.
+				float damagedealt;
+				g_CurStun = 0.1f;	// Stunned for stunTime.
 				g_Staggered = true;
+
+				if(m_IGF>=slamThreshold)
+				{
+					Slam(m_IGF);
+					damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*impactStrengthM); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
+				}
+				else
+				{
+					o_FighterAudio.LandingSound(m_IGF);
+					damagedealt = 0;
+				}
+
 				if(damagedealt >= 0)
 				{
 					FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
@@ -738,7 +750,6 @@ public class FighterChar : NetworkBehaviour
 		AkSoundEngine.SetRTPCValue("EnergyLevel", FighterState.ZonLevel, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_Y", FighterState.Vel.y, this.gameObject);
-		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 		AkSoundEngine.SetRTPCValue("GForce_Continuous", m_CGF, this.gameObject);
 
 
@@ -1072,6 +1083,7 @@ public class FighterChar : NetworkBehaviour
 		Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
+		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 		o_FighterAudio.CraterSound(impactForce, m_CraterT, 1000f);
 
 		SpawnShockEffect(this.initialVel.normalized);
@@ -1098,6 +1110,7 @@ public class FighterChar : NetworkBehaviour
 		Vector3 PosInfluence = new Vector3(posM,posM,0);
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
+		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 		o_FighterAudio.SlamSound(impactForce, m_SlamT, m_CraterT);
 
 		if(g_VelocityPunching)
@@ -2532,7 +2545,7 @@ public class FighterChar : NetworkBehaviour
 		opponent.v_PunchHitting = true;
 		v_PunchHitting = true;
 
-		if(this.IsPlayer() || opponent.IsPlayer())
+		if(this.IsPlayer() || opponent.IsPlayer()&&impactDamageM>v_PunchStrengthSlowmoT)
 		{
 			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
 		}

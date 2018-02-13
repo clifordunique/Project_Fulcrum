@@ -41,6 +41,7 @@ Game Parameter	ID	Name			Wwise Object Path	Notes
 	640949982	Speed			\Default Work Unit\FighterChar\Speed	
 	2286036297	EnergyLevel			\Default Work Unit\FighterChar\EnergyLevel	
 	2881936400	TimeDilation			\Default Work Unit\World\TimeDilation	
+	2916501359	GForce_Instant			\Default Work Unit\FighterChar\GForce_Instant	GForce incurred at exactly this game frame, typically from an impact.
 	3194824364	Volume_Effects			\Default Work Unit\World\Volume_Effects	
 	3891337659	Volume_Music			\Default Work Unit\World\Volume_Music	
 

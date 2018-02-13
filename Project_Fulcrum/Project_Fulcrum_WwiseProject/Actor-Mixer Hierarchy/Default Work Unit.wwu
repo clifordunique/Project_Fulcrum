@@ -5639,6 +5639,39 @@
 													<ValueList>
 														<Value>-8</Value>
 													</ValueList>
+													<RTPCList>
+														<RTPC Name="" ID="{62DD94E8-A221-40C9-B3DA-EEB3722B0791}" ShortID="367865543">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="GForce_Instant" ID="{EC1DA244-2562-4B43-8A33-5CE5DEAE129B}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{F464392C-E47E-4992-87D4-8D49E3FA2378}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-30</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Log1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>248.4472</XPos>
+																		<YPos>-0.1185</YPos>
+																		<Flags>0</Flags>
+																		<SegmentShape>Log1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>3000</XPos>
+																		<YPos>12</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
 												</Property>
 											</PropertyList>
 											<ReferenceList>
@@ -5762,6 +5795,39 @@
 													<ValueList>
 														<Value>-14</Value>
 													</ValueList>
+													<RTPCList>
+														<RTPC Name="" ID="{A03E9FC6-72BD-4D9A-A912-4364A7986B75}" ShortID="691628870">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="GForce_Instant" ID="{EC1DA244-2562-4B43-8A33-5CE5DEAE129B}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{BF6C511E-4C63-4284-A906-CEBA61D9D477}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-30</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Log1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>248.4472</XPos>
+																		<YPos>-0.118500000000012</YPos>
+																		<Flags>0</Flags>
+																		<SegmentShape>Log1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>3000</XPos>
+																		<YPos>12</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
 												</Property>
 											</PropertyList>
 											<ReferenceList>
