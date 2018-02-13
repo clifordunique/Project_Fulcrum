@@ -48,7 +48,6 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;										// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
-	[SerializeField] private GameObject p_ZonPulse;									// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -702,9 +701,20 @@ public class Player : FighterChar
 
 		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
 		{
-			if(!(FighterState.LeftKeyHold&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKeyHold&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			if(IsVelocityPunching())
 			{
-				ThrowPunch(FighterState.PlayerMouseVector.normalized);
+				v_PunchHitting = true;
+			}
+			else
+			{
+				if(!(FighterState.LeftKeyHold && (FighterState.PlayerMouseVector.normalized.x>0)) && !(FighterState.RightKeyHold && (FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+				{
+					ThrowPunch(FighterState.PlayerMouseVector.normalized);
+				}
+				else
+				{
+					ThrowPunch(FighterState.Vel.normalized);
+				}
 			}
 			//print("Leftclick detected");
 			FighterState.LeftClickRelease = false;
@@ -763,10 +773,7 @@ public class Player : FighterChar
 		FighterState.DownKeyPress = false;
 
 		FighterState.LeftClickRelease = false; 	
-		FighterState.RightClickRelease = false;
-//		FighterState.ZonKeyRelease = false;				
-//		FighterState.DisperseKeyRelease = false;				
-//		FighterState.JumpKeyRelease = false;				
+		FighterState.RightClickRelease = false;			
 		FighterState.LeftKeyRelease = false;
 		FighterState.RightKeyRelease = false;
 		FighterState.UpKeyRelease = false;
@@ -938,6 +945,22 @@ public class Player : FighterChar
 
 	protected void FixedUpdatePlayerAnimation() // FUPA
 	{
+	}
+
+	protected override void ZonPulse()
+	{
+		if(FighterState.ZonLevel <= 0)
+		{
+			return;
+		}
+
+		FighterState.ZonLevel--;
+		o_ProximityLiner.ClearAllFighters();
+		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
+		newZonPulse.GetComponentInChildren<ZonPulse>().originFighter = this;
+		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
+		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
+		o_FighterAudio.ZonPulseSound();
 	}
 
 	protected void UpdatePlayerAnimation() // UPA
@@ -1198,23 +1221,6 @@ public class Player : FighterChar
 
 		//o_MainCamera.orthographicSize = 20f; // REMOVE THIS WHEN NOT DEBUGGING.
 
-	}
-
-
-	protected void ZonPulse()
-	{
-		if(FighterState.ZonLevel <= 0)
-		{
-			return;
-		}
-
-		FighterState.ZonLevel--;
-		o_ProximityLiner.ClearAllFighters();
-		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
-		newZonPulse.GetComponentInChildren<ZonPulse>().originPlayer = this;
-		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
-		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
-		o_FighterAudio.ZonPulseSound();
 	}
 		
 	#endregion

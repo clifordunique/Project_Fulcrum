@@ -11,5 +11,6 @@ Effect plug-ins	ID	Name	Type				Notes
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	31853508	riverloop02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\riverloop02_DDA8542A.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Water\riverloop02		1162104
+	44504001	ambience_cave02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ambience_cave02_4BFAA247.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Cave\ambience_cave02		6932500
 	931815851	riverloop01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\riverloop01_AB9C8EB4.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Water\riverloop01		1212888
 

@@ -47,7 +47,7 @@ public class TimeManager : MonoBehaviour {
 		if(permaSlow){return;}
 		if(slowmoTimer>0)
 		{
-			print("slowmoTimer = "+slowmoTimer);
+			//print("slowmoTimer = "+slowmoTimer);
 			slowmoTimer -= Time.fixedUnscaledDeltaTime;
 		}
 		else

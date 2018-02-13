@@ -130,6 +130,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] public Transform o_DustSpawnTransform;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;     	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
+	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
@@ -228,7 +229,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
-	[SerializeField][ReadOnlyAttribute] protected float v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
+	[SerializeField][ReadOnlyAttribute] protected bool v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements.
 	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
 	#endregion 
@@ -362,7 +363,7 @@ public class FighterChar : NetworkBehaviour
 
 		newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
 		newAirPunch.GetComponentInChildren<AirPunch>().punchThrower = this;
-		v_PunchHitting = 0.2f;
+		v_PunchHitting = true;
 		o_FighterAudio.PunchSound();
 	}
 
@@ -888,15 +889,14 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
 
-		if(v_PunchHitting>0)
+		if(v_PunchHitting)
 		{
 			o_Anim.SetBool("PunchHit", true);
-			v_PunchHitting -= Time.fixedUnscaledDeltaTime;
+			v_PunchHitting = false;
 		}
 		else
 		{
 			o_Anim.SetBool("PunchHit", false);
-			v_PunchHitting = 0;
 		}
 	
 
@@ -1474,6 +1474,22 @@ public class FighterChar : NetworkBehaviour
 				break;
 			}
 		}
+	}
+
+	protected virtual void ZonPulse()
+	{
+		if(FighterState.ZonLevel <= 0)
+		{
+			return;
+		}
+
+		FighterState.ZonLevel--;
+		//o_ProximityLiner.ClearAllFighters();
+		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
+		newZonPulse.GetComponentInChildren<ZonPulse>().originFighter = this;
+		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
+		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
+		o_FighterAudio.ZonPulseSound();
 	}
 
 	protected float GetSteepness(Vector2 vectorPara)
@@ -2298,8 +2314,12 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Visual/Audio effects
 		//
-		v_PunchHitting = 0.25f;
-		o_TimeManager.TimeDilation(0.1f, 0.75f);
+		v_PunchHitting = true;
+
+		if(this.IsPlayer() || opponent.IsPlayer())
+		{
+			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
+		}
 		if(combinedSpeed >= m_CraterT)
 		{
 			//opponent.Crater(combinedSpeed);
@@ -2309,10 +2329,6 @@ public class FighterChar : NetworkBehaviour
 		{
 			//opponent.Slam(combinedSpeed);
 			Slam(combinedSpeed);
-		}
-		else
-		{
-			//ThrowPunch(myVelocity);
 		}
 		Vector2 inbetween = (opponent.GetPosition()+this.GetPosition())/2;
 		SpawnDustEffect(inbetween);
@@ -2412,10 +2428,6 @@ public class FighterChar : NetworkBehaviour
 		{
 			print("Fighter slam successful");
 			Slam(combinedSpeed);
-		}
-		else
-		{
-			ThrowPunch(myVelocity);
 		}
 		//
 		// Setting new player velocities.
@@ -2517,6 +2529,14 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Special effects
 		//
+		opponent.v_PunchHitting = true;
+		v_PunchHitting = true;
+
+		if(this.IsPlayer() || opponent.IsPlayer())
+		{
+			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
+		}
+
 		if(combinedSpeed >= m_CraterT)
 		{
 			print("Fighter crater successful");
@@ -2529,16 +2549,20 @@ public class FighterChar : NetworkBehaviour
 			opponent.Slam(combinedSpeed);
 			Slam(combinedSpeed);
 		}
-		else
-		{
-			ThrowPunch(myVelocity);
-			opponent.ThrowPunch(yourVelocity);
-		}
 		//
 		// Setting new player velocities.
 		//
-		opponent.InstantForce(myVelocity, combinedSpeed*0.5f);
-		this.InstantForce(yourVelocity, combinedSpeed*0.5f);
+		float repulsion;
+		if(combinedSpeed*0.5f<30)
+		{
+			repulsion = 30;
+		}
+		else
+		{
+			repulsion = combinedSpeed*0.5f;
+		}
+		opponent.InstantForce(myVelocity, repulsion);
+		this.InstantForce(yourVelocity, repulsion);
 
 		print("Fighters Clashed!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
 		print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");

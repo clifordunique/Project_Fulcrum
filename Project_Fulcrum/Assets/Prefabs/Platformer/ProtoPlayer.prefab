@@ -283,7 +283,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -49.23455, y: 81.31443, z: 0}
+  m_LocalPosition: {x: 1758.7, y: -180.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4422466092389278}
@@ -373,7 +373,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1129748630130028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4989268661329980}
@@ -985,6 +985,7 @@ MonoBehaviour:
   o_DustSpawnTransform: {fileID: 0}
   o_TimeManager: {fileID: 0}
   o_SpriteRenderer: {fileID: 0}
+  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -1136,7 +1137,6 @@ MonoBehaviour:
   o_Spooler: {fileID: 0}
   o_Healthbar: {fileID: 0}
   o_ProximityLiner: {fileID: 0}
-  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   i_DoubleTapDelayTime: 0.5
   inputBufferSize: 2
   sceneIsReady: 1
@@ -1734,9 +1734,9 @@ SpriteRenderer:
   m_SortingLayerID: -270496717
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 2d4efec4ac1bbe844ba7994e60bdef85, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d528bfb8c058e254da9720a00527fc15, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}

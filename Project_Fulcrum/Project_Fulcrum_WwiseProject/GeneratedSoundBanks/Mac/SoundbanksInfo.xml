@@ -549,6 +549,10 @@
 					<ShortName>riverloop02.wav</ShortName>
 					<Path>SFX\riverloop02_DDA8542A.wem</Path>
 				</File>
+				<File Id="44504001" Language="SFX">
+					<ShortName>ambience_cave02.wav</ShortName>
+					<Path>SFX\ambience_cave02_4BFAA247.wem</Path>
+				</File>
 				<File Id="931815851" Language="SFX">
 					<ShortName>riverloop01.wav</ShortName>
 					<Path>SFX\riverloop01_AB9C8EB4.wem</Path>

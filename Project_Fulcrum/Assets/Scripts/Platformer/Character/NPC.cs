@@ -119,12 +119,12 @@ public class NPC : FighterChar {
 				{
 					if(this.GetComponent<Collider2D>() == i){continue;}
 					//print("TESTING ENTITY:"+i);
-					FighterChar floob = i.GetComponent<FighterChar>();
-					if(enemyTarget==null&&floob!=null)
+					FighterChar fighter = i.GetComponent<FighterChar>();
+					if(enemyTarget==null&&fighter!=null)
 					{
-						if(floob.isAlive())
+						if(fighter.isAlive())
 						{
-							enemyTarget = floob;
+							enemyTarget = fighter;
 						}
 					}
 				}
@@ -133,6 +133,7 @@ public class NPC : FighterChar {
 		case 1: // Pursuing
 			{
 				if(d_aiDebug){print("Chasing!");}
+				this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
 				if(goalLocation.x < 0)
 				{
 					this.FighterState.LeftKeyHold = true;
@@ -157,7 +158,7 @@ public class NPC : FighterChar {
 				{
 					this.FighterState.JumpKeyPress = false;
 				}
-				if(this.GetSpeed() >= 30)
+				if( (this.GetSpeed() >= 30) && (PunchCooldown<=0) )
 				{
 					this.FighterState.LeftClickHold = true;
 					this.FighterState.LeftClickPress = true;
@@ -167,11 +168,25 @@ public class NPC : FighterChar {
 		case 2: // Attacking
 			{
 				if(d_aiDebug){print("ATTACKING!");}
+
+				this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
+
 				this.FighterState.RightKeyHold = false;
 				this.FighterState.LeftKeyHold = false;
+
+				if( (facingDirection) && (goalLocation.x > 0) )
+				{
+					this.FighterState.RightKeyHold = false;
+					this.FighterState.LeftKeyHold = true;
+				}
+				if( (!facingDirection) && (goalLocation.x < 0) )
+				{
+					this.FighterState.RightKeyHold = true;
+					this.FighterState.LeftKeyHold = false;
+				}
+					
 				if(PunchCooldown <= 0)
 				{
-					this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
 					this.FighterState.LeftClickRelease = true;
 					PunchCooldown = PunchDelay + UnityEngine.Random.Range(-PunchDelayVariance,PunchDelayVariance);
 				}
@@ -195,71 +210,10 @@ public class NPC : FighterChar {
 
 	protected override void FixedUpdateProcessInput() // FUPI
 	{
-		m_WorldImpact = false;
+		m_WorldImpact = false; //Placeholder??
+		FighterState.Stance = 0;
 		m_Landing = false;
 		m_Kneeling = false;
-
-		//		if(FighterState.RightClick&&(FighterState.DevMode))
-		//		{
-		//			//GameObject newMarker = (GameObject)Instantiate(o_DebugMarker);
-		//			//newMarker.name = "DebugMarker";
-		//			//newMarker.transform.position = FighterState.MouseWorldPos;
-		//			FighterState.RightClick = false;
-		//			float Magnitude = 2f;
-		//			//float Magnitude = 0.5f;
-		//			float Roughness = 10f;
-		//			//float FadeOutTime = 0.6f;
-		//			float FadeOutTime = 5f;
-		//			float FadeInTime = 0f;
-		//			//Vector3 RotInfluence = new Vector3(0,0,0);
-		//			//Vector3 PosInfluence = new Vector3(1,1,0);
-		//			Vector3 RotInfluence = new Vector3(1,1,1);
-		//			Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
-		//			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
-		//		}	
-		//
-		//		if(FighterState.LeftClick&&(FighterState.DevMode||d_ClickToKnockPlayer))
-		//		{
-		//			FighterState.Vel += FighterState.PlayerMouseVector*10;
-		//			//print("Knocking the player.");
-		//			FighterState.LeftClick = false;
-		//		}	
-		//
-		//		if(i_DevKey1)
-		//		{
-		//			if(FighterState.DevMode)
-		//			{
-		//				FighterState.DevMode = false;
-		//			}
-		//			else
-		//			{
-		//				FighterState.DevMode = true;
-		//			}
-		//			i_DevKey1 = false;
-		//		}
-		//
-		//
-		//		if(i_DevKey2)
-		//		{
-		//			this.Respawn();
-		//			i_DevKey2 = false;
-		//		}
-		//
-		//
-		//		if(i_DevKey3)
-		//		{
-		//			i_DevKey3 = false;
-		//		}
-		//
-		//
-		//		if(i_DevKey4)
-		//		{
-		//			FighterState.CurHealth -= 10;
-		//			i_DevKey4 = false;
-		//		}
-		//
-
-
 
 		if(IsDisabled())
 		{
@@ -336,21 +290,42 @@ public class NPC : FighterChar {
 
 		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
 		{
-			if(!(FighterState.LeftKeyHold&&(FighterState.PlayerMouseVector.normalized.x>0))&&!(FighterState.RightKeyHold&&(FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+			if(IsVelocityPunching())
 			{
-				ThrowPunch(FighterState.PlayerMouseVector.normalized);
+				v_PunchHitting = true;
+			}
+			else
+			{
+				if(!(FighterState.LeftKeyHold && (FighterState.PlayerMouseVector.normalized.x>0)) && !(FighterState.RightKeyHold && (FighterState.PlayerMouseVector.normalized.x<0))) // If trying to run opposite your punch direction, do not punch.
+				{
+					ThrowPunch(FighterState.PlayerMouseVector.normalized);
+				}
+				else
+				{
+					ThrowPunch(FighterState.Vel.normalized);
+				}
 			}
 			//print("Leftclick detected");
-			//g_VelocityPunchExpended = false;
 			FighterState.LeftClickRelease = false;
-		}	
+		}
+
+		if(FighterState.RightClickHold)
+		{
+			FighterState.Stance = 2;
+		}
+
+		if(FighterState.DisperseKeyPress)
+		{
+			ZonPulse();
+			FighterState.DisperseKeyPress = false;
+		}
 
 		if(FighterState.LeftClickHold)
 		{
-			i_LeftClickHoldDuration += Time.fixedDeltaTime;
+			FighterState.LeftClickHoldDuration += Time.fixedDeltaTime;
 			FighterState.Stance = 1;
 
-			if((i_LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
+			if((FighterState.LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
 				g_VelocityPunching = true;
 				o_VelocityPunch.inUse = true;
@@ -363,10 +338,17 @@ public class NPC : FighterChar {
 		}
 		else
 		{
-			i_LeftClickHoldDuration = 0;
+			FighterState.LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
 			o_VelocityPunch.inUse = false;
 		}
+
+		if(FighterState.DisperseKeyPress)
+		{
+			ZonPulse();
+			FighterState.DisperseKeyPress = false;
+		}
+
 
 		// Once the input has been processed, set the press inputs to false so they don't run several times before being changed by update() again. 
 		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
@@ -379,6 +361,13 @@ public class NPC : FighterChar {
 		FighterState.RightKeyPress = false;
 		FighterState.UpKeyPress = false;
 		FighterState.DownKeyPress = false;
+
+		FighterState.LeftClickRelease = false; 	
+		FighterState.RightClickRelease = false;			
+		FighterState.LeftKeyRelease = false;
+		FighterState.RightKeyRelease = false;
+		FighterState.UpKeyRelease = false;
+		FighterState.DownKeyRelease = false;
 	}
 
 

@@ -56,7 +56,6 @@ C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debu
 C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-firstpass.pdb
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp-firstpass.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp-firstpass.pdb
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Ionic.Zip.Reduced.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\nunit.framework.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.dll
@@ -84,7 +83,6 @@ C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\nunit.framework.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.Analytics.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.HoloLens.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.VR.xml
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-firstpass.pdb

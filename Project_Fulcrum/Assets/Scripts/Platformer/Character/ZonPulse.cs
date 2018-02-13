@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ZonPulse : MonoBehaviour {
 	
-	public Player originPlayer;
+	public FighterChar originFighter;
 	[ReadOnlyAttribute][SerializeField] float pulseRadius;
 	[ReadOnlyAttribute][SerializeField] public float pulseRange = 40;
 
@@ -37,9 +37,12 @@ public class ZonPulse : MonoBehaviour {
 		{
 			theFighter = theObject.gameObject.GetComponent<FighterChar>();
 		}
-		if((theFighter != null)&&(theFighter!=originPlayer))
+		if((theFighter != null)&&(theFighter!=originFighter))
 		{
-			originPlayer.PulseHit(theFighter);
+			if(originFighter.IsPlayer())
+			{
+				((Player)originFighter).PulseHit(theFighter);
+			}
 		}
 	}
 }

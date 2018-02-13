@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="128">
 	<RootPaths>
-		<ProjectRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\nicho\Documents\GitHub\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -551,7 +551,7 @@
 				</File>
 				<File Id="44504001" Language="SFX">
 					<ShortName>ambience_cave02.wav</ShortName>
-					<Path>SFX\ambience_cave02_319A59DC.wem</Path>
+					<Path>SFX\ambience_cave02_4BFAA247.wem</Path>
 				</File>
 				<File Id="931815851" Language="SFX">
 					<ShortName>riverloop01.wav</ShortName>
