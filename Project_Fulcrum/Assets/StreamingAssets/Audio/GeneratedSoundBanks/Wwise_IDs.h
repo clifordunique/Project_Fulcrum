@@ -25,6 +25,7 @@ namespace AK
         static const AkUniqueID MENU_PAUSE = 2170009975U;
         static const AkUniqueID MENU_RESUME = 2263363174U;
         static const AkUniqueID MENU_SELECT = 4203375351U;
+        static const AkUniqueID PAIN = 1996139369U;
         static const AkUniqueID PLAYMUSIC = 417627684U;
         static const AkUniqueID PUNCHHIT = 3343194546U;
         static const AkUniqueID PUNCHSWING = 2180951687U;

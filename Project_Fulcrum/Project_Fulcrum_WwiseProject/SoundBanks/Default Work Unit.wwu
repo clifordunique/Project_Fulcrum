@@ -21,6 +21,7 @@
 						<ObjectRef Name="WindLoopStart" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PlayMusic" ID="{6E59EE28-79D6-4E5A-91BE-0963CBD13CFE}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Set_Gender_Female" ID="{A8D314FA-7D8E-4E84-9AE8-8A04A621FABB}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Pain" ID="{D86A8D18-3BB8-4EA8-A8C1-F52F2826A8D6}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SlideLoopStart" ID="{D2DA7FD7-E562-4F09-BF09-A46AA3A0D55B}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>

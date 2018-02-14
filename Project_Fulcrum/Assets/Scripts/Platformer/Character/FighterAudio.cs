@@ -6,6 +6,7 @@ using AK.Wwise;
 public class FighterAudio : NetworkBehaviour {
 
 	[SerializeField]private AK.Wwise.Event e_Step = null;
+	[SerializeField]private AK.Wwise.Event e_Pain = null;
 	[SerializeField]private AK.Wwise.Event e_ZonPulse = null;
 	[SerializeField]private AK.Wwise.Event e_Punch = null;
 	[SerializeField]private AK.Wwise.Event e_PunchHit = null;
@@ -84,6 +85,12 @@ public class FighterAudio : NetworkBehaviour {
 		float volume = sfxVolM;
 		//charAudioSource.PlayOneShot(sfxSounds[0], volume);
 		e_ZonPulse.Post(this.gameObject);
+	}
+
+	public void PainSound()
+	{
+		print("pain!");
+		e_Pain.Post(this.gameObject);
 	}
 
 	public void PunchSound()

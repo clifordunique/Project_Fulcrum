@@ -3734,6 +3734,10 @@ public class FighterChar : NetworkBehaviour
 	public void TakeDamage(int dmgAmount)
 	{
 		FighterState.CurHealth -= dmgAmount;
+		if(dmgAmount>15)
+		{
+			o_FighterAudio.PainSound();
+		}
 	}
 
 	public bool IsPlayer()

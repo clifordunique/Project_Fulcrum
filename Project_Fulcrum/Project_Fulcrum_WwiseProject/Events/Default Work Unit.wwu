@@ -118,26 +118,6 @@
 								</Reference>
 							</ReferenceList>
 						</Action>
-						<Action Name="" ID="{70D322B1-1A33-40AE-9BA5-0C846DFFC1D1}" ShortID="93045134">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="1"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{FD96D1DF-B267-4ED8-BF71-0002079A3E4C}" ShortID="808398573">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="1"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="Pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
 					</ChildrenList>
 				</Event>
 				<Event Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}">
@@ -151,16 +131,6 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{79821FA4-43DD-4C61-9818-4CD8CDA9F4E6}" ShortID="117109133">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="1"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -429,6 +399,30 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="ambience_cave02" ID="{EC7FC32E-0675-41C5-83F9-3C72273E251F}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Pain" ID="{D86A8D18-3BB8-4EA8-A8C1-F52F2826A8D6}">
+					<ChildrenList>
+						<Action Name="" ID="{5B521CD3-3325-4F4A-AE1E-535714DB8E3E}" ShortID="398553270">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Pain" ID="{CBE6C2BD-0E63-4320-81F2-C8735AF66264}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{92069893-68C2-4132-900E-B37167F8D05E}" ShortID="753069379">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="pain" ID="{8C304F8F-DC46-4EF7-86FD-36EA51839F54}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

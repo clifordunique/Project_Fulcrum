@@ -213,8 +213,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271522054906898}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1697, y: -100, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 199.2907, y: -68.90414, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4400483855208910}
@@ -794,6 +794,9 @@ MonoBehaviour:
   e_Step:
     valueGuid: 26ac86d82f62264cbb8bcbe28c6d6151
     ID: 1866025847
+  e_Pain:
+    valueGuid: 188d6ad8b83ba84ea8c1f52f2826a8d6
+    ID: 1996139369
   e_ZonPulse:
     valueGuid: 24aa3cabf9d82b4088c1a5af022d82b6
     ID: 1403055964

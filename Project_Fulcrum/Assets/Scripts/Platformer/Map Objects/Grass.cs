@@ -41,16 +41,23 @@ public class Grass : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D theObject)
 	{
 		FighterChar thePlayer = theObject.gameObject.GetComponent<FighterChar>();
+		AirPunch theAirpunch = theObject.gameObject.GetComponent<AirPunch>();
 		WindEffector theWind =  theObject.gameObject.GetComponent<WindEffector>();
-		if(thePlayer != null)
+		if(theAirpunch!=null)
+		{
+			print("Punched da grass yo.");
+			windForce = theAirpunch.aimDirection.x*2;
+		}
+		else if(thePlayer!=null)
 		{
 			fighterChar = thePlayer;
 			thePlayer.g_IsInGrass++;
 		}
-		else if(theWind != null)
+		else if(theWind!=null)
 		{
 			windEffector = theWind;
 		}
+	
 	}
 
 	void OnTriggerExit2D(Collider2D theObject)
