@@ -555,7 +555,7 @@ public class FighterChar : NetworkBehaviour
 
 				g_CurStun = stunTime;				 			// Stunned for stunTime.
 				g_Stunned = true;
-				FighterState.CurHealth -= (int)damagedealt;		// Damaged by fall.
+				TakeDamage((int)damagedealt);		// Damaged by fall.
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 			}
 			else if(m_IGF >= slamThreshold)
@@ -571,7 +571,7 @@ public class FighterChar : NetworkBehaviour
 				g_Staggered = true;
 				if(damagedealt >= 0)
 				{
-					FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 
@@ -598,7 +598,7 @@ public class FighterChar : NetworkBehaviour
 
 				if(damagedealt >= 0)
 				{
-					FighterState.CurHealth -= (int)damagedealt;		 // Damaged by fall.
+					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
 			}
@@ -3612,7 +3612,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		if(enemyFighter != null)
 		{
-			enemyFighter.FighterState.CurHealth -= 5;
+			enemyFighter.TakeDamage(5);
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
 
@@ -3647,7 +3647,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		if(enemyFighter != null)
 		{
-			enemyFighter.FighterState.CurHealth -= 5;
+			enemyFighter.TakeDamage(5);
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
 			//print("Punch connected remotely");

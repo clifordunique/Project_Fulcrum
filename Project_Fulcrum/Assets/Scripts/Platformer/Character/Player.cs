@@ -364,7 +364,7 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey6)
 		{
-			FighterState.CurHealth -= 10;
+			TakeDamage(10);
 			g_CurStun = 2f;
 			g_Stunned = true;
 			FighterState.DevKey6 = false;
