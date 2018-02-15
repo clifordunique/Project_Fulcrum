@@ -15,7 +15,6 @@ public class StartOptions : NetworkBehaviour {
 	public InputField inputField;
 	public int sceneToStart = 1;										//Index number in build settings of scene to load if changeScenes is true
 	public bool changeScenes;											//If true, load a new scene when Start is pressed, if false, fade out UI and continue in single scene
-	public bool changeMusicOnStart;										//Choose whether to continue playing menu music or start a new music clip
 	[SerializeField] private GameObject p_MatchSelectButton;
 	[SerializeField] private RectTransform o_MatchSelectScrollbar;
 	[SerializeField] public float defaultMusicLvl = 75;
@@ -28,8 +27,6 @@ public class StartOptions : NetworkBehaviour {
 	public AnimationClip fadeColorAnimationClip;						//Animation clip fading to color (black default) when changing scenes
 	[HideInInspector] public AnimationClip fadeAlphaAnimationClip;		//Animation clip fading out UI elements alpha
 
-
-	private PlayMusic playMusic;										//Reference to PlayMusic script
 	private float fastFadeIn = .01f;									//Very short fade time (10 milliseconds) to start playing music immediately without a click/glitch
 	private float slowFadeIn = 10.0f;									
 	private ShowPanels showPanels;										//Reference to ShowPanels script on UI GameObject, to show and hide panels
@@ -44,8 +41,6 @@ public class StartOptions : NetworkBehaviour {
 		Mngr = GameObject.Find("PFGameManager").GetComponent<FulcrumNetworkManager>();
 
 		//Get a reference to PlayMusic attached to UI object
-		playMusic = GetComponent<PlayMusic> ();
-
 		AkSoundEngine.SetRTPCValue("Volume_Music", defaultMusicLvl);
 		AkSoundEngine.SetRTPCValue("Volume_Effects", defaultEffectsLvl);
 	
@@ -97,10 +92,7 @@ public class StartOptions : NetworkBehaviour {
 	}
 
 	public void SingleplayerButtonClicked()
-	{
-
-		playMusic.FadeDown(fadeColorAnimationClip.length);
-			
+	{			
 		//Use invoke to delay calling of LoadDelayed by half the length of fadeColorAnimationClip
 		Invoke("LoadDelayed", fadeColorAnimationClip.length * .5f);
 
@@ -169,25 +161,19 @@ public class StartOptions : NetworkBehaviour {
 		if(scene.name=="MainMenu")
 		{
 			Mngr.gameObject.GetComponent<TimeManager>().enabled = false;
-			Mngr.gameObject.GetComponent<CloudHandler>().enabled = false;
-			playMusic.PlaySelectedMusic(0);
 			print("MainMenu Loaded.");
 			return;
 		}
 		else
 		{
-			Mngr.gameObject.GetComponent<CloudHandler>().enabled = true;
 			Mngr.gameObject.GetComponent<TimeManager>().enabled = true;
 		}
 		if(isMultiplayer)
 		{
-			print("Multiplayer Loaded.");
-			Invoke("PlayNewMusic", fadeAlphaAnimationClip.length);
-		}
+			print("Multiplayer Loaded.");		}
 		else
 		{
 			print("Singleplayer Loaded.");
-			Invoke("PlayNewMusic", fadeAlphaAnimationClip.length);
 			NetworkClient localhost = Mngr.StartHost();
 			ClientScene.AddPlayer(localhost.connection, 0);
 		}
@@ -218,23 +204,11 @@ public class StartOptions : NetworkBehaviour {
 
 		//If changeMusicOnStart is true, fade out volume of music group of AudioMixer by calling FadeDown function of PlayMusic, using length of fadeColorAnimationClip as time. 
 		//To change fade time, change length of animation "FadeToColor"
-		if (changeMusicOnStart) 
-		{
-			//Wait until game has started, then play new music
-			Invoke("PlayNewMusic", fadeAlphaAnimationClip.length);
-		}
+
 		//Set trigger for animator to start animation fading out Menu UI
 		animMenuAlpha.SetTrigger("fade");
 		Invoke("HideDelayed", fadeAlphaAnimationClip.length);
 		Debug.Log ("Game started in same scene! Put your game starting stuff here.");
 	}
-
-
-	public void PlayNewMusic()
-	{
-		//Play music clip assigned to mainMusic in PlayMusic script
-		print("playmusic");
-		playMusic.FadeUp(fadeColorAnimationClip.length);
-		playMusic.PlaySelectedMusic(1);
-	}
+		
 }

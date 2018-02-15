@@ -45,8 +45,8 @@ public class Grass : MonoBehaviour {
 		WindEffector theWind =  theObject.gameObject.GetComponent<WindEffector>();
 		if(theAirpunch!=null)
 		{
-			print("Punched da grass yo.");
-			windForce = theAirpunch.aimDirection.x*2;
+//			print("Punched da grass yo.");
+			windForce = theAirpunch.aimDirection.x*-2;
 		}
 		else if(thePlayer!=null)
 		{

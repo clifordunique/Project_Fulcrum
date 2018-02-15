@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(ParallaxLayer))]
-
+[ExecuteInEditMode]
 public class CloudLayer : MonoBehaviour {
 	public GameObject[] cloudSpritesL;
 	public GameObject[] cloudSpritesM;
@@ -27,26 +27,28 @@ public class CloudLayer : MonoBehaviour {
 	{
 
 	}
-
+		
 	void Awake()
 	{
-		parallaxLayer = this.GetComponent<ParallaxLayer>();	
-		allClouds = new GameObject[cloudCount];
-		spriteWidth = cloudSpritesL[0].GetComponent<SpriteRenderer>().bounds.size.x;
-//		if(!isInitialized)
-//		{
-//			Initialize(1, 10, Color.blue);
-//		}
-		//print("AWAKE!");
+//		parallaxLayer = this.GetComponent<ParallaxLayer>();	
+//		//allClouds = new GameObject[cloudCount];
+//		spriteWidth = cloudSpritesL[0].GetComponent<SpriteRenderer>().bounds.size.x;
+//
 	}
 
-	public void Initialize(int lyrDepth, float distKM, Color color)
+	public void Initialize(int lyrDepth, float distKM, Color color, Vector2 worldCoords)
 	{
+		parallaxLayer = this.GetComponent<ParallaxLayer>();	
+		parallaxLayer.isNewStyle = true;
+		parallaxLayer.isCloud = true;
+		allClouds = new GameObject[cloudCount];
+		spriteWidth = cloudSpritesL[0].GetComponent<SpriteRenderer>().bounds.size.x;
 		//print("Initializing! \n LayerDepth: "+lyrDepth+"\n DistanceKM: "+distKM+"\n Colour: "+color);
 		distanceKM = distKM;
 		layerDepth = lyrDepth;
 		cloudColor = color;
-		parallaxLayer.distanceKM = distKM;
+ 		parallaxLayer.distanceKM = distKM;
+		parallaxLayer.worldSpaceCoords = worldCoords;
 		int sortOrder= -100-layerDepth*5;
 		float randomXOffset = Random.Range(-cloudXRandomness,cloudXRandomness);
 		if(distKM > 0)
@@ -76,13 +78,14 @@ public class CloudLayer : MonoBehaviour {
 		}
 	}
 
-	public void Adjust(int lyrDepth, float distKM, Color color)
+	public void Adjust(int lyrDepth, float distKM, Color color, Vector2 worldCoords)
 	{
 		//print("Adjust activated.");
 		distanceKM = distKM;
 		layerDepth = lyrDepth;
 		cloudColor = color;
 		parallaxLayer.distanceKM = distanceKM;
+		parallaxLayer.worldSpaceCoords = worldCoords;
 
 		if(distKM > 0)
 		{
@@ -102,13 +105,6 @@ public class CloudLayer : MonoBehaviour {
 			cloudSprite.sortingLayerName = "Background";
 			cloudSprite.sortingOrder = sortOrder;
 		}
-	}
-
-//
-	// Update is called once per frame
-	void Update () 
-	{
-		
 	}
 }
 	

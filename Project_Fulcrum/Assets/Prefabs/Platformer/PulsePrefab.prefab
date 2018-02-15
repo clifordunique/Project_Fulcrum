@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ee7c4ef2a087ac42ae70b97eaa3299a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  originPlayer: {fileID: 0}
+  originFighter: {fileID: 0}
   pulseRadius: 0
   pulseRange: 40
 --- !u!212 &212382692746011788
@@ -132,7 +132,7 @@ SpriteRenderer:
   m_SortingLayerID: -179097649
   m_SortingLayer: -2
   m_SortingOrder: 10000
-  m_Sprite: {fileID: 21300000, guid: 137c0f09ab9e7ec44a339385dbe686f5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da6eea3884670ad409692d7a4ed37498, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

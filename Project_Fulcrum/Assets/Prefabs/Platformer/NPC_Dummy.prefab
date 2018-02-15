@@ -253,7 +253,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1512946014622738}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -316.4, y: -5.2, z: 0}
+  m_LocalPosition: {x: 208.63, y: -70.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4915894897621116}
@@ -749,7 +749,11 @@ MonoBehaviour:
   o_DustSpawnTransform: {fileID: 0}
   o_TimeManager: {fileID: 0}
   o_SpriteRenderer: {fileID: 212605838245193270}
-  p_ZonPulse: {fileID: 0}
+  p_ItemHandler: {fileID: 114283083902740920, guid: 1b835cc0920f3bd47ae9854e28f86364,
+    type: 2}
+  p_EquippedShoe: {fileID: 114599216380227446, guid: 547fd2b597e04d54fa38bb307d672cbe,
+    type: 2}
+  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,

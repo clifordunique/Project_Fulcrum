@@ -72,7 +72,6 @@
      <Compile Include="Assets\MenuAudio.cs" />
      <Compile Include="Assets\ParallaxHandler.cs" />
      <Compile Include="Assets\ScreenFilter.cs" />
-     <Compile Include="Assets\Scripts\Demonstration.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransformUpdater.cs" />
@@ -93,12 +92,15 @@
      <Compile Include="Assets\Scripts\Platformer\Character\ProxLine.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\ProximityLiner.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Ring.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\Shoe.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\ShoeTooltip.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Spooler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\StrandJumpEffect.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VelocityPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\ZonPulse.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\DeformMeshTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\TextureGenerator.cs" />
+     <Compile Include="Assets\Scripts\Platformer\ItemHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Breakable.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudLayer.cs" />

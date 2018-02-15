@@ -89,7 +89,7 @@ public class FighterAudio : NetworkBehaviour {
 
 	public void PainSound()
 	{
-		print("pain!");
+//		print("pain!");
 		e_Pain.Post(this.gameObject);
 	}
 

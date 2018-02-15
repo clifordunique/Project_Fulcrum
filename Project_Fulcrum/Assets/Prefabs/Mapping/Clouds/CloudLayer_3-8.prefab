@@ -652,11 +652,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3936483b6f7524b4c98754d76c2be529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedX: 0.934
-  speedY: 0.934
+  moveAmount: 0
   parallaxMovement: 0
   distanceKM: -1
   moveInOppositeDirection: 0
+  isNewStyle: 1
+  isCloud: 0
+  worldSpaceCoords: {x: 0, y: 0, z: 0}
+  cameraSpaceCoords: {x: 0, y: 0, z: 0}
 --- !u!114 &114086789126690376
 MonoBehaviour:
   m_ObjectHideFlags: 1

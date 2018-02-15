@@ -130,6 +130,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] public Transform o_DustSpawnTransform;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;     	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
+	[SerializeField][ReadOnlyAttribute] protected ItemHandler o_ItemHandler;		// Reference to the itemhandler, which acts as an authority on item stats and indexes.
+	[SerializeField] protected Shoe p_EquippedShoe;      		// Reference to the player's currently equipped shoe.
 	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
@@ -229,7 +231,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
-	[SerializeField][ReadOnlyAttribute] protected bool v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
+	[SerializeField][ReadOnlyAttribute] public bool v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)] protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
@@ -326,6 +328,43 @@ public class FighterChar : NetworkBehaviour
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	protected virtual void EquipShoe(Shoe shoe)
+	{
+		if(shoe == null){print("ERROR: SHOE NOT FOUND");return;}
+		this.m_MinSpeed = shoe.m_MinSpeed;					
+		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
+		this.m_Acceleration = shoe.m_Acceleration;  			
+
+		this.m_VJumpForce = shoe.m_VJumpForce;               
+		this.m_HJumpForce = shoe.m_HJumpForce;  				
+		this.m_WallVJumpForce = shoe.m_WallVJumpForce;           
+		this.m_WallHJumpForce = shoe.m_WallHJumpForce;  			
+		this.m_ZonJumpForcePerCharge = shoe.m_ZonJumpForcePerCharge; 	
+		this.m_ZonJumpForceBase = shoe.m_ZonJumpForceBase; 		
+
+		this.m_TractionChangeT = shoe.m_TractionChangeT;			
+		this.m_WallTractionT = shoe.m_WallTractionT;			
+		this.m_LinearStopRate = shoe.m_LinearStopRate; 			
+		this.m_LinearSlideRate = shoe.m_LinearSlideRate;			
+		this.m_LinearOverSpeedRate = shoe.m_LinearOverSpeedRate;		
+		this.m_LinearAccelRate = shoe.m_LinearAccelRate;			
+		this.m_ImpactDecelMinAngle = shoe.m_ImpactDecelMinAngle;
+		this.m_ImpactDecelMaxAngle = shoe.m_ImpactDecelMaxAngle;
+		this.m_TractionLossMinAngle = shoe.m_TractionLossMinAngle; 
+		this.m_TractionLossMaxAngle = shoe.m_TractionLossMaxAngle;
+		this.m_SlippingAcceleration = shoe.m_SlippingAcceleration;  	
+		this.m_SurfaceClingTime = shoe.m_SurfaceClingTime;
+		this.m_ClingReqGForce = shoe.m_ClingReqGForce;
+
+		this.m_SlamT = shoe.m_SlamT;					
+		this.m_CraterT = shoe.m_CraterT; 					
+		this.m_GuardSlamT = shoe.m_GuardSlamT; 				
+		this.m_GuardCraterT = shoe.m_GuardCraterT;				
+
+		this.m_StrandJumpSpeedLossM = shoe.m_StrandJumpSpeedLossM;
+		this.m_WidestStrandJumpAngle = shoe.m_WidestStrandJumpAngle;
+	}
 
 	protected void ThrowPunch(Vector2 aimDirection)
 	{
@@ -996,12 +1035,21 @@ public class FighterChar : NetworkBehaviour
 		o_Anim = this.GetComponent<Animator>();
 		o_Rigidbody2D = GetComponent<Rigidbody2D>();
 		o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
-		v_DefaultColor = o_SpriteRenderer.color;
+		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 
+
+		v_DefaultColor = o_SpriteRenderer.color;
 		lastSafePosition = new Vector2(0,0);
 		m_RemainingMovement = new Vector2(0,0);
 		m_RemainingVelM = 1f;
 		//print(m_RemainingMovement);
+
+
+		if(p_EquippedShoe == null)
+		{
+			p_EquippedShoe = o_ItemHandler.shoes[0].GetComponent<Shoe>(); // If no shoes equipped, equip bare feet.
+		}
+		EquipShoe(p_EquippedShoe);
 
 
 		if(!(showVelocityIndicator||FighterState.DevMode)){
@@ -2577,9 +2625,9 @@ public class FighterChar : NetworkBehaviour
 		// Setting new player velocities.
 		//
 		float repulsion;
-		if(combinedSpeed*0.5f<30)
+		if(combinedSpeed*0.5f<15)
 		{
-			repulsion = 30;
+			repulsion = 15;
 		}
 		else
 		{
