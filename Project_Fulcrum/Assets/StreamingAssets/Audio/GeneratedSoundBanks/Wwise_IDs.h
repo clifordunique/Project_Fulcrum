@@ -19,6 +19,7 @@ namespace AK
         static const AkUniqueID FOOTSTEP = 1866025847U;
         static const AkUniqueID IMPACT_CRATER = 1796283983U;
         static const AkUniqueID IMPACT_SLAM = 3485259485U;
+        static const AkUniqueID ITEM_EQUIP = 2146777153U;
         static const AkUniqueID JUMP = 3833651337U;
         static const AkUniqueID LANDING = 2548270042U;
         static const AkUniqueID MENU_HIGHLIGHT = 29030485U;
@@ -77,6 +78,17 @@ namespace AK
             } // namespace SWITCH
         } // namespace MOVETYPE
 
+        namespace SHOETYPE
+        {
+            static const AkUniqueID GROUP = 2413944604U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID METAL = 2473969246U;
+                static const AkUniqueID NORMAL = 1160234136U;
+            } // namespace SWITCH
+        } // namespace SHOETYPE
+
         namespace SURFACECONTACTS
         {
             static const AkUniqueID GROUP = 2055121345U;
@@ -127,6 +139,7 @@ namespace AK
         static const AkUniqueID GFORCE_INSTANT = 2916501359U;
         static const AkUniqueID HEALTH = 3677180323U;
         static const AkUniqueID KNEELING = 2487913616U;
+        static const AkUniqueID SHOETYPE_ID = 3806191500U;
         static const AkUniqueID SLIDING = 472853913U;
         static const AkUniqueID SPEED = 640949982U;
         static const AkUniqueID TIMEDILATION = 2881936400U;

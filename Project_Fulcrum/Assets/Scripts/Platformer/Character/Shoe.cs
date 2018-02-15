@@ -6,8 +6,21 @@ using UnityEngine;
 public class Shoe : MonoBehaviour {
 
 	[SerializeField] public string shoeName;	// Shoe's name text.
-	[SerializeField] public int shoeID;		// Shoe index number.
+	[SerializeField] public int shoeID;			// Shoe index number.
 	[SerializeField] public string shoeDesc;	// Shoe description text.
+	[SerializeField] public int soundType;		// 0 equals normal, 1 equals metal.
+	private SpriteRenderer shoeSprite;			// Shoe description text.
+
+
+
+	private bool falling = true;
+	private float inactiveTimeMax = 2; // Max inactive time upon being dropped.
+	private float inactiveTimeCur; // Current remaining time spent inactive (unable to be picked up).
+
+	
+	/// <summary>
+	/// Movement Attributes
+	/// </summary>
 	[Space(10)]
 	[SerializeField] public float m_MinSpeed;							// The instant starting speed while moving.
 	[SerializeField] public float m_MaxRunSpeed;							// The fastest the fighter can travel along land.
@@ -42,13 +55,70 @@ public class Shoe : MonoBehaviour {
 	[SerializeField][Range(0,1)] public float m_StrandJumpSpeedLossM; 	// Percent of speed lost with each strand jump
 	[SerializeField][Range(0f,180f)]public float m_WidestStrandJumpAngle;// Most shallow angle that allows a strand jump
 
-	// Use this for initialization
-	void Start () {
-		
+	public void Awake()
+	{
+		shoeSprite = this.GetComponent<SpriteRenderer>();
+		inactiveTimeCur = inactiveTimeMax;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public void FixedUpdate()
+	{
+		if(falling)
+		{
+			this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y-Time.fixedDeltaTime, this.transform.position.z);
+		}
+		if(inactiveTimeCur>0)
+		{
+			inactiveTimeCur -= Time.fixedDeltaTime;
+		}
+		else
+		{
+			inactiveTimeCur = 0;
+		}
+	}
+
+	public void DestroyThis()
+	{
+		Destroy(this.gameObject);
+	}
+
+	public void PickedUpBy(FighterChar newFighter)
+	{
+		this.GetComponent<CircleCollider2D>().enabled = false;
+		transform.parent = newFighter.transform;
+		shoeSprite.enabled = false;
+		falling = false;
+	}
+
+	public void Drop()
+	{
+		if(shoeID==0)
+		{
+			print("Feet got dropped!");
+		}
+		this.GetComponent<CircleCollider2D>().enabled = true;
+		transform.localPosition = Vector3.zero;
+		transform.parent = null;
+		shoeSprite.enabled = true;
+		inactiveTimeCur = inactiveTimeMax;
+		falling = true;
+	}
+
+	void OnTriggerEnter2D(Collider2D theObject)
+	{
+		FighterChar thePlayer = theObject.gameObject.GetComponent<FighterChar>();
+
+		if(thePlayer!=null)
+		{
+			if(thePlayer.IsPlayer() && inactiveTimeCur <= 0)
+			{
+				thePlayer.EquipShoe(this);
+			}
+		}
+		else //if ( theObject.gameObject.layer == 15 ) // If collided object is a world object.
+		{
+			print("collided with: "+theObject.name);
+			falling = false;
+		}
 	}
 }

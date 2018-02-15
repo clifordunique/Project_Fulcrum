@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{1B947992-7866-424C-9CDE-F5F761BD8DE6}" SchemaVersion="85">
 	<Queries>
-		<WorkUnit Name="Default Work Unit" ID="{1B947992-7866-424C-9CDE-F5F761BD8DE6}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{1B947992-7866-424C-9CDE-F5F761BD8DE6}" PersistMode="Standalone">
+			<ChildrenList>
+				<Query Name="New Query" ID="{660DC095-7764-4233-B1AE-C22A35D66A3D}">
+					<PropertyList>
+						<Property Name="ObjectType" Type="int32" Value="600"/>
+					</PropertyList>
+					<ChildrenList>
+						<SearchCriteria Name="GeneralShort ID" ID="{C5178393-C099-45E4-BA17-9D6B5C7DFFBC}" SearchOperationID="{5A52DB39-C09B-4D8C-9AAF-2EB9016E2E66}">
+							<PropertyList>
+								<Property Name="UIntValue" Type="Uint32" Value="2146777153"/>
+							</PropertyList>
+						</SearchCriteria>
+					</ChildrenList>
+				</Query>
+			</ChildrenList>
+		</WorkUnit>
 	</Queries>
 </WwiseDocument>

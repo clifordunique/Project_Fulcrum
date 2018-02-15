@@ -22,6 +22,7 @@
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep" MaxAttenuation="100.000000"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
+				<Event Id="2146777153" Name="Item_Equip" ObjectPath="\Events\Default Work Unit\Item_Equip" MaxAttenuation="100.000000"/>
 				<Event Id="3833651337" Name="Jump" ObjectPath="\Events\Default Work Unit\Jump"/>
 				<Event Id="2548270042" Name="Landing" ObjectPath="\Events\Default Work Unit\Landing" MaxAttenuation="100.000000"/>
 				<Event Id="1996139369" Name="Pain" ObjectPath="\Events\Default Work Unit\Pain" MaxAttenuation="100.000000"/>
@@ -223,6 +224,10 @@
 				<File Id="334614632" Language="SFX">
 					<ShortName>female_jump02.wav</ShortName>
 					<Path>SFX\female_jump02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="336931189" Language="SFX">
+					<ShortName>Item\itempick2.wav</ShortName>
+					<Path>SFX\Item\itempick2_1C9C67B2.wem</Path>
 				</File>
 				<File Id="364092348" Language="SFX">
 					<ShortName>tile2.wav</ShortName>

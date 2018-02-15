@@ -16,6 +16,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AK.Wwise.Event e_Jump = null;
 	[SerializeField]private AK.Wwise.Event e_StrandJump = null;
 	[SerializeField]private AK.Wwise.Event e_SuperJump = null;
+	[SerializeField]private AK.Wwise.Event e_EquipSound = null;
 
 //	[SerializeField]private AudioSource charAudioSource;
 //	[SerializeField]private AudioSource windSource;
@@ -115,6 +116,10 @@ public class FighterAudio : NetworkBehaviour {
 		e_PunchHit.Post(this.gameObject);
 	}
 
+	public void EquipSound()
+	{
+		e_EquipSound.Post(this.gameObject);
+	}
 	//	[Command] public void CmdPunchSound(float theVolume)
 	//	{
 	//		RpcPunchSound(theVolume);

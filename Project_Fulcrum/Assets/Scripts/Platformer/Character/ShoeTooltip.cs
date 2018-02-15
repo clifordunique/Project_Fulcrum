@@ -5,7 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ShoeTooltip : MonoBehaviour {
-	
+
+	[SerializeField]private FighterChar myFighter;
 	[SerializeField]private Shoe myShoe;
 	[SerializeField]private Transform myTag;
 	[SerializeField]private Transform myOrb;
@@ -23,6 +24,14 @@ public class ShoeTooltip : MonoBehaviour {
 		itemName = myTag.GetChild(0).GetComponent<Text>();
 	}
 
+	public void OnMouseDown()
+	{
+		if(myFighter!=null)
+		{
+			DropShoe();
+		}
+	}
+
 	public void OnMouseEnter()
 	{
 		mouseOver = true;
@@ -32,6 +41,11 @@ public class ShoeTooltip : MonoBehaviour {
 		mouseOver = false;
 	}
 
+	public void DropShoe()
+	{
+		myFighter.EquipShoe(null);
+	}
+	 
 	public void SetShoe(Shoe newShoe)
 	{
 		if(newShoe!=null)
@@ -40,6 +54,11 @@ public class ShoeTooltip : MonoBehaviour {
 			itemName.text = newShoe.shoeName;
 			itemIcon.sprite = newShoe.GetComponent<SpriteRenderer>().sprite;
 		}
+	}
+
+	public void SetFighter(FighterChar newFighter)
+	{
+		myFighter = newFighter;
 	}
 
 	// Update is called once per frame

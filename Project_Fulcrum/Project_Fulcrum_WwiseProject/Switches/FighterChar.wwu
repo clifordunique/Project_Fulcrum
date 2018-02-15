@@ -77,6 +77,35 @@
 						<Switch Name="Female" ID="{67639EEA-49EB-4E55-AE5D-7B19D2D155F5}"/>
 					</ChildrenList>
 				</SwitchGroup>
+				<SwitchGroup Name="ShoeType" ID="{70D7BB7B-547F-4C95-B55D-0325CE551EE0}">
+					<PropertyList>
+						<Property Name="UseGameParameter" Type="bool" Value="True"/>
+					</PropertyList>
+					<ChildrenList>
+						<Switch Name="Normal" ID="{BEA2250F-F65B-4A85-BC94-F0EF9221BBF1}"/>
+						<Switch Name="Metal" ID="{7701DC9A-8D69-49E1-B685-D83EE137FB83}"/>
+					</ChildrenList>
+					<SwitchOnRTPC>
+						<GameParameterRef Name="ShoeType_ID" ID="{9585FD08-40CB-4CD3-BF6C-8BF1DA22EB07}"/>
+						<Curve Name="" ID="{D26F01A9-1303-4F62-BD69-00A3248078E5}">
+							<PropertyList>
+								<Property Name="Flags" Type="int32" Value="65537"/>
+							</PropertyList>
+							<PointList>
+								<Point>
+									<XPos>0</XPos>
+									<YPos>1</YPos>
+									<Flags>5</Flags>
+								</Point>
+								<Point>
+									<XPos>1</XPos>
+									<YPos>2</YPos>
+									<Flags>37</Flags>
+								</Point>
+							</PointList>
+						</Curve>
+					</SwitchOnRTPC>
+				</SwitchGroup>
 			</ChildrenList>
 		</WorkUnit>
 	</Switches>

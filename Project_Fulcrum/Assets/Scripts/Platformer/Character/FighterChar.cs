@@ -61,53 +61,88 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region MOVEMENT HANDLING
 	[Header("Movement Tuning:")]
-	[SerializeField] protected float m_MinSpeed = 10f; 							// The instant starting speed while moving
-	[SerializeField] protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
-	[Range(0,2)][SerializeField] protected float m_Acceleration = 0.6f;    		// Speed the fighter accelerates at
-	[SerializeField] protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
-	[SerializeField] protected float m_HJumpForce = 5f;  						// Amount of horizontal force added when the fighter jumps.
-	[SerializeField] protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the fighter walljumps.
-	[SerializeField] protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the fighter walljumps.
-	[SerializeField] protected float m_TractionChangeT = 20f;					// Threshold where movement changes from exponential to linear acceleration.  
-	[SerializeField] protected float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
-	[SerializeField] protected bool m_WallSliding;								// Speed threshold at which wallsliding traction changes.
-	[SerializeField] protected bool m_Sliding;									// Whether or not the player is sliding.
-	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 		// How fast the fighter decelerates when changing direction.
-	[Range(0,5)][SerializeField] protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
-	[Range(0,5)][SerializeField] protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
-	[Range(0,5)][SerializeField] protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
-	[Range(1,89)][SerializeField] protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
-	[Range(1,89)][SerializeField] protected float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
-	[Range(1,89)][SerializeField] protected float m_TractionLossMinAngle = 45f; // Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
-	[Range(45,90)][SerializeField] protected float m_TractionLossMaxAngle = 78f;// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
-	[Range(0,2)][SerializeField] protected float m_SlippingAcceleration = 1f;  	// Changes how fast the fighter slides down overly steep slopes.
-	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 	// How long the fighter can cling to walls before gravity takes over.
-	[Range(20,70)][SerializeField] protected float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
-	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;						// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
-	[ReadOnlyAttribute]protected float m_TimeSpentHanging = 0f;					// Amount of time the fighter has been clung to a wall.
-	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;					// Max time the fighter can cling to current wall.
-	[Range(0,0.5f)][SerializeField] protected float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
-	[Range(0.01f,0.4f)][SerializeField] protected float m_MinEmbed = 0.01f; 	// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
+	[Tooltip("The instant starting speed while moving")][SerializeField] 
+	protected float m_MinSpeed = 10f; 							// The instant starting speed while moving
+	[Tooltip("The fastest the fighter can travel along land.")][SerializeField] 
+	protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
+	[Tooltip("Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)")][Range(0,2)][SerializeField] 
+	protected float m_Acceleration = 0.6f;    		// Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)
+	[Tooltip("Amount of vertical force added when the fighter jumps.")][SerializeField] 
+	protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
+	[Tooltip("Amount of horizontal force added when the fighter jumps.")][SerializeField] 
+	protected float m_HJumpForce = 5f;  						// Amount of horizontal force added when the fighter jumps.
+	[Tooltip("Amount of vertical force added when the fighter walljumps.")][SerializeField] 
+	protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the fighter walljumps.
+	[Tooltip("Amount of horizontal force added when the fighter walljumps.")][SerializeField] 
+	protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the fighter walljumps.
+	[Tooltip("Threshold where movement changes from exponential to linear acceleration.")][SerializeField] 
+	protected float m_TractionChangeT = 20f;					// Threshold where movement changes from exponential to linear acceleration.  
+	[Tooltip("Speed threshold at which wallsliding traction changes.")]	[SerializeField] 
+	protected float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
+	[Tooltip("Whether or not the player is wallsliding.")][SerializeField] 
+	protected bool m_WallSliding;								// Whether or not the player is wallsliding.
+	[Tooltip("Whether or not the player is sliding.")][SerializeField] 
+	protected bool m_Sliding;									// Whether or not the player is sliding.
+	[Tooltip("How fast the fighter decelerates when changing direction.")][Range(0,5)][SerializeField] 
+	protected float m_LinearStopRate = 2f; 		// How fast the fighter decelerates when changing direction.
+	[Tooltip("How fast the fighter decelerates with no input.")][Range(0,5)][SerializeField] 
+	protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
+	[Tooltip("How fast the fighter decelerates when running too fast.")][Range(0,5)][SerializeField] 
+	protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
+	[Tooltip("How fast the fighter accelerates with input.")][Range(0,5)][SerializeField] 
+	protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
+	[Tooltip("Any impacts at sharper angles than this will start to slow the fighter down.")][Range(1,89)][SerializeField] 
+	protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
+	[Tooltip("Any impacts at sharper angles than this will result in a full halt.")][Range(1,89)][SerializeField] 
+	protected float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
+	[Tooltip("Changes the angle at which steeper angles start to linearly lose traction")][Range(1,89)][SerializeField] 
+	protected float m_TractionLossMinAngle = 45f; // Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
+	[Tooltip("Changes the angle at which fighter loses ALL traction")][Range(45,90)][SerializeField] 
+	protected float m_TractionLossMaxAngle = 78f;// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
+	[Tooltip("Changes how fast the fighter slides down overly steep slopes.")][Range(0,2)][SerializeField] 
+	protected float m_SlippingAcceleration = 1f;  	// Changes how fast the fighter slides down overly steep slopes.
+	[Tooltip("How long the fighter can cling to walls before gravity takes over.")][Range(0.5f,3)][SerializeField] 
+	protected float m_SurfaceClingTime = 1f; 	// How long the fighter can cling to walls before gravity takes over.
+	[Tooltip("This is the amount of impact GForce required for a full-duration ceiling cling.")][Range(20,70)][SerializeField] 
+	protected float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
+	[Tooltip("This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.")][ReadOnlyAttribute]
+	protected Vector2 m_ExpiredNormal;						// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
+	[Tooltip("Amount of time the fighter has been clung to a wall.")][ReadOnlyAttribute]
+	protected float m_TimeSpentHanging = 0f;					// Amount of time the fighter has been clung to a wall.
+	[Tooltip("Max time the fighter can cling to a wall.")][ReadOnlyAttribute]
+	protected float m_MaxTimeHanging = 0f;					// Max time the fighter can cling to current wall.
+	[Tooltip("How deep into objects the character can be before actually colliding with them. ")][Range(0,0.5f)][SerializeField]
+	protected float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
+	[Tooltip("How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.")][Range(0.01f,0.4f)][SerializeField]
+	protected float m_MinEmbed = 0.01f; 	// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
+
 	[Space(10)]
-	[SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
-	[SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
+
+	[Tooltip("")][SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
+	[Tooltip("")][SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
+
 	[Space(10)]
-	[SerializeField] public float m_VelPunchT = 60f; 							// Impact threshold for Velocity Punch trigger
-	[SerializeField] protected float m_SlamT = 100f; 							// Impact threshold for slam
-	[SerializeField] protected float m_CraterT = 200f; 							// Impact threshold for crater
-	[SerializeField] protected float m_GuardSlamT = 200f; 						// Guarded Impact threshold for slam
-	[SerializeField] protected float m_GuardCraterT = 400f; 					// Guarded Impact threshold for crater
+
+	[Tooltip("")][SerializeField] public float m_VelPunchT = 60f; 							// Impact threshold for Velocity Punch trigger
+	[Tooltip("")][SerializeField] protected float m_SlamT = 100f; 							// Impact threshold for slam
+	[Tooltip("")][SerializeField] protected float m_CraterT = 200f; 							// Impact threshold for crater
+	[Tooltip("")][SerializeField] protected float m_GuardSlamT = 200f; 						// Guarded Impact threshold for slam
+	[Tooltip("")][SerializeField] protected float m_GuardCraterT = 400f; 					// Guarded Impact threshold for crater
+
 	[Space(10)]
-	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides a _ frame buffer to allow players to jump after leaving the ground.
-	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides a _ frame buffer to allow players to jump after leaving the ceiling.
-	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferL; //Provides a _ frame buffer to allow players to jump after leaving the leftwall.
-	[SerializeField][ReadOnlyAttribute]protected int m_JumpBufferR; //Provides a _ frame buffer to allow players to jump after leaving the rightwall.
-	[SerializeField][Range(1,600)] protected int m_JumpBufferFrameAmount; //Dictates the duration of the jump buffer in physics frames.
+
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides a _ frame buffer to allow players to jump after leaving the ground.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides a _ frame buffer to allow players to jump after leaving the ceiling.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferL; //Provides a _ frame buffer to allow players to jump after leaving the leftwall.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferR; //Provides a _ frame buffer to allow players to jump after leaving the rightwall.
+	[Tooltip("")][SerializeField][Range(1,600)] protected int m_JumpBufferFrameAmount; //Dictates the duration of the jump buffer in physics frames.
+
 	[Space(10)]
-	[SerializeField][Range(0,1)] protected float m_StrandJumpSpeedLossM; //Percent of speed lost with each strand Jump
-	[SerializeField] protected float m_StrandJumpReflectSpd;
-	[SerializeField] protected Vector2 m_StrandJumpReflectDir;
-	[SerializeField][Range(0f,180f)] protected float m_WidestStrandJumpAngle;
+
+	[Tooltip("")][SerializeField][Range(0,1)] protected float m_StrandJumpSpeedLossM; //Percent of speed lost with each strand Jump
+	[Tooltip("")][SerializeField] protected float m_StrandJumpReflectSpd;
+	[Tooltip("")][SerializeField] protected Vector2 m_StrandJumpReflectDir;
+	[Tooltip("")][SerializeField][Range(0f,180f)] protected float m_WidestStrandJumpAngle;
 	#endregion
 
 	//############################################################################################################################################################################################################
@@ -131,7 +166,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;     	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
 	[SerializeField][ReadOnlyAttribute] protected ItemHandler o_ItemHandler;		// Reference to the itemhandler, which acts as an authority on item stats and indexes.
-	[SerializeField] protected Shoe p_EquippedShoe;      		// Reference to the player's currently equipped shoe.
+	[SerializeField][ReadOnlyAttribute] protected Shoe o_EquippedShoe;      		// Reference to the player's currently equipped shoe.
+	[SerializeField][ReadOnlyAttribute] protected GameObject o_SparkThrower;      	// Reference to the player's currently equipped shoe.
 	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
@@ -139,6 +175,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public GameObject p_StrandJumpPrefab;		// Reference to the strand jump visual effect prefab.
 	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a radial windforce.
 	[SerializeField] public GameObject p_DustEffectPrefab;		// Reference to the dust visual effect prefab.
+	[SerializeField] public GameObject p_SparkEffectPrefab;		// Reference to the spark visual effect prefab.
 	protected Animator o_Anim;           						// Reference to the character's animator component.
 	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
 
@@ -278,6 +315,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,1)] protected float g_MaxGuardStunT = 0.8f;				// Damage required to reach max stun time from a strike on a guard stance.
 
 	protected bool isAPlayer;
+	[SerializeField] protected int p_DefaultShoeID;      		// Reference to the character's starting shoe
 
 	#endregion 
 
@@ -329,9 +367,31 @@ public class FighterChar : NetworkBehaviour
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
 
-	protected virtual void EquipShoe(Shoe shoe)
+	public virtual void UnequipShoe()
 	{
-		if(shoe == null){print("ERROR: SHOE NOT FOUND");return;}
+		if(o_EquippedShoe == null){return;}
+		if(o_EquippedShoe.shoeID==0)
+		{
+			print("Cannot unequip feet!");
+			o_EquippedShoe.DestroyThis();
+			return;
+		}
+		o_EquippedShoe.Drop();
+	}
+
+	public virtual void EquipShoe(Shoe shoe) // Equip a shoe object. Set argument to null to equip barefoot.
+	{		
+		if(shoe==null)
+		{
+			shoe = Instantiate(o_ItemHandler.shoes[0], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
+		}
+
+		UnequipShoe(); // Drop old shoes.
+
+		///
+		/// Movestat code
+		///
+
 		this.m_MinSpeed = shoe.m_MinSpeed;					
 		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
 		this.m_Acceleration = shoe.m_Acceleration;  			
@@ -364,6 +424,18 @@ public class FighterChar : NetworkBehaviour
 
 		this.m_StrandJumpSpeedLossM = shoe.m_StrandJumpSpeedLossM;
 		this.m_WidestStrandJumpAngle = shoe.m_WidestStrandJumpAngle;
+
+		///
+		/// Non movestat code
+		///
+
+		o_EquippedShoe = shoe;
+		shoe.PickedUpBy(this);
+
+		if(shoe.shoeID!=0)
+		{
+			o_FighterAudio.EquipSound();
+		}
 	}
 
 	protected void ThrowPunch(Vector2 aimDirection)
@@ -427,7 +499,27 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetBool("Dead", false);
 		o_SpriteRenderer.color = v_DefaultColor;
 	}
-		
+
+//	protected virtual void SpawnSparkEffect()
+//	{
+//		Vector3 spawnPos;
+//		if(o_DustSpawnTransform)
+//		{
+//			spawnPos = o_DustSpawnTransform.position;
+//		}
+//		else
+//		{
+//			spawnPos = m_GroundFoot.position;
+//		}
+//		Instantiate(p_SparkEffectPrefab, spawnPos, Quaternion.identity);
+//	}
+//		
+//	protected virtual void SpawnSparkEffect(Vector2 spawnPos)
+//	{
+//		Vector3 spawnPosV3 = (Vector3)spawnPos;
+//		Instantiate(p_SparkEffectPrefab, spawnPosV3, Quaternion.identity);
+//	}
+//		
 	protected virtual void SpawnDustEffect()
 	{
 		Vector3 spawnPos;
@@ -768,17 +860,33 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void UpdateAnimation()
 	{
+		o_SparkThrower.transform.position = o_DustSpawnTransform.position;
 		if(m_Sliding)
 		{
 			if(v_DistFromLastDust<=0)
 			{
-				SpawnDustEffect();
+				if(o_EquippedShoe.soundType==1)
+				{
+					//SpawnSparkEffect();
+					o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = true;
+
+				}
+				else
+				{
+					o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+					SpawnDustEffect();
+				}
+
 				v_DistFromLastDust = v_DistBetweenDust;
 			}
 			else
 			{
 				v_DistFromLastDust -= this.GetSpeed()*Time.deltaTime;
 			}
+		}
+		else
+		{
+			o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
 		}
 	}
 
@@ -1037,6 +1145,8 @@ public class FighterChar : NetworkBehaviour
 		o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 
+		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
+		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
 
 		v_DefaultColor = o_SpriteRenderer.color;
 		lastSafePosition = new Vector2(0,0);
@@ -1044,12 +1154,9 @@ public class FighterChar : NetworkBehaviour
 		m_RemainingVelM = 1f;
 		//print(m_RemainingMovement);
 
+		Shoe startingShoe = Instantiate(o_ItemHandler.shoes[p_DefaultShoeID], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
 
-		if(p_EquippedShoe == null)
-		{
-			p_EquippedShoe = o_ItemHandler.shoes[0].GetComponent<Shoe>(); // If no shoes equipped, equip bare feet.
-		}
-		EquipShoe(p_EquippedShoe);
+		EquipShoe(startingShoe);
 
 
 		if(!(showVelocityIndicator||FighterState.DevMode)){

@@ -10,6 +10,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	1796283983	Impact_Crater			\Default Work Unit\Impact_Crater	Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase. 
 	1866025847	Footstep			\Default Work Unit\Footstep	
 	1996139369	Pain			\Default Work Unit\Pain	
+	2146777153	Item_Equip			\Default Work Unit\Item_Equip	
 	2180951687	PunchSwing			\Default Work Unit\PunchSwing	
 	2390935913	EnergyCharge			\Default Work Unit\EnergyCharge	
 	2548270042	Landing			\Default Work Unit\Landing	
@@ -21,6 +22,7 @@ Event	ID	Name			Wwise Object Path	Notes
 Switch Group	ID	Name			Wwise Object Path	Notes
 	25772016	TerrainType			\FighterChar\TerrainType	Renamed from footsteps to TerrainType, cause it might be applicable to sliding and other sounds.
 	1776943274	Gender			\FighterChar\Gender	
+	2413944604	ShoeType			\FighterChar\ShoeType	
 
 Switch	ID	Name	Switch Group			Notes
 	712897245	Mud	TerrainType			
@@ -36,6 +38,8 @@ Switch	ID	Name	Switch Group			Notes
 	4248645337	Grass	TerrainType			
 	2204441813	Female	Gender			
 	3111576190	Male	Gender			
+	1160234136	Normal	ShoeType			
+	2473969246	Metal	ShoeType			
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	472853913	Sliding			\Default Work Unit\FighterChar\Sliding	
@@ -44,6 +48,7 @@ Game Parameter	ID	Name			Wwise Object Path	Notes
 	2881936400	TimeDilation			\Default Work Unit\World\TimeDilation	
 	2916501359	GForce_Instant			\Default Work Unit\FighterChar\GForce_Instant	GForce incurred at exactly this game frame, typically from an impact.
 	3194824364	Volume_Effects			\Default Work Unit\World\Volume_Effects	
+	3806191500	ShoeType_ID			\Default Work Unit\FighterChar\ShoeType_ID	
 	3891337659	Volume_Music			\Default Work Unit\World\Volume_Music	
 
 Effect plug-ins	ID	Name	Type				Notes
@@ -119,9 +124,10 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	298524530	dirt08	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\dirt08_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Dirt\dirt08		47680
 	301568547	jump03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\jump03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Jump\generic\jump03		79564
 	304183638	concrete_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\concrete\concrete_land02		40520
-	312555540	concrete1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\concrete1		79936
+	312555540	concrete1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\NormalShoe\concrete1		79936
 	319543437	tile3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\tile3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Tile\tile3		44372
 	334614632	female_jump02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\female_jump02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\jump\female\female_jump02		53928
+	336931189	Placeholder_ItemGrab	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\Item\itempick2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Item\Placeholder_ItemGrab		72128
 	364092348	tile2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\tile2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Tile\tile2		68864
 	393478770	mud03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\mud03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Mud\mud03		91324
 	396329686	sand4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\sand4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Sand\sand4		92992
@@ -130,7 +136,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	411638196	male_pain01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\male_pain01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\pain\male\male_pain01		90852
 	420720297	male_pain04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\male_pain04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\pain\male\male_pain04		78624
 	432477398	wood_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\wood\wood_land02		86520
-	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\concrete2		79040
+	432745082	concrete2	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete2_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\NormalShoe\concrete2		79040
 	475327629	fist_swing01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\fist_swing01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Punch\swing\fist_swing01		29406
 	478271839	female_attack02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\female_attack02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\attack\female\female_attack02		81444
 	480740440	Windloop1	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\Windloop1_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Wind\Windloop1		5268300
@@ -180,11 +186,11 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	913278187	grass_land04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\grass_land04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\grass\grass_land04		71532
 	913485582	fist_impact07	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\fist_impact07_3E5F825A.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Punch\impact\fist_impact07		47020
 	917801640	fist_swing02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\fist_swing02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Punch\swing\fist_swing02		29406
-	918777720	concrete4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\concrete4		97856
+	918777720	concrete4	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete4_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\NormalShoe\concrete4		97856
 	920223581	male_pain06	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\male_pain06_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\pain\male\male_pain06		92264
 	924096670	grass_land03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\grass_land03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\grass\grass_land03		77092
 	928355922	wood_land03	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood_land03_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\wood\wood_land03		67188
-	938966706	concrete3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\concrete3		52240
+	938966706	concrete3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concrete3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Concrete\NormalShoe\concrete3		52240
 	945796388	grass_land02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\grass_land02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\grass\grass_land02		89804
 	959060629	female_pain04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\female_pain04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\pain\female\female_pain04		137892
 	995229020	metal3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\metal3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Metal\metal3		51504

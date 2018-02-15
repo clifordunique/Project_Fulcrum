@@ -1,7 +1,10 @@
 Switch Group	ID	Name			Wwise Object Path	Notes
+	2413944604	ShoeType			\FighterChar\ShoeType	
 	4160739938	MoveType			\FighterChar\MoveType	Current parameters implemented: Sliding and Idle 
 
 Switch	ID	Name	Switch Group			Notes
+	1160234136	Normal	ShoeType			
+	2473969246	Metal	ShoeType			
 	340271938	Walking	MoveType			
 	472853913	Sliding	MoveType			
 	1874288895	Idle	MoveType			

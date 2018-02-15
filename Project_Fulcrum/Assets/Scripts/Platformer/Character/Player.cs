@@ -132,6 +132,7 @@ public class Player : FighterChar
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
 		o_Spooler = this.gameObject.GetComponent<Spooler>();
 		o_ShoeTooltip = GameObject.Find("ShoeTooltip").GetComponent<ShoeTooltip>();
+		o_ShoeTooltip.SetFighter(this);
 	}
 
 	protected void Start()
@@ -211,9 +212,19 @@ public class Player : FighterChar
 	#region CUSTOM FUNCTIONS
 
 
-	protected override void EquipShoe(Shoe shoe)
+	public override void EquipShoe(Shoe shoe)
 	{
-		if(!shoe){print("ERROR: SHOE NOT FOUND");return;}
+		if(shoe==null)
+		{
+			shoe = Instantiate(o_ItemHandler.shoes[0], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
+		}
+
+		UnequipShoe(); // Drop old shoes.
+
+		///
+		/// Movestat code
+		///
+
 		this.m_MinSpeed = shoe.m_MinSpeed;					
 		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
 		this.m_Acceleration = shoe.m_Acceleration;  			
@@ -247,11 +258,22 @@ public class Player : FighterChar
 		this.m_StrandJumpSpeedLossM = shoe.m_StrandJumpSpeedLossM;
 		this.m_WidestStrandJumpAngle = shoe.m_WidestStrandJumpAngle;
 
+		///
+		/// Non movestat code
+		///
+		o_EquippedShoe = shoe;
+		shoe.PickedUpBy(this);
+
+		AkSoundEngine.SetRTPCValue("ShoeType_ID", shoe.soundType);
+
+		if(shoe.shoeID!=0)
+		{
+			o_FighterAudio.EquipSound();
+		}
 		if(isLocalPlayer)
 		{
 			o_ShoeTooltip.SetShoe(shoe);
 		}
-		print("Shoe equipped: "+ shoe.shoeName);
 	}
 
 	[Command]protected void CmdThrowPunch(Vector2 aimDirection)
@@ -453,7 +475,6 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey9)
 		{
-			EquipShoe(o_ItemHandler.shoes[1].GetComponent<Shoe>());
 			FighterState.DevKey9 = false;
 		}
 		if(FighterState.DevKey10)
@@ -1239,7 +1260,7 @@ public class Player : FighterChar
 	protected void CameraControlTypeC() //CCTC - super jump cam
 	{
 		if(!o_MainCamera){return;}
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, GetZonLevel()*25, Time.deltaTime);
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, GetZonLevel()*25, Time.unscaledDeltaTime);
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
@@ -1269,8 +1290,8 @@ public class Player : FighterChar
 		float xDistanceToMax = topRightMax.x-theMiddle.x;
 		float yDistanceToMax = topRightMax.y-theMiddle.y;
 
-		v_CamWhiplashAmount = Vector2.Lerp(v_CamWhiplashAmount, FighterState.Vel*v_CamWhiplashM, Time.deltaTime);
-		v_CamWhiplashRecovery = Vector2.Lerp(v_CamWhiplashRecovery, v_CamWhiplashAmount, Time.deltaTime);
+		v_CamWhiplashAmount = Vector2.Lerp(v_CamWhiplashAmount, FighterState.Vel*v_CamWhiplashM, Time.unscaledDeltaTime);
+		v_CamWhiplashRecovery = Vector2.Lerp(v_CamWhiplashRecovery, v_CamWhiplashAmount, Time.unscaledDeltaTime);
 
 		float finalXPos = camAverageX-(v_CamWhiplashAmount.x-v_CamWhiplashRecovery.x);
 		float finalYPos = camAverageY-(v_CamWhiplashAmount.y-v_CamWhiplashRecovery.y);
@@ -1384,8 +1405,16 @@ public class Player : FighterChar
 //			//camAverageY = this.transform.position.y-(yDistanceToEdge);
 //		}
 //
-		v_CamWhiplashAmount = Vector2.Lerp(v_CamWhiplashAmount, FighterState.Vel*v_CamWhiplashM, Time.deltaTime);
-		v_CamWhiplashRecovery = Vector2.Lerp(v_CamWhiplashRecovery, v_CamWhiplashAmount, Time.deltaTime);
+
+		v_CamWhiplashAmount = Vector2.Lerp(v_CamWhiplashAmount, FighterState.Vel*v_CamWhiplashM, Time.unscaledDeltaTime*2);
+
+//		if(v_CamWhiplashAmount.magnitude>FighterState.Vel.magnitude*v_CamWhiplashM)
+//		{
+//			v_CamWhiplashAmount = FighterState.Vel*v_CamWhiplashM;
+//		}
+//
+		v_CamWhiplashRecovery = Vector2.Lerp(v_CamWhiplashRecovery, v_CamWhiplashAmount, Time.unscaledDeltaTime*2);
+
 
 		float finalXPos = camAverageX-(v_CamWhiplashAmount.x-v_CamWhiplashRecovery.x);
 		float finalYPos = camAverageY-(v_CamWhiplashAmount.y-v_CamWhiplashRecovery.y);
@@ -1400,7 +1429,7 @@ public class Player : FighterChar
 			{
 				finalXPos = -xDistanceToMax;
 			}
-			print("Too far horizontal!");
+			//print("Too far horizontal!");
 		}
 		else
 		{
@@ -1409,7 +1438,7 @@ public class Player : FighterChar
 
 		if(Mathf.Abs(finalYPos)>=yDistanceToMax)
 		{
-			print("Too far vertical!");
+			//print("Too far vertical!");
 			if(finalYPos>0)
 			{
 				finalYPos = yDistanceToMax;

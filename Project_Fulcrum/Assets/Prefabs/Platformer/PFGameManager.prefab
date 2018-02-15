@@ -108,6 +108,7 @@ MonoBehaviour:
   shoes:
   - {fileID: 1667449418817232, guid: 547fd2b597e04d54fa38bb307d672cbe, type: 2}
   - {fileID: 1667449418817232, guid: 45c8a0110d4914b4fb865f42d6cb84f1, type: 2}
+  - {fileID: 1667449418817232, guid: 50f8fe3b4709510489476e19d9717c02, type: 2}
 --- !u!114 &114529365685208964
 MonoBehaviour:
   m_ObjectHideFlags: 1

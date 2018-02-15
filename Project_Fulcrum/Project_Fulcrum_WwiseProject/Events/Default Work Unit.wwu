@@ -428,6 +428,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Item_Equip" ID="{567CD688-4488-4593-94F3-F6DA017E7292}">
+					<ChildrenList>
+						<Action Name="" ID="{1EF54794-F057-49C0-BFB4-DD18644936E1}" ShortID="98558371">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Placeholder_ItemGrab" ID="{68DA7025-8201-404C-88ED-CB7303884D31}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
