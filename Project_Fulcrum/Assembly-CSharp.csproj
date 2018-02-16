@@ -46,7 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\FramerateLocker.cs" />
      <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
@@ -69,14 +68,14 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\MenuAudio.cs" />
-     <Compile Include="Assets\ParallaxHandler.cs" />
-     <Compile Include="Assets\ScreenFilter.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransformUpdater.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolationController.cs" />
+     <Compile Include="Assets\Scripts\FramerateLocker.cs" />
      <Compile Include="Assets\Scripts\FulcrumNetworkManager.cs" />
+     <Compile Include="Assets\Scripts\MenuAudio.cs" />
+     <Compile Include="Assets\Scripts\ParallaxHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
@@ -117,6 +116,7 @@
      <Compile Include="Assets\Scripts\Platformer\Visual\ShaderTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\ShockEffect.cs" />
      <Compile Include="Assets\Scripts\Platformer\Visual\WindEffector.cs" />
+     <Compile Include="Assets\Scripts\ScreenFilter.cs" />
      <Compile Include="Assets\Scripts\Social\Actor.cs" />
      <Compile Include="Assets\Scripts\Social\ActorAnimator.cs" />
      <Compile Include="Assets\Scripts\Social\Choice.cs" />
@@ -132,7 +132,9 @@
      <Compile Include="Assets\Scripts\Social\Scene.cs" />
      <Compile Include="Assets\Scripts\Social\SocialManager.cs" />
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
-     <Compile Include="Assets\TimeManager.cs" />
+     <Compile Include="Assets\Scripts\SuperSampler.cs" />
+     <Compile Include="Assets\Scripts\TimeManager.cs" />
+     <Compile Include="Assets\Shaders\ImageEffects\MinimapHolo.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
@@ -327,7 +329,6 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\NFAA.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceRaytrace.cginc" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\TiltShiftHdrLensBlur.shader" />
-     <None Include="Assets\LC1.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\VignetteShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
@@ -348,7 +349,7 @@
      <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
      <None Include="Assets\Text\LC1.txt" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
-     <None Include="Assets\Images\Shaders\Grass.shader" />
+     <None Include="Assets\Shaders\Shaders\Grass.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SSAOShader.shader" />
@@ -360,6 +361,7 @@
      <None Include="Assets\z_Game Jam Template\Fonts\OpenSans\License!.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ChromaticAberrationShader.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
+     <None Include="Assets\Shaders\Shaders\MinimapHologram.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\GlobalFog.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Luminance.shader" />
@@ -375,7 +377,7 @@
      <None Include="Assets\Text\TEST1.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlurEffectConeTaps.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" />
-     <None Include="Assets\Images\Shaders\CutoutShader2D.shader" />
+     <None Include="Assets\Shaders\Shaders\CutoutShader2D.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\DLAA.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFMaskReset.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrainDX11.shader" />
@@ -404,11 +406,11 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\PrepareSunShaftsBlur.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\Blend.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\BlendModesOverlay.shader" />
-     <None Include="Assets\Images\Shaders\SpoolTest.shader" />
+     <None Include="Assets\Shaders\Shaders\SpoolTest.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\SimpleClear.shader" />
      <None Include="Assets\z_Game Jam Template\GameJamTemplateReadMe.txt" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularDisplacement.shader" />
-     <None Include="Assets\Images\Shaders\Test.shader" />
+     <None Include="Assets\Shaders\Shaders\Test.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFMask.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\FXAA3Console.shader" />
      <None Include="Assets\Wwise\Version.txt" />
