@@ -1,26 +1,22 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Shaders\ImageEffects\MinimapHolo.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\HitAnimator.cs">
     <Files>
-      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\FulcrumNetworkManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\z_Game Jam Template\Scripts\StartOptions.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\VelocityPunch.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Map Objects\Breakable.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Map Objects\Cutout2D.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\NPC.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\ShoeTooltip.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Platformer\Map Objects\Grass.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\ProjectFulcrum\CloudEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\ItemHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Map Objects\GodModeBox.cs" Line="1" Column="1" />
-      <File FileName="Assets\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs" Line="80" Column="60" />
-      <File FileName="Assets\Standard Assets\Effects\ImageEffects\Scripts\MotionBlur.cs" Line="18" Column="39" />
-      <File FileName="Assets\Scripts\Platformer\Visual\ShaderTest.cs" Line="5" Column="1" />
-      <File FileName="Assets\Shaders\ImageEffects\MinimapHolo.cs" Line="23" Column="3" />
-      <File FileName="Assets\SuperSampler.cs" Line="22" Column="3" />
+      <File FileName="Assets\Standard Assets\Effects\ImageEffects\Scripts\Blur.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Visual\ShaderTest.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Map Objects\Breakable.cs" Line="1" Column="1" />
+      <File FileName="Assets\Shaders\Shaders\MinimapHologram.shader" Line="1" Column="1" />
+      <File FileName="Assets\Shaders\ImageEffects\MinimapHolo.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\SuperSampler.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="1049" Column="20" />
+      <File FileName="Assets\Scripts\Platformer\Visual\ParallaxLayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="790" Column="19" />
+      <File FileName="Assets\Scripts\Platformer\Character\ProxLine.cs" Line="28" Column="65" />
+      <File FileName="Assets\Shaders\Shaders\SpoolTest.shader" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\ShoeTooltip.cs" Line="1" Column="1" />
+      <File FileName="Assets\AnimationTester.cs" Line="25" Column="1" />
+      <File FileName="Assets\HitAnimator.cs" Line="20" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

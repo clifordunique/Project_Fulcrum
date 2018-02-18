@@ -1115,7 +1115,7 @@ MonoBehaviour:
   o_ShoeTooltip: {fileID: 0}
   o_Speedometer: {fileID: 0}
   o_Reporter: {fileID: 0}
-  o_ZonCounter: {fileID: 0}
+  o_EnergyCounter: {fileID: 0}
   o_MainCamera: {fileID: 0}
   o_MainCameraTransform: {fileID: 0}
   o_CamShaker: {fileID: 0}

@@ -90,12 +90,12 @@
 					if(pixelAbove.a * pixelBelow.a * pixelRight.a * pixelLeft.a != 0)
 					{
 						col = fixed4(0.15,0,0,1);
-						col.a = (0.6+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
+						col.a = (0.75+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
 					}
 					else
 					{
 						col = fixed4(0.5,0,0,1);
-						col.a = (0.8+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
+						col.a = (0.95+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
 					}
 					//col.a = 0.9;
 				}

@@ -32,7 +32,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Sliding" ID="{B82E3879-0D83-4B32-B713-6A3C91D04409}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="Sliding" ID="{C69CF185-BD4C-4B8F-A4E4-D8C9C5216F66}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

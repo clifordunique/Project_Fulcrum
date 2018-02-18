@@ -92,16 +92,16 @@ MonoBehaviour:
   shoeName: Classikos
   shoeID: 1
   shoeDesc: '"Reliable and unremarkable"'
-  shoeSprite: {fileID: 0}
+  soundType: 0
   m_MinSpeed: 20
   m_MaxRunSpeed: 300
   m_Acceleration: 1
-  m_VJumpForce: 40
-  m_HJumpForce: 15
+  m_VJumpForce: 45
+  m_HJumpForce: 8
   m_WallVJumpForce: 35
   m_WallHJumpForce: 15
   m_ZonJumpForcePerCharge: 5
-  m_ZonJumpForceBase: 60
+  m_ZonJumpForceBase: 50
   m_TractionChangeT: 20
   m_WallTractionT: 20
   m_LinearStopRate: 3
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_LinearAccelRate: 0.6
   m_ImpactDecelMinAngle: 20
   m_ImpactDecelMaxAngle: 65
-  m_TractionLossMinAngle: 60
+  m_TractionLossMinAngle: 50
   m_TractionLossMaxAngle: 78
   m_SlippingAcceleration: 1
   m_SurfaceClingTime: 0.6

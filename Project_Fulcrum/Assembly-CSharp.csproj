@@ -46,6 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AnimationTester.cs" />
+     <Compile Include="Assets\CanvasSuperSample.cs" />
      <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
@@ -68,6 +70,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\HitAnimator.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransformUpdater.cs" />

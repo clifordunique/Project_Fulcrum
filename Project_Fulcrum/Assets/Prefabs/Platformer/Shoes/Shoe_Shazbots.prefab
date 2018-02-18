@@ -95,11 +95,11 @@ MonoBehaviour:
   soundType: 1
   m_MinSpeed: 10
   m_MaxRunSpeed: 400
-  m_Acceleration: 0.3
+  m_Acceleration: 0.45
   m_VJumpForce: 40
-  m_HJumpForce: 0
-  m_WallVJumpForce: 20
-  m_WallHJumpForce: 10
+  m_HJumpForce: 3
+  m_WallVJumpForce: 25
+  m_WallHJumpForce: 15
   m_ZonJumpForcePerCharge: 5
   m_ZonJumpForceBase: 40
   m_TractionChangeT: 10

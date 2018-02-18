@@ -137,6 +137,10 @@
 					<ShortName>wood_land04.wav</ShortName>
 					<Path>SFX\wood_land04_1C9C67B2.wem</Path>
 				</File>
+				<File Id="163060734" Language="SFX">
+					<ShortName>metalslide02.wav</ShortName>
+					<Path>SFX\metalslide02_1C9C67B2.wem</Path>
+				</File>
 				<File Id="172000020" Language="SFX">
 					<ShortName>concreteslide01.wav</ShortName>
 					<Path>SFX\concreteslide01_F17FB28C.wem</Path>

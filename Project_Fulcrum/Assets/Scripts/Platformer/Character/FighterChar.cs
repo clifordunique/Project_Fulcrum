@@ -1000,7 +1000,6 @@ public class FighterChar : NetworkBehaviour
 
 		if(m_WallSliding)
 		{
-			print("THIS IS WHY UR SMOKING");
 			m_Sliding = true;
 		}
 
@@ -1050,7 +1049,6 @@ public class FighterChar : NetworkBehaviour
 		if(v_PunchHitting)
 		{
 			o_Anim.SetBool("PunchHit", true);
-			v_PunchHitting = false;
 		}
 		else
 		{
@@ -1100,14 +1098,16 @@ public class FighterChar : NetworkBehaviour
 			//FighterState.RightClick = true;
 		}
 
-		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		FighterState.MouseWorldPos = Vec2(mousePoint);
+		//Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		//FighterState.MouseWorldPos = Vec2(mousePoint);
 	}
 
 	protected virtual void FighterAwake()
 	{
 		o_DustSpawnTransform = transform.Find("EffectFlipper/DustEffectTransform");
 		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
+		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
+
 		FighterState.CurHealth = 100;					// Current health.
 		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
 		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
@@ -1143,7 +1143,6 @@ public class FighterChar : NetworkBehaviour
 		o_Anim = this.GetComponent<Animator>();
 		o_Rigidbody2D = GetComponent<Rigidbody2D>();
 		o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
-		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 
 		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
 		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;

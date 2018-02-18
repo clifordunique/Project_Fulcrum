@@ -42,7 +42,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private ShoeTooltip o_ShoeTooltip;      			// Reference to the speed indicator (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Reporter o_Reporter;      			// Reference to the console (dev tool).
-	[SerializeField][ReadOnlyAttribute] private Text o_ZonCounter;      			// Reference to the level of zon power (dev tool).
+	[SerializeField][ReadOnlyAttribute] private Text o_EnergyCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
@@ -128,7 +128,7 @@ public class Player : FighterChar
 		o_MainCameraTransform.SetParent(this.transform);
 		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
-		o_ZonCounter = GameObject.Find("Zon Counter").GetComponent<Text>();
+		o_EnergyCounter = GameObject.Find("Energy Counter").GetComponent<Text>();
 		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
 		o_Spooler = this.gameObject.GetComponent<Spooler>();
 		o_ShoeTooltip = GameObject.Find("ShoeTooltip").GetComponent<ShoeTooltip>();
@@ -483,6 +483,7 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey11)
 		{
+			v_PunchHitting = true;
 			FighterState.DevKey11 = false;
 		}
 		if(FighterState.DevKey12)
@@ -1021,7 +1022,7 @@ public class Player : FighterChar
 		//
 		// Mouse position in world space
 		//
-		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		Vector3 mousePoint = o_MainCamera.ScreenToWorldPoint(Input.mousePosition);
 		FighterState.MouseWorldPos = Vec2(mousePoint);
 
 	}
@@ -1082,9 +1083,9 @@ public class Player : FighterChar
 		{
 			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
 		}
-		if(o_ZonCounter!=null)
+		if(o_EnergyCounter!=null)
 		{
-			o_ZonCounter.text = ""+FighterState.ZonLevel;
+			o_EnergyCounter.text = ""+FighterState.ZonLevel;
 		}
 	}
 

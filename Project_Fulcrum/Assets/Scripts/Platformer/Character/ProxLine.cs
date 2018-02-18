@@ -25,7 +25,7 @@ public class ProxLine : MonoBehaviour {
 	void Start () 
 	{
 		fadeInOpacity = 1;
-		camera = Camera.main;
+		camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		spriteHolder = this.transform.GetChild(0);
 		spriteRenderer = spriteHolder.GetComponent<SpriteRenderer>();
 		myRect = this.GetComponent<RectTransform>();
