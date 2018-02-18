@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{66071663-98D7-4FE5-A1E6-A536FEA4D0FA}" SchemaVersion="85">
+	<Switches>
+		<WorkUnit Name="Environment" ID="{66071663-98D7-4FE5-A1E6-A536FEA4D0FA}" PersistMode="Standalone">
+			<ChildrenList>
+				<SwitchGroup Name="AmbientZone" ID="{224D5E04-1FC5-421A-9FF1-F62B56953160}">
+					<ChildrenList>
+						<Switch Name="Rural" ID="{9A2558D2-396D-44A0-8FA7-5DD3401B3B69}"/>
+						<Switch Name="Ruins" ID="{DDD158E3-E64C-4158-AE72-536190C3BFF8}"/>
+						<Switch Name="City" ID="{AA140200-E6F2-4DEE-8424-16022BA53316}"/>
+					</ChildrenList>
+				</SwitchGroup>
+			</ChildrenList>
+		</WorkUnit>
+	</Switches>
+</WwiseDocument>

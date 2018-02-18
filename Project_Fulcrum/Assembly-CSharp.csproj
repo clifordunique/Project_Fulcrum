@@ -138,6 +138,7 @@
      <Compile Include="Assets\Scripts\SuperSampler.cs" />
      <Compile Include="Assets\Scripts\TimeManager.cs" />
      <Compile Include="Assets\Shaders\ImageEffects\MinimapHolo.cs" />
+     <Compile Include="Assets\UninterruptibleAnim.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />

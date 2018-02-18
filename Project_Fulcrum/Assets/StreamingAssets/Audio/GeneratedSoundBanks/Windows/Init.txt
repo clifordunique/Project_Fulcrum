@@ -1,0 +1,28 @@
+Switch Group	ID	Name			Wwise Object Path	Notes
+	2413944604	ShoeType			\FighterChar\ShoeType	
+	4160739938	MoveType			\FighterChar\MoveType	Current parameters implemented: Sliding and Idle 
+
+Switch	ID	Name	Switch Group			Notes
+	1160234136	Normal	ShoeType			
+	2473969246	Metal	ShoeType			
+	340271938	Walking	MoveType			
+	472853913	Sliding	MoveType			
+	1874288895	Idle	MoveType			
+	2190485205	WallSliding	MoveType			
+	3863236874	Running	MoveType			
+
+Audio Bus	ID	Name			Wwise Object Path	Notes
+	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	
+
+Auxiliary Bus	ID	Name			Wwise Object Path	Notes
+	187046019	LargeRoom			\Default Work Unit\Master Audio Bus\LargeRoom	
+	2933838247	SmallRoom			\Default Work Unit\Master Audio Bus\SmallRoom	
+
+Effect plug-ins	ID	Name	Type				Notes
+	1990128658	Room_Medium	Wwise RoomVerb			
+	2849147824	Medium	Wwise RoomVerb			
+
+Audio Devices	ID	Name	Type				Notes
+	2317455096	No_Output	No Output			
+	3859886410	System	System			
+

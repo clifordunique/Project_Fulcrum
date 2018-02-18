@@ -293,9 +293,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool g_Stunned = false;					// True when the fighter loses control after a hard impact from the ground or a player.
 	[SerializeField] protected bool g_Staggered = false;				// True when the fighter loses control after a hard impact from the ground or a player.
 	[SerializeField] public int g_IsInGrass;							// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
-	[SerializeField] public bool g_fighterCollision = true;				// While true, this fighter will collide with other fighters
-	[SerializeField] public float g_fighterCollisionCD;					// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
-	[SerializeField] public float g_fighterCollisionCDLength = 1f;		// Time after a fightercollision that further collision is disabled. Later this should be modified to only affect one fighter.
+	[SerializeField] public bool g_FighterCollision = true;				// While true, this fighter will collide with other fighters
+	[SerializeField][ReadOnlyAttribute] public float g_FighterCollisionCD;					// Time after a fightercollision that further collision is disabled. This is the current time remaining.
+	[SerializeField] public float g_FighterCollisionCDLength = 1f;		// Time after a fightercollision that further collision is disabled. This is the duration to wait. Later this should be modified to only affect one fighter.
 	[SerializeField][ReadOnlyAttribute]protected float g_CurStun = 0;	// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
 	[SerializeField] protected float g_MaxClashDisparity = 500;			// The speed difference at which the damage a clash deals reaches its max. For example, if set to 500, one player must be going 500 Kph faster than their opponent to deal 100% damage. If value is lost, try starting with 500 to test.
 	[SerializeField] protected float g_MaxClashDamage = 300;			// Max damage dealt by any clash of fighters. (A clash is when two fighters collide in attack stance)
@@ -612,7 +612,7 @@ public class FighterChar : NetworkBehaviour
 
 		//print("m_RemainingMovement before collision: "+m_RemainingMovement);
 
-		if(g_fighterCollision)//&&g_fighterCollisionCD <= 0)
+		if(g_FighterCollision && g_FighterCollisionCD <= 0)
 		{
 			DynamicCollision();
 		}
@@ -821,9 +821,9 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdateLogic() //FUL
 	{
 
-		if(g_fighterCollisionCD>0)
+		if(g_FighterCollisionCD>0)
 		{
-			g_fighterCollisionCD -= Time.fixedDeltaTime;
+			g_FighterCollisionCD -= Time.fixedDeltaTime;
 		}
 
 		if(g_CurStun>0)
@@ -1038,6 +1038,7 @@ public class FighterChar : NetworkBehaviour
 		m_DebugLine.SetPositions(debugLineVector);
 
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
+		o_Anim.SetFloat("WindForce", FighterState.Vel.magnitude);
 		o_Anim.SetFloat("hSpeed", Math.Abs(FighterState.Vel.x));
 		o_Anim.SetFloat("vSpeed", Math.Abs(FighterState.Vel.y));
 		o_Anim.SetFloat("hVelocity", FighterState.Vel.x);
@@ -1048,6 +1049,7 @@ public class FighterChar : NetworkBehaviour
 
 		if(v_PunchHitting)
 		{
+			v_PunchHitting = false;
 			o_Anim.SetBool("PunchHit", true);
 		}
 		else
@@ -1197,7 +1199,7 @@ public class FighterChar : NetworkBehaviour
 			InstantForce(m_StrandJumpReflectDir, m_StrandJumpReflectSpd);
 		}
 
-		if(g_fighterCollision)
+		if(g_FighterCollision)
 		{
 			DynamicCollision();
 		}
@@ -2512,8 +2514,8 @@ public class FighterChar : NetworkBehaviour
 		print("Opponent took "+myTotalDamageDealt+" damage");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
-		g_fighterCollisionCD = g_fighterCollisionCDLength;
-		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
+		g_FighterCollisionCD = g_FighterCollisionCDLength;
+		opponent.g_FighterCollisionCD = g_FighterCollisionCDLength;
 	}
 
 	protected void FighterGuardStruck(FighterChar opponent) // FGS - Executes when a fighter in attack stance collides with an opponent in guard stance.
@@ -2612,8 +2614,8 @@ public class FighterChar : NetworkBehaviour
 		print("Guard struck!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
 		print("Opponent took "+myTotalDamageDealt+" damage");
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
-		g_fighterCollisionCD = g_fighterCollisionCDLength;
-		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
+		g_FighterCollisionCD = g_FighterCollisionCDLength;
+		opponent.g_FighterCollisionCD = g_FighterCollisionCDLength;
 	}
 
 	protected void FighterClash(FighterChar opponent) // FC - Executes when two fighters collide in attack stance, clashing weapons.
@@ -2746,8 +2748,8 @@ public class FighterChar : NetworkBehaviour
 		print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
-		g_fighterCollisionCD = g_fighterCollisionCDLength;
-		opponent.g_fighterCollisionCD = g_fighterCollisionCDLength;
+		g_FighterCollisionCD = g_FighterCollisionCDLength;
+		opponent.g_FighterCollisionCD = g_FighterCollisionCDLength;
 	}
 
 	protected Vector2 ChangeSpeedMult(Vector2 inputVelocity, float multiplier)

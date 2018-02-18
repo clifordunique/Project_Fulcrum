@@ -1,5 +1,14 @@
 Event	ID	Name			Wwise Object Path	Notes
 	1718773345	RiverLoopStart			\Default Work Unit\RiverLoopStart	
+	1892414574	Ambient_Start			\Default Work Unit\Ambient_Start	
+
+Switch Group	ID	Name			Wwise Object Path	Notes
+	170877025	AmbientZone			\Environment\AmbientZone	
+
+Switch	ID	Name	Switch Group			Notes
+	417916826	Ruins	AmbientZone			
+	569754219	Rural	AmbientZone			
+	3888786832	City	AmbientZone			
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	2881936400	TimeDilation			\Default Work Unit\World\TimeDilation	
@@ -12,5 +21,8 @@ Effect plug-ins	ID	Name	Type				Notes
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	31853508	riverloop02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\riverloop02_DDA8542A.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Water\riverloop02		1162104
 	44504001	ambience_cave02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\ambience_cave02_4BFAA247.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Cave\ambience_cave02		6932500
+	172087502	ambience_ruins	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\ambience_ruins_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Ambient\ambience_ruins		4335272
+	776139243	ambience_rural	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\ambience_rural_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Ambient\ambience_rural		4925076
+	862610851	ambience_city	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\ambience_city_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Ambient\ambience_city		7767312
 	931815851	riverloop01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\riverloop01_AB9C8EB4.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Water\riverloop01		1212888
 

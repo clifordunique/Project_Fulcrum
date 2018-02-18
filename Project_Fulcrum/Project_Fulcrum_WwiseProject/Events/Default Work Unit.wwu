@@ -442,6 +442,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Ambient_Start" ID="{E84B38C3-64D6-45FF-9C01-1F7E11DBEEF8}">
+					<ChildrenList>
+						<Action Name="" ID="{F47766D6-A5BD-48EF-A98E-AAF543CB2306}" ShortID="916820467">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Ambient" ID="{16E005E3-4295-4F13-8906-54754040B6AF}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

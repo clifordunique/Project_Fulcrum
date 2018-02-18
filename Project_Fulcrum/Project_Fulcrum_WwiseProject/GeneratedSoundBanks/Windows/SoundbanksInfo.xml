@@ -139,7 +139,7 @@
 				</File>
 				<File Id="163060734" Language="SFX">
 					<ShortName>metalslide02.wav</ShortName>
-					<Path>SFX\metalslide02_1C9C67B2.wem</Path>
+					<Path>SFX\metalslide02_F17FB28C.wem</Path>
 				</File>
 				<File Id="172000020" Language="SFX">
 					<ShortName>concreteslide01.wav</ShortName>
@@ -552,6 +552,7 @@
 			<ShortName>Environment</ShortName>
 			<Path>Environment.bnk</Path>
 			<IncludedEvents>
+				<Event Id="1892414574" Name="Ambient_Start" ObjectPath="\Events\Default Work Unit\Ambient_Start"/>
 				<Event Id="1718773345" Name="RiverLoopStart" ObjectPath="\Events\Default Work Unit\RiverLoopStart" MaxAttenuation="80.000000"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -562,6 +563,18 @@
 				<File Id="44504001" Language="SFX">
 					<ShortName>ambience_cave02.wav</ShortName>
 					<Path>SFX\ambience_cave02_4BFAA247.wem</Path>
+				</File>
+				<File Id="172087502" Language="SFX">
+					<ShortName>ambience_ruins.wav</ShortName>
+					<Path>SFX\ambience_ruins_F17FB28C.wem</Path>
+				</File>
+				<File Id="776139243" Language="SFX">
+					<ShortName>ambience_rural.wav</ShortName>
+					<Path>SFX\ambience_rural_F17FB28C.wem</Path>
+				</File>
+				<File Id="862610851" Language="SFX">
+					<ShortName>ambience_city.wav</ShortName>
+					<Path>SFX\ambience_city_F17FB28C.wem</Path>
 				</File>
 				<File Id="931815851" Language="SFX">
 					<ShortName>riverloop01.wav</ShortName>

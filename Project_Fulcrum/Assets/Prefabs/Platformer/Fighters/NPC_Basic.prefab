@@ -257,7 +257,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271522054906898}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1697, y: -100, z: 0}
+  m_LocalPosition: {x: 480.4, y: -113.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4400483855208910}
@@ -772,9 +772,9 @@ MonoBehaviour:
   g_Stunned: 0
   g_Staggered: 0
   g_IsInGrass: 0
-  g_fighterCollision: 1
-  g_fighterCollisionCD: 0
-  g_fighterCollisionCDLength: 1
+  g_FighterCollision: 1
+  g_FighterCollisionCD: 0
+  g_FighterCollisionCDLength: 0.25
   g_CurStun: 0
   g_MaxClashDisparity: 500
   g_MaxClashDamage: 50

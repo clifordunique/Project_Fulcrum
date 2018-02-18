@@ -942,9 +942,9 @@ MonoBehaviour:
   g_Stunned: 0
   g_Staggered: 0
   g_IsInGrass: 0
-  g_fighterCollision: 1
-  g_fighterCollisionCD: 0
-  g_fighterCollisionCDLength: 1
+  g_FighterCollision: 1
+  g_FighterCollisionCD: 0
+  g_FighterCollisionCDLength: 0.25
   g_CurStun: 0
   g_MaxClashDisparity: 500
   g_MaxClashDamage: 300

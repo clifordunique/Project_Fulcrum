@@ -43,10 +43,11 @@ Switch	ID	Name	Switch Group			Notes
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	472853913	Sliding			\Default Work Unit\FighterChar\Sliding	
-	640949982	Speed			\Default Work Unit\FighterChar\Speed	
+	640949982	Speed			\Default Work Unit\FighterChar\Speed	Exact speed at any given time, with no slew rate.
 	2286036297	EnergyLevel			\Default Work Unit\FighterChar\EnergyLevel	
 	2881936400	TimeDilation			\Default Work Unit\World\TimeDilation	
 	2916501359	GForce_Instant			\Default Work Unit\FighterChar\GForce_Instant	GForce incurred at exactly this game frame, typically from an impact.
+	3087318520	WindForce			\Default Work Unit\FighterChar\WindForce	
 	3194824364	Volume_Effects			\Default Work Unit\World\Volume_Effects	
 	3806191500	ShoeType_ID			\Default Work Unit\FighterChar\ShoeType_ID	
 	3891337659	Volume_Music			\Default Work Unit\World\Volume_Music	
@@ -105,7 +106,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	148537627	dirt05	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\dirt05_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Dirt\dirt05		55984
 	149336316	jump04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\jump04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Jump\generic\jump04		72036
 	159626265	wood_land04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\wood_land04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Landing\wood\wood_land04		77288
-	163060734	metalslide02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\metalslide02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Sliding\MetalShoe\metalslide02		683072
+	163060734	metalslide02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\metalslide02_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Sliding\MetalShoe\MetalBlend\metalslide02		683072
 	172000020	concreteslide01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\concreteslide01_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Sliding\NormalShoe\concreteslide01		390720
 	196523804	male_attack02	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\male_attack02_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\attack\male\male_attack02		70156
 	200616888	mud01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\mud01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Mud\mud01		89584

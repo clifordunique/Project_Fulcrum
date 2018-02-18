@@ -13,6 +13,7 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID AMBIENT_START = 1892414574U;
         static const AkUniqueID BREAKABLE_BREAK = 4052040634U;
         static const AkUniqueID ENERGYCHARGE = 2390935913U;
         static const AkUniqueID ENERGYPULSE = 1403055964U;
@@ -41,6 +42,18 @@ namespace AK
 
     namespace SWITCHES
     {
+        namespace AMBIENTZONE
+        {
+            static const AkUniqueID GROUP = 170877025U;
+
+            namespace SWITCH
+            {
+                static const AkUniqueID CITY = 3888786832U;
+                static const AkUniqueID RUINS = 417916826U;
+                static const AkUniqueID RURAL = 569754219U;
+            } // namespace SWITCH
+        } // namespace AMBIENTZONE
+
         namespace GENDER
         {
             static const AkUniqueID GROUP = 1776943274U;
@@ -148,6 +161,7 @@ namespace AK
         static const AkUniqueID VOLUME_EFFECTS = 3194824364U;
         static const AkUniqueID VOLUME_MUSIC = 3891337659U;
         static const AkUniqueID WALLSLIDING = 2190485205U;
+        static const AkUniqueID WINDFORCE = 3087318520U;
     } // namespace GAME_PARAMETERS
 
     namespace BANKS

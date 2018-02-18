@@ -9,7 +9,7 @@
 						<Property Name="Max" Type="Real64" Value="15"/>
 					</PropertyList>
 				</GameParameter>
-				<GameParameter Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}">
+				<GameParameter Name="WindForce" ID="{0226325D-8969-47B2-A05E-01B803250483}">
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="0"/>
 						<Property Name="Max" Type="Real64" Value="4000"/>
@@ -33,6 +33,9 @@
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
 						<Property Name="Max" Type="Real64" Value="1"/>
+						<Property Name="RTPCRamping" Type="int16" Value="1"/>
+						<Property Name="SlewRateDown" Type="Real64" Value="5"/>
+						<Property Name="SlewRateUp" Type="Real64" Value="1000"/>
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="GForce_Instant" ID="{EC1DA244-2562-4B43-8A33-5CE5DEAE129B}">
@@ -93,6 +96,13 @@
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="0"/>
 						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}">
+					<Comment>Exact speed at any given time, with no slew rate.</Comment>
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="4000"/>
 					</PropertyList>
 				</GameParameter>
 			</ChildrenList>

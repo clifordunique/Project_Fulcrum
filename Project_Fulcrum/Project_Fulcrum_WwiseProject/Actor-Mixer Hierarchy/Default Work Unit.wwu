@@ -289,7 +289,7 @@
 														<RTPC Name="" ID="{DB90CCB1-2BB0-47D4-AB72-5E3EBB9EF91F}" ShortID="723651921">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																	<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{845A3493-A42C-4A1C-9AE5-5397FFD1199E}">
@@ -334,7 +334,7 @@
 														<RTPC Name="" ID="{C6B713E0-7980-41B0-ABC2-389253520AB1}" ShortID="312750064">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																	<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{F17117F2-B7EE-454A-B18C-C81BA61625E7}">
@@ -5542,7 +5542,7 @@
 																<RTPC Name="" ID="{5DDEAF5C-5F3E-44DB-8B05-33010EA6C402}" ShortID="616834958">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																			<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{BF2BBB82-C23B-4953-B602-D695E9FC1558}">
@@ -5729,40 +5729,6 @@
 																<Value>-5</Value>
 															</ValueList>
 															<RTPCList>
-																<RTPC Name="" ID="{DC79626D-33F8-41F5-A202-6E577C04D8BF}" ShortID="1072953249">
-																	<ReferenceList>
-																		<Reference Name="ControlInput">
-																			<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
-																		</Reference>
-																	</ReferenceList>
-																	<Curve Name="" ID="{BAFF2B76-A9B1-4D32-B341-F1D9E5343E00}">
-																		<PropertyList>
-																			<Property Name="Flags" Type="int32" Value="3"/>
-																		</PropertyList>
-																		<PointList>
-																			<Point>
-																				<XPos>0</XPos>
-																				<YPos>-200</YPos>
-																				<Flags>5</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>35.08771</XPos>
-																				<YPos>-2.63131</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>995.61404</XPos>
-																				<YPos>0.09324</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>4000</XPos>
-																				<YPos>0</YPos>
-																				<Flags>37</Flags>
-																			</Point>
-																		</PointList>
-																	</Curve>
-																</RTPC>
 																<RTPC Name="" ID="{2B0D4475-2F4D-41CB-9FE3-C5C4B8590D0A}" ShortID="449055136">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
@@ -5985,7 +5951,7 @@
 																<ActiveSource Name="metalslide01" ID="{52FEA661-E06A-41E8-B43E-946F46C8D060}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
-														<Sound Name="metalslide02" ID="{2F46412E-7058-4318-88BC-D707F972C7F6}" ShortID="641747378">
+														<BlendContainer Name="MetalBlend" ID="{837F3C44-6CE9-4D0D-B1C0-E354A4A3048D}" ShortID="964838882">
 															<ReferenceList>
 																<Reference Name="Conversion">
 																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -5995,15 +5961,337 @@
 																</Reference>
 															</ReferenceList>
 															<ChildrenList>
-																<AudioFileSource Name="metalslide02" ID="{495F992B-0CD6-4A6E-95A3-AC895F6BA3BB}" ShortID="163060734">
-																	<Language>SFX</Language>
-																	<AudioFile>metalslide02.wav</AudioFile>
-																</AudioFileSource>
+																<Sound Name="metalslide02" ID="{2F46412E-7058-4318-88BC-D707F972C7F6}" ShortID="641747378">
+																	<PropertyList>
+																		<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+																		<Property Name="Pitch" Type="int32">
+																			<ValueList>
+																				<Value>-300</Value>
+																			</ValueList>
+																		</Property>
+																		<Property Name="PositioningType" Type="int16" Value="1"/>
+																		<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+																		<Property Name="Volume" Type="Real64">
+																			<ValueList>
+																				<Value>5</Value>
+																			</ValueList>
+																			<RTPCList>
+																				<RTPC Name="" ID="{C628472B-AACD-454B-B24F-7DDE53CA6A06}" ShortID="783760419">
+																					<ReferenceList>
+																						<Reference Name="ControlInput">
+																							<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																						</Reference>
+																					</ReferenceList>
+																					<Curve Name="" ID="{300AC26D-9C1C-4482-9706-97E3C1C4357C}">
+																						<PropertyList>
+																							<Property Name="Flags" Type="int32" Value="3"/>
+																						</PropertyList>
+																						<PointList>
+																							<Point>
+																								<XPos>0</XPos>
+																								<YPos>-200</YPos>
+																								<Flags>5</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>0.001</XPos>
+																								<YPos>-200</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>50</XPos>
+																								<YPos>-6</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>114.98772</XPos>
+																								<YPos>-3</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>4000</XPos>
+																								<YPos>-9.75999999999999E-02</YPos>
+																								<Flags>37</Flags>
+																							</Point>
+																						</PointList>
+																					</Curve>
+																				</RTPC>
+																			</RTPCList>
+																		</Property>
+																	</PropertyList>
+																	<ReferenceList>
+																		<Reference Name="Attenuation">
+																			<Custom>
+																				<Attenuation Name="Attenuation (Custom)" ID="{BFF27710-D04D-4BD7-8E01-7D139C7EB876}" ShortID="222806157">
+																					<CurveUsageInfoList>
+																						<VolumeDryUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																								<Curve Name="VolumeDry" ID="{E3BFF4E3-6F6C-4B2A-9475-B4F600300B84}">
+																									<PropertyList>
+																										<Property Name="Flags" Type="int32" Value="3"/>
+																									</PropertyList>
+																									<PointList>
+																										<Point>
+																											<XPos>0</XPos>
+																											<YPos>0</YPos>
+																											<Flags>5</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>100</XPos>
+																											<YPos>-200</YPos>
+																											<Flags>37</Flags>
+																										</Point>
+																									</PointList>
+																								</Curve>
+																							</CurveUsageInfo>
+																						</VolumeDryUsage>
+																						<VolumeWetGameUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																						</VolumeWetGameUsage>
+																						<VolumeWetUserUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																						</VolumeWetUserUsage>
+																						<LowPassFilterUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</LowPassFilterUsage>
+																						<HighPassFilterUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</HighPassFilterUsage>
+																						<SpreadUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																								<Curve Name="Spread" ID="{7DC2E804-0EA7-425D-86E7-51BFDA7DD76B}">
+																									<PropertyList>
+																										<Property Name="Flags" Type="int32" Value="1"/>
+																									</PropertyList>
+																									<PointList>
+																										<Point>
+																											<XPos>0</XPos>
+																											<YPos>100</YPos>
+																											<Flags>5</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>20.15873</XPos>
+																											<YPos>100</YPos>
+																											<Flags>0</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>100</XPos>
+																											<YPos>0</YPos>
+																											<Flags>37</Flags>
+																										</Point>
+																									</PointList>
+																								</Curve>
+																							</CurveUsageInfo>
+																						</SpreadUsage>
+																						<FocusUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</FocusUsage>
+																					</CurveUsageInfoList>
+																				</Attenuation>
+																			</Custom>
+																		</Reference>
+																		<Reference Name="Conversion">
+																			<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																		</Reference>
+																		<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																			<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																		</Reference>
+																		<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																			<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																		</Reference>
+																		<Reference Name="OutputBus">
+																			<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<ChildrenList>
+																		<AudioFileSource Name="metalslide02" ID="{495F992B-0CD6-4A6E-95A3-AC895F6BA3BB}" ShortID="163060734">
+																			<Language>SFX</Language>
+																			<AudioFile>metalslide02.wav</AudioFile>
+																		</AudioFileSource>
+																	</ChildrenList>
+																	<ActiveSourceList>
+																		<ActiveSource Name="metalslide02" ID="{495F992B-0CD6-4A6E-95A3-AC895F6BA3BB}" Platform="Linked"/>
+																	</ActiveSourceList>
+																</Sound>
+																<Sound Name="concreteslide01" ID="{F6C3837C-5C0B-4AC6-BA4B-1DE6C41085E2}" ShortID="163692165">
+																	<PropertyList>
+																		<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+																		<Property Name="PositioningType" Type="int16" Value="1"/>
+																		<Property Name="UseGameAuxSends" Type="bool" Value="True"/>
+																		<Property Name="Volume" Type="Real64">
+																			<RTPCList>
+																				<RTPC Name="" ID="{3B3A84DB-E931-41CF-8D30-51C9B4013BFC}" ShortID="324394273">
+																					<ReferenceList>
+																						<Reference Name="ControlInput">
+																							<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																						</Reference>
+																					</ReferenceList>
+																					<Curve Name="" ID="{B3397527-43DA-4AB1-B415-E6F968A022F9}">
+																						<PropertyList>
+																							<Property Name="Flags" Type="int32" Value="3"/>
+																						</PropertyList>
+																						<PointList>
+																							<Point>
+																								<XPos>0</XPos>
+																								<YPos>-200</YPos>
+																								<Flags>5</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>0.001</XPos>
+																								<YPos>-200</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>40.002</XPos>
+																								<YPos>-3.99074</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>114.98772</XPos>
+																								<YPos>-0.00431</YPos>
+																								<Flags>0</Flags>
+																							</Point>
+																							<Point>
+																								<XPos>4000</XPos>
+																								<YPos>-9.75999999999999E-02</YPos>
+																								<Flags>37</Flags>
+																							</Point>
+																						</PointList>
+																					</Curve>
+																				</RTPC>
+																			</RTPCList>
+																		</Property>
+																	</PropertyList>
+																	<ReferenceList>
+																		<Reference Name="Attenuation">
+																			<Custom>
+																				<Attenuation Name="Attenuation (Custom)" ID="{A2FE87A7-66D0-444B-BFB7-9D828CDE5428}" ShortID="84837180">
+																					<CurveUsageInfoList>
+																						<VolumeDryUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																								<Curve Name="VolumeDry" ID="{4F8F2599-8EB8-43D5-B4B3-A37277507D73}">
+																									<PropertyList>
+																										<Property Name="Flags" Type="int32" Value="3"/>
+																									</PropertyList>
+																									<PointList>
+																										<Point>
+																											<XPos>0</XPos>
+																											<YPos>0</YPos>
+																											<Flags>5</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>100</XPos>
+																											<YPos>-200</YPos>
+																											<Flags>37</Flags>
+																										</Point>
+																									</PointList>
+																								</Curve>
+																							</CurveUsageInfo>
+																						</VolumeDryUsage>
+																						<VolumeWetGameUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																						</VolumeWetGameUsage>
+																						<VolumeWetUserUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+																						</VolumeWetUserUsage>
+																						<LowPassFilterUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</LowPassFilterUsage>
+																						<HighPassFilterUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</HighPassFilterUsage>
+																						<SpreadUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																								<Curve Name="Spread" ID="{A85A56CE-23E7-402E-8CEB-6F0C5B41A49A}">
+																									<PropertyList>
+																										<Property Name="Flags" Type="int32" Value="1"/>
+																									</PropertyList>
+																									<PointList>
+																										<Point>
+																											<XPos>0</XPos>
+																											<YPos>100</YPos>
+																											<Flags>5</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>20.15873</XPos>
+																											<YPos>100</YPos>
+																											<Flags>0</Flags>
+																										</Point>
+																										<Point>
+																											<XPos>100</XPos>
+																											<YPos>0</YPos>
+																											<Flags>37</Flags>
+																										</Point>
+																									</PointList>
+																								</Curve>
+																							</CurveUsageInfo>
+																						</SpreadUsage>
+																						<FocusUsage>
+																							<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+																						</FocusUsage>
+																					</CurveUsageInfoList>
+																				</Attenuation>
+																			</Custom>
+																		</Reference>
+																		<Reference Name="Conversion">
+																			<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																		</Reference>
+																		<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																			<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																		</Reference>
+																		<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																			<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																		</Reference>
+																		<Reference Name="OutputBus">
+																			<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<ChildrenList>
+																		<AudioFileSource Name="concreteslide01" ID="{58B4D6C3-4862-4F01-86C6-FAEBE309087F}" ShortID="955278657">
+																			<Language>SFX</Language>
+																			<AudioFile>concreteslide01.wav</AudioFile>
+																			<ConvertedFileIDList>
+																				<File ID="172000020"/>
+																			</ConvertedFileIDList>
+																		</AudioFileSource>
+																	</ChildrenList>
+																	<ActiveSourceList>
+																		<ActiveSource Name="concreteslide01" ID="{58B4D6C3-4862-4F01-86C6-FAEBE309087F}" Platform="Linked"/>
+																	</ActiveSourceList>
+																</Sound>
 															</ChildrenList>
-															<ActiveSourceList>
-																<ActiveSource Name="metalslide02" ID="{495F992B-0CD6-4A6E-95A3-AC895F6BA3BB}" Platform="Linked"/>
-															</ActiveSourceList>
-														</Sound>
+															<BlendTrackList>
+																<BlendTrack Name="New Blend Track" ID="{1307CBF8-0622-488F-9415-2D98EAF54FF8}" ShortID="403028862">
+																	<PropertyList>
+																		<Property Name="EnableCrossFading" Type="bool" Value="True"/>
+																	</PropertyList>
+																	<ReferenceList>
+																		<Reference Name="LayerCrossFadeControlInput">
+																			<ObjectRef Name="Speed" ID="{8CFA28AF-7FE1-41B9-BD1D-274F69B76959}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<BlendTrackAssocList>
+																		<BlendTrackAssoc>
+																			<ItemRef Name="concreteslide01" ID="{F6C3837C-5C0B-4AC6-BA4B-1DE6C41085E2}"/>
+																			<CrossfadingInfo>
+																				<LeftEdgePos>0</LeftEdgePos>
+																				<LeftFadingMode>Automatic</LeftFadingMode>
+																				<RightEdgePos>45</RightEdgePos>
+																				<RightFadingMode>Automatic</RightFadingMode>
+																			</CrossfadingInfo>
+																		</BlendTrackAssoc>
+																		<BlendTrackAssoc>
+																			<ItemRef Name="metalslide02" ID="{2F46412E-7058-4318-88BC-D707F972C7F6}"/>
+																			<CrossfadingInfo>
+																				<LeftEdgePos>0.0005</LeftEdgePos>
+																				<LeftFadingMode>Automatic</LeftFadingMode>
+																				<RightEdgePos>2705.88235294118</RightEdgePos>
+																				<RightFadingMode>Automatic</RightFadingMode>
+																			</CrossfadingInfo>
+																		</BlendTrackAssoc>
+																	</BlendTrackAssocList>
+																</BlendTrack>
+															</BlendTrackList>
+														</BlendContainer>
 													</ChildrenList>
 												</RandomSequenceContainer>
 											</ChildrenList>
@@ -6296,7 +6584,7 @@
 																<RTPC Name="" ID="{B5BF4AE0-D744-4404-AA45-93F2193666B9}" ShortID="646561517">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="Speed" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																			<ObjectRef Name="WindForce" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{591FF599-7362-4A12-885B-D2A244E8C50B}">
@@ -6674,8 +6962,14 @@
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
 												</Reference>
+												<Reference Name="DefaultSwitchOrState">
+													<ObjectRef Name="Rural" ID="{9A2558D2-396D-44A0-8FA7-5DD3401B3B69}" WorkUnitID="{66071663-98D7-4FE5-A1E6-A536FEA4D0FA}"/>
+												</Reference>
 												<Reference Name="OutputBus">
 													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+												</Reference>
+												<Reference Name="SwitchGroupOrStateGroup">
+													<ObjectRef Name="AmbientZone" ID="{224D5E04-1FC5-421A-9FF1-F62B56953160}" WorkUnitID="{66071663-98D7-4FE5-A1E6-A536FEA4D0FA}"/>
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
@@ -6726,6 +7020,11 @@
 												<Sound Name="ambience_rural" ID="{A50EC6DC-34B5-479D-8907-7F77AD9B4D9C}" ShortID="402270778">
 													<PropertyList>
 														<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+														<Property Name="Volume" Type="Real64">
+															<ValueList>
+																<Value>-12</Value>
+															</ValueList>
+														</Property>
 													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
@@ -6758,6 +7057,26 @@
 														<ItemRef Name="ambience_city" ID="{5E7D22E4-0749-4EC5-900B-731D94128AAD}"/>
 													</GroupingBehavior>
 												</GroupingBehaviorList>
+												<GroupingList>
+													<Grouping>
+														<SwitchRef Name="City" ID="{AA140200-E6F2-4DEE-8424-16022BA53316}"/>
+														<ItemList>
+															<ItemRef Name="ambience_city" ID="{5E7D22E4-0749-4EC5-900B-731D94128AAD}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Rural" ID="{9A2558D2-396D-44A0-8FA7-5DD3401B3B69}"/>
+														<ItemList>
+															<ItemRef Name="ambience_rural" ID="{A50EC6DC-34B5-479D-8907-7F77AD9B4D9C}"/>
+														</ItemList>
+													</Grouping>
+													<Grouping>
+														<SwitchRef Name="Ruins" ID="{DDD158E3-E64C-4158-AE72-536190C3BFF8}"/>
+														<ItemList>
+															<ItemRef Name="ambience_ruins" ID="{129F0B1D-054D-445F-A701-F598F7C08213}"/>
+														</ItemList>
+													</Grouping>
+												</GroupingList>
 											</GroupingInfo>
 										</SwitchContainer>
 										<RandomSequenceContainer Name="Water" ID="{4E0FD65D-09F4-4777-8308-6C2980DC3A90}" ShortID="1041840965">
