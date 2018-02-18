@@ -66,6 +66,7 @@ public class Breakable : NetworkBehaviour {
 			//this.gameObject.SetActive(false);
 			this.Break(velocitee);
 			hitter.SetSpeed(speed-maxForce);
+			hitter.Slam(velocitee.magnitude);
 			hitter.v_PunchHitting = true;
 			//print("set speed to: "+(speed-maxForce));
 			return true; //Returns true if the player broke through and should not be deflected.

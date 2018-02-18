@@ -1224,7 +1224,7 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected void Crater(float impactForce) // Triggered when character impacts anything REALLY hard.
+	public void Crater(float impactForce) // Triggered when character impacts anything REALLY hard.
 	{
 		float impactStrengthM = ((impactForce-m_CraterT)/(1000f-m_CraterT));
 		if(impactStrengthM > 1){impactStrengthM = 1;}
@@ -1252,7 +1252,7 @@ public class FighterChar : NetworkBehaviour
 		newWindGust.name = "AirGust";
 	}
 
-	protected void Slam(float impactForce) // Triggered when character impacts anything too hard.
+	public void Slam(float impactForce) // Triggered when character impacts anything too hard.
 	{
 		float impactStrengthM = ((impactForce-m_SlamT)/(m_CraterT-m_SlamT));
 		float camShakeM = (impactForce+m_SlamT)/(2*m_SlamT);
@@ -1295,6 +1295,11 @@ public class FighterChar : NetworkBehaviour
 					if(hit.collider.GetComponent<FighterChar>().isAlive())
 					{
 						bool isFighterCol = FighterCollision(hit.collider.GetComponent<FighterChar>());
+						if(isFighterCol)
+						{
+							facingDirection = (hit.collider.transform.position.x-this.transform.position.x < 0) ? false : true; // If enemy is to your left, face left. Otherwise, right.
+							hit.collider.GetComponent<FighterChar>().facingDirection = !facingDirection;
+						}
 					}
 				}
 			}
@@ -2074,7 +2079,7 @@ public class FighterChar : NetworkBehaviour
 
 		if(hitBreakable!=null&&FighterState.Vel.magnitude > 3)
 		{
-			print("hit a hitbreakable!");
+			if(d_SendCollisionMessages){print("hit a hitbreakable!");}
 			if(hitBreakable.RecieveHit(this)){return false;}
 		}
 		//leftSideContact = true;
@@ -2719,13 +2724,13 @@ public class FighterChar : NetworkBehaviour
 
 		if(combinedSpeed >= m_CraterT)
 		{
-			print("Fighter crater successful");
+			//print("Fighter crater successful");
 			opponent.Crater(combinedSpeed);
 			Crater(combinedSpeed);
 		}
 		else if(combinedSpeed >= m_SlamT)
 		{
-			print("Fighter slam successful");
+			//print("Fighter slam successful");
 			opponent.Slam(combinedSpeed);
 			Slam(combinedSpeed);
 		}
@@ -2744,8 +2749,8 @@ public class FighterChar : NetworkBehaviour
 		opponent.InstantForce(myVelocity, repulsion);
 		this.InstantForce(yourVelocity, repulsion);
 
-		print("Fighters Clashed!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
-		print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");
+		//print("Fighters Clashed!\nOpponent got knocked in direction "+yourVelocity.normalized+"\nI got knocked in direction "+myVelocity.normalized);
+		//print("Opponent took "+myTotalDamageDealt+" damage, and I took "+yourTotalDamageDealt+" damage.");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
 		g_FighterCollisionCD = g_FighterCollisionCDLength;

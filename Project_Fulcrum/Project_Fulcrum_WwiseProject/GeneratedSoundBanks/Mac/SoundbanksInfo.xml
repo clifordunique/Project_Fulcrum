@@ -566,11 +566,11 @@
 				</File>
 				<File Id="172087502" Language="SFX">
 					<ShortName>ambience_ruins.wav</ShortName>
-					<Path>SFX\ambience_ruins_F17FB28C.wem</Path>
+					<Path>SFX\ambience_ruins_43AF13D6.wem</Path>
 				</File>
 				<File Id="776139243" Language="SFX">
 					<ShortName>ambience_rural.wav</ShortName>
-					<Path>SFX\ambience_rural_F17FB28C.wem</Path>
+					<Path>SFX\ambience_rural_7F73363F.wem</Path>
 				</File>
 				<File Id="862610851" Language="SFX">
 					<ShortName>ambience_city.wav</ShortName>

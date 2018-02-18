@@ -117,7 +117,7 @@ public class Shoe : MonoBehaviour {
 		}
 		else //if ( theObject.gameObject.layer == 15 ) // If collided object is a world object.
 		{
-			print("collided with: "+theObject.name);
+			//print("collided with: "+theObject.name);
 			falling = false;
 		}
 	}

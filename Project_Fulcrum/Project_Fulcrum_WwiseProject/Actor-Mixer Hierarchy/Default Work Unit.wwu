@@ -6998,6 +6998,16 @@
 												<Sound Name="ambience_ruins" ID="{129F0B1D-054D-445F-A701-F598F7C08213}" ShortID="164043088">
 													<PropertyList>
 														<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+														<Property Name="Pitch" Type="int32">
+															<ValueList>
+																<Value>-300</Value>
+															</ValueList>
+														</Property>
+														<Property Name="Volume" Type="Real64">
+															<ValueList>
+																<Value>-12</Value>
+															</ValueList>
+														</Property>
 													</PropertyList>
 													<ReferenceList>
 														<Reference Name="Conversion">
@@ -7009,6 +7019,11 @@
 													</ReferenceList>
 													<ChildrenList>
 														<AudioFileSource Name="ambience_ruins" ID="{8483DBFD-D9FF-4ED5-A5F6-5FE64A7FA668}" ShortID="172087502">
+															<PropertyList>
+																<Property Name="LoopEnd" Type="Real64" Value="24.2458231798287"/>
+																<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+																<Property Name="TrimBegin" Type="Real64" Value="1.19767996402798"/>
+															</PropertyList>
 															<Language>SFX</Language>
 															<AudioFile>ambience_ruins.wav</AudioFile>
 														</AudioFileSource>
@@ -7036,6 +7051,10 @@
 													</ReferenceList>
 													<ChildrenList>
 														<AudioFileSource Name="ambience_rural" ID="{57C0E979-2C51-4D72-BB04-4B0B6D84E5BF}" ShortID="776139243">
+															<PropertyList>
+																<Property Name="TrimBegin" Type="Real64" Value="0.405083034701976"/>
+																<Property Name="TrimEnd" Type="Real64" Value="27.5456463597344"/>
+															</PropertyList>
 															<Language>SFX</Language>
 															<AudioFile>ambience_rural.wav</AudioFile>
 														</AudioFileSource>
