@@ -30,7 +30,7 @@ public class StrandJumpEffect : MonoBehaviour {
 		animPlaying = true;
 	}
 
-	void FixedUpdate()
+	void Update()
 	{
 		if(fighterChar.IsKinematic()&&animPlaying)
 		{
@@ -40,7 +40,7 @@ public class StrandJumpEffect : MonoBehaviour {
 		{
 			animPlaying = false;
 			strandLine.SetPosition(1, this.transform.position);
-			secondsPassed += Time.fixedDeltaTime;
+			secondsPassed += Time.deltaTime;
 			if(secondsPassed>=duration)
 			{
 				Complete();

@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4026411316874232}
   - component: {fileID: 114259797117421262}
   - component: {fileID: 120395266713707820}
-  - component: {fileID: 114263550936532240}
   m_Layer: 2
   m_Name: StrandJumpPrefab
   m_TagString: Untagged
@@ -118,38 +117,6 @@ MonoBehaviour:
   animPlaying: 0
   startPoint: {fileID: 4716505764760922}
   endPoint: {fileID: 4430310956721688}
---- !u!114 &114263550936532240
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1241283713325446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 149
-    i1: 117
-    i2: 28
-    i3: 165
-    i4: 91
-    i5: 87
-    i6: 5
-    i7: 100
-    i8: 234
-    i9: 215
-    i10: 18
-    i11: 55
-    i12: 154
-    i13: 124
-    i14: 70
-    i15: 19
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 1
 --- !u!120 &120395266713707820
 LineRenderer:
   m_ObjectHideFlags: 1

@@ -1081,7 +1081,8 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			o_SpriteTransform.localRotation = Quaternion.identity;
+			Quaternion spriteAngle = Get2DAngle(GetVelocity());
+			o_SpriteTransform.localRotation = spriteAngle;
 		}
 
 
@@ -3767,7 +3768,10 @@ public class FighterChar : NetworkBehaviour
 				
 			GameObject newStrandJumpEffect = (GameObject)Instantiate(p_StrandJumpPrefab, this.transform.position, ImpactAngle);
 			Vector3 theLocalScale = new Vector3(1f, 1f, 1f);
-			newStrandJumpEffect.transform.localScale = theLocalScale*FighterState.Vel.magnitude;
+			float strandScaleM = (FighterState.Vel.magnitude/200);
+			strandScaleM = (strandScaleM<1) ? 1 : strandScaleM; // if strandscale multiplier less than 1, set it to one.
+			strandScaleM = (strandScaleM>5) ? 5 : strandScaleM; // if strandscale multiplier greater than 5, set it to five.
+			newStrandJumpEffect.transform.localScale = theLocalScale*strandScaleM;
 			k_IsKinematic = true;
 			k_KinematicAnim = 0;
 
