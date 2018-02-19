@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AnimAudio.cs" />
      <Compile Include="Assets\AnimationTester.cs" />
      <Compile Include="Assets\CanvasSuperSample.cs" />
      <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />

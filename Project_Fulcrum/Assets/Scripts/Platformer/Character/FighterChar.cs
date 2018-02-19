@@ -161,13 +161,15 @@ public class FighterChar : NetworkBehaviour
 	[Header("Character Components:")]
 	[SerializeField][ReadOnlyAttribute] public FighterAudio o_FighterAudio;			// Reference to the character's audio handler.
 	[SerializeField][ReadOnlyAttribute] public VelocityPunch o_VelocityPunch;		// Reference to the velocity punch visual effect entity attached to the character.
-	[SerializeField][ReadOnlyAttribute] public Transform o_EffectFlipper;			// Reference to the velocity punch visual effect entity attached to the character.
+	[SerializeField][ReadOnlyAttribute] public Transform o_SpriteTransform;			// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField][ReadOnlyAttribute] public Transform o_DustSpawnTransform;		// Reference to the velocity punch visual effect entity attached to the character.
 	[SerializeField][ReadOnlyAttribute] protected TimeManager o_TimeManager;     	// Reference to the game level's timescale manager.
 	[SerializeField][ReadOnlyAttribute] protected SpriteRenderer o_SpriteRenderer;	// Reference to the character's sprite renderer.
 	[SerializeField][ReadOnlyAttribute] protected ItemHandler o_ItemHandler;		// Reference to the itemhandler, which acts as an authority on item stats and indexes.
 	[SerializeField][ReadOnlyAttribute] protected Shoe o_EquippedShoe;      		// Reference to the player's currently equipped shoe.
 	[SerializeField][ReadOnlyAttribute] protected GameObject o_SparkThrower;      	// Reference to the player's currently equipped shoe.
+	[SerializeField][ReadOnlyAttribute] protected Animator o_Anim;           		// Reference to the character's animator component.
+	[SerializeField][ReadOnlyAttribute] protected Rigidbody2D o_Rigidbody2D;		// Reference to the character's physics body.
 	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
@@ -176,8 +178,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a radial windforce.
 	[SerializeField] public GameObject p_DustEffectPrefab;		// Reference to the dust visual effect prefab.
 	[SerializeField] public GameObject p_SparkEffectPrefab;		// Reference to the spark visual effect prefab.
-	protected Animator o_Anim;           						// Reference to the character's animator component.
-	protected Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
+
 
 	#endregion
 	//############################################################################################################################################################################################################
@@ -366,6 +367,86 @@ public class FighterChar : NetworkBehaviour
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
+
+	protected virtual void FighterAwake()
+	{
+		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
+		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
+
+		FighterState.CurHealth = 100;					// Current health.
+		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
+		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
+
+		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
+		o_SpriteTransform = transform.Find("SpriteTransform");
+		o_DustSpawnTransform = transform.Find("SpriteTransform/DustEffectTransform");
+		o_Anim = o_SpriteTransform.GetComponentInChildren<Animator>();
+		o_SpriteRenderer = o_SpriteTransform.GetComponent<SpriteRenderer>();
+		o_FighterAudio = this.GetComponent<FighterAudio>();
+		o_Rigidbody2D = GetComponent<Rigidbody2D>();
+
+		if(o_DustSpawnTransform.position==null)
+		{
+			print("dusttransform is the issue");
+		}
+
+		if(p_SparkEffectPrefab==null)
+		{
+			print("p_SparkEffectPrefab is the issue");
+		}
+
+
+		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
+		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+
+
+		m_GroundFoot = transform.Find("MidFoot");
+		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
+		m_GroundFootOffset.x = m_GroundFoot.position.x-fighterOrigin.x;
+		m_GroundFootOffset.y = m_GroundFoot.position.y-fighterOrigin.y;
+		m_GroundFootLength = m_GroundFootOffset.magnitude;
+
+		m_CeilingFoot = transform.Find("CeilingFoot");
+		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
+		m_CeilingFootOffset.x = m_CeilingFoot.position.x-fighterOrigin.x;
+		m_CeilingFootOffset.y = m_CeilingFoot.position.y-fighterOrigin.y;
+		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
+
+		m_LeftSide = transform.Find("LeftSide");
+		m_LeftSideLine = m_LeftSide.GetComponent<LineRenderer>();
+		m_LeftSideOffset.x = m_LeftSide.position.x-fighterOrigin.x;
+		m_LeftSideOffset.y = m_LeftSide.position.y-fighterOrigin.y;
+		m_LeftSideLength = m_LeftSideOffset.magnitude;
+
+		m_RightSide = transform.Find("RightSide");
+		m_RightSideLine = m_RightSide.GetComponent<LineRenderer>();
+		m_RightSideOffset.x = m_RightSide.position.x-fighterOrigin.x;
+		m_RightSideOffset.y = m_RightSide.position.y-fighterOrigin.y;
+		m_RightSideLength = m_RightSideOffset.magnitude;
+
+		m_DebugLine = GetComponent<LineRenderer>();
+
+		v_DefaultColor = o_SpriteRenderer.color;
+		lastSafePosition = new Vector2(0,0);
+		m_RemainingMovement = new Vector2(0,0);
+		m_RemainingVelM = 1f;
+
+		Shoe startingShoe = Instantiate(o_ItemHandler.shoes[p_DefaultShoeID], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
+		EquipShoe(startingShoe);
+
+
+		if(!(showVelocityIndicator||FighterState.DevMode)){
+			m_DebugLine.enabled = false;
+		}
+
+		if(!(showContactIndicators||FighterState.DevMode))
+		{
+			m_CeilingLine.enabled = false;
+			m_GroundLine.enabled = false;
+			m_RightSideLine.enabled = false;
+			m_LeftSideLine.enabled = false;
+		}
+	}
 
 	public virtual void UnequipShoe()
 	{
@@ -588,12 +669,16 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_RightWalled)
 		{//Wallsliding!
-			WallTraction(CtrlH,m_RightNormal);
+			WallTraction(CtrlH, m_RightNormal);
 		}
 		else if(m_LeftWalled)
 		{
-			WallTraction(CtrlH,m_LeftNormal);
+			WallTraction(CtrlH, m_LeftNormal);
 		}
+//		else if(m_Ceilinged)
+//		{
+//			WallTraction(CtrlH, m_CeilingNormal);
+//		}
 		else if(!noGravity)
 		{//Gravity!
 			AirControl(CtrlH);
@@ -948,28 +1033,66 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		o_Anim.SetBool("Walled", false);
-
-		if(m_LeftWalled&&!m_Grounded)
+		if(m_Grounded)
 		{
-			m_Sliding = true;
-			o_Anim.SetBool("Walled", true);
-			facingDirection = true;
+			Quaternion spriteAngle = Get2DAngle(Perp(m_GroundNormal));
+			o_SpriteTransform.localRotation = spriteAngle;
+		}
+		else if(m_LeftWalled)
+		{
+			
+			if(GetVelocity().y>0)
+			{
+				facingDirection = false;
+				Quaternion spriteAngle = Get2DAngle(Perp(m_LeftNormal));
+				o_SpriteTransform.localRotation = spriteAngle;
+			}
+			else
+			{
+				facingDirection = true;
+				Quaternion spriteAngle = Get2DAngle(m_LeftNormal);
+				o_SpriteTransform.localRotation = spriteAngle;
+				m_Sliding = true;
+				o_Anim.SetBool("Walled", true);
+			}
+		}
+		else if(m_RightWalled)
+		{
+			
+			if(GetVelocity().y>0)
+			{
+				facingDirection = true;
+				Quaternion spriteAngle = Get2DAngle(Perp(m_RightNormal));
+				o_SpriteTransform.localRotation = spriteAngle;
+			}
+			else
+			{
+				facingDirection = false;
+				Quaternion spriteAngle = Get2DAngle(m_RightNormal);
+				o_SpriteTransform.localRotation = spriteAngle;
+				m_Sliding = true;
+				o_Anim.SetBool("Walled", true);
+			}
+		}
+		else if(m_Ceilinged)
+		{
+			Quaternion spriteAngle = Get2DAngle(Perp(m_CeilingNormal));
+			o_SpriteTransform.localRotation = spriteAngle;
+		}
+		else
+		{
+			o_SpriteTransform.localRotation = Quaternion.identity;
 		}
 
-		if(m_RightWalled&&!m_Grounded)
-		{
-			m_Sliding = true;
-			o_Anim.SetBool("Walled", true);
-			facingDirection = false;
-		}
+
 
 		if (!facingDirection) //If facing left
 		{
 			o_Anim.SetBool("IsFacingRight", false);
 			//print("FACING LEFT!   "+h)
 			//o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
-			o_SpriteRenderer.flipX = true;
-			o_EffectFlipper.localScale = new Vector3 (1f, 1f, 1f);
+			//o_SpriteRenderer.flipX = true;
+			o_SpriteTransform.localScale = new Vector3 (-1f, 1f, 1f);
 			if(FighterState.Vel.x > 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -985,8 +1108,8 @@ public class FighterChar : NetworkBehaviour
 			//print("FACING RIGHT!   "+h);
 			o_Anim.SetBool("IsFacingRight", true);
 			//o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
-			o_SpriteRenderer.flipX = false;
-			o_EffectFlipper.localScale = new Vector3 (-1f, 1f, 1f);
+			//o_SpriteRenderer.flipX = false;
+			o_SpriteTransform.localScale = new Vector3 (1f, 1f, 1f);
 			if(FighterState.Vel.x < 0 && FighterState.Vel.magnitude >= v_ReversingSlideT && !m_Airborne)
 			{
 				o_Anim.SetBool("Crouch", true);
@@ -1102,75 +1225,6 @@ public class FighterChar : NetworkBehaviour
 
 		//Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		//FighterState.MouseWorldPos = Vec2(mousePoint);
-	}
-
-	protected virtual void FighterAwake()
-	{
-		o_DustSpawnTransform = transform.Find("EffectFlipper/DustEffectTransform");
-		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
-		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
-
-		FighterState.CurHealth = 100;					// Current health.
-		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
-		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
-		m_DebugLine = GetComponent<LineRenderer>();
-		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
-		o_EffectFlipper = o_VelocityPunch.gameObject.transform.parent;
-
-		m_GroundFoot = transform.Find("MidFoot");
-		m_GroundLine = m_GroundFoot.GetComponent<LineRenderer>();
-		m_GroundFootOffset.x = m_GroundFoot.position.x-fighterOrigin.x;
-		m_GroundFootOffset.y = m_GroundFoot.position.y-fighterOrigin.y;
-		m_GroundFootLength = m_GroundFootOffset.magnitude;
-
-		m_CeilingFoot = transform.Find("CeilingFoot");
-		m_CeilingLine = m_CeilingFoot.GetComponent<LineRenderer>();
-		m_CeilingFootOffset.x = m_CeilingFoot.position.x-fighterOrigin.x;
-		m_CeilingFootOffset.y = m_CeilingFoot.position.y-fighterOrigin.y;
-		m_CeilingFootLength = m_CeilingFootOffset.magnitude;
-
-		m_LeftSide = transform.Find("LeftSide");
-		m_LeftSideLine = m_LeftSide.GetComponent<LineRenderer>();
-		m_LeftSideOffset.x = m_LeftSide.position.x-fighterOrigin.x;
-		m_LeftSideOffset.y = m_LeftSide.position.y-fighterOrigin.y;
-		m_LeftSideLength = m_LeftSideOffset.magnitude;
-
-		m_RightSide = transform.Find("RightSide");
-		m_RightSideLine = m_RightSide.GetComponent<LineRenderer>();
-		m_RightSideOffset.x = m_RightSide.position.x-fighterOrigin.x;
-		m_RightSideOffset.y = m_RightSide.position.y-fighterOrigin.y;
-		m_RightSideLength = m_RightSideOffset.magnitude;
-
-		o_FighterAudio = this.GetComponent<FighterAudio>();
-		o_Anim = this.GetComponent<Animator>();
-		o_Rigidbody2D = GetComponent<Rigidbody2D>();
-		o_SpriteRenderer = this.GetComponent<SpriteRenderer>();
-
-		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
-		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
-
-		v_DefaultColor = o_SpriteRenderer.color;
-		lastSafePosition = new Vector2(0,0);
-		m_RemainingMovement = new Vector2(0,0);
-		m_RemainingVelM = 1f;
-		//print(m_RemainingMovement);
-
-		Shoe startingShoe = Instantiate(o_ItemHandler.shoes[p_DefaultShoeID], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
-
-		EquipShoe(startingShoe);
-
-
-		if(!(showVelocityIndicator||FighterState.DevMode)){
-			m_DebugLine.enabled = false;
-		}
-
-		if(!(showContactIndicators||FighterState.DevMode))
-		{
-			m_CeilingLine.enabled = false;
-			m_GroundLine.enabled = false;
-			m_RightSideLine.enabled = false;
-			m_LeftSideLine.enabled = false;
-		}
 	}
 
 	protected Vector2 Vec2(Vector3 inputVector)
@@ -3710,11 +3764,10 @@ public class FighterChar : NetworkBehaviour
 					//print("ERROR: IMPACT DIRECTION OF (0,0)");
 				}
 			}
-
-
+				
 			GameObject newStrandJumpEffect = (GameObject)Instantiate(p_StrandJumpPrefab, this.transform.position, ImpactAngle);
 			Vector3 theLocalScale = new Vector3(1f, 1f, 1f);
-			newStrandJumpEffect.transform.localScale = theLocalScale;
+			newStrandJumpEffect.transform.localScale = theLocalScale*FighterState.Vel.magnitude;
 			k_IsKinematic = true;
 			k_KinematicAnim = 0;
 
@@ -3728,16 +3781,71 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-//	protected void StrandJumpTypeB(Vector2 playerMouseVector)
-//	{
-
-//	}
-//
 	#endregion
 	//###################################################################################################################################
 	// PUBLIC FUNCTIONS
 	//###################################################################################################################################
 	#region PUBLIC FUNCTIONS
+
+	public Quaternion Get2DAngle(Vector2 vector2)
+	{
+		if(vector2.x<0)
+		{
+			vector2 *= -1;
+		}
+
+		Quaternion trueAngle = Quaternion.LookRotation(vector2);
+		trueAngle.x = 0;
+		trueAngle.y = 0;
+
+		if(vector2.y == 0)
+		{
+			if(vector2.x < 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, 180);
+			}
+			else if(vector2.x > 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, 0);
+			}
+		}
+
+		if(vector2.x == 0)
+		{
+			if(vector2.y < 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, -90);
+			}
+			else if(vector2.y > 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, 90);
+			}
+		}
+
+		return trueAngle;
+	}
+
+	public Quaternion Get2DAngle(Vector3 vector3)
+	{
+		Vector2 vector2 = Vec2(vector3);
+		Quaternion trueAngle = Quaternion.LookRotation(vector2);
+		trueAngle.x = 0;
+		trueAngle.y = 0;
+
+		if(vector2.y == 0)
+		{
+			if(vector2.x < 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, -90);
+			}
+			else if(vector2.x > 0)
+			{
+				trueAngle.eulerAngles = new Vector3(0, 0, 90);
+			}
+		}
+
+		return trueAngle;
+	}
 
 	public bool IsVelocityPunching()
 	{
