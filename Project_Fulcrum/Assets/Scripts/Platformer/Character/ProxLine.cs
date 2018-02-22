@@ -17,7 +17,7 @@ public class ProxLine : MonoBehaviour {
 	public FighterChar originPlayer;
 	private Transform spriteHolder;
 	private SpriteRenderer spriteRenderer;
-	[ReadOnlyAttribute]public Camera camera;
+	[ReadOnlyAttribute]public Camera myCamera;
 	private RectTransform myRect;
 
 
@@ -25,7 +25,7 @@ public class ProxLine : MonoBehaviour {
 	void Start () 
 	{
 		fadeInOpacity = 1;
-		camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		myCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		spriteHolder = this.transform.GetChild(0);
 		spriteRenderer = spriteHolder.GetComponent<SpriteRenderer>();
 		myRect = this.GetComponent<RectTransform>();
@@ -74,7 +74,7 @@ public class ProxLine : MonoBehaviour {
 		Vector2 onScreenPos;
 		Vector2 WorldPos;
 		float opacity = 0.5f;
-		screenPos = camera.WorldToViewportPoint(assignedFighter.GetPosition());
+		screenPos =myCamera.WorldToViewportPoint(assignedFighter.GetPosition());
 
 		if(screenPos.x >= 0 && screenPos.x <= 1 && screenPos.y >= 0 && screenPos.y <= 1)
 		{

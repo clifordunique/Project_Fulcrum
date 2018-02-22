@@ -1474,11 +1474,6 @@ public class Player : FighterChar
 	//###################################################################################################################################
 	#region PUBLIC FUNCTIONS
 
-	public Vector2 GetPosition()
-	{
-		return FighterState.FinalPos;
-	}
-
 	public void PulseHit(FighterChar theFighter)
 	{
 		o_ProximityLiner.AddFighter(theFighter);

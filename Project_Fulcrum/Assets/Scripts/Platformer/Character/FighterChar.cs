@@ -11,6 +11,10 @@ using UnityEditor;
 /*
  * AUTHOR'S NOTES:
  * 
+ * FighterChar is the basis class for all humanoid combatants. NPC and Player classes extend this class. 
+ * Most animation, collision code, and physics is conducted in this base class. Input is processed in FighterChar, but the input is recieved from respective sources set in NPC and Player.
+ * A FighterChar, if spawned, would behave simply as an uncontrolled dummy. Spawn players or NPCs instead, and use FighterChar for any code that would affect both of them. 
+ * 
  * Naming conventions:
  * If a variable ends with: A, it is short for:B
  * 		A	|	B
@@ -151,7 +155,7 @@ public class FighterChar : NetworkBehaviour
 	#region KINEMATIC VARIABLES
 	[SerializeField] protected bool k_IsKinematic; 						//Dictates whether the player is moving in physical fighterchar mode or in some sort of specially controlled fashion, such as in cutscenes or strand jumps
 	[SerializeField] protected int k_KinematicAnim; 					//Designates the kinematic animation being played. 0 is strandjumping.
-	[SerializeField] protected float k_StrandJumpSlowdownM = 0.5f; 		//Percent of momentum lost per frame when hitting a strand.
+	[SerializeField] protected float k_StrandJumpSlowdownM = 0.33f; 		//Percent of momentum retained per frame when hitting a strand.
 	[SerializeField] protected float k_StrandJumpSlowdownLinear = 5f; 	//Set amount of momentum lost per frame when hitting a strand.
 	#endregion
 	//############################################################################################################################################################################################################
@@ -185,29 +189,33 @@ public class FighterChar : NetworkBehaviour
 	// PHYSICS&RAYCASTING
 	//###########################################################################################################################################################################
 	#region PHYSICS&RAYCASTING
-	[SerializeField] protected LayerMask mask;			// Mask used for terrain collisions.
-	[SerializeField] protected LayerMask fighterMask;	// Mask used for fighter collisions.
 
-	protected Transform m_GroundFoot; 		// Ground collider.
-	protected Vector2 m_GroundFootOffset; 	// Ground raycast endpoint.
-	protected float m_GroundFootLength;		// Ground raycast length.
+	// Physics relies on four directional raycasts set up in a cross formation. The vertical raycasts are longer than the horizontal ones. 
+	// This results in a diamond shaped hitbox. When multiple raycasts are contacting the ground, priority is chosen based on which one impacts the deepest, or, when equal, the angle of terrain.
 
-	protected Transform m_CeilingFoot; 		// Ceiling collider, middle.
-	protected Vector2 m_CeilingFootOffset;	// Ceiling raycast endpoint.
-	protected float m_CeilingFootLength;		// Ceiling raycast length.
+	[SerializeField] public LayerMask m_TerrainMask;	// Mask used for terrain collisions.
+	[SerializeField] public LayerMask m_FighterMask;	// Mask used for fighter collisions.
 
-	protected Transform m_LeftSide; 			// LeftWall collider.
-	protected Vector2 m_LeftSideOffset;		// LeftWall raycast endpoint.
-	protected float m_LeftSideLength;			// LeftWall raycast length.
+	[HideInInspector]public Transform m_GroundFoot; 			// Ground collider.
+	[HideInInspector]public Vector2 m_GroundFootOffset; 		// Ground raycast endpoint.
+	[ReadOnlyAttribute]public float m_GroundFootLength;		// Ground raycast length.
 
-	protected Transform m_RightSide;  		// RightWall collider.
-	protected Vector2 m_RightSideOffset;		// RightWall raycast endpoint.
-	protected float m_RightSideLength;		// RightWall raycast length.
+	[HideInInspector]public Transform m_CeilingFoot; 		// Ceiling collider, middle.
+	[HideInInspector]public Vector2 m_CeilingFootOffset;		// Ceiling raycast endpoint.
+	[ReadOnlyAttribute]public float m_CeilingFootLength;		// Ceiling raycast length.
 
-	protected Vector2 m_GroundNormal;			// Vector with slope of Ground.
-	protected Vector2 m_CeilingNormal;		// Vector with slope of Ceiling.
-	protected Vector2 m_LeftNormal;			// Vector with slope of LeftWall.
-	protected Vector2 m_RightNormal;			// Vector with slope of RightWall.
+	[HideInInspector]public Transform m_LeftSide; 			// LeftWall collider.
+	[HideInInspector]public Vector2 m_LeftSideOffset;		// LeftWall raycast endpoint.
+	[ReadOnlyAttribute]public float m_LeftSideLength;			// LeftWall raycast length.
+
+	[HideInInspector]public Transform m_RightSide;  			// RightWall collider.
+	[HideInInspector]public Vector2 m_RightSideOffset;		// RightWall raycast endpoint.
+	[ReadOnlyAttribute]public float m_RightSideLength;			// RightWall raycast length.
+
+	[ReadOnlyAttribute]public Vector2 m_GroundNormal;			// Vector holding the slope of Ground.
+	[ReadOnlyAttribute]public Vector2 m_CeilingNormal;		// Vector holding the slope of Ceiling.
+	[ReadOnlyAttribute]public Vector2 m_LeftNormal;			// Vector holding the slope of LeftWall.
+	[ReadOnlyAttribute]public Vector2 m_RightNormal;			// Vector holding the slope of RightWall.
 
 	[Header("Fighter State:")]
 	[SerializeField][ReadOnlyAttribute]protected float m_IGF; 					//"Instant G-Force" of the impact this frame.
@@ -269,10 +277,12 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
-	[SerializeField][ReadOnlyAttribute] public bool v_PunchHitting;		// Greater than 0 when the punchhitting animation is to be played.
+	[SerializeField][ReadOnlyAttribute] public bool v_PunchHitting;			// Greater than 0 when the punchhitting animation is to be played.
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)] protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
+	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 100;// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
+	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -669,11 +679,11 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_RightWalled)
 		{//Wallsliding!
-			WallTraction(CtrlH, m_RightNormal);
+			WallTraction(CtrlH, CtrlV, m_RightNormal);
 		}
 		else if(m_LeftWalled)
 		{
-			WallTraction(CtrlH, m_LeftNormal);
+			WallTraction(CtrlH, CtrlV, m_LeftNormal);
 		}
 //		else if(m_Ceilinged)
 //		{
@@ -979,6 +989,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		AkSoundEngine.SetRTPCValue("Health", FighterState.CurHealth, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
+		AkSoundEngine.SetRTPCValue("WindForce", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("EnergyLevel", FighterState.ZonLevel, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_Y", FighterState.Vel.y, this.gameObject);
@@ -1004,6 +1015,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		m_WallSliding = false;
 		m_Sliding = false;
+		o_Anim.SetBool("Walled", false);
 
 		if(g_Staggered)
 		{
@@ -1031,61 +1043,33 @@ public class FighterChar : NetworkBehaviour
 		{
 			o_SpriteRenderer.color = v_DefaultColor;
 		}
-
-		o_Anim.SetBool("Walled", false);
-		if(m_Grounded)
-		{
-			Quaternion spriteAngle = Get2DAngle(Perp(m_GroundNormal));
-			o_SpriteTransform.localRotation = spriteAngle;
-		}
-		else if(m_LeftWalled)
-		{
 			
+		if(m_LeftWalled&&!m_Grounded)
+		{
 			if(GetVelocity().y>0)
 			{
 				facingDirection = false;
-				Quaternion spriteAngle = Get2DAngle(Perp(m_LeftNormal));
-				o_SpriteTransform.localRotation = spriteAngle;
 			}
 			else
 			{
 				facingDirection = true;
-				Quaternion spriteAngle = Get2DAngle(m_LeftNormal);
-				o_SpriteTransform.localRotation = spriteAngle;
 				m_Sliding = true;
 				o_Anim.SetBool("Walled", true);
 			}
 		}
-		else if(m_RightWalled)
+		else if(m_RightWalled&&!m_Grounded)
 		{
-			
 			if(GetVelocity().y>0)
 			{
 				facingDirection = true;
-				Quaternion spriteAngle = Get2DAngle(Perp(m_RightNormal));
-				o_SpriteTransform.localRotation = spriteAngle;
 			}
 			else
 			{
 				facingDirection = false;
-				Quaternion spriteAngle = Get2DAngle(m_RightNormal);
-				o_SpriteTransform.localRotation = spriteAngle;
 				m_Sliding = true;
 				o_Anim.SetBool("Walled", true);
 			}
 		}
-		else if(m_Ceilinged)
-		{
-			Quaternion spriteAngle = Get2DAngle(Perp(m_CeilingNormal));
-			o_SpriteTransform.localRotation = spriteAngle;
-		}
-		else
-		{
-			Quaternion spriteAngle = Get2DAngle(GetVelocity());
-			o_SpriteTransform.localRotation = spriteAngle;
-		}
-
-
 
 		if (!facingDirection) //If facing left
 		{
@@ -1121,6 +1105,61 @@ public class FighterChar : NetworkBehaviour
 				o_Anim.SetBool("Crouch", false);
 			}
 		}
+
+		//
+		//Sprite transform positioning code
+		//
+		float surfaceLeanM = GetSpeed()/v_SpeedForMaxLean; // Player leans more the faster they're going. At max speed, the player model rotates so the ground is directly below them.
+		surfaceLeanM = (surfaceLeanM<1) ? surfaceLeanM : 1; // If greater than 1, clamp to 1.
+
+		float spriteAngle;
+
+		if(m_Grounded)
+		{
+			spriteAngle = Get2DAngle(Perp(m_GroundNormal));
+		}
+		else if(m_LeftWalled)
+		{
+			spriteAngle = Get2DAngle(Perp(m_LeftNormal));
+			if(GetVelocity().y<0)
+				surfaceLeanM = 1;
+		}
+		else if(m_RightWalled)
+		{
+			spriteAngle = Get2DAngle(Perp(m_RightNormal));
+			print("Rightwall angle = "+spriteAngle);
+			if(GetVelocity().y<0)
+				surfaceLeanM = 1;
+		}
+		else if(m_Ceilinged)
+		{
+			spriteAngle = Get2DAngle(Perp(m_CeilingNormal));
+		}
+		else
+		{
+			spriteAngle = 0;
+//			Quaternion spriteAngle = Get2DAngle(GetVelocity());
+//			o_SpriteTransform.localRotation = spriteAngle;
+		}
+
+		if(spriteAngle>180)
+		{
+			//spriteAngle -= 360;
+			spriteAngle = -(360 - spriteAngle);
+		}
+
+		if(o_Anim.GetBool("Crouch")) // Placeholder!
+			surfaceLeanM = 1;
+
+		v_LeanAngle = Mathf.Lerp(v_LeanAngle, spriteAngle, Time.fixedDeltaTime*100);
+		v_LeanAngle = spriteAngle*surfaceLeanM;
+		Quaternion finalAngle = new Quaternion();
+		finalAngle.eulerAngles = new Vector3(0,0, v_LeanAngle);
+		o_SpriteTransform.localRotation = finalAngle;
+
+		//
+		// End of sprite transform positioning code
+		//
 
 		if(m_WallSliding)
 		{
@@ -1162,7 +1201,6 @@ public class FighterChar : NetworkBehaviour
 		m_DebugLine.SetPositions(debugLineVector);
 
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
-		o_Anim.SetFloat("WindForce", FighterState.Vel.magnitude);
 		o_Anim.SetFloat("hSpeed", Math.Abs(FighterState.Vel.x));
 		o_Anim.SetFloat("vSpeed", Math.Abs(FighterState.Vel.y));
 		o_Anim.SetFloat("hVelocity", FighterState.Vel.x);
@@ -1338,7 +1376,7 @@ public class FighterChar : NetworkBehaviour
 		if(!this.isAlive()){return;}
 		// FIGHTER-FIGHTER COLLISION TESTING IS SEPERATE AND PRECEDES WORLD COLLISIONS
 		float crntSpeed = FighterState.Vel.magnitude*Time.fixedDeltaTime; //Current speed.
-		RaycastHit2D[] fighterCollision = Physics2D.RaycastAll(this.transform.position, FighterState.Vel, crntSpeed, fighterMask);
+		RaycastHit2D[] fighterCollision = Physics2D.RaycastAll(this.transform.position, FighterState.Vel, crntSpeed, m_FighterMask);
 
 		foreach(RaycastHit2D hit in fighterCollision)
 		{
@@ -1402,10 +1440,10 @@ public class FighterChar : NetworkBehaviour
 		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
 		//These raycasts fire from the 4 edges of the player collider in the direction of travel, effectively forming a projection of the player. This is a form of continuous collision detection.
-		predictedLoc[0] = Physics2D.Raycast(adjustedBot, FighterState.Vel, crntSpeed, mask); 	// Ground
-		predictedLoc[1] = Physics2D.Raycast(adjustedTop, FighterState.Vel, crntSpeed, mask); 	// Ceiling
-		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, mask); 	// Left
-		predictedLoc[3] = Physics2D.Raycast(adjustedRight, FighterState.Vel, crntSpeed, mask);	// Right  
+		predictedLoc[0] = Physics2D.Raycast(adjustedBot, FighterState.Vel, crntSpeed, m_TerrainMask); 	// Ground
+		predictedLoc[1] = Physics2D.Raycast(adjustedTop, FighterState.Vel, crntSpeed, m_TerrainMask); 	// Ceiling
+		predictedLoc[2] = Physics2D.Raycast(adjustedLeft, FighterState.Vel, crntSpeed, m_TerrainMask); 	// Left
+		predictedLoc[3] = Physics2D.Raycast(adjustedRight, FighterState.Vel, crntSpeed, m_TerrainMask);	// Right  
 
 		float[] rayDist = new float[4];
 		rayDist[0] = predictedLoc[0].distance; // Ground dist
@@ -1760,7 +1798,7 @@ public class FighterChar : NetworkBehaviour
 			else if ((m_RightWalled) && (horizontalInput > 0)) 
 			{
 				//print("Trying to run up right wall slowly.");
-				Vector2 wallPara = Perp (m_RightNormal);
+				Vector2 wallPara = Perp(m_RightNormal);
 				wallSteepnessAngle = Vector2.Angle (Vector2.up, wallPara);
 				wallSteepnessAngle = 180f - wallSteepnessAngle;
 				if (wallSteepnessAngle == 180) 
@@ -1947,18 +1985,18 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Vel += new Vector2(horizontalInput/20, 0);
 	}
 
-	protected void WallTraction(float horizontalInput, Vector2 wallSurface)
+	protected void WallTraction(float hInput, float vInput, Vector2 wallSurface)
 	{
-		if(horizontalInput > 0 && m_LeftWalled && !m_RightWalled) // If pressing input away from wall, detach from it.
+		if(hInput > 0 && m_LeftWalled && !m_RightWalled) // If pressing input away from wall, detach from it.
 		{
 			//print("FALLIN OFF YO!");
-			AirControl(horizontalInput);
+			AirControl(hInput);
 			return;
 		}
-		else if(horizontalInput < 0 && m_RightWalled && !m_LeftWalled)  // If pressing input away from wall, detach from it.
+		else if(hInput < 0 && m_RightWalled && !m_LeftWalled)  // If pressing input away from wall, detach from it.
 		{
 			//print("FALLIN OFF YO!");
-			AirControl(horizontalInput);
+			AirControl(hInput);
 			return;
 		}
 
@@ -1967,7 +2005,7 @@ public class FighterChar : NetworkBehaviour
 		////////////////////
 		Vector2 wallPara = Perp(wallSurface);
 
-		//print("horizontalInput="+horizontalInput);
+		//print("hInput="+hInput);
 
 
 		if(wallPara.x > 0)
@@ -2031,24 +2069,24 @@ public class FighterChar : NetworkBehaviour
 //		if (this.GetSpeed () <= 0.0001f) 
 //		{
 //			print ("RIDING WALL SLOWLY, CONSIDERING CORRECTION");
-//			if ((m_LeftWalled) && (horizontalInput < 0)) 
+//			if ((m_LeftWalled) && (hInput < 0)) 
 //			{
 //				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
 //					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
 //					//FighterState.Vel = Vector2.zero;
 //					m_LeftWallBlocked = true;
-//					horizontalInput = 0;
+//					hInput = 0;
 //					m_SurfaceCling = false;
 //				}
 //			} 
-//			else if ((m_RightWalled) && (horizontalInput > 0)) 
+//			else if ((m_RightWalled) && (hInput > 0)) 
 //			{
 //				print ("Trying to run up right wall slowly.");
 //				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
 //					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
 //					//FighterState.Vel = Vector2.zero;
 //					m_RightWallBlocked = true;
-//					horizontalInput = 0;
+//					hInput = 0;
 //					m_SurfaceCling = false;
 //				}
 //			} 
@@ -2073,7 +2111,7 @@ public class FighterChar : NetworkBehaviour
 			}
 			else if(FighterState.Vel.y <= 0)
 			{
-				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) )
+				if( (hInput<0 && m_LeftWalled) || (hInput>0 && m_RightWalled) )
 				{
 					FighterState.Vel = ChangeSpeedLinear(FighterState.Vel,0.1f);
 				}
@@ -2088,11 +2126,11 @@ public class FighterChar : NetworkBehaviour
 			//m_WallSliding = true;
 			if(FighterState.Vel.y > 0)
 			{
-				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+				if( (hInput<0 && m_LeftWalled) || (hInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
 				{
 					FighterState.Vel.y -= 0.8f; //Decelerate slower.
 				}
-				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+				else if((hInput>0 && m_LeftWalled) || (hInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
 				{
 					FighterState.Vel.y -= 1.2f; //Decelerate faster.
 				}
@@ -2103,11 +2141,11 @@ public class FighterChar : NetworkBehaviour
 			}
 			else if(FighterState.Vel.y <= 0)
 			{
-				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+				if( (hInput<0 && m_LeftWalled) || (hInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
 				{
 					FighterState.Vel.y -= 0.1f; //Accelerate downward slower.
 				}
-				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+				else if((hInput>0 && m_LeftWalled) || (hInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
 				{
 					FighterState.Vel.y -= 1.2f; //Accelerate downward faster.
 				}
@@ -2148,7 +2186,7 @@ public class FighterChar : NetworkBehaviour
 
 		//print ("Final Position:  " + this.transform.position);
 
-		RaycastHit2D leftCheck2 = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask);
+		RaycastHit2D leftCheck2 = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, m_TerrainMask);
 		if (leftCheck2) 
 		{
 			m_LeftNormal = leftCheck2.normal;
@@ -2158,6 +2196,16 @@ public class FighterChar : NetworkBehaviour
 			m_LeftNormal = leftCheck.normal;
 		}
 			
+		if(Mathf.Abs(m_LeftNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+		{
+			m_LeftNormal.x = 0;
+		}
+
+		if(Mathf.Abs(m_LeftNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+		{
+			m_LeftNormal.y = 0;
+		}
+
 //		if(m_Grounded)
 //		{
 //			if(d_SendCollisionMessages)
@@ -2215,7 +2263,6 @@ public class FighterChar : NetworkBehaviour
 		m_RightWalled = true;
 		Vector2 setCharPos = rightCheck.point;
 		setCharPos.x -= (m_RightSideLength-m_MinEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
-		//setCharPos.y -= m_MinEmbed;  //Embed slightly in ground to ensure raycasts still hit ground.
 
 		//print("Sent to Pos:" + setCharPos);
 		//print("Sent to normal:" + groundCheck.normal);
@@ -2224,14 +2271,26 @@ public class FighterChar : NetworkBehaviour
 
 		//print ("Final Position:  " + this.transform.position);
 
-		RaycastHit2D rightCheck2 = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);
+		RaycastHit2D rightCheck2 = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask);
 		if (rightCheck2) 
 		{
 			m_RightNormal = rightCheck2.normal;
+			print("rightCheck2.normal="+rightCheck2.normal);
 		}
 		else
 		{
 			m_RightNormal = rightCheck.normal;
+			print("rightCheck1.normal="+rightCheck.normal);
+		}
+
+		if(Mathf.Abs(m_RightNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+		{
+			m_RightNormal.x = 0;
+		}
+
+		if(Mathf.Abs(m_RightNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+		{
+			m_RightNormal.y = 0;
 		}
 
 
@@ -2282,7 +2341,7 @@ public class FighterChar : NetworkBehaviour
 		//print("Sent to Pos:" + setCharPos);
 		//print("Sent to normal:" + groundCheck.normal);
 
-		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
+		RaycastHit2D groundCheck2 = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, m_TerrainMask);
 
 		if(groundCheck.normal.y == 0f)
 		{//If vertical surface
@@ -2375,7 +2434,7 @@ public class FighterChar : NetworkBehaviour
 		setCharPos.y -= (m_GroundFootLength-m_MinEmbed); //Embed slightly in ceiling to ensure raycasts still hit ceiling.
 		this.transform.position = setCharPos;
 
-		RaycastHit2D ceilingCheck2 = Physics2D.Raycast(this.transform.position, Vector2.up, m_GroundFootLength, mask);
+		RaycastHit2D ceilingCheck2 = Physics2D.Raycast(this.transform.position, Vector2.up, m_GroundFootLength, m_TerrainMask);
 		if (ceilingCheck2) 
 		{
 			//			if(antiTunneling){
@@ -2950,7 +3009,7 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 
-		lowerHit = Physics2D.Raycast(this.transform.position, lowerDirection, lowerLength, mask);
+		lowerHit = Physics2D.Raycast(this.transform.position, lowerDirection, lowerLength, m_TerrainMask);
 
 		float embedDepth;
 		Vector2 gPara; //lowerpara, aka groundparallel
@@ -3022,7 +3081,7 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 
-		upperHit = Physics2D.Raycast(this.transform.position, upperDirection, upperLength, mask);
+		upperHit = Physics2D.Raycast(this.transform.position, upperDirection, upperLength, m_TerrainMask);
 		embedDepth = upperLength-upperHit.distance;
 
 		if(!upperHit)
@@ -3149,29 +3208,37 @@ public class FighterChar : NetworkBehaviour
 		m_RightSideLine.startColor = Color.red;
 
 		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
-		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask); 	// Ground
-		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);  	// Ceiling
-		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask); 	// Left
-		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);	// Right  
+		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, m_TerrainMask); 	// Ground
+		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, m_TerrainMask);  	// Ceiling
+		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, m_TerrainMask); 	// Left
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask);	// Right  
 
 		if (directionContacts[0]) 
 		{
+			m_GroundNormal = directionContacts[0].normal;
 			groundContact = true;
 			m_GroundLine.endColor = Color.green;
 			m_GroundLine.startColor = Color.green;
-			m_GroundNormal = directionContacts[0].normal;
 			m_Grounded = true;
 			m_JumpBufferG = m_JumpBufferFrameAmount;
+			if(Mathf.Abs(m_GroundNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_GroundNormal.x = 0;
+			if(Mathf.Abs(m_GroundNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_GroundNormal.y = 0;
 		} 
 
 		if (directionContacts[1]) 
 		{
+			m_CeilingNormal = directionContacts[1].normal;
 			ceilingContact = true;
 			m_CeilingLine.endColor = Color.green;
 			m_CeilingLine.startColor = Color.green;
-			m_CeilingNormal = directionContacts[1].normal;
 			m_Ceilinged = true;
 			m_JumpBufferC = m_JumpBufferFrameAmount;
+			if(Mathf.Abs(m_CeilingNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_CeilingNormal.x = 0;
+			if(Mathf.Abs(m_CeilingNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_CeilingNormal.y = 0;
 		} 
 
 
@@ -3183,6 +3250,11 @@ public class FighterChar : NetworkBehaviour
 			m_LeftSideLine.startColor = Color.green;
 			m_LeftWalled = true;
 			m_JumpBufferL = m_JumpBufferFrameAmount;
+			if(Mathf.Abs(m_LeftNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_LeftNormal.x = 0;
+			if(Mathf.Abs(m_LeftNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_LeftNormal.y = 0;
+
 		} 
 
 		if (directionContacts[3])
@@ -3193,6 +3265,10 @@ public class FighterChar : NetworkBehaviour
 			m_RightSideLine.startColor = Color.green;
 			m_RightWalled = true;
 			m_JumpBufferR = m_JumpBufferFrameAmount;
+			if(Mathf.Abs(m_RightNormal.x)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_RightNormal.x = 0;
+			if(Mathf.Abs(m_RightNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
+				m_RightNormal.y = 0;
 		} 
 
 		if(!(m_Grounded&&m_Ceilinged))
@@ -3231,10 +3307,10 @@ public class FighterChar : NetworkBehaviour
 		m_RightSideLine.startColor = Color.red;
 
 		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
-		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask); 	// Ground
-		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, mask);  	// Ceiling
-		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, mask); 	// Left
-		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, mask);	// Right  
+		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, m_TerrainMask); 	// Ground
+		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, m_TerrainMask);  	// Ceiling
+		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, m_TerrainMask); 	// Left
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask);	// Right  
 
 		if (directionContacts[0]) 
 		{
@@ -3791,11 +3867,21 @@ public class FighterChar : NetworkBehaviour
 	//###################################################################################################################################
 	#region PUBLIC FUNCTIONS
 
-	public Quaternion Get2DAngle(Vector2 vector2)
+	public float Get2DAngle(Vector2 vector2)
 	{
 		if(vector2.x<0)
 		{
 			vector2 *= -1;
+		}
+
+		if(Mathf.Abs(vector2.x)<0.00001f)
+		{
+			vector2.x = 0;
+		}
+
+		if(Mathf.Abs(vector2.y)<0.00001f)
+		{
+			vector2.y = 0;
 		}
 
 		Quaternion trueAngle = Quaternion.LookRotation(vector2);
@@ -3807,9 +3893,11 @@ public class FighterChar : NetworkBehaviour
 			if(vector2.x < 0)
 			{
 				trueAngle.eulerAngles = new Vector3(0, 0, 180);
+				//print("Horizontal surface, correcting to upside down");
 			}
 			else if(vector2.x > 0)
 			{
+				//print("Horizontal surface, correcting to normal");
 				trueAngle.eulerAngles = new Vector3(0, 0, 0);
 			}
 		}
@@ -3818,18 +3906,20 @@ public class FighterChar : NetworkBehaviour
 		{
 			if(vector2.y < 0)
 			{
+				//print("Vertical surface, correcting to -90 deg");
 				trueAngle.eulerAngles = new Vector3(0, 0, -90);
 			}
 			else if(vector2.y > 0)
 			{
+				//print("Vertical surface, correcting to 90 deg");
 				trueAngle.eulerAngles = new Vector3(0, 0, 90);
 			}
 		}
-
-		return trueAngle;
+		//print("TrueAngle"+trueAngle+", normal: ("+vector2.x+", "+vector2.y);
+		return trueAngle.eulerAngles.z;
 	}
 
-	public Quaternion Get2DAngle(Vector3 vector3)
+	public float Get2DAngle(Vector3 vector3)
 	{
 		Vector2 vector2 = Vec2(vector3);
 		Quaternion trueAngle = Quaternion.LookRotation(vector2);
@@ -3848,7 +3938,7 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 
-		return trueAngle;
+		return trueAngle.eulerAngles.z;
 	}
 
 	public bool IsVelocityPunching()

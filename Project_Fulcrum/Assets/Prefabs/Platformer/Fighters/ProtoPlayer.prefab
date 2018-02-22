@@ -116,6 +116,7 @@ GameObject:
   - component: {fileID: 212685492061055732}
   - component: {fileID: 95437643845570510}
   - component: {fileID: 114104248409984814}
+  - component: {fileID: 114044858264543024}
   m_Layer: 13
   m_Name: SpriteTransform
   m_TagString: Untagged
@@ -269,7 +270,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 244.78485, y: -66.652016, z: 0}
+  m_LocalPosition: {x: 10.163, y: -6.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4039223620323396}
@@ -709,6 +710,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ed1ae3a3fc0224da2ed324a25c879b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114044858264543024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1320289542274498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ddf95c5712b5be438e4f1f430fbf77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFighter: {fileID: 0}
+  downDirection: {x: 0, y: 0}
+  angle: 0
+  radians: 0
+  embedAmount: 0
 --- !u!114 &114097838302721424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -792,24 +809,6 @@ MonoBehaviour:
   e_EquipSound:
     valueGuid: 88d67c568844934594f3f6da017e7292
     ID: 2146777153
-  theCharacter: {fileID: 0}
-  jumpVolM: 0.2
-  strandJumpVolM: 0.5
-  landVolM: 0.2
-  slamVolM: 0.3
-  crtrVolM: 0.3
-  windVolM: 0.843
-  slideVolM: 0.3
-  stepVolM: 0.3
-  punchVolM: 0.2
-  punchHitVolM: 0.4
-  sfxVolM: 1
-  windMinT: 100
-  windMaxT: 500
-  curWindIntensity: 0
-  destWindIntensity: 0
-  slideMinT: 0
-  slideMaxT: 100
   muteFootsteps: 0
 --- !u!114 &114132217005915654
 MonoBehaviour:
@@ -977,6 +976,8 @@ MonoBehaviour:
   o_ItemHandler: {fileID: 0}
   o_EquippedShoe: {fileID: 0}
   o_SparkThrower: {fileID: 0}
+  o_Anim: {fileID: 0}
+  o_Rigidbody2D: {fileID: 0}
   p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
@@ -992,12 +993,28 @@ MonoBehaviour:
     type: 2}
   p_SparkEffectPrefab: {fileID: 1241283713325446, guid: d6c2c7ebdba9baa4cb85abe4ed6c2319,
     type: 2}
-  mask:
+  m_TerrainMask:
     serializedVersion: 2
     m_Bits: 32768
-  fighterMask:
+  m_FighterMask:
     serializedVersion: 2
     m_Bits: 8192
+  m_GroundFoot: {fileID: 0}
+  m_GroundFootOffset: {x: 0, y: 0}
+  m_GroundFootLength: 0
+  m_CeilingFoot: {fileID: 0}
+  m_CeilingFootOffset: {x: 0, y: 0}
+  m_CeilingFootLength: 0
+  m_LeftSide: {fileID: 0}
+  m_LeftSideOffset: {x: 0, y: 0}
+  m_LeftSideLength: 0
+  m_RightSide: {fileID: 0}
+  m_RightSideOffset: {x: 0, y: 0}
+  m_RightSideLength: 0
+  m_GroundNormal: {x: 0, y: 0}
+  m_CeilingNormal: {x: 0, y: 0}
+  m_LeftNormal: {x: 0, y: 0}
+  m_RightNormal: {x: 0, y: 0}
   m_IGF: 0
   m_CGF: 0.3710251
   m_RemainingVelM: 1
@@ -1092,6 +1109,8 @@ MonoBehaviour:
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
+  v_SpeedForMaxLean: 100
+  v_LeanAngle: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxHealth: 100
@@ -1774,7 +1793,7 @@ SpriteRenderer:
   m_SortingLayerID: -270496717
   m_SortingLayer: -3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d528bfb8c058e254da9720a00527fc15, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2d4efec4ac1bbe844ba7994e60bdef85, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
