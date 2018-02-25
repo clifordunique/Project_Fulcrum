@@ -1204,11 +1204,6 @@ public class FighterChar : NetworkBehaviour
 			
 			o_Anim.SetFloat("AimAngle", stoppingAngle);
 		}
-			
-		if(v_PrimarySurface!=o_Anim.GetInteger("PrimarySurface"))
-		{
-			print("PrimarySurface changed!");
-		}
 
 		o_Anim.SetInteger("PrimarySurface", v_PrimarySurface);
 		o_Anim.SetFloat("Speed", FighterState.Vel.magnitude);
@@ -1245,11 +1240,11 @@ public class FighterChar : NetworkBehaviour
 
 		if(v_PrimarySurface != -1)
 		{
-			if(directionContacts[v_PrimarySurface]!=null)
+			if(directionContacts[v_PrimarySurface])
 			{
 				String terrainType = "Concrete";
 				RaycastHit2D surfaceHit = directionContacts[v_PrimarySurface];
-				if(surfaceHit.collider.sharedMaterial)
+				if(surfaceHit.collider.sharedMaterial!=null)
 				{
 					terrainType = surfaceHit.collider.sharedMaterial.name;
 				}

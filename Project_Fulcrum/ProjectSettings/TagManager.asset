@@ -23,7 +23,7 @@ TagManager:
   - Player
   - 
   - World
-  - 
+  - Minimap
   - Item
   - 
   - Wind
@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: AbsoluteBack
+    uniqueID: 2233928791
+    locked: 0
   - name: Background
     uniqueID: 3963292447
     locked: 0

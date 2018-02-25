@@ -354,6 +354,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
      <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
      <None Include="Assets\Text\LC1.txt" />
+     <None Include="Assets\Shaders\Shaders\MinimapHologramHighlights.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonBasicOutline.shader" />
      <None Include="Assets\Shaders\Shaders\Grass.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfField34.shader" />
