@@ -24,7 +24,7 @@ public class Shoe : MonoBehaviour {
 	[Space(10)]
 	[SerializeField] public float m_MinSpeed;							// The instant starting speed while moving.
 	[SerializeField] public float m_MaxRunSpeed;							// The fastest the fighter can travel along land.
-	[Range(0,2)][SerializeField] public float m_Acceleration;  			// How quickly the fighter accelerates.
+	[Range(0,50)][SerializeField] public float m_StartupAccelRate;  			// How quickly the fighter accelerates.
 	[Space(10)]
 	[SerializeField] public float m_VJumpForce;                  		// Amount of vertical force added when the fighter jumps.
 	[SerializeField] public float m_HJumpForce;  						// Amount of horizontal force added when the fighter jumps.

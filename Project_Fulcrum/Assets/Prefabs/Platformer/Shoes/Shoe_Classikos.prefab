@@ -95,7 +95,7 @@ MonoBehaviour:
   soundType: 0
   m_MinSpeed: 20
   m_MaxRunSpeed: 300
-  m_Acceleration: 1
+  m_StartupAccelRate: 1.8
   m_VJumpForce: 45
   m_HJumpForce: 8
   m_WallVJumpForce: 35

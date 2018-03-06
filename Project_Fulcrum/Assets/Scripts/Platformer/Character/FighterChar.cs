@@ -70,7 +70,9 @@ public class FighterChar : NetworkBehaviour
 	[Tooltip("The fastest the fighter can travel along land.")][SerializeField] 
 	protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
 	[Tooltip("Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)")][Range(0,2)][SerializeField] 
-	protected float m_Acceleration = 0.6f;    		// Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)
+	protected float m_StartupAccelRate = 0.8f;    		// Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)
+	[Tooltip("How fast the fighter accelerates with input.")][Range(0,5)][SerializeField] 
+	protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
 	[Tooltip("Amount of vertical force added when the fighter jumps.")][SerializeField] 
 	protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
 	[Tooltip("Amount of horizontal force added when the fighter jumps.")][SerializeField] 
@@ -89,8 +91,6 @@ public class FighterChar : NetworkBehaviour
 	protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
 	[Tooltip("How fast the fighter decelerates when running too fast.")][Range(0,5)][SerializeField] 
 	protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
-	[Tooltip("How fast the fighter accelerates with input.")][Range(0,5)][SerializeField] 
-	protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
 	[Tooltip("Any impacts at sharper angles than this will start to slow the fighter down.")][Range(1,89)][SerializeField] 
 	protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
 	[Tooltip("Any impacts at sharper angles than this will result in a full halt.")][Range(1,89)][SerializeField] 
@@ -170,6 +170,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected GameObject o_SparkThrower;      	// Reference to the player's currently equipped shoe.
 	[SerializeField][ReadOnlyAttribute] protected Animator o_Anim;           		// Reference to the character's animator component.
 	[SerializeField][ReadOnlyAttribute] protected Rigidbody2D o_Rigidbody2D;		// Reference to the character's physics body.
+	[SerializeField][ReadOnlyAttribute] protected Transform o_DebugAngleDisplay;	// Reference to a transform of an angle display child transform of the player.
+
 	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
@@ -239,7 +241,6 @@ public class FighterChar : NetworkBehaviour
 	[Space(10)]
 	[SerializeField][ReadOnlyAttribute]protected bool m_SurfaceCling;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Airborne;
-	[SerializeField][ReadOnlyAttribute]protected bool m_Landing;
 	[SerializeField][ReadOnlyAttribute]protected bool m_Kneeling;
 	[SerializeField][ReadOnlyAttribute]protected bool m_WorldImpact;
 	protected Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
@@ -249,7 +250,7 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region FIGHTERINPUT
 	[Header("Input:")]
-	[SerializeField][ReadOnlyAttribute] protected FighterState FighterState;// Struct holding all networked fighter info.
+	[SerializeField] protected FighterState FighterState;// Struct holding all networked fighter info.
 	protected int CtrlH; 													// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	protected int CtrlV; 													// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
 	protected bool facingDirection; 										// True means right, false means left.
@@ -275,7 +276,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
-	[SerializeField][ReadOnlyAttribute] public bool v_PunchHitting;			// Greater than 0 when the punchhitting animation is to be played.
+	[SerializeField][ReadOnlyAttribute] public bool v_TriggerAtkHit;		// Set to true to activate the attack hit animation.
+	[SerializeField][ReadOnlyAttribute] public bool v_TriggerRollOut;		// Set to true to activate the guard roll animation.
+
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
@@ -284,8 +287,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall.
 	[SerializeField][ReadOnlyAttribute]protected bool v_WallSliding;		// Whether or not the player is wallsliding.
 	[SerializeField][ReadOnlyAttribute]protected bool v_Sliding;			// Whether or not the player is sliding.
-	[SerializeField][ReadOnlyAttribute]protected string[] v_TerrainType;			// Whether or not the player is sliding.
-
+	[SerializeField][ReadOnlyAttribute]protected string[] v_TerrainType;	// Type of terrain the player is stepping on. Used for audio like footsteps.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -385,6 +387,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
+		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 
 		//v_TerrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
@@ -396,6 +399,7 @@ public class FighterChar : NetworkBehaviour
 
 		o_VelocityPunch = GetComponentInChildren<VelocityPunch>();
 		o_SpriteTransform = transform.Find("SpriteTransform");
+		o_DebugAngleDisplay = transform.Find("DebugAngleDisplay");
 		o_DustSpawnTransform = transform.Find("SpriteTransform/DustEffectTransform");
 		o_Anim = o_SpriteTransform.GetComponentInChildren<Animator>();
 		o_SpriteRenderer = o_SpriteTransform.GetComponent<SpriteRenderer>();
@@ -415,6 +419,7 @@ public class FighterChar : NetworkBehaviour
 
 		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
 		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+
 
 
 		m_GroundFoot = transform.Find("MidFoot");
@@ -492,7 +497,7 @@ public class FighterChar : NetworkBehaviour
 
 		this.m_MinSpeed = shoe.m_MinSpeed;					
 		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
-		this.m_Acceleration = shoe.m_Acceleration;  			
+		this.m_StartupAccelRate = shoe.m_StartupAccelRate;  			
 
 		this.m_VJumpForce = shoe.m_VJumpForce;               
 		this.m_HJumpForce = shoe.m_HJumpForce;  				
@@ -573,7 +578,7 @@ public class FighterChar : NetworkBehaviour
 
 		newAirPunch.GetComponentInChildren<AirPunch>().aimDirection = aimDirection;
 		newAirPunch.GetComponentInChildren<AirPunch>().punchThrower = this;
-		v_PunchHitting = true;
+		v_TriggerAtkHit = true;
 		o_FighterAudio.PunchSound();
 	}
 
@@ -688,7 +693,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		else if(m_LeftWalled)
 		{//Wallsliding!
-			print("Walltraction!");
+			//print("Walltraction!");
 			WallTraction(CtrlH, CtrlV, m_LeftNormal);
 			v_PrimarySurface = 2;
 		}
@@ -880,7 +885,6 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdateProcessInput() //FUPI
 	{
 		m_WorldImpact = false;
-		m_Landing = false;
 		m_Kneeling = false;
 
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
@@ -1026,9 +1030,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdateAnimation() //FUA
 	{
-		//v_WallSliding = false;
 		v_Sliding = false;
-		o_Anim.SetBool("Walled", false);
 		o_Anim.SetBool("WallSlide", false);
 		o_Anim.SetBool("Crouch", false);
 
@@ -1068,13 +1070,13 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		//
-		//Sprite transform rotation code
+		//Sprite rotation code - SRC
 		//
 		float surfaceLeanM = GetSpeed()/v_SpeedForMaxLean; // Player leans more the faster they're going. At max speed, the player model rotates so the ground is directly below them.
 		surfaceLeanM = (surfaceLeanM<1) ? surfaceLeanM : 1; // If greater than 1, clamp to 1.
 
 		float spriteAngle;
-
+		float testAngle = 0;
 
 		if(v_PrimarySurface == 0)
 		{
@@ -1098,16 +1100,73 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			spriteAngle = 0;
-//			Quaternion spriteAngle = Get2DAngle(GetVelocity());
-//			o_SpriteTransform.localRotation = spriteAngle;
+			spriteAngle = Get2DAngle(GetVelocity(), 0);
+			testAngle = spriteAngle;
+
+			if(GetVelocity().y<0)
+			{
+				if(spriteAngle>0)
+				{
+					spriteAngle = -180+spriteAngle;
+				}
+				else
+				{
+					spriteAngle = 180+spriteAngle;
+				}
+				spriteAngle *= 0.5f;
+			}
+
+
+			//print("spriteAngle: "+spriteAngle);
+			float angleScaling = 1;
+
+//			angleScaling = GetVelocity().y/100;
+//
+//			angleScaling = (angleScaling>1) ? 1 : angleScaling;
+//			angleScaling = (angleScaling<-1) ? -1 : angleScaling;
+
+		//	angleScaling = GetVelocity().normalized.y;
+
+			angleScaling = Mathf.Abs(GetVelocity().y/50);//*Mathf.Abs(GetVelocity().y/20); // Parabola approaching zero at y = 0, and extending to positive infinity on either side.
+
+			angleScaling = (angleScaling>1) ? 1 : angleScaling; // Clamp at 1.
+
+//			float horizontalScaling = (Mathf.Abs(GetVelocity().x)+50)/200;
+//			if(GetVelocity().x<50)
+//			{
+//				horizontalScaling = Mathf.Abs(GetVelocity().x)/50;
+//			}
+//
+//			horizontalScaling = (horizontalScaling>1) ? 1 : horizontalScaling; // Clamp at 1.
+//
+//			angleScaling *= horizontalScaling;
+//			if(angleScaling<0)
+//			{
+//				spriteAngle = -spriteAngle
+//			}
+			//angleScaling = (angleScaling<0) ? angleScaling*0.5f : angleScaling;
+
+//			if(GetVelocity().x>GetVelocity().y)
+//			{
+//				
+//			}
+
+			surfaceLeanM = angleScaling;
+
+			if(Mathf.Abs(GetVelocity().x)>100)
+			{
+				surfaceLeanM = 1; 
+				spriteAngle = Get2DAngle(GetVelocity(), 0);
+			}
+
+			//print("testAngle: "+testAngle+", finalangle: "+(surfaceLeanM*spriteAngle));
 		}
 
 		if(o_Anim.GetBool("Crouch"))
 			surfaceLeanM = 1;
 
-		v_LeanAngle = Mathf.Lerp(v_LeanAngle, spriteAngle, Time.fixedDeltaTime*100);
-		v_LeanAngle = spriteAngle*surfaceLeanM;
+		//v_LeanAngle = Mathf.Lerp(v_LeanAngle, spriteAngle, Time.fixedDeltaTime*100);
+		v_LeanAngle = spriteAngle*surfaceLeanM; //remove this and enable lerp.
 		Quaternion finalAngle = new Quaternion();
 		finalAngle.eulerAngles = new Vector3(0,0, v_LeanAngle);
 		o_SpriteTransform.localRotation = finalAngle;
@@ -1144,6 +1203,20 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Debug collision visualization code.
 		//
+		if( isLocalPlayer )
+		{
+			if( FighterState.DevMode )
+			{
+				o_DebugAngleDisplay.gameObject.SetActive(true);
+				Quaternion debugQuaternion = new Quaternion();
+				debugQuaternion.eulerAngles = new Vector3(0, 0, testAngle);
+				o_DebugAngleDisplay.localRotation = debugQuaternion;
+			}
+			else
+			{
+				o_DebugAngleDisplay.gameObject.SetActive(false);
+			}
+		}
 		Vector3[] debugLineVector = new Vector3[3];
 
 		debugLineVector[0].x = -m_DistanceTravelled.x;
@@ -1215,16 +1288,16 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
 
-		if(v_PunchHitting)
+		if(v_TriggerAtkHit)
 		{
-			v_PunchHitting = false;
-			o_Anim.SetBool("PunchHit", true);
+			v_TriggerAtkHit = false;
+			o_Anim.SetBool("TriggerPunchHit", true);
 		}
-		else
+		if(v_TriggerRollOut)
 		{
-			o_Anim.SetBool("PunchHit", false);
+			v_TriggerRollOut = false;
+			o_Anim.SetBool("TriggerRollOut", true);
 		}
-
 
 		float multiplier = 1; // Animation playspeed multiplier that increases with higher velocity
 
@@ -1288,7 +1361,6 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedWallAnimation()
 	{
-		o_Anim.SetBool("Walled", true);
 		if(v_WallSliding)
 		{
 			o_Anim.SetBool("WallSlide", true);
@@ -1924,30 +1996,48 @@ public class FighterChar : NetworkBehaviour
 				}
 				else if(rawSpeed < 0.001f)
 				{
-					if(slopeMultiplier<0.5)
-					{
-						FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+//					if(slopeMultiplier<0.5)
+//					{
+//						FighterState.Vel = new Vector2((m_Acceleration)*horizontalInput*(1-slopeMultiplier), 0);
+//					}
+//					else
+//					{
+//						if(d_SendTractionMessages){print("Too steep!");}
+//					}
+//					if(d_SendTractionMessages){print("Starting motion. Adding " + m_Acceleration);}
+					if(d_SendTractionMessages){print("HardAccel-> " + rawSpeed);}
+					if(FighterState.Vel.y > 0)
+					{ 	// If climbing, recieve uphill movement penalty.
+						FighterState.Vel = new Vector2(m_StartupAccelRate*(1-slopeMultiplier)*horizontalInput, 0);
 					}
 					else
 					{
-						if(d_SendTractionMessages){print("Too steep!");}
+						FighterState.Vel = new Vector2(m_StartupAccelRate*horizontalInput, 0);
 					}
-					if(d_SendTractionMessages){print("Starting motion. Adding " + m_Acceleration);}
 				}
 				else
 				{
-					//print("ExpAccel-> " + rawSpeed);
-					float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
-					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-
-					float addedSpeed = curveMultiplier*(m_Acceleration);
+//					//print("ExpAccel-> " + rawSpeed);
+//					float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
+//					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
+//
+//					float addedSpeed = curveMultiplier*(m_Acceleration);
+//					if(FighterState.Vel.y > 0)
+//					{ // If climbing, recieve uphill movement penalty.
+//						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
+//					}
+//					if(d_SendTractionMessages){print("Addedspeed:"+addedSpeed);}
+//					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
+//					if(d_SendTractionMessages){print("FighterState.Vel:"+FighterState.Vel);}
+					if(d_SendTractionMessages){print("HardAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
-					{ // If climbing, recieve uphill movement penalty.
-						addedSpeed = curveMultiplier*(m_Acceleration)*(1-slopeMultiplier);
+					{ 	// If climbing, recieve uphill movement penalty.
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_StartupAccelRate*(1-slopeMultiplier));
 					}
-					if(d_SendTractionMessages){print("Addedspeed:"+addedSpeed);}
-					FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed+addedSpeed);
-					if(d_SendTractionMessages){print("FighterState.Vel:"+FighterState.Vel);}
+					else
+					{
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_StartupAccelRate);
+					}
 				}
 			}
 			else
@@ -1965,21 +2055,9 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 		else if((horizontalInput > 0 && FighterState.Vel.x < 0) || (horizontalInput < 0 && FighterState.Vel.x > 0))
-		{//if pressing button opposite of move direction, slow to zero exponentially.
-			if(rawSpeed > m_TractionChangeT )
-			{
-				if(d_SendTractionMessages){print("LinDecel");}
-				FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
-			}
-			else
-			{
-				if(d_SendTractionMessages){print("Decelerating");}
-				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
-				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
-				float addedSpeed = curveMultiplier*(m_Acceleration);
-				FighterState.Vel = (FighterState.Vel.normalized)*(rawSpeed-2*addedSpeed);
-				if(d_SendTractionMessages){print("Deceleration result:"+(rawSpeed-2*addedSpeed));}
-			}
+		{//if pressing button opposite of move direction, slow to zero quickly.
+			if(d_SendTractionMessages){print("LinDecel");}
+			FighterState.Vel = ChangeSpeedLinear (FighterState.Vel, -m_LinearStopRate);
 
 			//float modifier = Mathf.Abs(FighterState.Vel.x/FighterState.Vel.y);
 			//print("SLOPE MODIFIER: " + modifier);
@@ -2880,7 +2958,7 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Visual/Audio effects
 		//
-		v_PunchHitting = true;
+		v_TriggerAtkHit = true;
 		o_FighterAudio.PunchHitSound();
 		if((this.IsPlayer() || opponent.IsPlayer())&&(impactDamageM>v_PunchStrengthSlowmoT))
 		{
@@ -2999,7 +3077,7 @@ public class FighterChar : NetworkBehaviour
 			print("Fighter slam successful");
 			Slam(combinedSpeed);
 		}
-		v_PunchHitting = true;
+		v_TriggerAtkHit = true;
 		o_FighterAudio.PunchHitSound();
 
 		//
@@ -3102,10 +3180,10 @@ public class FighterChar : NetworkBehaviour
 		//
 		// Special effects
 		//
-		opponent.v_PunchHitting = true;
+		opponent.v_TriggerAtkHit = true;
 		opponent.o_FighterAudio.PunchHitSound();
 
-		v_PunchHitting = true;
+		v_TriggerAtkHit = true;
 		o_FighterAudio.PunchHitSound();
 
 
@@ -3967,6 +4045,8 @@ public class FighterChar : NetworkBehaviour
 			}
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
+			m_Grounded = false; // Watch this.
+			v_PrimarySurface = -1;
 		}
 		//else if(m_LeftWalled)m_JumpBufferG>0
 		else if(m_JumpBufferL>0)
@@ -3990,6 +4070,7 @@ public class FighterChar : NetworkBehaviour
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
 			m_LeftWalled = false;
+			v_PrimarySurface = -1;
 		}
 		//else if(m_RightWalled)
 		else if(m_JumpBufferR>0)
@@ -4014,6 +4095,7 @@ public class FighterChar : NetworkBehaviour
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
 			m_RightWalled = false;
+			v_PrimarySurface = -1;
 		}
 		//else if(m_Ceilinged)
 		else if(m_JumpBufferC>0)
@@ -4028,6 +4110,7 @@ public class FighterChar : NetworkBehaviour
 			}
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
+			v_PrimarySurface = -1;
 			m_Ceilinged = false;
 		}
 		else
@@ -4150,6 +4233,8 @@ public class FighterChar : NetworkBehaviour
 		angle = degOffset-angle;
 		if(angle>180)
 			angle = -360+angle;
+		if(angle<-180)
+			angle = 360+angle;
 		return angle;
 	}
 
@@ -4413,5 +4498,5 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public Vector2 MouseWorldPos;				// Mouse position in world coordinates.
 	[SerializeField][ReadOnlyAttribute]public Vector2 PlayerMouseVector;			// Vector pointing from the player to their mouse position.
 	[SerializeField][ReadOnlyAttribute]public Vector2 Vel;							//Current (x,y) velocity.
-	[SerializeField][ReadOnlyAttribute]public Vector2 FinalPos;						//The final position of the character at the end of the physics frame.
+	[SerializeField]public Vector2 FinalPos;						//The final position of the character at the end of the physics frame.
 }

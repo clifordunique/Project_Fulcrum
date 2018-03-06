@@ -70,6 +70,8 @@ public class Player : FighterChar
 	// DEBUGGING VARIABLES
 	//##########################################################################################################################################################################
 	#region DEBUGGING
+	[SerializeField]private float d_LastFrameSpeed;
+	[SerializeField]private float d_DeltaV;
 	#endregion
 	//############################################################################################################################################################################################################
 	// VISUAL&SOUND VARIABLES
@@ -227,7 +229,7 @@ public class Player : FighterChar
 
 		this.m_MinSpeed = shoe.m_MinSpeed;					
 		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
-		this.m_Acceleration = shoe.m_Acceleration;  			
+		this.m_StartupAccelRate = shoe.m_StartupAccelRate;  			
 
 		this.m_VJumpForce = shoe.m_VJumpForce;               
 		this.m_HJumpForce = shoe.m_HJumpForce;  				
@@ -342,7 +344,6 @@ public class Player : FighterChar
 	{
 		m_WorldImpact = false; //Placeholder??
 		FighterState.Stance = 0;
-		m_Landing = false;
 		m_Kneeling = false;
 
 		if(FighterState.RightClickPress&&(FighterState.DevMode))
@@ -360,11 +361,10 @@ public class Player : FighterChar
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		if(FighterState.LeftClickPress&&(FighterState.DevMode||d_ClickToKnockFighter))
+		if(FighterState.LeftClickHold&&(FighterState.DevMode||d_ClickToKnockFighter))
 		{
-			FighterState.Vel += FighterState.PlayerMouseVector*10;
+			FighterState.Vel += FighterState.PlayerMouseVector*20*Time.fixedDeltaTime;
 			//print("Knocking the fighter.");
-			FighterState.LeftClickPress = false;
 		}	
 
 		// Automatic input options.
@@ -483,7 +483,7 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey11)
 		{
-			v_PunchHitting = true;
+			v_TriggerAtkHit = true;
 			FighterState.DevKey11 = false;
 		}
 		if(FighterState.DevKey12)
@@ -787,7 +787,7 @@ public class Player : FighterChar
 		{
 			if(IsVelocityPunching())
 			{
-				v_PunchHitting = true;
+				v_TriggerAtkHit = true;
 			}
 			else
 			{
@@ -1029,6 +1029,7 @@ public class Player : FighterChar
 
 	protected void FixedUpdatePlayerAnimation() // FUPA
 	{
+		
 	}
 
 	protected override void ZonPulse()
@@ -1079,9 +1080,14 @@ public class Player : FighterChar
 
 		o_Healthbar.SetCurHealth(FighterState.CurHealth);
 
+		d_DeltaV = Math.Abs(d_LastFrameSpeed-FighterState.Vel.magnitude);
+		d_LastFrameSpeed = FighterState.Vel.magnitude;
+
+
 		if(o_Speedometer != null)
 		{
 			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
+			//o_Speedometer.text = ""+Math.Round(d_DeltaV,0);
 		}
 		if(o_EnergyCounter!=null)
 		{

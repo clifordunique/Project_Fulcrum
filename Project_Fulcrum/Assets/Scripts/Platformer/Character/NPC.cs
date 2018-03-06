@@ -17,7 +17,7 @@ public class NPC : FighterChar {
 	[SerializeField][ReadOnlyAttribute]private FighterChar enemyTarget; 	// Reference to the enemy combatant the NPC wants to fight.
 	[SerializeField][ReadOnlyAttribute]private float distanceToTarget; 		// Distance from enemy target.
 	[SerializeField][ReadOnlyAttribute]private float attackRange = 1f;		// Range at which the NPC will stop running and punch.
-	[SerializeField][ReadOnlyAttribute]private Vector2 goalLocation;		// Location that the NPC attempts to reach while moving.
+	[SerializeField][ReadOnlyAttribute]private Vector2 goalLocation;		// Location that the NPC attempts to run at when in simple mode. Does not use pathfinding.
 	[SerializeField][ReadOnlyAttribute]private int DecisionState;			// Defines what action the NPC is currently trying to do.
 	[SerializeField]private float PunchDelay = 1;
 	[SerializeField]private float PunchDelayVariance = 0.3f;
@@ -25,6 +25,28 @@ public class NPC : FighterChar {
 
 	[SerializeField]private bool d_Think; 									// When false, AI brain is shut down. Fighter will just stand there.
 	[SerializeField]public bool d_aiDebug;									// When true, enables ai debug messaging.
+	[Space(10)]
+	[Header("NAV MESH:")]
+	[SerializeField][ReadOnlyAttribute] private NavMaster n_NavMaster; // Global navmesh handler for the level.
+	[SerializeField][ReadOnlyAttribute] private int n_NavState = 0; // Used for nav movement state machine.
+	[SerializeField][ReadOnlyAttribute] private float n_TraversalTime; // Time the NPC has been attempting a traversal.
+	[SerializeField][ReadOnlyAttribute] private bool n_AtExit; // True when the NPC has a destination and is at the exit point leading to that destination.
+	[SerializeField][ReadOnlyAttribute] private bool n_HasJumped; // True once the NPC has expended its one jump to reach its destination.
+	[SerializeField][ReadOnlyAttribute] private float n_WindUpGoal = -1; // Goal location on the current surface to get enough runway to make the jump.
+
+	[SerializeField][ReadOnlyAttribute] private float n_TraversalTimer = 0; // Time the NPC has been attempting a traversal. Once it exceeds its maximum, the traversal is deemed a failure.
+
+
+	[SerializeField][ReadOnlyAttribute] private NavPath n_CurrentPath; // Currentpath is a chain of navconnections which lead to the NPC's desired final destination.
+	[SerializeField][ReadOnlyAttribute] private int n_PathProgress; // Indicates which connection of the current path the NPC is on. 
+	[SerializeField][ReadOnlyAttribute] private NavConnection n_ActiveConnection; // Connection the NPC is traversing.
+	[SerializeField][ReadOnlyAttribute] private NavSurface[] n_SurfaceList;
+	[SerializeField][ReadOnlyAttribute] private NavSurface n_CurrentSurf; // Surface the AI is standing on.
+	[SerializeField][ReadOnlyAttribute] private NavSurface n_DestSurf;	// Surface the AI is trying to reach.
+	[SerializeField] private int n_DestSurfID = -1; // ID of the destination surface.
+	[SerializeField][ReadOnlyAttribute] private float n_SurfLineDist; // Distance from the current surface.
+	[SerializeField] private float n_MaxSurfLineDist = 100; // Max distance from the current surface. Outside of this, it is considered off the surface.
+
 
 	//########################################################################################################################################
 	// CORE FUNCTIONS
@@ -34,6 +56,8 @@ public class NPC : FighterChar {
 	protected void Start () 
 	{
 		this.FighterState.FinalPos = this.transform.position;
+		n_NavMaster = GameObject.Find("NavMaster").GetComponent<NavMaster>();
+		n_SurfaceList = n_NavMaster.GetSurfaces();
 	}
 
 	protected override void Awake()
@@ -68,8 +92,6 @@ public class NPC : FighterChar {
 
 	protected void FixedUpdateAI()
 	{
-		if(!d_Think){return;}
-
 		#region Knowledge Gathering
 		if(PunchCooldown > 0)
 		{
@@ -105,6 +127,12 @@ public class NPC : FighterChar {
 		{
 			DecisionState = -1; // Idle
 		}
+
+		if(!d_Think)
+		{
+			DecisionState = 3; // Mindlessly running to a destination which is only set manually.
+		}
+
 		#endregion
 
 		#region Decision Making
@@ -174,22 +202,16 @@ public class NPC : FighterChar {
 				this.FighterState.RightKeyHold = false;
 				this.FighterState.LeftKeyHold = false;
 
-//				if( (facingDirection) && (goalLocation.x > 0) )
-//				{
-//					this.FighterState.RightKeyHold = false;
-//					this.FighterState.LeftKeyHold = true;
-//				}
-//				if( (!facingDirection) && (goalLocation.x < 0) )
-//				{
-//					this.FighterState.RightKeyHold = true;
-//					this.FighterState.LeftKeyHold = false;
-//				}
-					
 				if(PunchCooldown <= 0)
 				{
 					this.FighterState.LeftClickRelease = true;
 					PunchCooldown = PunchDelay + UnityEngine.Random.Range(-PunchDelayVariance,PunchDelayVariance);
 				}
+				break;
+			}
+		case 3: // Traversing NavMesh
+			{
+				NavMeshMovement();
 				break;
 			}
 		default: // Idle
@@ -198,6 +220,464 @@ public class NPC : FighterChar {
 			}
 		}
 		#endregion
+
+		//print("END OF AI FRAME #############################################################################################");
+	}
+
+	private void NavMeshMovement()
+	{
+		#region Nav Knowledge Gathering
+
+		n_NavState = 0;
+
+		if(n_CurrentSurf==null) // If  currentsurf = null, try and find a currentsurface.
+		{
+			for(int i = 0; i<n_SurfaceList.Length; i++)
+			{
+				if( n_SurfaceList[i].DistFromLine(this.m_GroundFoot.position)<=n_MaxSurfLineDist )
+				{
+					//print("CurrentSurf set to NavSurface["+i+"], dist: "+n_SurfaceList[i].DistFromLine(this.m_GroundFoot.position));
+					n_CurrentSurf = n_SurfaceList[i];
+					break;
+				}
+				else
+				{
+					//print("distance to NavSurface["+i+"] was too far. Dist= "+n_SurfaceList[i].DistFromLine(this.m_GroundFoot.position));
+				}
+			}
+		}
+		else // if there is a currentsurface, check if it's too far now.
+		{
+			if(n_CurrentSurf.DistFromLine(this.m_GroundFoot.position)>n_MaxSurfLineDist)
+			{
+				n_CurrentSurf=null; // If current surface too distant, reset it and skip this ai frame.
+				return;
+			}
+		}
+
+//		n_DestSurfID = Random.Range(0, n_SurfaceList.Length-1);
+		if(n_CurrentSurf!=null)
+		{
+			if(n_DestSurf==null)
+			{
+				n_ActiveConnection=null;
+				n_CurrentPath=null;
+
+				if( n_DestSurfID!=-1 && n_DestSurfID<n_SurfaceList.Length)
+				{
+					if(n_DestSurfID != n_CurrentSurf.id)
+					{
+						n_DestSurf = n_SurfaceList[n_DestSurfID];
+						print("n_DestSurf set to NavSurface["+n_DestSurfID+"]");
+					}
+					else
+					{
+						n_DestSurfID = -1;
+					}
+				}
+				else 
+				{
+					n_NavState = 0;
+				}
+			}
+			else if(n_DestSurf.id!=n_DestSurfID)
+			{
+				n_ActiveConnection=null;
+				n_CurrentPath=null;
+
+				if(n_DestSurfID!=-1)
+				{
+					if( n_DestSurfID!=-1 && n_DestSurfID<n_SurfaceList.Length-1 )
+					{
+						n_DestSurf = n_SurfaceList[n_DestSurfID];
+						print("n_DestSurf set to NavSurface["+n_DestSurfID+"]");
+					}
+					else
+					{
+						n_DestSurfID = -1;
+					}
+				}
+				else
+				{
+					n_NavState = 0;
+					n_DestSurf = null;
+				}
+			}
+
+			if(n_DestSurf!=null)
+			{
+				if(n_CurrentPath==null)
+				{
+					NavPath[] pathChoices = n_NavMaster.GetPathList(n_CurrentSurf.id, n_DestSurf.id);	
+					if(pathChoices!=null)
+					{
+						n_CurrentPath = pathChoices[0];
+						n_PathProgress = 0;
+					}
+					else
+					{
+						print("Pathchoices is null!");
+						n_DestSurfID = -1;
+					}
+				}
+				if(n_CurrentPath!=null)
+				{
+					n_ActiveConnection = n_CurrentPath.edges[n_PathProgress];
+					if(!n_AtExit)
+					{
+						n_NavState = 1;
+					}
+					else
+					{
+						n_NavState = 2;
+					}
+				}
+			}
+		}
+		#endregion
+		#region Nav Decision Making
+
+		ClearAllInput(); // Ensure that keys are polled every ai frame and do not remain on when not being held.
+
+		switch(n_NavState)
+		{
+			case 0: //Idle - no destination
+				{
+					//print("Idle.");
+					if(FighterState.Vel.x > 5f) // Slow to a halt since there is no goal.
+					{
+						//print("Stopping right movement.");
+						FighterState.LeftKeyHold = true;
+					}
+					else if(FighterState.Vel.x < -5f) // Slow to a halt since there is no goal.
+					{
+						//print("Stopping left movement.");
+						FighterState.RightKeyHold = true; 
+					}
+					break;	
+				}
+			case 1: // Moving to exit point.
+				{
+					if(n_WindUpGoal > 0)
+					{
+						NavGotoWindupPoint();
+					}
+					else
+					{
+						NavGotoExitPoint(n_ActiveConnection);
+					}
+
+					break;	
+				}
+			case 2: // Traversing.
+				{
+					NavTraverse(n_ActiveConnection);
+					break;	
+				}
+			case 3: // No current surface - orphaned from the nav mesh.
+				{
+					break;
+				}
+			case 4: // Windup - Not enough speed to make jump, backing up to take a running start.
+				{
+					break;
+				}
+		}
+		#endregion
+
+
+	}
+
+	private void EndTraverse(bool successful)
+	{
+		if(successful)
+		{
+			n_CurrentSurf = n_ActiveConnection.dest;
+			//n_DestSurf = null;
+
+			//test code
+
+			//end test code
+			print("Arrived at destination!!");
+			n_PathProgress++;
+			if(n_PathProgress>n_CurrentPath.edges.Length-1)
+			{
+				print("Path traversal completed :)");
+				n_CurrentPath = null;
+				n_DestSurfID = -1;
+			}
+		}
+		else
+		{
+			n_CurrentPath = null;
+			n_CurrentSurf = null;
+			n_PathProgress = 0;
+		}
+		n_TraversalTimer = 0;
+		n_AtExit = false;
+		n_ActiveConnection = null;
+		n_HasJumped = false;
+	}
+
+	private void NavGotoWindupPoint()
+	{
+		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
+		float distToWindupPoint = n_WindUpGoal-linPos;
+
+		if(Mathf.Abs(distToWindupPoint)>0.5f)
+		{
+			if( distToWindupPoint<0 )
+			{
+				//print("Moving left to exit point at: "+distToWindupPoint);
+				FighterState.LeftKeyHold = true;
+			}
+			else
+			{
+				//print("Moving right to exit point at: "+distToWindupPoint);
+				FighterState.RightKeyHold = true;
+			}
+		}
+		else
+		{
+			print("At windup point!");
+			n_WindUpGoal = -1;
+		}
+	}
+
+	private void NavGotoExitPoint(NavConnection navCon)
+	{
+		print("NavGotoExitPoint");
+		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
+		float distToExitPoint = navCon.exitPosition-linPos;
+
+		if(n_ActiveConnection.exitVel.x<=0) // If required exit velocity is negative.
+		{
+			if(FighterState.Vel.x<0) // if x velocity is also negative
+			{
+				if(FighterState.Vel.x<navCon.minExitVel) // If going too fast.
+				{
+					 // Do nothing! You will slow down over time. Replace this with a deceleration distance equation in the future for better results.
+				}
+				else
+				{
+					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.maxExitVel), FighterState.Vel.x);
+					print("Distance needed: "+distanceNeeded+", distToExitPoint: "+Mathf.Abs(distToExitPoint));
+
+					if(distanceNeeded>Mathf.Abs(distToExitPoint))
+					{
+						print("NOT ENOUGH RUNWAY!");
+						n_WindUpGoal = navCon.exitPosition+distanceNeeded;
+					}
+					else
+					{
+						FighterState.LeftKeyHold = true;
+					}
+				}
+
+			}
+			else if(FighterState.Vel.x>0) // if x velocity is positive, away from the exit point
+			{
+				FighterState.LeftKeyHold = true;
+				float distanceForStop = NavGetWindupDist(0, FighterState.Vel.x);
+				print("DistanceForStop: "+distanceForStop);
+			}
+			else
+			{
+				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.maxExitVel));
+				print("Distance needed: "+distanceNeeded+", distToExitPoint: "+Mathf.Abs(distToExitPoint));
+				if(distanceNeeded>Mathf.Abs(distToExitPoint))
+				{
+					print("Stationary: NOT ENOUGH RUNWAY!");
+					n_WindUpGoal = navCon.exitPosition+distanceNeeded;
+				}
+				else
+				{
+					FighterState.LeftKeyHold = true;
+				}
+			}
+		}
+		else if(n_ActiveConnection.exitVel.x>0) // If velocity is positive.
+		{
+			if(FighterState.Vel.x>0) // if x velocity is also positive
+			{
+				if(FighterState.Vel.x>n_ActiveConnection.maxExitVel) // If going too fast.
+				{
+					// Do nothing! You will slow down over time. Replace this with a deceleration distance equation in the future for better results.
+				}
+				else if(FighterState.Vel.x<0) // If not going fast enough, accelerate toward exitposition. If not enough room, set windup goal.
+				{
+					FighterState.RightKeyHold = true;
+					float distanceForStop = NavGetWindupDist(0, FighterState.Vel.x);
+					print("DistanceForStop: "+distanceForStop);
+				}
+				else
+				{
+					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), FighterState.Vel.x);
+					print("Distance needed: "+distanceNeeded+", distToExitPoint: "+Mathf.Abs(distToExitPoint));
+
+					if(distanceNeeded>Mathf.Abs(distToExitPoint))
+					{
+						print("NOT ENOUGH RUNWAY!");
+						n_WindUpGoal = navCon.exitPosition-distanceNeeded;
+					}
+					else
+					{
+						FighterState.RightKeyHold = true;
+					}
+				}
+
+			}
+			else if(FighterState.Vel.x>0) // if x velocity is negative, away from the exit point
+			{
+				FighterState.RightKeyHold = true;
+//				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.exitVel.x-n_ActiveConnection.exitVelRange));
+//				float distanceForStop = NavGetWindupDist(0, FighterState.Vel.x);
+//				print("DistanceForStop: "+distanceForStop);
+
+			}
+			else // x velocity stationary
+			{
+				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.exitVel.x-n_ActiveConnection.exitVelRange));
+				print("Distance needed: "+distanceNeeded+", distToExitPoint: "+Mathf.Abs(distToExitPoint));
+				if(distanceNeeded>Mathf.Abs(distToExitPoint))
+				{
+					print("Stationary: NOT ENOUGH RUNWAY!");
+					n_WindUpGoal = navCon.exitPosition-distanceNeeded;
+				}
+				else
+				{
+					FighterState.RightKeyHold = true;
+				}
+			}
+		}
+
+		if( Mathf.Abs(distToExitPoint)<=navCon.exitPositionRange )
+		{
+			print("At exit point.");
+			n_AtExit = true;
+		}
+	}
+
+	private void NavTraverse(NavConnection navCon)
+	{
+		n_TraversalTimer += Time.fixedDeltaTime;
+
+		if(n_TraversalTimer>navCon.traversaltimeout)
+		{
+			print("Traversal timeout! Recalculating...");
+			EndTraverse(false);
+		}
+		if(navCon==null)
+		{
+			print("navCon NULL! ARGH");
+		}
+
+		if(n_DestSurf==null)
+		{
+			print("n_destsurf NULL!");
+		}
+
+		Vector2 directionVector = navCon.dest.LinToWorldPos(navCon.destPosition)-this.GetFootPosition();
+		if( directionVector.magnitude<=0.5f )
+		{
+			//print("n_DestSurf.LinToWorldPos(navCon.destPosition) = "+n_DestSurf.LinToWorldPos(navCon.destPosition));
+			//print("this.GetFootPosition() = "+this.GetFootPosition());
+			EndTraverse(true);
+			return;
+		}
+
+
+		switch(navCon.traverseType)
+		{
+		case 0: // Walking
+			{
+				if( directionVector.x < 0 )
+				{
+					this.FighterState.RightKeyHold = false;
+					this.FighterState.LeftKeyHold = true;
+				}
+				else
+				{
+					this.FighterState.RightKeyHold = true;
+					this.FighterState.LeftKeyHold = false;
+				}
+				break;	
+			}
+		case 1: // Jumping
+			{
+				if( !n_HasJumped )
+				{
+					this.FighterState.JumpKeyPress = true;
+					n_HasJumped = true;
+				}
+				if( directionVector.x < 0 )
+				{
+					this.FighterState.RightKeyHold = false;
+					this.FighterState.LeftKeyHold = true;
+				}
+				else
+				{
+					this.FighterState.RightKeyHold = true;
+					this.FighterState.LeftKeyHold = false;
+				}
+				break;	
+			}
+		}
+	}
+
+	public float NavGetWindupDist(float reqVel) // reqVel is the required velocity. The distance returned is how much runway the NPC needs to reach that speed.
+	{
+		float distance;
+
+		float linDist = ((reqVel*reqVel)/(m_LinearAccelRate/Time.fixedDeltaTime));
+		//print("linDist="+linDist);
+		float linDistBelowThreshold = ((m_TractionChangeT*m_TractionChangeT)/(m_LinearAccelRate/Time.fixedDeltaTime));
+		//print("linDistBelowThreshold="+linDistBelowThreshold);
+		float linDistAboveThreshold = linDist-linDistBelowThreshold;
+
+		float fastDist = ((m_TractionChangeT*m_TractionChangeT)/(m_StartupAccelRate/Time.fixedDeltaTime));
+
+
+		if(Mathf.Abs(reqVel)<m_TractionChangeT)
+		{
+			distance = ((reqVel*reqVel)/(m_StartupAccelRate/Time.fixedDeltaTime));;
+			print("1-arg Windup Distance: "+distance+" for vel of "+reqVel);
+		}
+		else
+		{
+			distance = linDistAboveThreshold+fastDist; // The acceleration is a piecewise function, so the bottom of lindist needs to be chopped off and replaced by fastdist result.
+			print("1-arg Windup Distance: "+distance+" for vel of "+reqVel+". LinearDistanceAboveTheshold="+linDistAboveThreshold+", fastDistBelowThreshold="+fastDist);
+		}
+
+		return distance;
+	}
+
+	public float NavGetWindupDist(float reqVel, float curVel) // reqVel is the required additional velocity. The distance returned is how much
+	{
+//
+//		float accelRate = 0;
+//
+//		if(FighterState.Vel.magnitude<m_TractionChangeT)
+//			accelRate = m_StartupAccelRate;
+//		else
+//			accelRate = m_LinearAccelRate;
+//		
+//
+//		float distance = ((reqVel*reqVel)/(accelRate/Time.fixedDeltaTime));
+//		float subtracted = ((curVel*curVel)/(accelRate/Time.fixedDeltaTime));
+//		return distance-subtracted;
+
+		float distanceNeeded = NavGetWindupDist(reqVel);
+		float distanceNotNeeded = NavGetWindupDist(curVel);
+		print("2arg Windup Distance: "+(distanceNeeded-distanceNotNeeded)+" for vel of "+reqVel+", with curvel="+curVel+". distanceNeeded="+distanceNeeded+", distanceNotNeeded="+distanceNotNeeded);
+		return distanceNeeded-distanceNotNeeded;
+	}
+
+	public void ClearAllInput()
+	{
+		this.FighterState.RightKeyHold = false;
+		this.FighterState.LeftKeyHold = false;
+		this.FighterState.JumpKeyPress = false;
 	}
 
 	protected override void Respawn()
@@ -212,7 +692,6 @@ public class NPC : FighterChar {
 	{
 		m_WorldImpact = false; //Placeholder??
 		FighterState.Stance = 0;
-		m_Landing = false;
 		m_Kneeling = false;
 
 		if(IsDisabled())
@@ -304,7 +783,7 @@ public class NPC : FighterChar {
 		{
 			if(IsVelocityPunching())
 			{
-				v_PunchHitting = true;
+				v_TriggerAtkHit = true;
 			}
 			else
 			{

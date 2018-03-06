@@ -50,6 +50,8 @@
      <Compile Include="Assets\Editor\ProjectFulcrum\CloudEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\CutoutMeshHandler.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\GrassColourerInterface.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\NavMasterEditor.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\NavSurfaceEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\ParallaxOptionEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\TEST_PFBuildHandler.cs" />
      <Compile Include="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" />

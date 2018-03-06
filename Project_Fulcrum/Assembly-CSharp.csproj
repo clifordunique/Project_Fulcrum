@@ -46,10 +46,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AnimAudio.cs" />
-     <Compile Include="Assets\AnimHeightAdjuster.cs" />
-     <Compile Include="Assets\AnimationTester.cs" />
-     <Compile Include="Assets\CanvasSuperSample.cs" />
      <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
@@ -72,14 +68,22 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
-     <Compile Include="Assets\HitAnimator.cs" />
+     <Compile Include="Assets\Scripts\AnimAudio.cs" />
+     <Compile Include="Assets\Scripts\AnimHeightAdjuster.cs" />
+     <Compile Include="Assets\Scripts\AnimationTester.cs" />
+     <Compile Include="Assets\Scripts\CanvasSuperSample.cs" />
      <Compile Include="Assets\Scripts\DopplerTestScript.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransform.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolatedTransformUpdater.cs" />
      <Compile Include="Assets\Scripts\FixedInterpolation\InterpolationController.cs" />
      <Compile Include="Assets\Scripts\FramerateLocker.cs" />
      <Compile Include="Assets\Scripts\FulcrumNetworkManager.cs" />
+     <Compile Include="Assets\Scripts\HitAnimator.cs" />
      <Compile Include="Assets\Scripts\MenuAudio.cs" />
+     <Compile Include="Assets\Scripts\MoveStateAnimLock.cs" />
+     <Compile Include="Assets\Scripts\NavMaster.cs" />
+     <Compile Include="Assets\Scripts\NavNode.cs" />
+     <Compile Include="Assets\Scripts\NavSurface.cs" />
      <Compile Include="Assets\Scripts\ParallaxHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\AirPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\Camera2DFollow.cs" />
@@ -139,8 +143,9 @@
      <Compile Include="Assets\Scripts\Social\TextFieldModder.cs" />
      <Compile Include="Assets\Scripts\SuperSampler.cs" />
      <Compile Include="Assets\Scripts\TimeManager.cs" />
+     <Compile Include="Assets\Scripts\TriggeredAnim.cs" />
+     <Compile Include="Assets\Scripts\UninterruptibleAnim.cs" />
      <Compile Include="Assets\Shaders\ImageEffects\MinimapHolo.cs" />
-     <Compile Include="Assets\UninterruptibleAnim.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
