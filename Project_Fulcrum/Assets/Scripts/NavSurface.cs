@@ -14,22 +14,35 @@ public class NavSurface : MonoBehaviour {
 	public GameObject p_ConnectionLinePrefab;
 	public LineRenderer[] connectionLines;
 	private LineRenderer surfVis; // Surface Visualizer
-
+	private Color floorColor = new Color(0, 1, 0, 0.2f);
+	private Color wallColor = new Color(1, 1, 0, 0.2f);
+	private Color ceilColor = new Color(1, 0, 0, 0.2f);
+	private Color myColor;
 	//
 	// Nav data variables
 	//
-	[SerializeField] private int surfaceType; // 0 for ground, 1 for ceiling, 2 for leftwall, 3 for rightwall. 
+	[SerializeField][ReadOnlyAttribute] public int surfaceType; // 0 for ground, 1 for ceiling, 2 for leftwall, 3 for rightwall. 
+	[SerializeField][ReadOnlyAttribute] private float steepness; // How steep the surface is.
 	[ReadOnlyAttribute] public float totalLength;
 	[ReadOnlyAttribute] public int id;
+
 	public NavNode[] nodes;
 	public NavConnection[] navCon; // Connection data object that carries information of a connection between surfaces.
+	[ReadOnlyAttribute][SerializeField]private NavMaster o_NavMaster; // Nav overseer object.
 
 	void Update()
 	{
-		if(transform.hasChanged&&Application.isEditor)
-		{
-			UpdateSurface();
-		}
+//		if(transform.hasChanged&&Application.isEditor)
+//		{
+//			UpdateSurface();
+//		}
+	}
+
+	public void Initialize(Vector3 leftBound, Vector3 rightBound)
+	{
+		nodes[0].transform.position = leftBound;
+		nodes[1].transform.position = rightBound;
+		UpdateSurface();
 	}
 
 	// Use this for initialization
@@ -38,10 +51,84 @@ public class NavSurface : MonoBehaviour {
 		UpdateSurface();
 	}
 
+	public void GenerateAdjacencyConnections()
+	{
+		List<NavConnection> newConnList = new List<NavConnection>(); // Set up a list so new connections can be dynamically added.
+
+		foreach(NavSurface ns in o_NavMaster.GetSurfaces())
+		{
+			if((nodes[0].transform.position-ns.nodes[1].transform.position).magnitude<=o_NavMaster.proximityJoinT) // if this surface's left endpoint touches the other surface's right endpoint
+			{
+				print("Adjacent node edges!");
+				NavConnection newConnection = new NavConnection();
+				newConnection.exitPosition = 0;
+				newConnection.edgeWeight = 1;
+				newConnection.exitVel.x = -100;
+				newConnection.exitVelRange = 100;
+				newConnection.orig = this;
+				newConnection.traversaltimeout = 2;
+				newConnection.exitPositionRange = 0.5f;
+				newConnection.dest = ns;
+				newConnection.destPosition = ns.totalLength;
+				newConnection.averageTraversalTime = 0;
+				this.AddNavConnection(newConnection);
+
+			}
+			if((nodes[1].transform.position-ns.nodes[0].transform.position).magnitude<=o_NavMaster.proximityJoinT) // if this surface's right endpoint touches the other surface's left endpoint
+			{
+				print("Adjacent node edges!");
+				NavConnection newConnection = new NavConnection();
+				newConnection.exitPosition = this.totalLength;
+				newConnection.edgeWeight = 1;
+				newConnection.exitVel.x = 100;
+				newConnection.exitVelRange = 100;
+				newConnection.orig = this;
+				newConnection.traversaltimeout = 2;
+				newConnection.exitPositionRange = 0.5f;
+				newConnection.dest = ns;
+				newConnection.destPosition = 0;
+				newConnection.averageTraversalTime = 0;
+				this.AddNavConnection(newConnection);
+			}
+		}
+	}
 
 	public void UpdateSurface()
 	{
 		//print("Updated Surface.");
+
+		if(o_NavMaster==null)
+		{
+			o_NavMaster = GameObject.Find("NavMaster").GetComponent<NavMaster>();
+		}
+
+		Vector2 paraVector = nodes[1].transform.position-nodes[0].transform.transform.position;
+
+		steepness = Get2DAngle(paraVector, 90);
+
+		if(Math.Abs(steepness)<78)
+		{
+			surfaceType = 0;
+			myColor = floorColor;
+		}
+		else if(Math.Abs(steepness)<102)
+		{
+			if(steepness<0)
+				surfaceType = 2;
+			else
+				surfaceType = 3;
+			
+			myColor = wallColor;
+		}
+		else
+		{
+			surfaceType = 1;
+			myColor = ceilColor;
+		}
+		//print("steepness:"+steepness);
+
+
+
 		surfVis = this.GetComponent<LineRenderer>();
 
 		LineRenderer[] oldLines = transform.GetComponentsInChildren<LineRenderer>();
@@ -81,8 +168,16 @@ public class NavSurface : MonoBehaviour {
 			connectionLines[i].SetPosition(0, LinToWorldPos(navCon[i].exitPosition));
 			connectionLines[i].SetPosition(1, navCon[i].dest.LinToWorldPos(navCon[i].destPosition));
 
-			connectionLines[i].startColor = new Color(0,1,0,0.1f);
-			connectionLines[i].endColor = new Color(0, 1, 0, 0.1f);
+			if(navCon[i].traverseType==0)
+			{
+				connectionLines[i].startColor = new Color(1, 1, 1, 0.1f);
+				connectionLines[i].endColor = new Color(1, 1, 1, 0.1f);
+			}
+			else
+			{
+				connectionLines[i].startColor = new Color(0, 1, 1, 0.1f);
+				connectionLines[i].endColor = new Color(0, 1, 1, 0.1f);
+			}
 		}
 		totalLength = 0;
 		for(int i = 0; i<nodes.Length-1; i++)
@@ -92,17 +187,8 @@ public class NavSurface : MonoBehaviour {
 
 		if(surfVis!=null)
 		{
-			if(surfaceType<=1)
-			{
-				surfVis.startColor = new Color(0, 1, 1, 0.3f);
-				surfVis.endColor = new Color(0, 1, 1, 0.3f);
-			}
-			else
-			{
-				surfVis.startColor = Color.red;
-				surfVis.endColor = Color.red;
-			}
-
+			surfVis.startColor = myColor;
+			surfVis.endColor = myColor;
 			surfVis.positionCount = nodes.Length;
 			for(int i = 0; i<nodes.Length; i++)
 			{
@@ -111,6 +197,15 @@ public class NavSurface : MonoBehaviour {
 		}
 
 		SetVisible(isVisible);
+	}
+
+	public void AddNavConnection(NavConnection nc)
+	{
+		NavConnection[] newList = new NavConnection[navCon.Length+1];
+		navCon.CopyTo(newList, 0);
+		newList[navCon.Length] = nc;
+		navCon = newList;
+		UpdateSurface();
 	}
 
 	public Vector2 LinToWorldPos(float linPos) // Converts distance along surface line to world position.
@@ -148,6 +243,17 @@ public class NavSurface : MonoBehaviour {
 		float component = Vector2.Dot(A,B)/B.magnitude;
 		return component*B.normalized;
 	}	
+
+	public float Get2DAngle(Vector2 vector2, float degOffset) // Get angle, from -180 to +180 degrees. Degree offset shifts the origin from up, clockwise, by the amount of degrees specified. For example, 90 degrees shifts the origin to horizontal right.
+	{
+		float angle = Mathf.Atan2(vector2.x, vector2.y)*Mathf.Rad2Deg;
+		angle = degOffset-angle;
+		if(angle>180)
+			angle = -360+angle;
+		if(angle<-180)
+			angle = 360+angle;
+		return angle;
+	}
 
 	public void SetVisible(bool yes)
 	{
@@ -190,25 +296,25 @@ public class NavSurface : MonoBehaviour {
 }
 
 [System.Serializable] public class NavConnection
-{
-	[SerializeField] public float edgeWeight = 1; 		// Edge weight for use in pathfinding algorithms.
-	[SerializeField] public NavSurface orig; 		// Origin surface.
-	[SerializeField] public NavSurface dest; 		// Destination surface.
-	[SerializeField] public float exitPosition; 	// Position on current surface to leave from.
+{		
+	[SerializeField] public float edgeWeight = 1; 			// Edge weight for use in pathfinding algorithms.
+	[SerializeField] public NavSurface orig; 				// Origin surface.
+	[SerializeField] public NavSurface dest; 				// Destination surface.
+
+	[SerializeField] public float destPosition;  			// Position on destination surface to aim for.
+	[SerializeField] public float destLandingVel;  			// Average speed the npc hits their destination at.
+
+	[SerializeField] public Vector2 exitVel;  				// Exit velocity to reach the next platform. Range widened by exitVelRange.
+	[SerializeField] public float exitVelRange; 			// Determines how close the fighter must be to exitVel to traverse surfaces.
+	[SerializeField] public float minExitVel; 				// Min speed to leave current surface. Overrides exitVel and exitVelRange if set.
+	[SerializeField] public float maxExitVel;  				// Max speed to leave current surface. Overrides exitVel and exitVelRange if set.
+	[SerializeField] public float exitPosition; 			// Position on current surface to leave from.
 	[SerializeField] public float exitPositionRange = 0.5f; // Allowed variance in linear position before traversing.
 
-	[SerializeField] public float destPosition;  	// Position on destination surface to aim for.
-
-	[SerializeField] public Vector2 exitVel;  	// Exit velocity to reach the next platform. Range widened by exitVelRange.
-	[SerializeField] public float exitVelRange; // Determines how close the fighter must be to exitVel to traverse surfaces.
-
-	[SerializeField] public float minExitVel;  // Min speed to leave current surface. Overrides exitVel and exitVelRange if set.
-	[SerializeField] public float maxExitVel;  // Max speed to leave current surface. Overrides exitVel and exitVelRange if set.
-
-	[SerializeField] public int traverseType;  // Type of movement used to traverse between surfaces.
-	[SerializeField][ReadOnlyAttribute] public int failedTraversals;  // Amount of times NPCs failed to move to the next surface using this connection.
-	[SerializeField][ReadOnlyAttribute] public int successfulTraversals;  // Amount of times NPCs succeeded using this connection.
-	[SerializeField] public float traversaltimeout = 5;  // Max time in seconds the NPCs can try to traverse before deeming the attempt a failure.
-	[SerializeField][ReadOnlyAttribute] public float averageTraversalTime;  // Average time it takes NPCs to traverse this connection. 
+	[SerializeField] public int traverseType;  								// Type of movement used to traverse between surfaces.
+	[SerializeField][ReadOnlyAttribute] public int failedTraversals; 		// Amount of times NPCs failed to move to the next surface using this connection.
+	[SerializeField][ReadOnlyAttribute] public int successfulTraversals;	// Amount of times NPCs succeeded using this connection.
+	[SerializeField] public float traversaltimeout = 5;  					// Max time in seconds the NPCs can try to traverse before deeming the attempt a failure.
+	[SerializeField][ReadOnlyAttribute] public float averageTraversalTime;	// Average time it takes NPCs to traverse this connection. 
 
 }

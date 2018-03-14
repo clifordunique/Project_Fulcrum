@@ -21,8 +21,8 @@ public class NavMasterEditor : Editor {
 		DrawDefaultInspector();
 		EditorGUILayout.Space();
 		EditorGUILayout.Space();
-		testNum1 = EditorGUILayout.IntField("Start Node", testNum1);
-		testNum2 = EditorGUILayout.IntField("End Node", testNum2);
+		testNum1 = EditorGUILayout.IntField("Testing Start Node", testNum1);
+		testNum2 = EditorGUILayout.IntField("Testing End Node", testNum2);
 		if(GUILayout.Button("Test weighted all-paths pathfinder."))
 		{
 			myNavMaster.testNavPathList = myNavMaster.GetPathList(testNum1, testNum2);
@@ -34,5 +34,13 @@ public class NavMasterEditor : Editor {
 			Debug.Log("Updating surfaces.");
 			myNavMaster.UpdateAllSurfaces();
 		}
+		EditorGUILayout.Space();
+		EditorGUILayout.Space();
+		if(GUILayout.Button("Generate All Adjacency Connections"))
+		{
+			Debug.Log("Generating Adjacency Connections");
+			myNavMaster.GenerateAllAdjacencyConnections();
+		}
+
 	}
 }

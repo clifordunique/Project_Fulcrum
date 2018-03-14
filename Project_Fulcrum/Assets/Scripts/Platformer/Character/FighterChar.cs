@@ -54,6 +54,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool d_ClickToKnockFighter;	// When true and you left click, the fighter is propelled toward where you clicked.
 	[SerializeField] protected bool d_SendCollisionMessages;// When true, the console prints messages related to collision detection
 	[SerializeField] protected bool d_SendTractionMessages;	// When true, the console prints messages related to collision detection
+	[SerializeField] protected bool d_Invincible;			// When true, the fighter does not take damage of any kind.	[SerializeField]private int d_TickCounter; 								// Counts which game logic tick the game is on. Rolls over at 60.
+	[SerializeField] protected int d_TickCounter; 								// Counts which game logic tick the game is on. Rolls over at 60
 	protected LineRenderer m_DebugLine; 					// Part of above indicators.
 	protected LineRenderer m_GroundLine;					// Part of above indicators.		
 	protected LineRenderer m_CeilingLine;					// Part of above indicators.		
@@ -171,6 +173,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected Animator o_Anim;           		// Reference to the character's animator component.
 	[SerializeField][ReadOnlyAttribute] protected Rigidbody2D o_Rigidbody2D;		// Reference to the character's physics body.
 	[SerializeField][ReadOnlyAttribute] protected Transform o_DebugAngleDisplay;	// Reference to a transform of an angle display child transform of the player.
+	[SerializeField][ReadOnlyAttribute] protected NavMaster o_NavMaster;			// Global navmesh handler for the level.
 
 	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
@@ -281,7 +284,7 @@ public class FighterChar : NetworkBehaviour
 
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
-	[SerializeField][ReadOnlyAttribute] protected bool v_Gender;			// Used for character audio.
+	[SerializeField] protected bool v_Gender;								// Used for character audio.
 	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 100;// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
 	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
 	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall.
@@ -334,8 +337,27 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected int p_DefaultShoeID;      		// Reference to the character's starting shoe
 
 	#endregion 
+	//############################################################################################################################################################################################################
+	// NAVIGATION VARIABLES
+	//###########################################################################################################################################################################
+	#region NAVIGATION
+	[Header("Navigation:")]
+	[SerializeField][ReadOnlyAttribute] public NavSurface n_CurrentSurf; // Surface the fighter is standing on.
+	[SerializeField][ReadOnlyAttribute] public int n_CurrentSurfID; // ID of surface the fighter is standing on.
+	[SerializeField] protected float n_MaxSurfLineDist = 0.5f; // Max distance from the current surface. Outside of this, it is considered off the surface.
+
+	//NavConnection AutoGeneration variables. Used for recording the players movements for the NPCs to mimic.
+	[SerializeField] protected bool n_AutoGenerateNavCon; // When true, any traversals made between surfaces will be recorded for use by the AI.
+	[SerializeField][ReadOnlyAttribute] protected bool n_Jumped; // Set to true when the player started the traversal with a jump.
+	[SerializeField][ReadOnlyAttribute] protected bool n_PlayerTraversing; // Set to true when the player is traversing between surfaces.
+	[SerializeField][ReadOnlyAttribute] protected float n_PlayerTraversalTime; // Time the player took to complete the traversal. Updated each frame until the destination is reached.
+	[SerializeField][ReadOnlyAttribute] protected NavConnection n_TempNavCon; // Set to true when the player is traversing between surfaces.
+	[SerializeField][ReadOnlyAttribute] protected NavSurface n_LastSurface; // Surface the player was last standing on.
+	[SerializeField][ReadOnlyAttribute] protected bool n_SpecialAction; // Set to true when the player traverses using a method the NPC cannot, such as superjumps.
 
 
+
+	#endregion
 	//########################################################################################################################################
 	// CORE FUNCTIONS
 	//########################################################################################################################################
@@ -348,6 +370,9 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdate()
 	{
 		//EditorApplication.isPaused = true; //Used for debugging.
+		d_TickCounter++;
+		d_TickCounter = (d_TickCounter > 60) ? 0 : d_TickCounter; // Rolls back to zero when hitting 60
+		UpdateCurrentNavSurf();
 		if(k_IsKinematic)
 		{
 			FixedUpdateKinematic();	
@@ -368,14 +393,15 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void Update()
 	{
-		UpdateInput();
+		UpdatePlayerInput();
 		UpdateAnimation();
 	}
 
 	protected virtual void LateUpdate()
 	{
-		
+		// Declared for override purposes
 	}
+
 
 	#endregion
 	//###################################################################################################################################
@@ -383,11 +409,105 @@ public class FighterChar : NetworkBehaviour
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
 
+	protected void UpdateCurrentNavSurf()
+	{
+		if(n_PlayerTraversing)
+			n_PlayerTraversalTime += Time.fixedDeltaTime;
+
+		n_CurrentSurf = null;
+		n_CurrentSurfID = -1;
+
+		Vector3 contactTransform;
+
+		if(v_PrimarySurface==0)
+		{
+			contactTransform = this.m_GroundFoot.position;
+		}
+		else if(v_PrimarySurface==1)
+		{
+			contactTransform = this.m_CeilingFoot.position;
+		}
+		else if(v_PrimarySurface==2)
+		{
+			contactTransform = this.m_LeftSide.position;
+		}
+		else
+		{
+			contactTransform = this.m_RightSide.position;
+		}
+		NavSurface[] surfaceList = o_NavMaster.GetSurfaces();
+		for(int i = 0; i<surfaceList.Length; i++)
+		{
+			if( surfaceList[i].DistFromLine(this.m_GroundFoot.position)<=n_MaxSurfLineDist && surfaceList[i].surfaceType == v_PrimarySurface)
+			{
+				n_CurrentSurf = surfaceList[i];
+				n_CurrentSurfID = n_CurrentSurf.id;
+				n_LastSurface = n_CurrentSurf;
+				if(n_PlayerTraversing&&v_PrimarySurface!=-1) // If touching a new surface and not airborne, set that as the destination of your traversal.
+					EndPlayerTraverse();
+				break;
+			}
+		}
+
+		if(n_CurrentSurf==null&&n_AutoGenerateNavCon&&!n_PlayerTraversing&&!n_Jumped)
+		{
+			StartPlayerTraverse();
+		}
+	}
+
+	protected void StartPlayerTraverse()
+	{
+		print("["+d_TickCounter+"]:Starting Player traversal recording");
+		//n_AutoGenerateNavCon = false;
+		n_PlayerTraversalTime = 0;
+		n_PlayerTraversing = true;
+		n_TempNavCon = new NavConnection();
+		n_TempNavCon.exitPosition = n_LastSurface.WorldToLinPos(this.transform.position);
+		n_TempNavCon.edgeWeight = 1;
+		n_TempNavCon.exitVel = this.FighterState.Vel;
+		n_TempNavCon.orig = n_LastSurface;
+		n_TempNavCon.traversaltimeout = 2;
+		n_TempNavCon.exitPositionRange = 0.5f;
+		n_TempNavCon.exitVelRange = 0.5f;
+
+		if(n_CurrentSurf.surfaceType>=2)
+		{
+			n_TempNavCon.exitPositionRange = 1f;
+			n_TempNavCon.exitVelRange = 5f;
+		}
+
+		if(n_Jumped)
+		{	
+			n_Jumped = false;
+			n_TempNavCon.traverseType = 1;
+		}
+		else
+			n_TempNavCon.traverseType = 0;
+	}
+
+	protected void EndPlayerTraverse()
+	{
+		n_PlayerTraversing = false;
+
+		if(n_CurrentSurf.id==n_TempNavCon.orig.id)
+		{
+			print("["+d_TickCounter+"]: "+n_TempNavCon.orig.id+" and "+n_CurrentSurf.id+" are same surface, not recording.");
+			n_TempNavCon = null;
+			return;
+		}
+		n_TempNavCon.dest = n_CurrentSurf;
+		n_TempNavCon.destPosition = n_CurrentSurf.WorldToLinPos(this.transform.position);
+		n_TempNavCon.averageTraversalTime = n_PlayerTraversalTime;
+		n_TempNavCon.orig.AddNavConnection(n_TempNavCon);
+		print("["+d_TickCounter+"]:Saved new navconnection between surfaces "+n_TempNavCon.orig.id+" and "+n_TempNavCon.dest.id+".");
+	}
+	
 	protected virtual void FighterAwake()
 	{
 		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
+		o_NavMaster = GameObject.Find("NavMaster").GetComponent<NavMaster>();
 
 		//v_TerrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
@@ -899,7 +1019,8 @@ public class FighterChar : NetworkBehaviour
 		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
 		FighterState.LeftClickPress = false; 	
 		FighterState.RightClickPress = false;
-		FighterState.ZonKeyPress = false;				
+		FighterState.ZonKeyPress = false;
+		FighterState.ShiftKeyPress = false;
 		FighterState.DisperseKeyPress = false;				
 		FighterState.JumpKeyPress = false;				
 		FighterState.LeftKeyPress = false;
@@ -1007,7 +1128,6 @@ public class FighterChar : NetworkBehaviour
 		AkSoundEngine.SetRTPCValue("Health", FighterState.CurHealth, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("WindForce", FighterState.Vel.magnitude, this.gameObject);
-		AkSoundEngine.SetRTPCValue("EnergyLevel", FighterState.ZonLevel, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_Y", FighterState.Vel.y, this.gameObject);
 		AkSoundEngine.SetRTPCValue("GForce_Continuous", m_CGF, this.gameObject);
@@ -1392,7 +1512,7 @@ public class FighterChar : NetworkBehaviour
 			
 	}
 
-	protected virtual void UpdateInput()
+	protected virtual void UpdatePlayerInput()
 	{
 		if(Input.GetMouseButtonDown(0))
 		{
@@ -2437,7 +2557,7 @@ public class FighterChar : NetworkBehaviour
 
 		if(m_SurfaceCling)
 		{
-			print("SURFACECLING!");
+			//print("SURFACECLING!");
 			if(FighterState.Vel.y > 0)
 			{
 				FighterState.Vel = ChangeSpeedLinear(FighterState.Vel,-0.8f);
@@ -2985,8 +3105,8 @@ public class FighterChar : NetworkBehaviour
 		//this.FighterState.Vel.y += 20*impactDamageM;
 		//opponent.FighterState.Vel.y += 20*impactDamageM;
 
-		print("Opponent struck!\nOpponent got knocked in direction "+yourVelocity+"\nI got knocked in direction "+myVelocity);
-		print("Opponent took "+myTotalDamageDealt+" damage");
+		//print("Opponent struck!\nOpponent got knocked in direction "+yourVelocity+"\nI got knocked in direction "+myVelocity);
+		//print("Opponent took "+myTotalDamageDealt+" damage");
 
 		// Placeholder. Adding a delay to prevent a double impact when the other player's physics executes.
 		g_FighterCollisionCD = g_FighterCollisionCDLength;
@@ -4023,6 +4143,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected void Jump(float horizontalInput)
 	{
+		Vector2 preJumpVelocity = FighterState.Vel;
 		if(m_Grounded&&m_Ceilinged)
 		{
 			if(d_SendCollisionMessages)
@@ -4034,6 +4155,12 @@ public class FighterChar : NetworkBehaviour
 		{
 			//m_LeftWallBlocked = false;
 			//m_RightWallBlocked = false;
+
+			n_Jumped = true;
+			if(n_AutoGenerateNavCon&&!n_PlayerTraversing) 
+			{
+				StartPlayerTraverse(); // Generating a jump-type nav connection between the start and end of this jump
+			}
 
 			if(FighterState.Vel.y >= 0)
 			{
@@ -4070,6 +4197,11 @@ public class FighterChar : NetworkBehaviour
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
 			m_LeftWalled = false;
+			n_Jumped = true;
+			if(n_AutoGenerateNavCon&&!n_PlayerTraversing)
+			{
+				StartPlayerTraverse();
+			}
 			v_PrimarySurface = -1;
 		}
 		//else if(m_RightWalled)
@@ -4095,6 +4227,11 @@ public class FighterChar : NetworkBehaviour
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
 			m_RightWalled = false;
+			n_Jumped = true;
+			if(n_AutoGenerateNavCon&&!n_PlayerTraversing)
+			{
+				StartPlayerTraverse();
+			}
 			v_PrimarySurface = -1;
 		}
 		//else if(m_Ceilinged)
@@ -4110,13 +4247,19 @@ public class FighterChar : NetworkBehaviour
 			}
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
-			v_PrimarySurface = -1;
+			n_Jumped = true;
+			if(n_AutoGenerateNavCon&&!n_PlayerTraversing)
+			{
+				StartPlayerTraverse();
+			}
 			m_Ceilinged = false;
+			v_PrimarySurface = -1;
 		}
 		else
 		{
 			//print("Can't jump, airborne!");
 		}
+			
 		m_JumpBufferG = 0;
 		m_JumpBufferC = 0;
 		m_JumpBufferL = 0;
@@ -4420,6 +4563,7 @@ public class FighterChar : NetworkBehaviour
 
 	public void TakeDamage(int dmgAmount)
 	{
+		if(d_Invincible){return;}
 		FighterState.CurHealth -= dmgAmount;
 		if(dmgAmount>15)
 		{
@@ -4444,6 +4588,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public int Stance;					// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
 
 	[SerializeField][ReadOnlyAttribute]public bool JumpKeyPress;
+	[SerializeField][ReadOnlyAttribute]public bool ShiftKeyPress;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickPress;
 	[SerializeField][ReadOnlyAttribute]public bool RightClickPress;
 	[SerializeField][ReadOnlyAttribute]public bool LeftKeyPress;
@@ -4451,10 +4596,11 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute]public bool UpKeyPress;
 	[SerializeField][ReadOnlyAttribute]public bool DownKeyPress;
 
-
+	[SerializeField][ReadOnlyAttribute]public float ScrollWheel;
 
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickHold;
 	[SerializeField][ReadOnlyAttribute]public bool RightClickHold;
+	[SerializeField][ReadOnlyAttribute]public bool ShiftKeyHold;
 	[SerializeField][ReadOnlyAttribute]public bool LeftKeyHold;
 	[SerializeField][ReadOnlyAttribute]public bool RightKeyHold;
 	[SerializeField][ReadOnlyAttribute]public bool UpKeyHold;
@@ -4462,6 +4608,7 @@ public class FighterChar : NetworkBehaviour
 
 	[SerializeField][ReadOnlyAttribute]public bool RightClickRelease;
 	[SerializeField][ReadOnlyAttribute]public bool LeftClickRelease;
+	[SerializeField][ReadOnlyAttribute]public bool ShiftKeyRelease;
 	[SerializeField][ReadOnlyAttribute]public bool LeftKeyRelease;
 	[SerializeField][ReadOnlyAttribute]public bool RightKeyRelease;
 	[SerializeField][ReadOnlyAttribute]public bool UpKeyRelease;

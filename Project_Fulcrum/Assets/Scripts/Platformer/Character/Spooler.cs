@@ -11,13 +11,11 @@ public class Spooler : NetworkBehaviour
 	[SerializeField]private GameObject p_SpoolRingPrefab;
 	[SerializeField]private AudioMixer o_SpoolMixer;
 	[SerializeField]private AudioClip[] s_SpoolUp;
-	[SerializeField][ReadOnlyAttribute] private FighterChar o_Player;
+	[SerializeField][ReadOnlyAttribute] private Player o_Player;
 	[SerializeField]private Text o_FeedbackText;
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
 	[SerializeField]private Ring o_Limit;
-
-
 	#endregion
 
 	#region RINGPARAMS
@@ -25,7 +23,8 @@ public class Spooler : NetworkBehaviour
 	[SerializeField][Range(0,0.02f)] private float r_RingGap;		// Static gap between rings.
 	[SerializeField][Range(0,0.02f)] private float r_BufferZone;	// Distance from core.
 	[SerializeField][Range(0,0.02f)] private float r_CoreSize;		// Core size. Keep this lower than r_BufferZone.
-	[SerializeField][Range(0,0.5f)] private float r_LimitRadius; 	// Max radius before overload occurs.
+	[SerializeField][Range(0,20f)] private float r_LimitRadius; 	// Max radius before overload occurs.
+	[SerializeField][Range(0,20)] private int r_LimitInRings = 9; 	// Max radius measured in rings.
 	[SerializeField][Range(0,0.02f)] private float r_LimitThickness; // Thickness of outer bound ring.
 	[SerializeField][Range(0,10f)] private float r_MaxTime;			// Time per full rotation of ring.
 	[SerializeField][ReadOnlyAttribute] private float r_CurTime;	// Amount of time since rotation started.
@@ -35,28 +34,46 @@ public class Spooler : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] private float r_Rotation;   // Orientation of current ring.
 	[SerializeField][ReadOnlyAttribute] private float r_Accuracy;   	// For your accuracy score.
 	[SerializeField][ReadOnlyAttribute] private float r_Balance; 	// Negative when the current ring is ended early, pos when ended late.
-	[SerializeField][ReadOnlyAttribute] private int r_RingNum;		// Number of the current outer ring.
+	[SerializeField][ReadOnlyAttribute] private int r_OuterRingID;	// Number of the current outer ring. Starts at 0. -1 when no circles present.
 	[SerializeField][ReadOnlyAttribute] private bool r_TooEarly;	// True when the turn is ended prematurely.
 	[SerializeField][ReadOnlyAttribute] private bool r_Paused;		// True when spooling is paused.
-	[SerializeField][ReadOnlyAttribute] private bool r_Active;	 	// True when a ring is mid spool.
+	[SerializeField][ReadOnlyAttribute] private bool r_MaxReached;		// True when spooling is at its max size.
+	[SerializeField][ReadOnlyAttribute] public bool r_Active;	 	// True when a ring is mid spool.
 	#endregion
 
-	#region PLAYERINPUT
-	private bool i_ZonKey;
 	public bool i_GoodStance;
-	private int CtrlH; 				// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
-	private int CtrlV; 				// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-	private bool facingDirection; 	// True means Right (the direction), false means Left.
-	#endregion
+	private float currentZoom;
 
 	// Use this for initialization
 	void Start () 
 	{
-		o_Player = this.gameObject.GetComponent<FighterChar>();
+		o_Player = this.gameObject.GetComponent<Player>();
+
+		GameObject newCore = (GameObject)Instantiate(p_SpoolRingPrefab);
+		newCore.name = "Core";
+		newCore.transform.SetParent(this.transform, false);
+		o_Core = newCore.GetComponent<Ring>();
+
+		GameObject newLimit = (GameObject)Instantiate(p_SpoolRingPrefab);
+		newLimit.name = "Limit";
+		newLimit.transform.SetParent(this.transform, false);
+		o_Limit = newLimit.GetComponent<Ring>();
+
+		o_Rings = new Ring[20];
+
+		for(int i = 0; i<20; i++)
+		{
+			GameObject newRing = (GameObject)Instantiate(p_SpoolRingPrefab);
+			newRing.name = "Ring_"+i;
+			newRing.transform.SetParent(this.transform, false);
+			o_Rings[i] = newRing.GetComponent<Ring>();
+			o_Rings[i].ringHidden = true;
+		}
+
 		i_GoodStance = false;
 		r_Paused = true;
 		r_CurTime = 0;
-		r_RingNum = -1;
+		r_OuterRingID = -1;
 		r_OuterRadius = 0;
 		r_Rotation = 0;
 		r_TotalPower = 0;
@@ -66,75 +83,64 @@ public class Spooler : NetworkBehaviour
 
 	void Awake() 
 	{
-		o_Player = this.gameObject.GetComponent<FighterChar>();
+		o_Player = this.gameObject.GetComponent<Player>();
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void Update() 
 	{
 		i_GoodStance = true;
+//		if((!i_GoodStance)&&(r_Active))
+//		{
+//			Reset();
+//		}
 
-		i_ZonKey = Input.GetButtonDown("Spooling");
+		o_Limit.radius = r_LimitRadius;
 
-		if((!i_GoodStance)&&(r_Active))
+		if(currentZoom!=o_Player.v_CameraZoomLevel)
 		{
-			Reset();
-		}
-
-		if(i_ZonKey&&i_GoodStance)
-		{
-			if(r_RingNum < o_Rings.Length && r_OuterRadius < r_LimitRadius)
+			currentZoom = o_Player.v_CameraZoomLevel;
+			float scaleFactor = currentZoom;
+			Vector3 scaleVector = new Vector3(scaleFactor, scaleFactor, 1);
+			o_Core.transform.localScale = scaleVector;
+			o_Limit.transform.localScale = scaleVector;
+			foreach(Ring r in o_Rings)
 			{
-				if(r_RingNum >= 0)
+				if(r!=null)
 				{
-					if(o_Rings[r_RingNum].getPercentWhite()>=1)
-					{
-						EndRing();
-						AddRing();
-					}
-					else
-					{
-						r_TooEarly = true;
-						o_Rings[r_RingNum].earlyStop = true;
-					}
-				}
-				else
-				{
-					StartSpool();
-				}
-
-			}
-			else
-			{
-				if(!r_Paused)
-				{
-					DevEndScore();
+					r.transform.localScale = scaleVector;
 				}
 			}
 		}
-		//if: not paused,	at least 1 ring,	not exceeding max rings,		and not outside max radius		
-		if( (!r_Paused) && (r_RingNum >= 0) && (r_RingNum < o_Rings.Length) && ((r_MinRadius*(r_CurTime/r_MaxTime))+r_RingWidth <= r_LimitRadius) ) // This code executes when there is an active ring filling, and it's not too large.
+
+		if(!r_Active || (r_Paused) || (r_OuterRingID<0))
+		{
+			return;
+		}
+
+		//if: not exceeding max rings,		and not outside max radius		
+		if((r_OuterRingID < o_Rings.Length) && ((r_MinRadius*(r_CurTime/r_MaxTime))+r_RingWidth <= r_LimitRadius) ) // This code executes when there is an active ring filling, and it's not too large.
 		{
 			//ContractTest();
-				
+			//print("Growing");
 			if(r_TooEarly) // if the player pressed button before a full turn.
 			{
 				r_CurTime += Time.deltaTime/2;
 				r_OuterRadius = r_MinRadius;
 				if(r_CurTime <= r_MaxTime)
 				{
-					//print("EARLY!");	
+					print("EARLY!");	
 					float thePercent = (r_CurTime/r_MaxTime);
-					o_Rings[r_RingNum].setPercentFull(thePercent);
-					o_Rings[r_RingNum].radius = r_OuterRadius;
+					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
+					o_Rings[r_OuterRingID].radius = r_OuterRadius;
 					//print(radians);
 				}
 				else
 				{
-					//print("EARLY ENDING!");	
+					print("EARLY ENDING!");	
 					r_CurTime = r_MaxTime;
-					o_Rings[r_RingNum].setPercentFull(1);
-					o_Rings[r_RingNum].radius = r_OuterRadius;
+					o_Rings[r_OuterRingID].SetPercentFull(1);
+					o_Rings[r_OuterRingID].radius = r_OuterRadius;
 					EndRing();
 					AddRing();
 				}
@@ -144,25 +150,25 @@ public class Spooler : NetworkBehaviour
 				r_CurTime += Time.deltaTime;
 				if(r_CurTime <= r_MaxTime)
 				{
-					//print("SPOOLING!");	
+					print("SPOOLING!");	
 					float thePercent = (r_CurTime/r_MaxTime);
-					o_Rings[r_RingNum].setPercentFull(thePercent);
+					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
 				}
 				else if(r_CurTime <= r_MaxTime*2)
 				{
-					//print("OVERSPOOLING!");	
+					print("OVERSPOOLING!");	
 					float thePercent = (r_CurTime/r_MaxTime);
 					r_OuterRadius = r_MinRadius*thePercent;
-					o_Rings[r_RingNum].setPercentFull(thePercent);
-					o_Rings[r_RingNum].radius = r_OuterRadius;
+					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
+					o_Rings[r_OuterRingID].radius = r_OuterRadius;
 				}
 				else
 				{
 					r_CurTime = r_MaxTime*2;
 					float thePercent = 2;
 					r_OuterRadius = r_MinRadius*thePercent;
-					o_Rings[r_RingNum].setPercentFull(thePercent);
-					o_Rings[r_RingNum].radius = r_OuterRadius;
+					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
+					o_Rings[r_OuterRingID].radius = r_OuterRadius;
 					EndRing();
 					AddRing();
 				}
@@ -170,47 +176,91 @@ public class Spooler : NetworkBehaviour
 		}
 		else
 		{
-			if(r_RingNum >= 0)
+			if(r_OuterRingID >= 0)
 			{	
 				r_OuterRadius = r_LimitRadius;
 				DevEndScore(); 
 			}
 		}
+	}
 
+	public void LockRing()
+	{
+		if(!r_Active)
+		{
+			return;
+		}
+
+		print("Q Pressed");
+
+
+		if(r_OuterRingID < o_Rings.Length && r_OuterRadius < r_LimitRadius)
+		{
+			if(r_Paused)
+			{
+				print("Adding first ring.");
+				r_Paused = false;
+				AddRing();
+			}
+			else if(r_OuterRingID>=0)
+			{
+				if(o_Rings[r_OuterRingID].GetPercentWhite()>=1)
+				{
+					EndRing();
+					print("Ended last ring and started new.");
+					AddRing();
+				}
+				else
+				{
+					print("Too early.");
+					r_TooEarly = true;
+					o_Rings[r_OuterRingID].earlyStop = true;
+				}
+			}
+		}
+		else
+		{
+			print("Final circle, no more rings allowed.");
+			DevEndScore();
+		}
 	}
 
 	private void AddRing()
 	{
-		r_OuterRadius += r_RingWidth+r_RingGap;
-		r_MinRadius = r_OuterRadius;
-		r_RingNum++;
-		GameObject AddRing = (GameObject)Instantiate(p_SpoolRingPrefab);
-		AddRing.name = "Ring_"+r_RingNum;
-		AddRing.transform.SetParent(this.transform, false);
-		o_Rings[r_RingNum] = AddRing.GetComponent<Ring>();
+		print("AddRing");
 
-		o_Rings[r_RingNum].setPercentFull(0);
-		o_Rings[r_RingNum].radius = r_OuterRadius;
-		o_Rings[r_RingNum].thickness = r_RingWidth;
-		o_Rings[r_RingNum].rotation = r_Rotation;
+		r_OuterRingID++;
+
+		o_Rings[r_OuterRingID].ringHidden = false;
+		o_Rings[r_OuterRingID].SetPercentFull(0);
+		o_Rings[r_OuterRingID].radius = r_OuterRadius;
+		o_Rings[r_OuterRingID].lerpRadius = r_OuterRadius;
+		o_Rings[r_OuterRingID].thickness = r_RingWidth;
+		o_Rings[r_OuterRingID].lerpthickness = r_RingWidth;
+
+		o_Rings[r_OuterRingID].rotation = r_Rotation;
+		o_Rings[r_OuterRingID].lerpAllChanges = true;
+		o_Rings[r_OuterRingID].lerpRadius = r_OuterRadius;
+
+
 		//o_Rings[r_RingNum].color = new Vector4(1,1,1,0.5f);
-		o_Rings[r_RingNum].UpdateVisuals();
+		o_Rings[r_OuterRingID].UpdateVisuals();
 
 
 		AkSoundEngine.PostEvent("EnergyCharge", gameObject);
-		AkSoundEngine.SetRTPCValue("EnergyLevel", o_Player.GetZonLevel(), gameObject);
+		AkSoundEngine.SetRTPCValue("EnergyLevel", r_TotalPower, gameObject);
 
-		float thePitch = 1+(r_RingNum/7f);
 		//print("RINGNUM="+r_RingNum);
 		//print("thePitch"+thePitch);	
 		r_CurTime = 0;
 	}
 
-	private void EndRing()
+	private void EndRing() //ER
 	{
+		print("EndRing");
+
 		r_TotalPower++;
-		o_Player.SetZonLevel(r_TotalPower);
-		float thePercent = o_Rings[r_RingNum].getPercentWhite();
+		float thePercent = o_Rings[r_OuterRingID].GetPercentWhite();
 
 		if(thePercent>1)
 		{
@@ -247,21 +297,19 @@ public class Spooler : NetworkBehaviour
 		if(thePercent < 1)
 		{
 			//print("TOO SMALL!");
-			o_Rings[r_RingNum].radius = r_OuterRadius;
+			o_Rings[r_OuterRingID].radius = r_OuterRadius;
 		}
 		else
 		{
 			//print("Proper size!");
-			o_Rings[r_RingNum].radius = r_OuterRadius;
+			o_Rings[r_OuterRingID].radius = r_OuterRadius;
 			//r_Accuracy += 2-thePercent;
 
 		}
+			
+		r_OuterRadius += r_RingWidth+r_RingGap;
+		r_MinRadius = r_OuterRadius;
 		//print("END RING ####################");	
-	}
-
-	private void Contract()
-	{
-		
 	}
 
 	private void ContractTest()
@@ -275,68 +323,166 @@ public class Spooler : NetworkBehaviour
 			}
 		}
 	}
-		
-	public void Reset()
+
+	public void HideSpooler()
 	{
+		AbsorbAndClose();
+	}
+		
+	public void OpenSpooler()
+	{
+		o_Core.ringHidden = false;
+		o_Limit.ringHidden = false;
+
+		foreach(Ring r in o_Rings)
+		{
+			if(r!=null)
+			{
+				r.ringHidden = false;
+			}
+		}
+		if(!r_Active)
+		{
+			StartSpool();
+		}
+	}
+
+//	public void Reset()
+//	{
+//		print("Reset");
+//		if(!r_Active)
+//		{
+//			return;
+//		}
+//
+//		r_Paused = true;
+//		r_CurTime = 0;
+//		r_OuterRingID = -1;
+//		r_OuterRadius = 0;
+//		r_Rotation = 0;
+//		r_TotalPower = 0;
+//		r_Accuracy = 0;
+//		r_TooEarly = false;
+//
+////		o_Core.gameObject.SetActive(false);
+////		o_Limit.gameObject.SetActive(false);
+//
+//
+//		//o_FeedbackText.text = "";
+//
+//		foreach(Ring theRing in o_Rings)
+//		{
+//			if(theRing != null)
+//			{
+//				theRing.ringHidden = true;
+//				theRing.SetPercentFull(0);
+//				theRing.radius = 0;
+//				theRing.thickness = r_RingWidth;
+//				theRing.rotation = 0;
+//				theRing.lerpAllChanges = true;
+//			}
+//		}
+//		r_Active = false;
+//	}
+//
+	public void AbsorbAndClose()
+	{
+		print("AbsorbAndClose");
 		if(!r_Active)
 		{
 			return;
 		}
 
-		r_Paused = true;
-		r_CurTime = 0;
-		r_RingNum = -1;
-		r_OuterRadius = 0;
-		r_Rotation = 0;
-		r_TotalPower = 0;
-		r_Accuracy = 0;
-		r_TooEarly = false;
 
+
+		//r_RingNum = -1;
+		//r_OuterRadius = 0;
+		//r_Rotation = 0;
+		//r_TotalPower = 0;
+		//r_Accuracy = 0;
+		if(r_OuterRingID>=0) // If at least one ring exists
+		{
+			if(!r_Paused&&o_Rings[r_OuterRingID].GetPercentFull()>1) // If final ring is over full, end it before closing.
+			{
+				EndRing();
+			}
+			else if((o_Rings[r_OuterRingID].GetPercentFull()<1)) // If final ring is incomplete, discard it before closing.
+			{
+				print("Discarding incomplete outer ring");
+				o_Rings[r_OuterRingID].SetPercentFull(0);
+				r_OuterRingID--;
+			}
+		}
+
+
+		o_Core.ringHidden = true;
+		o_Limit.ringHidden = true;
+//		o_Core.gameObject.SetActive(false);
+//		o_Limit.gameObject.SetActive(false);
 
 		//o_FeedbackText.text = "";
 
-		
-		Destroy(o_Core.gameObject);
+		o_Player.SetZonLevel(r_TotalPower);
 
-		Destroy(o_Limit.gameObject);
-
-		foreach(Ring theRing in o_Rings)
+		foreach(Ring r in o_Rings)
 		{
-			if(theRing != null)
+			if(r!=null)
 			{
-				Destroy(theRing.gameObject);
+				r.ringHidden = true;
 			}
 		}
 		r_Active = false;
+		r_Paused = true;
+		r_CurTime = 0;
+		r_TooEarly = false;
 	}
 
-	private void StartSpool()
+	public void StartSpool()
 	{
+		print("StartSpool!");
+		r_LimitRadius = r_CoreSize+r_BufferZone+(r_LimitInRings*(r_RingGap+r_RingWidth));
+		r_TotalPower = o_Player.GetZonLevel();
+
+		for(int i = 0; i<r_TotalPower; i++)
+		{
+			o_Rings[i].ringHidden = false;
+			o_Rings[i].thickness = r_RingWidth;
+		}
+
+		for(int i = r_TotalPower; i<o_Rings.Length; i++)
+		{
+			o_Rings[i].ResetRing();
+			o_Rings[i].thickness = r_RingWidth;
+		}
+
+		r_TooEarly = false;
 		r_CurTime = 0;
-		r_RingNum = -1;
-		r_Rotation = 0;
-		r_TotalPower = 0;
+		r_OuterRingID = r_TotalPower-1;
 		r_Accuracy = 0;
-		o_Player.SetZonLevel(0);
 
-		r_Paused = false;
-
-		GameObject newCore = (GameObject)Instantiate(p_SpoolRingPrefab);
-		newCore.name = "Core";
-		newCore.transform.SetParent(this.transform, false);
-		o_Core = newCore.GetComponent<Ring>();
-		o_Core.setPercentFull(1);
+		if(r_OuterRingID<0)
+		{
+			r_OuterRadius = r_CoreSize+r_BufferZone;
+			r_MinRadius = r_OuterRadius;
+		}
+		else
+		{
+			r_OuterRadius = o_Rings[r_OuterRingID].radius;
+			r_MinRadius = r_OuterRadius+r_RingWidth+r_RingGap;
+		
+		}
+		//o_Core.gameObject.SetActive(true);
+		o_Core.ringHidden = false;
+		o_Core.SetPercentFull(1);
 		o_Core.radius = 0;
 		o_Core.thickness = r_CoreSize;
 		o_Core.rotation = r_Rotation;
 		o_Core.lerpAllChanges = true;
 		o_Core.UpdateVisuals();
 
-		GameObject newLimit = (GameObject)Instantiate(p_SpoolRingPrefab);
-		newLimit.name = "Limit";
-		newLimit.transform.SetParent(this.transform, false);
-		o_Limit = newLimit.GetComponent<Ring>();
-		o_Limit.setPercentFull(1);
+		//o_Limit.gameObject.SetActive(true);
+		o_Limit.ringHidden = false;
+		o_Limit.SetPercentFull(1);
 		o_Limit.radius = r_LimitRadius;
 		o_Limit.thickness = r_LimitThickness;
 		o_Limit.rotation = r_Rotation;
@@ -344,16 +490,15 @@ public class Spooler : NetworkBehaviour
 		o_Limit.lerpAllChanges = true;
 		o_Limit.UpdateVisuals();
 
-
-		r_OuterRadius = r_CoreSize+r_BufferZone;
-		AddRing();
 		r_Active = true;
 	}
+
+
 
 	private void DevEndScore()
 	{
 		r_Paused = true;
-		Reset();
+		//Reset();
 		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
 
 //		o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";

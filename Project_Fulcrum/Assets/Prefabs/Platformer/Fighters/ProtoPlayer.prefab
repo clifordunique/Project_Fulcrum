@@ -983,9 +983,12 @@ MonoBehaviour:
   d_ClickToKnockFighter: 0
   d_SendCollisionMessages: 0
   d_SendTractionMessages: 0
+  d_Invincible: 1
+  d_TickCounter: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
-  m_Acceleration: 0.6
+  m_StartupAccelRate: 0.8
+  m_LinearAccelRate: 0.4
   m_VJumpForce: 40
   m_HJumpForce: 5
   m_WallVJumpForce: 30
@@ -995,7 +998,6 @@ MonoBehaviour:
   m_LinearStopRate: 2
   m_LinearSlideRate: 0.35
   m_LinearOverSpeedRate: 0.1
-  m_LinearAccelRate: 0.4
   m_ImpactDecelMinAngle: 20
   m_ImpactDecelMaxAngle: 80
   m_TractionLossMinAngle: 45
@@ -1037,6 +1039,7 @@ MonoBehaviour:
   o_Anim: {fileID: 0}
   o_Rigidbody2D: {fileID: 0}
   o_DebugAngleDisplay: {fileID: 0}
+  o_NavMaster: {fileID: 0}
   p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
@@ -1103,20 +1106,24 @@ MonoBehaviour:
     Dead: 0
     Stance: 0
     JumpKeyPress: 0
+    ShiftKeyPress: 0
     LeftClickPress: 0
     RightClickPress: 0
     LeftKeyPress: 0
     RightKeyPress: 0
     UpKeyPress: 0
     DownKeyPress: 0
+    ScrollWheel: 0
     LeftClickHold: 0
     RightClickHold: 0
+    ShiftKeyHold: 0
     LeftKeyHold: 0
     RightKeyHold: 0
     UpKeyHold: 0
     DownKeyHold: 0
     RightClickRelease: 0
     LeftClickRelease: 0
+    ShiftKeyRelease: 0
     LeftKeyRelease: 0
     RightKeyRelease: 0
     UpKeyRelease: 0
@@ -1167,7 +1174,7 @@ MonoBehaviour:
   v_TriggerRollOut: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
-  v_Gender: 0
+  v_Gender: 1
   v_SpeedForMaxLean: 100
   v_LeanAngle: 0
   v_PrimarySurface: 0
@@ -1206,6 +1213,32 @@ MonoBehaviour:
   g_MinGuardStunT: 0.5
   g_MaxGuardStunT: 0.8
   p_DefaultShoeID: 0
+  n_CurrentSurf: {fileID: 0}
+  n_CurrentSurfID: 0
+  n_MaxSurfLineDist: 0.5
+  n_AutoGenerateNavCon: 0
+  n_Jumped: 0
+  n_PlayerTraversing: 0
+  n_PlayerTraversalTime: 0
+  n_TempNavCon:
+    edgeWeight: 1
+    orig: {fileID: 0}
+    dest: {fileID: 0}
+    destPosition: 0
+    destLandingVel: 0
+    exitVel: {x: 0, y: 0}
+    exitVelRange: 0
+    minExitVel: 0
+    maxExitVel: 0
+    exitPosition: 0
+    exitPositionRange: 0.5
+    traverseType: 0
+    failedTraversals: 0
+    successfulTraversals: 0
+    traversaltimeout: 5
+    averageTraversalTime: 0
+  n_LastSurface: {fileID: 0}
+  n_SpecialAction: 0
   o_ShoeTooltip: {fileID: 0}
   o_Speedometer: {fileID: 0}
   o_Reporter: {fileID: 0}
@@ -1223,6 +1256,8 @@ MonoBehaviour:
   v_CamWhiplashAmount: {x: 0, y: 0, z: 0}
   v_CamWhiplashRecovery: {x: 0, y: 0, z: 0}
   v_CamWhiplashM: 0.3
+  v_CameraZoomLevel: 15
+  v_CameraZoomGoal: 15
   sceneIsReady: 1
 --- !u!114 &114629398634733958
 MonoBehaviour:
@@ -1346,6 +1381,7 @@ MonoBehaviour:
   r_BufferZone: 0.008
   r_CoreSize: 0.006
   r_LimitRadius: 0.06
+  r_LimitInRings: 15
   r_LimitThickness: 0.003
   r_MaxTime: 0.5
   r_CurTime: 0
@@ -1355,9 +1391,10 @@ MonoBehaviour:
   r_Rotation: 0
   r_Accuracy: 0
   r_Balance: 0
-  r_RingNum: -1
+  r_OuterRingID: 0
   r_TooEarly: 0
   r_Paused: 1
+  r_MaxReached: 0
   r_Active: 0
   i_GoodStance: 0
 --- !u!120 &120180239579081978

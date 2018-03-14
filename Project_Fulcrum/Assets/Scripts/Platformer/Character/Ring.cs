@@ -11,14 +11,19 @@ public class Ring : MonoBehaviour
 	[SerializeField] public Vector4 blue = new Vector4(0,0,1,1);		// Colour.
 	[SerializeField] public Vector4 red = new Vector4(1,0,0,1);			// Colour.
 
+
 	[SerializeField][Range(0,360)] public float rotation = 0; 			// Starting rotation.
 	[SerializeField][Range(0,0.1f)] public float radius = 0; 			// Inner radius.
-	[SerializeField][Range(0,0.1f)] public float thickness = 0; 		// Width of ring.
+	[SerializeField][Range(0,0.1f)] public float visualradius = 0; 		// Inner radius visual.
+	[SerializeField][Range(0,0.1f)] public float thickness = 0; 			// Width of ring.
 	[SerializeField][Range(0,6.28f)] private float fillAmount = 0; 		// How much the ring is filled, in radians. 0 to 6.28.
 	[SerializeField][Range(0,6.28f)] private float badFillAmount = 0; 	// How much the badring is filled, in radians. 0 to 6.28.
 	[SerializeField] public bool badOnTop = false; 						// Sets which colour ring sits on top.
-	[SerializeField] public bool lerpAllChanges = false; 				// Sets whether to move instantly or lerp towards real values.
+	[SerializeField] public bool isCore = false; 						// Sets which colour ring sits on top.
+	[SerializeField] public bool ringHidden = false; 					// Sets whether or not to shrink the ring into invisibility or not.
+	[SerializeField] public bool lerpAllChanges = true; 				// Sets whether to move instantly or lerp towards real values.
 	[SerializeField] public float lerpRadius = 0; 						// Transitional radius. Moves toward real value.
+	[SerializeField] public float lerpthickness = 0; 					// Transitional thickness. Moves toward real value.
 	[SerializeField] private Renderer r_Ring;							// Ring Sprite renderer
 	[SerializeField] private Renderer r_BadRing;						// badRing Sprite renderer
 	#endregion
@@ -34,7 +39,15 @@ public class Ring : MonoBehaviour
 	{	
 	}
 
-	public void setPercentFull(float percent)
+	public void ResetRing()
+	{
+		percentBlue = 0;
+		percentFilled = 0;
+		ringHidden = true;
+		earlyStop = false;
+	}
+
+	public void SetPercentFull(float percent)
 	{
 		if(percent >= 0 && percent <= 2)
 		{
@@ -49,7 +62,7 @@ public class Ring : MonoBehaviour
 		}
 	}
 
-	public float getPercentFull()
+	public float GetPercentFull()
 	{
 		if(earlyStop)
 		{
@@ -61,7 +74,7 @@ public class Ring : MonoBehaviour
 		}
 	}
 
-	public float getPercentWhite()
+	public float GetPercentWhite()
 	{
 		return percentFilled;
 	}
@@ -80,18 +93,63 @@ public class Ring : MonoBehaviour
 
 	private void RingLerp()
 	{
-		if(radius-lerpRadius > 0.001f)
+		if(!ringHidden)
 		{
-			lerpRadius += (radius-lerpRadius)/8;
+			if(Mathf.Abs(radius-lerpRadius)>0.001f)
+			{
+				lerpRadius += (radius-lerpRadius)/8;
+			}
+			else
+			{
+				lerpRadius = radius;
+			}
+
+			if(Mathf.Abs(thickness-lerpthickness)>0.001f)
+			{
+				lerpthickness += (thickness-lerpthickness)/8;
+			}
+			else
+			{
+				lerpthickness = thickness;
+			}
 		}
 		else
 		{
-			lerpRadius = radius;
+			if(Mathf.Abs(lerpRadius)>0.001f)
+			{
+				lerpRadius -= (lerpRadius)/8;
+			}
+			else // Once radius is fully retracted, contract the width also.
+			{
+				lerpRadius = 0;
+				if(Mathf.Abs(lerpthickness)>0.001f)
+				{
+					lerpthickness -= (lerpthickness)/8;
+				}
+				else
+				{
+					lerpthickness = 0;
+				}
+			}
+
 		}
+
 	}
 
 	public void UpdateVisuals()
 	{
+
+		if(lerpAllChanges && lerpthickness<=0)
+		{
+			r_Ring.enabled = false;
+			r_BadRing.enabled = false;
+		}
+		else
+		{
+			r_Ring.enabled = true;
+			r_BadRing.enabled = true;
+		}
+
 		if(earlyStop&&percentFilled>1)
 		{
 			earlyStop = false; // If filled past 100%, could not possibly be underfilled.
@@ -139,21 +197,22 @@ public class Ring : MonoBehaviour
 			r_BadRing.sortingOrder = -1;
 		}
 		float visualRadius = radius; //Used for lerpin'
-
+		float visualThickness = thickness; //Used for lerpin'
 		if(lerpAllChanges)
 		{
 			visualRadius = lerpRadius;
+			visualThickness = lerpthickness;
 		}
 
 		r_Ring.material.SetFloat("_Angle", fillAmount);
 		r_Ring.material.SetFloat("_Radius", visualRadius);
 		r_Ring.material.SetColor("_Color", color);
-		r_Ring.material.SetFloat("_RingWidth", thickness);
+		r_Ring.material.SetFloat("_RingWidth", visualThickness);
 
 		r_BadRing.material.SetFloat("_Angle", badFillAmount);
 		r_BadRing.material.SetFloat("_Radius", visualRadius);
 		r_BadRing.material.SetColor("_Color", badColor);
-		r_BadRing.material.SetFloat("_RingWidth", thickness);
+		r_BadRing.material.SetFloat("_RingWidth", visualThickness);
 
 		Vector3 rot = new Vector3(0,0,rotation + 90);
 		this.transform.localEulerAngles = rot;

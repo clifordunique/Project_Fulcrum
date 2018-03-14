@@ -68,6 +68,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\NavBuilderRay.cs" />
      <Compile Include="Assets\Scripts\AnimAudio.cs" />
      <Compile Include="Assets\Scripts\AnimHeightAdjuster.cs" />
      <Compile Include="Assets\Scripts\AnimationTester.cs" />

@@ -80,6 +80,8 @@ public class Player : FighterChar
 	[SerializeField]private Vector3 v_CamWhiplashAmount;
 	[SerializeField]private Vector3 v_CamWhiplashRecovery;
 	[SerializeField]private float v_CamWhiplashM = 1;
+	[SerializeField]public float v_CameraZoomLevel = 15;
+	[SerializeField]private float v_CameraZoomGoal = 15;
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -159,8 +161,10 @@ public class Player : FighterChar
 				FighterState = inputBuffer.Dequeue();
 			}
 		}
-
+		d_TickCounter++;
+		d_TickCounter = (d_TickCounter > 60) ? 0 : d_TickCounter; // Rolls back to zero when hitting 60
 		FixedUpdateProcessInput();
+		UpdateCurrentNavSurf();
 		if(k_IsKinematic)
 		{
 			FixedUpdateKinematic();	//If the player is in kinematic mode, physics are disabled while animations are played.
@@ -197,9 +201,8 @@ public class Player : FighterChar
 		//
 		if(!sceneIsReady){return;}
 		if(!isLocalPlayer){return;}
-
+		UpdatePlayerInput();
 		UpdatePlayerAnimation();
-		UpdateInput();
 	}
 
 	protected override void LateUpdate()
@@ -427,10 +430,12 @@ public class Player : FighterChar
 		if(FighterState.DevKey5)
 		{
 			v_DefaultCameraMode++;
-			if(v_DefaultCameraMode>3)
+			string[] cameraNames = {"A - LockedClose","B - AimGuided","C - AimGuided SuperJump","D - AimGuidedWhiplash","E - Stationary"};
+			if(v_DefaultCameraMode>4)
 			{
 				v_DefaultCameraMode = 0;
 			}
+			print("Camera mode "+cameraNames[v_DefaultCameraMode]);
 			FighterState.DevKey5 = false;
 		}
 		if(FighterState.DevKey6)
@@ -479,6 +484,17 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey10)
 		{
+			if(n_AutoGenerateNavCon)
+			{
+				n_AutoGenerateNavCon = false;
+				print("AutoGenNavCon Disabled");
+
+			}
+			else
+			{
+				n_AutoGenerateNavCon = true;
+				print("AutoGenNavCon Enabled");
+			}		
 			FighterState.DevKey10 = false;
 		}
 		if(FighterState.DevKey11)
@@ -502,6 +518,7 @@ public class Player : FighterChar
 			FighterState.LeftClickPress = false;
 			FighterState.LeftClickRelease = false;
 			FighterState.LeftClickHold = false;
+			FighterState.ShiftKeyPress = false;
 			FighterState.UpKeyHold = false;
 			FighterState.LeftKeyHold = false;
 			FighterState.DownKeyHold = false;
@@ -514,6 +531,28 @@ public class Player : FighterChar
 		//#################################################################################
 		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE FIGHTER IS INCAPACITATED. ###
 		//#################################################################################
+
+		if(FighterState.ZonKeyPress)
+		{
+			o_Spooler.LockRing();
+		}
+
+		if(FighterState.ShiftKeyPress)
+		{
+			o_Spooler.OpenSpooler();
+		}
+
+		if(FighterState.ShiftKeyRelease)
+		{
+			if(o_Spooler.r_Active)
+			{
+				o_Spooler.HideSpooler();
+			}
+			else
+			{
+				print("Not active, cannot close spooler.");
+			}
+		}
 		//Horizontal button pressing
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
 		if((FighterState.LeftKeyHold && FighterState.RightKeyHold) || !(FighterState.LeftKeyHold||FighterState.RightKeyHold))
@@ -604,18 +643,6 @@ public class Player : FighterChar
 		{
 			facingDirectionV = 0;	
 		}
-
-		//print("CTRLH=" + CtrlH);
-//		if(FighterState.DownKeyHold&&m_Grounded)
-//		{
-//			m_Kneeling = true;
-//			CtrlH = 0;
-//			v_CameraMode = 2;
-//		}
-//		else
-//		{
-//			v_CameraMode = v_DefaultCameraMode;
-//		}
 			
 		//if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
 		if(FighterState.JumpKeyPress)
@@ -814,7 +841,7 @@ public class Player : FighterChar
 			ZonPulse();
 			FighterState.DisperseKeyPress = false;
 		}
-
+			
 		if(FighterState.LeftClickHold)
 		{
 			FighterState.LeftClickHoldDuration += Time.fixedDeltaTime;
@@ -852,6 +879,7 @@ public class Player : FighterChar
 		FighterState.DisperseKeyPress = false;				
 		FighterState.JumpKeyPress = false;				
 		FighterState.LeftKeyPress = false;
+		FighterState.ShiftKeyPress = false;
 		FighterState.RightKeyPress = false;
 		FighterState.UpKeyPress = false;
 		FighterState.DownKeyPress = false;
@@ -859,6 +887,7 @@ public class Player : FighterChar
 		FighterState.LeftClickRelease = false; 	
 		FighterState.RightClickRelease = false;			
 		FighterState.LeftKeyRelease = false;
+		FighterState.ShiftKeyRelease = false;
 		FighterState.RightKeyRelease = false;
 		FighterState.UpKeyRelease = false;
 		FighterState.DownKeyRelease = false;
@@ -878,12 +907,15 @@ public class Player : FighterChar
 		FighterState.DevKey12 = false;				
 	}
 
-	protected override void UpdateInput()
+	protected override void UpdatePlayerInput() //UPI
 	{
 		if(!isLocalPlayer){return;}
 		//
 		// Individual keydown presses
 		//
+
+		FighterState.ScrollWheel = Input.GetAxis("Mouse ScrollWheel");
+
 		if(Input.GetMouseButtonDown(0))
 		{
 			FighterState.LeftClickPress = true;
@@ -892,9 +924,13 @@ public class Player : FighterChar
 		{
 			FighterState.RightClickPress = true;
 		}
-		if(Input.GetButtonDown("Spooling"))
+		if(Input.GetButtonDown("Q"))
 		{
 			FighterState.ZonKeyPress = true;				
+		}
+		if(Input.GetButtonDown("Shift"))
+		{
+			FighterState.ShiftKeyPress = true;				
 		}
 		if(Input.GetButtonDown("Disperse"))
 		{
@@ -982,32 +1018,28 @@ public class Player : FighterChar
 		}
 
 		//
-		// Key-Up Unpresses
+		// Key-Up releases
 		//
 		if(Input.GetMouseButtonUp(0))
-		{
 			FighterState.LeftClickRelease = true;
-		}
+		
 		if(Input.GetMouseButtonUp(1))
-		{
 			FighterState.RightClickRelease = true;
-		}
-		if( Input.GetButtonUp("Left"))
-		{
+		
+		if(Input.GetButtonUp("Left"))
 			FighterState.LeftKeyRelease = true;
-		}
+		
 		if(Input.GetButtonUp("Right"))
-		{
 			FighterState.RightKeyRelease = true;
-		}
+		
 		if(Input.GetButtonUp("Up"))
-		{
 			FighterState.UpKeyRelease = true;
-		}
+		
 		if(Input.GetButtonUp("Down"))
-		{
 			FighterState.DownKeyRelease = true;
-		}
+
+		if(Input.GetButtonUp("Shift"))
+			FighterState.ShiftKeyRelease = true;				
 
 		//
 		// Key Hold-Downs
@@ -1050,6 +1082,16 @@ public class Player : FighterChar
 
 	protected void UpdatePlayerAnimation() // UPA
 	{
+		v_CameraZoomGoal -= FighterState.ScrollWheel*1.5f;
+		v_CameraZoomGoal = (v_CameraZoomGoal>15) ? 15 : v_CameraZoomGoal; // Clamp max
+		v_CameraZoomGoal = (v_CameraZoomGoal<5) ? 5 : v_CameraZoomGoal; // Clamp min
+
+
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, v_CameraZoomGoal, Time.deltaTime*10);
+
+
+
+
 		switch(v_CameraMode)
 		{
 		case 0: 
@@ -1070,6 +1112,11 @@ public class Player : FighterChar
 		case 3:
 			{
 				CameraControlTypeD(); // SuperJump Camera
+				break;
+			}
+		case 4:
+			{
+				CameraControlTypeE(); // Locked Map Location Camera
 				break;
 			}
 		default:
@@ -1097,12 +1144,18 @@ public class Player : FighterChar
 
 	protected void CameraControlTypeA() //CCTA - locked cam
 	{
-		#region zoom
+		
 		if(!o_MainCamera){return;}
+		if(o_MainCameraTransform.parent==null)
+		{
+			o_MainCameraTransform.parent = this.transform;
+			o_MainCameraTransform.localPosition = Vector3.zero;
+		}
+		#region zoom
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
 		//v_CameraZoom = FighterState.Vel.magnitude;
 		float zoomChange = 0;
-		o_MainCamera.orthographicSize = 8f;
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
 
 		//o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
 		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
@@ -1114,19 +1167,26 @@ public class Player : FighterChar
 	protected void CameraControlTypeB() //CCTB - aim cam
 	{
 		if(!o_MainCamera){return;}
+
+		if(o_MainCameraTransform.parent==null)
+		{
+			o_MainCameraTransform.parent = this.transform;
+			o_MainCameraTransform.localPosition = Vector3.zero;
+		}
+
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
 			zoomChange = (0.15f*v_CameraZoom)-5f;
 		}
-		if(8f+zoomChange >= 50f)
+		if(v_CameraZoomLevel+zoomChange >= 40f)
 		{
 			o_MainCamera.orthographicSize = 40f;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = 8f+zoomChange;
+			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
 		}
 
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
@@ -1154,19 +1214,26 @@ public class Player : FighterChar
 	protected void CameraControlTypeC() //CCTC - super jump cam
 	{
 		if(!o_MainCamera){return;}
+
+		if(o_MainCameraTransform.parent==null)
+		{
+			o_MainCameraTransform.parent = this.transform;
+			o_MainCameraTransform.localPosition = Vector3.zero;
+		}
+	
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, GetZonLevel()*25, Time.unscaledDeltaTime);
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
 			zoomChange = (0.15f*v_CameraZoom)-5f;
 		}
-		if(8f+zoomChange >= 50f)
+		if(v_CameraZoomLevel+zoomChange >= 40f) // If zoomchange (speed zoom) plus camerazoomlevel (scroll zoom) greater than the maximum, clamp it.
 		{
 			o_MainCamera.orthographicSize = 40f;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = 8f+zoomChange;
+			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
 		}
 
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
@@ -1236,25 +1303,36 @@ public class Player : FighterChar
 		o_MainCameraTransform.localPosition = Vector3.Lerp(o_MainCameraTransform.localPosition, camGoalLocation, 10*Time.unscaledDeltaTime); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
 	}
 		
-
-	protected void CameraControlTypeD() //CCTD - whiplash aimcam
+	protected void CameraControlTypeD() //CCTD - whiplash aimcam - Main camera style
 	{
 		if(!o_MainCamera){return;}
+
+		if(o_MainCameraTransform.parent==null)
+		{
+			o_MainCameraTransform.parent = this.transform;
+			o_MainCameraTransform.localPosition = Vector3.zero;
+		}
+		#region zoom
+		// CameraZoom is the speed based zoom modifier
 		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
+
+
 		float zoomChange = 0;
 		if((0.15f*v_CameraZoom)>=5f)
 		{
 			zoomChange = (0.15f*v_CameraZoom)-5f;
 		}
-		if(8f+zoomChange >= 50f)
+		if(v_CameraZoomLevel+zoomChange >= 50f)
 		{
 			o_MainCamera.orthographicSize = 40f;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = 8f+zoomChange;
+			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
 		}
 
+		#endregion
+		#region position
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
 
@@ -1351,6 +1429,7 @@ public class Player : FighterChar
 		Vector3 camGoalLocation = new Vector3(finalXPos, finalYPos, -10f);
 
 		o_MainCameraTransform.localPosition = Vector3.Lerp(o_MainCameraTransform.localPosition, camGoalLocation, 10*Time.unscaledDeltaTime); // CAMERA LERP TO POSITION. USUAL MOVEMENT METHOD.
+		#endregion
 
 		//
 		// The following block of code is for when the player hits the maximum bounds. The camera will instantly snap to the edge and won't go any further. Does not use lerp.
@@ -1360,6 +1439,21 @@ public class Player : FighterChar
 		//o_MainCamera.orthographicSize = 20f; // REMOVE THIS WHEN NOT DEBUGGING.
 
 	}
+
+	protected void CameraControlTypeE() // Scenic stationary camera
+	{
+		if(!o_MainCamera)
+		{
+			return;
+		}
+		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
+		//v_CameraZoom = FighterState.Vel.magnitude;
+		float zoomChange = 0;
+		o_MainCamera.orthographicSize = 20f;
+		o_MainCameraTransform.parent = null;
+		o_MainCameraTransform.position = new Vector3(-4, 263, -10f);
+	}
+
 
 	#endregion
 	//###################################################################################################################################

@@ -85,6 +85,7 @@ GameObject:
   - component: {fileID: 212296778074751252}
   - component: {fileID: 95806249971757354}
   - component: {fileID: 114959348067022044}
+  - component: {fileID: 114018071864638098}
   m_Layer: 13
   m_Name: SpriteTransform
   m_TagString: Untagged
@@ -133,7 +134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1306559093083546
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,8 +287,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271522054906898}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1307.4, y: 206.1, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 31.97, y: -5.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4400483855208910}
@@ -596,6 +597,22 @@ MonoBehaviour:
     i15: 128
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114018071864638098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1167762914364708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ddf95c5712b5be438e4f1f430fbf77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myFighter: {fileID: 0}
+  downDirection: {x: 0, y: 0}
+  angle: 0
+  radians: 0
+  embedAmount: 0
 --- !u!114 &114090628565039918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -621,9 +638,12 @@ MonoBehaviour:
   d_ClickToKnockFighter: 0
   d_SendCollisionMessages: 0
   d_SendTractionMessages: 0
+  d_Invincible: 0
+  d_TickCounter: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
-  m_Acceleration: 0.6
+  m_StartupAccelRate: 0.8
+  m_LinearAccelRate: 0.4
   m_VJumpForce: 40
   m_HJumpForce: 5
   m_WallVJumpForce: 20
@@ -633,7 +653,6 @@ MonoBehaviour:
   m_LinearStopRate: 2
   m_LinearSlideRate: 0.35
   m_LinearOverSpeedRate: 0.1
-  m_LinearAccelRate: 0.4
   m_ImpactDecelMinAngle: 20
   m_ImpactDecelMaxAngle: 80
   m_TractionLossMinAngle: 45
@@ -674,6 +693,8 @@ MonoBehaviour:
   o_SparkThrower: {fileID: 0}
   o_Anim: {fileID: 0}
   o_Rigidbody2D: {fileID: 0}
+  o_DebugAngleDisplay: {fileID: 0}
+  o_NavMaster: {fileID: 0}
   p_ZonPulse: {fileID: 0}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
@@ -731,7 +752,6 @@ MonoBehaviour:
   m_RightWallBlocked: 0
   m_SurfaceCling: 0
   m_Airborne: 1
-  m_Landing: 0
   m_Kneeling: 0
   m_WorldImpact: 0
   FighterState:
@@ -747,6 +767,7 @@ MonoBehaviour:
     RightKeyPress: 0
     UpKeyPress: 0
     DownKeyPress: 0
+    ScrollWheel: 0
     LeftClickHold: 0
     RightClickHold: 0
     LeftKeyHold: 0
@@ -801,7 +822,8 @@ MonoBehaviour:
   v_DistFromLastDust: 0
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
-  v_PunchHitting: 0
+  v_TriggerAtkHit: 0
+  v_TriggerRollOut: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
@@ -843,6 +865,32 @@ MonoBehaviour:
   g_MinGuardStunT: 0.5
   g_MaxGuardStunT: 0.8
   p_DefaultShoeID: 0
+  n_CurrentSurf: {fileID: 0}
+  n_CurrentSurfID: 0
+  n_MaxSurfLineDist: 0.5
+  n_AutoGenerateNavCon: 0
+  n_Jumped: 0
+  n_PlayerTraversing: 0
+  n_PlayerTraversalTime: 0
+  n_TempNavCon:
+    edgeWeight: 1
+    orig: {fileID: 0}
+    dest: {fileID: 0}
+    destPosition: 0
+    destLandingVel: 0
+    exitVel: {x: 0, y: 0}
+    exitVelRange: 0
+    minExitVel: 0
+    maxExitVel: 0
+    exitPosition: 0
+    exitPositionRange: 0.5
+    traverseType: 0
+    failedTraversals: 0
+    successfulTraversals: 0
+    traversaltimeout: 5
+    averageTraversalTime: 0
+  n_LastSurface: {fileID: 0}
+  n_SpecialAction: 0
   i_LeftClickHoldDuration: 0
   enemyTarget: {fileID: 0}
   distanceToTarget: 0
@@ -854,6 +902,41 @@ MonoBehaviour:
   PunchCooldown: 0
   d_Think: 1
   d_aiDebug: 0
+  n_NavState: 0
+  n_TraversalTime: 0
+  n_AtExit: 0
+  n_HasJumped: 0
+  n_WindUpGoal: -1
+  n_TraversalTimer: 0
+  n_PathProgress: 0
+  n_Traversing: 0
+  n_HasAPath: 0
+  o_NavDebugLine: {fileID: 0}
+  o_NavDebugMarker: {fileID: 0}
+  n_CurrentPath:
+    edges: []
+    totalWeight: 0
+    totalDepth: 0
+  n_ActiveConnection:
+    edgeWeight: 1
+    orig: {fileID: 0}
+    dest: {fileID: 0}
+    destPosition: 0
+    destLandingVel: 0
+    exitVel: {x: 0, y: 0}
+    exitVelRange: 0
+    minExitVel: 0
+    maxExitVel: 0
+    exitPosition: 0
+    exitPositionRange: 0.5
+    traverseType: 0
+    failedTraversals: 0
+    successfulTraversals: 0
+    traversaltimeout: 5
+    averageTraversalTime: 0
+  n_DestSurf: {fileID: 0}
+  n_DestSurfID: -1
+  n_SurfLineDist: 0
 --- !u!114 &114137358317395066
 MonoBehaviour:
   m_ObjectHideFlags: 1

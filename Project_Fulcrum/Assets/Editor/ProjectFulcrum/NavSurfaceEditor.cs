@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(NavSurface))]
+[CanEditMultipleObjects]
 public class NavSurfaceEditor : Editor {
 
 	private NavSurface myNavSurface;

@@ -103,6 +103,7 @@ Shader "Custom/SpoolTest" {
 
 				if(angle >= _Angle && alpha == 1)
 				{
+					clip(-1);
 					alpha = 0;
 				}
 			

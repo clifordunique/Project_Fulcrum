@@ -37,6 +37,8 @@ GameObject:
   - component: {fileID: 212382692746011788}
   - component: {fileID: 58000945380972210}
   - component: {fileID: 114328786206004790}
+  - component: {fileID: 114403614784768184}
+  - component: {fileID: 114394304719154910}
   m_Layer: 2
   m_Name: Sprite
   m_TagString: Untagged
@@ -100,6 +102,28 @@ MonoBehaviour:
   originFighter: {fileID: 0}
   pulseRadius: 0
   pulseRange: 40
+--- !u!114 &114394304719154910
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1742706380991586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83ed1ae3a3fc0224da2ed324a25c879b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114403614784768184
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1742706380991586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e65849298bdb76a498fa94e056fcb0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212382692746011788
 SpriteRenderer:
   m_ObjectHideFlags: 1
