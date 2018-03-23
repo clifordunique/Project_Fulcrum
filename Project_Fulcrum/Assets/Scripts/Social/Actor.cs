@@ -7,8 +7,9 @@ public class Actor : MonoBehaviour {
 	public Animator positionAnimator;
 	public int actorID;
 
-	void Start () {
-	
+	void Start () 
+	{
+
 	}
 	
 	// Update is called once per frame
@@ -36,6 +37,15 @@ public class Actor : MonoBehaviour {
 		emoteAnimator.SetInteger("EMOTE", value);
 	}
 
+	public void SetPositionAnim(int id)
+	{
+		positionAnimator.SetInteger("state", id);
+	}
+
+	public void SetEmoteAnim(int id)
+	{
+		emoteAnimator.SetInteger("EMOTE", id);
+	}
 
 	public void PlayDialogueAnim(bool leftSide, int emote)
 	{

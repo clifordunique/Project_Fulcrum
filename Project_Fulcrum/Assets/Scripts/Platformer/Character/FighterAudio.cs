@@ -15,6 +15,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AK.Wwise.Event e_Crater = null;
 	[SerializeField]private AK.Wwise.Event e_Jump = null;
 	[SerializeField]private AK.Wwise.Event e_StrandJump = null;
+	[SerializeField]private AK.Wwise.Event e_GuardRoll = null;
 	[SerializeField]private AK.Wwise.Event e_SuperJump = null;
 	[SerializeField]private AK.Wwise.Event e_EquipSound = null;
 
@@ -82,6 +83,12 @@ public class FighterAudio : NetworkBehaviour {
 	{
 		//if(!isLocalPlayer){return;}
 		e_StrandJump.Post(this.gameObject);
+	}
+
+	public void GuardRollSound()
+	{
+		//if(!isLocalPlayer){return;}
+		e_GuardRoll.Post(this.gameObject);
 	}
 
 //	private void modulateWind()

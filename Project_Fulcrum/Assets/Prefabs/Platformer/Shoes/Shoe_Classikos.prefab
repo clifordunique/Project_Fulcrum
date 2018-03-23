@@ -101,7 +101,7 @@ MonoBehaviour:
   m_WallVJumpForce: 35
   m_WallHJumpForce: 15
   m_ZonJumpForcePerCharge: 5
-  m_ZonJumpForceBase: 50
+  m_ZonJumpForceBase: 60
   m_TractionChangeT: 20
   m_WallTractionT: 20
   m_LinearStopRate: 3

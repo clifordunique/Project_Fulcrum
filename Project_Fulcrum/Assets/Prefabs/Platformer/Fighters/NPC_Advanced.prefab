@@ -383,7 +383,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1206254797076498}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25.8, y: 254.4, z: 0}
+  m_LocalPosition: {x: 16.8, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4242442471465676}
@@ -810,7 +810,7 @@ MonoBehaviour:
   d_ClickToKnockFighter: 0
   d_SendCollisionMessages: 0
   d_SendTractionMessages: 0
-  d_Invincible: 1
+  d_Invincible: 0
   d_TickCounter: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
@@ -882,6 +882,7 @@ MonoBehaviour:
     type: 2}
   p_SparkEffectPrefab: {fileID: 1241283713325446, guid: d6c2c7ebdba9baa4cb85abe4ed6c2319,
     type: 2}
+  p_ExplosionEffectPrefab: {fileID: 0}
   m_TerrainMask:
     serializedVersion: 2
     m_Bits: 32768
@@ -933,6 +934,7 @@ MonoBehaviour:
     Dead: 0
     Stance: 0
     JumpKeyPress: 0
+    ShiftKeyPress: 0
     LeftClickPress: 0
     RightClickPress: 0
     LeftKeyPress: 0
@@ -942,12 +944,14 @@ MonoBehaviour:
     ScrollWheel: 0
     LeftClickHold: 0
     RightClickHold: 0
+    ShiftKeyHold: 0
     LeftKeyHold: 0
     RightKeyHold: 0
     UpKeyHold: 0
     DownKeyHold: 0
     RightClickRelease: 0
     LeftClickRelease: 0
+    ShiftKeyRelease: 0
     LeftKeyRelease: 0
     RightKeyRelease: 0
     UpKeyRelease: 0
@@ -981,7 +985,6 @@ MonoBehaviour:
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
   v_ReversingSlideT: 5
-  v_FighterGlow: 0
   v_CameraZoom: 0
   v_CameraMode: 1
   v_DefaultCameraMode: 1
@@ -994,6 +997,8 @@ MonoBehaviour:
   v_DistFromLastDust: 0
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
+  v_CurrentColor: {r: 0, g: 0, b: 0, a: 0}
+  v_ChargedColor: {r: 0, g: 0, b: 0, a: 0}
   v_TriggerAtkHit: 0
   v_TriggerRollOut: 0
   v_AirForgiveness: 0
@@ -1073,7 +1078,8 @@ MonoBehaviour:
   PunchDelayVariance: 0.3
   PunchCooldown: 0
   d_Think: 1
-  d_aiDebug: 1
+  d_Dumb: 1
+  d_aiDebug: 0
   n_NavState: 0
   n_TraversalTime: 0
   n_AtExit: 0

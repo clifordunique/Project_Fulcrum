@@ -54,6 +54,7 @@
      <Compile Include="Assets\Editor\ProjectFulcrum\NavMasterEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\NavSurfaceEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\ParallaxOptionEditor.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\SceneNodeGraph.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\TEST_PFBuildHandler.cs" />
      <Compile Include="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" />
      <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />
@@ -176,6 +177,7 @@
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CreaseApply.shader" />
      <None Include="Assets\z_Game Jam Template\Fonts\OpenSans\License!.txt" />
+     <None Include="Assets\Shaders\Shaders\Spooler.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ChromaticAberrationShader.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Shaders\Shaders\MinimapHologram.shader" />
@@ -183,6 +185,7 @@
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Luminance.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
+     <None Include="Assets\Shaders\Shaders\AbsorbDissolve.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionSelective.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
@@ -209,6 +212,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VortexEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Adaptation.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
+     <None Include="Assets\Shaders\Shaders\ChromaticFlux.shader" />
      <None Include="Assets\Wwise\Deployment\Plugins\Mac\Debug\AkSoundEngine.bundle\Contents\Resources\readme.txt" />
      <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />

@@ -17,9 +17,11 @@
 			<Path>FighterChar.bnk</Path>
 			<IncludedEvents>
 				<Event Id="4052040634" Name="Breakable_Break" ObjectPath="\Events\Default Work Unit\Breakable_Break"/>
+				<Event Id="1802268949" Name="ChargeCrit" ObjectPath="\Events\Default Work Unit\ChargeCrit" MaxAttenuation="100.000000"/>
 				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge" MaxAttenuation="100.000000"/>
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse" MaxAttenuation="100.000000"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep" MaxAttenuation="100.000000"/>
+				<Event Id="797614645" Name="GuardRoll" ObjectPath="\Events\Default Work Unit\GuardRoll" MaxAttenuation="100.000000"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
 				<Event Id="2146777153" Name="Item_Equip" ObjectPath="\Events\Default Work Unit\Item_Equip" MaxAttenuation="100.000000"/>
@@ -99,7 +101,7 @@
 				</File>
 				<File Id="90860644" Language="SFX">
 					<ShortName>jump02.wav</ShortName>
-					<Path>SFX\jump02_1C9C67B2.wem</Path>
+					<Path>SFX\jump02_9AC9A775.wem</Path>
 				</File>
 				<File Id="94025848" Language="SFX">
 					<ShortName>gravel2.wav</ShortName>
@@ -131,7 +133,7 @@
 				</File>
 				<File Id="149336316" Language="SFX">
 					<ShortName>jump04.wav</ShortName>
-					<Path>SFX\jump04_1C9C67B2.wem</Path>
+					<Path>SFX\jump04_9AC9A775.wem</Path>
 				</File>
 				<File Id="159626265" Language="SFX">
 					<ShortName>wood_land04.wav</ShortName>
@@ -211,11 +213,15 @@
 				</File>
 				<File Id="301568547" Language="SFX">
 					<ShortName>jump03.wav</ShortName>
-					<Path>SFX\jump03_1C9C67B2.wem</Path>
+					<Path>SFX\jump03_9AC9A775.wem</Path>
 				</File>
 				<File Id="304183638" Language="SFX">
 					<ShortName>concrete_land02.wav</ShortName>
 					<Path>SFX\concrete_land02_1C9C67B2.wem</Path>
+				</File>
+				<File Id="305237879" Language="SFX">
+					<ShortName>SpoolerCrit.wav</ShortName>
+					<Path>SFX\SpoolerCrit_1C9C67B2.wem</Path>
 				</File>
 				<File Id="312555540" Language="SFX">
 					<ShortName>concrete1.wav</ShortName>
@@ -379,7 +385,7 @@
 				</File>
 				<File Id="664056065" Language="SFX">
 					<ShortName>jump05.wav</ShortName>
-					<Path>SFX\jump05_1C9C67B2.wem</Path>
+					<Path>SFX\jump05_9AC9A775.wem</Path>
 				</File>
 				<File Id="674098254" Language="SFX">
 					<ShortName>female_attack04.wav</ShortName>
@@ -493,6 +499,10 @@
 					<ShortName>female_pain04.wav</ShortName>
 					<Path>SFX\female_pain04_1C9C67B2.wem</Path>
 				</File>
+				<File Id="966269544" Language="SFX">
+					<ShortName>GuardRoll.wav</ShortName>
+					<Path>SFX\GuardRoll_9AC9A775.wem</Path>
+				</File>
 				<File Id="995229020" Language="SFX">
 					<ShortName>metal3.wav</ShortName>
 					<Path>SFX\metal3_1C9C67B2.wem</Path>
@@ -566,11 +576,11 @@
 				</File>
 				<File Id="172087502" Language="SFX">
 					<ShortName>ambience_ruins.wav</ShortName>
-					<Path>SFX\ambience_ruins_43AF13D6.wem</Path>
+					<Path>SFX\ambience_ruins_EB55FB10.wem</Path>
 				</File>
 				<File Id="776139243" Language="SFX">
 					<ShortName>ambience_rural.wav</ShortName>
-					<Path>SFX\ambience_rural_7F73363F.wem</Path>
+					<Path>SFX\ambience_rural_347AFE5E.wem</Path>
 				</File>
 				<File Id="862610851" Language="SFX">
 					<ShortName>ambience_city.wav</ShortName>

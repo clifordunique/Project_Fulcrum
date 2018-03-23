@@ -3,6 +3,7 @@
 */[Oo]bj/
 */[Bb]uild/
 */[Bb]uilds/
+
 */Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
@@ -29,12 +30,17 @@ ExportedObj/
 # Unity3D Generated File On Crash Reports
 */sysinfo.txt
 
-# Builds
 *.apk
+*.psd
 *.unitypackage
 *.meta
 *.info
 *.resource
 *.meta
-Project_Fulcrum/Assets/Wwise/*
 *.prof
+
+Project_Fulcrum/Assets/Wwise/*
+Photoshop/*
+Illustrator-Model/*
+Vector/*
+

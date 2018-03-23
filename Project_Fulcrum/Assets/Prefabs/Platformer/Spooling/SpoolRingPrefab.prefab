@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4957385652168484}
   - component: {fileID: 114224447615555590}
-  m_Layer: 16
+  m_Layer: 5
   m_Name: SpoolRingPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4748437557238440}
   - component: {fileID: 212082404253105348}
-  m_Layer: 16
+  m_Layer: 5
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4004865741860004}
   - component: {fileID: 212821386312496172}
-  m_Layer: 16
+  m_Layer: 5
   m_Name: BadRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ Transform:
   m_GameObject: {fileID: 1490407522407120}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4748437557238440}
   - {fileID: 4004865741860004}
@@ -111,10 +111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d3746c0849ac2b42a6aa4bdca4173f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {x: 1, y: 1, z: 1, w: 1}
-  badColor: {x: 0, y: 0, z: 1, w: 1}
-  blue: {x: 0, y: 0, z: 1, w: 1}
-  red: {x: 1, y: 0, z: 0, w: 1}
   rotation: 0
   radius: 0
   visualradius: 0
@@ -122,6 +118,8 @@ MonoBehaviour:
   fillAmount: 0
   badFillAmount: 0
   badOnTop: 0
+  criticalSuccess: 0
+  isTransparent: 0
   isCore: 0
   ringHidden: 0
   lerpAllChanges: 0
@@ -129,6 +127,8 @@ MonoBehaviour:
   lerpthickness: 0
   r_Ring: {fileID: 212082404253105348}
   r_BadRing: {fileID: 212821386312496172}
+  vortexAmount: 10
+  lerpVortexAmount: 0
   earlyStop: 0
   percentFilled: 0
   percentBlue: 0
@@ -145,7 +145,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7392dee934725bf44ba078ab698429bd, type: 2}
+  - {fileID: 2100000, guid: 578a4689f562a8e4da7aa10eaa739374, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -164,7 +164,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ad2e768a4054b0749ae9cdfb7103c883, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bffd94df86e1606409b6416f004067f5, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -185,7 +185,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7392dee934725bf44ba078ab698429bd, type: 2}
+  - {fileID: 2100000, guid: 578a4689f562a8e4da7aa10eaa739374, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -204,7 +204,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ad2e768a4054b0749ae9cdfb7103c883, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bffd94df86e1606409b6416f004067f5, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0

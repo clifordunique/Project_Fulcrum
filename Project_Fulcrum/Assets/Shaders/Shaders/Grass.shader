@@ -2,14 +2,9 @@
 Shader "Custom/Grass" {
 	
 	Properties {
-		//_Color("_Color", Color) = (1,1,1,1)
 		_MainTex("Texture", 2D) = "white" {}
 		_DisplaceTex ("Displacement Texture", 2D) = "white" {}
 		_WindForce("_WindForce", Range(-2,2)) = 0
-		//_RingWidth("_RingWidth", Range(0,0.1)) = 1
-		//_Angle("_Angle", Range(0,6.28)) = 1
-//		_Glossiness ("Smoothness", Range(0,1)) = 0.5
-//		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader 
 	{
@@ -24,7 +19,6 @@ Shader "Custom/Grass" {
 		Pass
 		{
 			Blend SrcAlpha OneMinusSrcAlpha 
-			//Blend One One
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -33,8 +27,6 @@ Shader "Custom/Grass" {
 			sampler2D _MainTex;
 			sampler2D _DisplaceTex;
 			float _WindForce;
-			//float _RingWidth;
-			//float _Angle;
 			float4 _Color;
 
 			#include "UnityCG.cginc"

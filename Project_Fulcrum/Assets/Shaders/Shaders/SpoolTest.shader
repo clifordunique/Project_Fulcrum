@@ -1,10 +1,8 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
+﻿
 Shader "Custom/SpoolTest" {
 	
 	Properties {
 		_Color("_Color", Color) = (1,1,1,1)
-		_MainTex("Texture", 2D) = "white" {}
 		_DisplaceTex ("Displacement Texture", 2D) = "white" {}
 		_Radius("_Radius", Range(0,1)) = 1
 		_RingWidth("_RingWidth", Range(0,0.1)) = 1
@@ -31,7 +29,6 @@ Shader "Custom/SpoolTest" {
 			#pragma vertex vert
 			#pragma fragment frag
 
-			sampler2D _MainTex;
 			sampler2D _DisplaceTex;
 			float _Radius;
 			float _RingWidth;
@@ -69,7 +66,6 @@ Shader "Custom/SpoolTest" {
 				//disp = (((disp*2)-1)*_Radius);
 				//float2 magnitude2 = float2(0,((0.5f*sin(_Time.y))+0.5f));
 				//float2 waveOffset = float2(0, 0.2*(sin(2*(i.uv.x+_Time.y))));
-				//float4 colour = tex2D(_MainTex, i.uv);
 
 				float angle = atan(i.uv.y/i.uv.x);
 
@@ -107,7 +103,8 @@ Shader "Custom/SpoolTest" {
 					alpha = 0;
 				}
 			
-				float4 colour = tex2D(_MainTex, i.uv);
+				//float4 colour = tex2D(_MainTex, i.uv);
+				float4 colour = _Color;
 				//float4 colour2 = float4(colour.r*i.uv.x,colour.g*i.uv.y,0,colour.a);
 				//float4 colour3 = float4(1-colour.r, 1-colour.g, 1-colour.b, colour.a);
 				float4 colour4 = float4(colour.r*_Color.r,colour.g*_Color.g,colour.b*_Color.b,alpha*_Color.a);

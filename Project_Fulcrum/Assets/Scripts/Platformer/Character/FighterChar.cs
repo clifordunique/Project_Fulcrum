@@ -183,6 +183,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public GameObject p_AirBurstPrefab;		// Reference to the air burst prefab, which is a radial windforce.
 	[SerializeField] public GameObject p_DustEffectPrefab;		// Reference to the dust visual effect prefab.
 	[SerializeField] public GameObject p_SparkEffectPrefab;		// Reference to the spark visual effect prefab.
+	[SerializeField] public GameObject p_ExplosionEffectPrefab;	// Reference to the explosion visual effect prefab.
 
 
 	#endregion
@@ -266,7 +267,6 @@ public class FighterChar : NetworkBehaviour
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
 	[SerializeField][Range(0,10)]protected float v_ReversingSlideT = 5;		// How fast the fighter must be going to go into a slide posture when changing directions.
-	[SerializeField][Range(0,3)] protected int v_FighterGlow;			 	// Amount of fighter "energy glow" effect.
 	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	 	// Amount of camera zoom.
 	[SerializeField][Range(0,1)] protected int v_CameraMode; 			 	// What camera control type is in use.
 	[SerializeField][Range(0,1)] protected int v_DefaultCameraMode = 1;		// What camera control type to default to in normal gameplay.
@@ -279,6 +279,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_DistFromLastDust; // Records the distance from the last dust cloud produced;
 	[SerializeField][Range(0,200)] protected float v_DistBetweenDust; 		// Sets the max distance between dust clouds.
 	[SerializeField][ReadOnlyAttribute] protected Color v_DefaultColor; 	// Set to the colour selected on the object's spriterenderer component.
+	[SerializeField][ReadOnlyAttribute] protected Color v_CurrentColor; 	// Set to the colour selected on the object's spriterenderer component.
+	[SerializeField] public Color v_ChargedColor; 							// Colour the fighter will be when fully charged.
 	[SerializeField][ReadOnlyAttribute] public bool v_TriggerAtkHit;		// Set to true to activate the attack hit animation.
 	[SerializeField][ReadOnlyAttribute] public bool v_TriggerRollOut;		// Set to true to activate the guard roll animation.
 
@@ -365,6 +367,15 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void Awake()
 	{
 		FighterAwake();
+
+		if(v_Gender)
+		{
+			AkSoundEngine.PostEvent("Set_Gender_Male", gameObject);
+		}
+		else
+		{
+			AkSoundEngine.PostEvent("Set_Gender_Female", gameObject);
+		}
 	}
 
 	protected virtual void FixedUpdate()
@@ -511,7 +522,6 @@ public class FighterChar : NetworkBehaviour
 
 		//v_TerrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
-
 
 		FighterState.CurHealth = 100;					// Current health.
 		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
@@ -711,7 +721,8 @@ public class FighterChar : NetworkBehaviour
 		}
 		FighterState.Dead = true;
 		o_Anim.SetBool("Dead", true);
-		o_SpriteRenderer.color = Color.red;
+		v_CurrentColor = Color.red;
+		o_SpriteRenderer.color = v_CurrentColor;
 	}
 
 	protected virtual void Respawn()
@@ -720,7 +731,8 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Dead = false;
 		FighterState.CurHealth = g_MaxHealth;
 		o_Anim.SetBool("Dead", false);
-		o_SpriteRenderer.color = v_DefaultColor;
+		v_CurrentColor = v_CurrentColor;
+		o_SpriteRenderer.color = v_CurrentColor;
 	}
 
 //	protected virtual void SpawnSparkEffect()
@@ -755,6 +767,37 @@ public class FighterChar : NetworkBehaviour
 			spawnPos = m_GroundFoot.position;
 		}
 		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
+	}
+
+	protected virtual void SpawnExplosionEffect()
+	{
+		Vector3 spawnPos;
+		float rotation;
+		if(v_PrimarySurface <= 0)
+		{
+			spawnPos = m_GroundFoot.position;
+			rotation = Get2DAngle(Perp(m_GroundNormal));
+		}
+		else if(v_PrimarySurface == 1)
+		{
+			spawnPos = m_CeilingFoot.position;
+			rotation = Get2DAngle(Perp(m_CeilingNormal));
+		}
+		else if(v_PrimarySurface == 2)
+		{
+			spawnPos = m_LeftSide.position;
+			rotation = Get2DAngle(Perp(m_LeftNormal));
+		}
+		else
+		{
+			spawnPos = m_RightSide.position;
+			rotation = Get2DAngle(Perp(m_RightNormal));
+		}
+
+		Quaternion spawnRotation = new Quaternion();
+		spawnRotation.eulerAngles = new Vector3(0, 0, rotation);
+
+		Instantiate(p_ExplosionEffectPrefab, spawnPos, spawnRotation);
 	}
 
 	protected virtual void SpawnDustEffect(Vector2 spawnPos)
@@ -893,8 +936,16 @@ public class FighterChar : NetworkBehaviour
 			AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 
 
-			if(FighterState.Stance == 2) // If guarding, more resistant to landing damage.
+			if(FighterState.Stance == 2) // Guardroll If guarding, more resistant to landing damage.
 			{
+				if(m_IGF>=30)
+				{
+					v_TriggerRollOut = true;
+					if(FighterState.Vel.magnitude>15)
+					{
+						o_FighterAudio.GuardRollSound();
+					}
+				}
 				craterThreshold = m_GuardCraterT;
 				slamThreshold = m_GuardSlamT;
 				velPunchThreshold = m_VelPunchT;
@@ -1082,7 +1133,8 @@ public class FighterChar : NetworkBehaviour
 			}
 			FighterState.Dead = true;
 			o_Anim.SetBool("Dead", true);
-			o_SpriteRenderer.color = Color.red;
+			v_CurrentColor = Color.red;
+			o_SpriteRenderer.color = v_CurrentColor;
 		}
 		else
 		{
@@ -1132,7 +1184,6 @@ public class FighterChar : NetworkBehaviour
 		AkSoundEngine.SetRTPCValue("Velocity_Y", FighterState.Vel.y, this.gameObject);
 		AkSoundEngine.SetRTPCValue("GForce_Continuous", m_CGF, this.gameObject);
 
-
 		//Bools
 		AkSoundEngine.SetRTPCValue("Sliding", Convert.ToSingle(isSliding()), this.gameObject);
 		AkSoundEngine.SetRTPCValue("Contact_Airborne", Convert.ToSingle(m_Airborne), this.gameObject);
@@ -1177,21 +1228,27 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 			
-		v_FighterGlow = FighterState.ZonLevel;
-		if (v_FighterGlow > 7){v_FighterGlow = 7;}
+		float fighterGlow = FighterState.ZonLevel;
+		if (fighterGlow > 7){fighterGlow = 7;}
 
-		if(v_FighterGlow>2)
+		if(fighterGlow>0)
 		{
-			o_SpriteRenderer.color = new Color(1,1,(1f-(v_FighterGlow/7f)),1);
+			o_SpriteRenderer.material.SetFloat("_Magnitude", fighterGlow);
+			//v_CurrentColor = new Color(1,1,(1f-(fighterGlow/7f)),1);
+			v_CurrentColor = Color.Lerp(v_DefaultColor, v_ChargedColor, fighterGlow/7);
+			o_SpriteRenderer.color = v_CurrentColor;
 		}
 		else
 		{
-			o_SpriteRenderer.color = v_DefaultColor;
+			o_SpriteRenderer.material.SetFloat("_Magnitude", 0);
+			v_CurrentColor = v_DefaultColor;
+			o_SpriteRenderer.color = v_CurrentColor;
 		}
 
 		//
 		//Sprite rotation code - SRC
 		//
+
 		float surfaceLeanM = GetSpeed()/v_SpeedForMaxLean; // Player leans more the faster they're going. At max speed, the player model rotates so the ground is directly below them.
 		surfaceLeanM = (surfaceLeanM<1) ? surfaceLeanM : 1; // If greater than 1, clamp to 1.
 
@@ -1981,6 +2038,16 @@ public class FighterChar : NetworkBehaviour
 		Vector2 groundPara = Perp(m_GroundNormal);
 		if(d_SendTractionMessages){print("Traction");}
 
+		float linAccel = this.m_LinearAccelRate;
+		float fastAccel = this.m_StartupAccelRate;
+		float topSpeed = this.m_MaxRunSpeed;
+
+		if(FighterState.Stance==2) // If in guard stance
+		{
+			linAccel /= 2;
+			fastAccel /= 2;
+			topSpeed /= 2;
+		}
 
 		// This block of code makes the player treat very steep left and right surfaces as walls when they aren't going fast enough to reasonably climb them. 
 		// This aims to prevent a jittering effect when the player build small amounts of speed, then hits the steeper slope and starts sliding down again 
@@ -2084,22 +2151,36 @@ public class FighterChar : NetworkBehaviour
 		float rawSpeed = FighterState.Vel.magnitude;
 		if(d_SendTractionMessages){print("FighterState.Vel.magnitude: "+FighterState.Vel.magnitude);}
 
-		if (horizontalInput == 0) 
+		if (horizontalInput == 0||m_Kneeling) 
 		{//if not pressing any move direction, slow to zero linearly.
 			if(d_SendTractionMessages){print("No input, slowing...");}
-			if(rawSpeed <= 0.5f)
+			if(m_Kneeling) // Decelerate faster if crouching
 			{
-				FighterState.Vel = Vector2.zero;	
+				if(rawSpeed <= 0.5f)
+				{
+					FighterState.Vel = Vector2.zero;	
+				}
+				else
+				{
+					FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, -m_LinearStopRate);
+				}
 			}
-			else
+			else 
 			{
-				FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, -m_LinearSlideRate);
+				if(rawSpeed <= 0.5f)
+				{
+					FighterState.Vel = Vector2.zero;	
+				}
+				else
+				{
+					FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, -m_LinearSlideRate);
+				}
 			}
 		}
 		else if((horizontalInput > 0 && FighterState.Vel.x >= 0) || (horizontalInput < 0 && FighterState.Vel.x <= 0))
 		{//if pressing same button as move direction, move to MAXSPEED.
 			if(d_SendTractionMessages){print("Moving with keypress");}
-			if(rawSpeed < m_MaxRunSpeed)
+			if(rawSpeed < topSpeed)
 			{
 				if(d_SendTractionMessages){print("Rawspeed("+rawSpeed+") less than max");}
 				if(rawSpeed > m_TractionChangeT)
@@ -2107,11 +2188,11 @@ public class FighterChar : NetworkBehaviour
 					if(d_SendTractionMessages){print("LinAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
-						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate*(1-slopeMultiplier));
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, linAccel*(1-slopeMultiplier));
 					}
 					else
 					{
-						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_LinearAccelRate);
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, linAccel);
 					}
 				}
 				else if(rawSpeed < 0.001f)
@@ -2128,11 +2209,11 @@ public class FighterChar : NetworkBehaviour
 					if(d_SendTractionMessages){print("HardAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
-						FighterState.Vel = new Vector2(m_StartupAccelRate*(1-slopeMultiplier)*horizontalInput, 0);
+						FighterState.Vel = new Vector2(fastAccel*(1-slopeMultiplier)*horizontalInput, 0);
 					}
 					else
 					{
-						FighterState.Vel = new Vector2(m_StartupAccelRate*horizontalInput, 0);
+						FighterState.Vel = new Vector2(fastAccel*horizontalInput, 0);
 					}
 				}
 				else
@@ -2152,20 +2233,20 @@ public class FighterChar : NetworkBehaviour
 					if(d_SendTractionMessages){print("HardAccel-> " + rawSpeed);}
 					if(FighterState.Vel.y > 0)
 					{ 	// If climbing, recieve uphill movement penalty.
-						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_StartupAccelRate*(1-slopeMultiplier));
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, fastAccel*(1-slopeMultiplier));
 					}
 					else
 					{
-						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, m_StartupAccelRate);
+						FighterState.Vel = ChangeSpeedLinear(FighterState.Vel, fastAccel);
 					}
 				}
 			}
 			else
 			{
-				if(rawSpeed < m_MaxRunSpeed+1)
+				if(rawSpeed < topSpeed+1)
 				{
-					rawSpeed = m_MaxRunSpeed;
-					SetSpeed(FighterState.Vel,m_MaxRunSpeed);
+					rawSpeed = topSpeed;
+					SetSpeed(FighterState.Vel,topSpeed);
 				}
 				else
 				{
@@ -2212,224 +2293,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		FighterState.Vel += new Vector2(horizontalInput/20, 0);
 	}
-
-//	protected void WallTraction(float hInput, float vInput, Vector2 wallSurface)
-//	{
-//		if(m_LeftWalled && !m_RightWalled) // If pressing input away from wall, detach from it.
-//		{
-//			if(hInput>0)
-//			{
-//				//print("FALLIN OFF YO!");
-//				AirControl(hInput);
-//				v_CameraMode = v_DefaultCameraMode;
-//				return;
-//			}
-//			else if(hInput<0)
-//			{
-//				m_Kneeling = true;
-//				vInput = 0;
-//				v_CameraMode = 2;
-//			}
-//			else
-//			{
-//				v_CameraMode = v_DefaultCameraMode;
-//			}
-//		}
-//		else if(m_RightWalled && !m_LeftWalled)  // If pressing input away from wall, detach from it.
-//		{
-//			if(hInput<0)
-//			{
-//				//print("FALLIN OFF YO!");
-//				AirControl(hInput);
-//				v_CameraMode = v_DefaultCameraMode;
-//				return;
-//			}
-//			else if(hInput>0)
-//			{
-//				m_Kneeling = true;
-//				vInput = 0;
-//				v_CameraMode = 2;
-//			}
-//			else
-//			{
-//				v_CameraMode = v_DefaultCameraMode;
-//			}
-//
-//		}
-//
-//		////////////////////
-//		// Variable Setup //
-//		////////////////////
-//		Vector2 wallPara = Perp(wallSurface);
-//
-//		//print("hInput="+hInput);
-//
-//
-//		if(wallPara.x > 0)
-//		{
-//			wallPara *= -1;
-//		}
-//
-//		float steepnessAngle = Vector2.Angle	(Vector2.up,wallPara);
-//
-//		if(m_RightWalled)
-//		{
-//			steepnessAngle = 180f - steepnessAngle;
-//		}
-//
-//		if(steepnessAngle == 180)
-//		{
-//			steepnessAngle=0;
-//		}
-//
-//		if(steepnessAngle > 90 && (wallSurface != m_ExpiredNormal)) //If the sliding surface is upside down, and hasn't already been clung to.
-//		{
-//			if(!m_SurfaceCling)
-//			{
-//				m_TimeSpentHanging = 0;
-//				m_MaxTimeHanging = 0;
-//				m_SurfaceCling = true;
-//				if(m_CGF >= m_ClingReqGForce)
-//				{
-//					m_MaxTimeHanging = m_SurfaceClingTime;
-//				}
-//				else
-//				{
-//					m_MaxTimeHanging = m_SurfaceClingTime*(m_CGF/m_ClingReqGForce);
-//				}
-//				//print("m_MaxTimeHanging="+m_MaxTimeHanging);
-//			}
-//			else
-//			{
-//				m_TimeSpentHanging += Time.fixedDeltaTime;
-//				//print("time=("+m_TimeSpentHanging+"/"+m_MaxTimeHanging+")");
-//				if(m_TimeSpentHanging>=m_MaxTimeHanging)
-//				{
-//					m_SurfaceCling = false;
-//					m_ExpiredNormal = wallSurface;
-//					//print("EXPIRED!");
-//				}
-//			}
-//		}
-//		else
-//		{
-//			m_SurfaceCling = false;
-//			m_TimeSpentHanging = 0;
-//			m_MaxTimeHanging = 0;
-//		}
-//
-//
-//		//
-//		// This code block is likely unnecessary
-//		// Anti-Jitter code for transitioning to a steep slope that is too steep to climb.
-//		//
-////		if (this.GetSpeed () <= 0.0001f) 
-////		{
-////			print ("RIDING WALL SLOWLY, CONSIDERING CORRECTION");
-////			if ((m_LeftWalled) && (hInput < 0)) 
-////			{
-////				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
-////					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
-////					//FighterState.Vel = Vector2.zero;
-////					m_LeftWallBlocked = true;
-////					hInput = 0;
-////					m_SurfaceCling = false;
-////				}
-////			} 
-////			else if ((m_RightWalled) && (hInput > 0)) 
-////			{
-////				print ("Trying to run up right wall slowly.");
-////				if (steepnessAngle >= m_TractionLossMaxAngle) { //If the wall surface the player is running
-////					print ("Wall steepness of " + steepnessAngle + " was too steep for speed " + this.GetSpeed () + ", stopping.");
-////					//FighterState.Vel = Vector2.zero;
-////					m_RightWallBlocked = true;
-////					hInput = 0;
-////					m_SurfaceCling = false;
-////				}
-////			} 
-////			else 
-////			{
-////				print ("Not trying to move up a wall; Continue as normal.");
-////			}
-////		}
-//
-//
-//		//print("Wall Steepness Angle:"+steepnessAngle);
-//
-//		///////////////////
-//		// Movement code //
-//		///////////////////
-//
-//		if(m_SurfaceCling)
-//		{
-//			if(FighterState.Vel.y > 0)
-//			{
-//				FighterState.Vel = ChangeSpeedLinear(FighterState.Vel,-0.8f);
-//			}
-//			else if(FighterState.Vel.y <= 0)
-//			{
-//				if( (hInput<0 && m_LeftWalled) || (hInput>0 && m_RightWalled) )
-//				{
-//					FighterState.Vel = ChangeSpeedLinear(FighterState.Vel,0.1f);
-//				}
-//				else
-//				{
-//					FighterState.Vel = ChangeSpeedLinear(FighterState.Vel,1f);
-//				}
-//			}
-//		}
-//		else
-//		{
-//			if(FighterState.Vel.y>0)
-//			{		
-//				if(m_LeftWalled)
-//					facingDirection = false;
-//				if(m_RightWalled)
-//					facingDirection = true;
-//				
-//				if(vInput>0) // If pressing key upward.
-//				{
-//					FighterState.Vel.y -= 0.8f; //Decelerate slower.
-//				}
-//				else if(vInput<0) // If pressing key downward
-//				{
-//					if(m_LeftWalled)
-//						facingDirection = true;
-//					if(m_RightWalled)
-//						facingDirection = false;
-//					FighterState.Vel.y -= 1.2f; //Decelerate faster.
-//				}
-//				else // If no input.
-//				{
-//					FighterState.Vel.y -= 1f; 	//Decelerate.
-//				}
-//			}
-//			else if(FighterState.Vel.y<=0)
-//			{
-//				if(m_LeftWalled)
-//					facingDirection = true;
-//				if(m_RightWalled)
-//					facingDirection = false;
-//				
-//				if((hInput<0 && m_LeftWalled) || (hInput>0 && m_RightWalled) || vInput>0) // If pressing up or against wall.
-//				{
-//					FighterState.Vel.y -= 0.1f; //Wallslide
-//					m_WallSliding = true;
-//				}
-//				else if(vInput<0) // If pressing down
-//				{
-//					FighterState.Vel.y -= 1.2f; //Accelerate downward faster.
-//				}
-//				else // If no input.
-//				{
-//					FighterState.Vel.y -= 1f; 	//Accelerate downward.
-//					m_WallSliding = true;
-//				}
-//			}
-//		}
-//	}
-//
-
+		
 	protected void WallTraction(float hInput, float vInput, Vector2 wallSurface)
 	{
 		v_CameraMode = v_DefaultCameraMode;
@@ -4379,6 +4243,21 @@ public class FighterChar : NetworkBehaviour
 		if(angle<-180)
 			angle = 360+angle;
 		return angle;
+	}
+
+	public void ChargeBackfire(int chargeAmount)
+	{
+		this.TakeDamage(chargeAmount*5);
+		g_Stunned = true;
+		g_CurStun = 2+chargeAmount/10;
+		Vector2 jumpNormal = -FighterState.PlayerMouseVector.normalized;
+		if(FighterState.ZonLevel > 0)
+		{
+			FighterState.ZonLevel--;
+		}
+		SpawnExplosionEffect();
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*(chargeAmount*3))));	
+		o_FighterAudio.CraterSound(FighterState.Vel.magnitude*5, m_CraterT, 1000f);
 	}
 
 	public float Get2DAngle(Vector2 vector2) // Get angle, from -180 to +180 degrees. Degree offset to horizontal right.

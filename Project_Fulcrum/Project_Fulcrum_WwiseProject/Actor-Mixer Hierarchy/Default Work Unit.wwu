@@ -2660,6 +2660,94 @@
 														<ActiveSource Name="ZonPulse" ID="{0E0B8FD6-0938-4F98-B629-E8AE60583C85}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
+												<Sound Name="SpoolerCrit" ID="{02B8AEDB-5276-4F92-9C26-162173795718}" ShortID="832955979">
+													<PropertyList>
+														<Property Name="Pitch" Type="int32">
+															<RTPCList>
+																<RTPC Name="" ID="{65A056F5-725E-4422-A362-7F03BEF7912D}" ShortID="933596708">
+																	<ReferenceList>
+																		<Reference Name="ControlInput">
+																			<ObjectRef Name="EnergyLevel" ID="{6944CE28-B7E0-4A2B-825F-58FCA7817D03}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<Curve Name="" ID="{DDB29ABC-0D64-4E66-8346-377D6DDB3DB0}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="65537"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>0</YPos>
+																				<Flags>5</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>15</XPos>
+																				<YPos>600</YPos>
+																				<Flags>37</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</RTPC>
+															</RTPCList>
+														</Property>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SpoolerCrit" ID="{278BB82F-82BE-4D2A-ADF8-BAFDA08FD0F4}" ShortID="305237879">
+															<Language>SFX</Language>
+															<AudioFile>SpoolerCrit.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SpoolerCrit" ID="{278BB82F-82BE-4D2A-ADF8-BAFDA08FD0F4}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="GuardRoll" ID="{7FB4C3CB-4D6D-4421-ADD4-33E05255DAB4}" ShortID="272334162">
+													<PropertyList>
+														<Property Name="MaxSoundPerInstance" Type="int16">
+															<ValueList>
+																<Value>1</Value>
+															</ValueList>
+														</Property>
+														<Property Name="UseMaxSoundPerInstance" Type="bool">
+															<ValueList>
+																<Value>True</Value>
+															</ValueList>
+														</Property>
+														<Property Name="Volume" Type="Real64">
+															<ValueList>
+																<Value>-7</Value>
+															</ValueList>
+														</Property>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="GuardRoll" ID="{0B944025-672D-478A-AB9B-53C13E0863BE}" ShortID="966269544">
+															<PropertyList>
+																<Property Name="ChannelConfigOverride" Type="int64" Value="49410"/>
+															</PropertyList>
+															<Language>SFX</Language>
+															<AudioFile>GuardRoll.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="GuardRoll" ID="{0B944025-672D-478A-AB9B-53C13E0863BE}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
 											</ChildrenList>
 										</ActorMixer>
 										<SwitchContainer Name="Landing" ID="{88EDFA2F-343C-443C-BEED-DDE4048BADBC}" ShortID="124828094">
@@ -3340,6 +3428,9 @@
 															</ReferenceList>
 															<ChildrenList>
 																<AudioFileSource Name="jump02" ID="{BD1D4310-B5B3-4A1F-9214-369132F04707}" ShortID="90860644">
+																	<PropertyList>
+																		<Property Name="ChannelConfigOverride" Type="int64" Value="49410"/>
+																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>jump02.wav</AudioFile>
 																</AudioFileSource>
@@ -3359,6 +3450,9 @@
 															</ReferenceList>
 															<ChildrenList>
 																<AudioFileSource Name="jump03" ID="{3D66CF90-C698-4E2A-AB97-4E4B3F818B67}" ShortID="301568547">
+																	<PropertyList>
+																		<Property Name="ChannelConfigOverride" Type="int64" Value="49410"/>
+																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>jump03.wav</AudioFile>
 																</AudioFileSource>
@@ -3378,6 +3472,9 @@
 															</ReferenceList>
 															<ChildrenList>
 																<AudioFileSource Name="jump04" ID="{58A04C63-ECDD-4124-9906-B56B95CB01BB}" ShortID="149336316">
+																	<PropertyList>
+																		<Property Name="ChannelConfigOverride" Type="int64" Value="49410"/>
+																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>jump04.wav</AudioFile>
 																</AudioFileSource>
@@ -3397,6 +3494,9 @@
 															</ReferenceList>
 															<ChildrenList>
 																<AudioFileSource Name="jump05" ID="{DE0D9973-F60D-471F-8913-DB4CB1E06F19}" ShortID="664056065">
+																	<PropertyList>
+																		<Property Name="ChannelConfigOverride" Type="int64" Value="49410"/>
+																	</PropertyList>
 																	<Language>SFX</Language>
 																	<AudioFile>jump05.wav</AudioFile>
 																</AudioFileSource>

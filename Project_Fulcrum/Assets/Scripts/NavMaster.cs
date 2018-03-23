@@ -7,7 +7,7 @@ public class NavMaster : MonoBehaviour {
 
 	[SerializeField]private NavSurface[] surfaceList;
 	[SerializeField]private int connectionCount;
-	[SerializeField]private bool setAllVisible;
+	[SerializeField]public bool setAllVisible;
 	[SerializeField]public NavPath[] testNavPathList;
 	[SerializeField]public float proximityJoinT = 0.01f; // Distance at which navsurfaces will automatically link together with walking connections since they're adjacent.
 
@@ -274,33 +274,7 @@ public class NavMaster : MonoBehaviour {
 		print(output);
 		return outputPath;
 	}
-
-//	public int[] GetShortestPath(int startID, int endID) //Primm's algorithm.
-//	{
-//		float[] nodeWeight = new float[surfaceList.Length];
-//		int untouchedNodes = surfaceList.Length;
-//		List<NavConnection> edgeList = new List<NavConnection>();
-//
-//		//Initial point
-//		//isPointInTree[startID] = true;
-//		int activeNode = startID;
-//
-//
-//		while( untouchedNodes>0 )
-//		{
-//			foreach(NavConnection nc in surfaceList[startID].navCon)
-//			{
-//				edgeList.Add(nc);
-//			}
-//			//foreach(NavConnection nc i
-//		}
-//
-//		//int uncheckedEdges = surfaceList[startID].navCon.Length;
-//		NavSurface activeSurface = surfaceList[startID];
-//
-//		return null;
-//	}
-//
+		
 	public NavSurface GetSurface(int id)
 	{
 		return surfaceList[id];

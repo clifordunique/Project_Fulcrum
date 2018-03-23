@@ -11,6 +11,7 @@
 						<ObjectRef Name="PunchSwing" ID="{45A20D95-22CE-444F-88A8-1F91E6ADBD8C}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SuperJump" ID="{6B0B3AB4-9D88-44FF-AEF9-3DC9C0621D39}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Item_Equip" ID="{567CD688-4488-4593-94F3-F6DA017E7292}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="ChargeCrit" ID="{9501F9BA-610B-460F-A160-D19A81D4C2FA}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Set_Gender_Male" ID="{A7F7646A-2BDF-469D-980C-32B5699187AC}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Impact_Slam" ID="{59034A69-AAB6-476B-80D9-1DA2BFC36721}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="EnergyCharge" ID="{C3E125B2-A822-48D8-8E0E-81B63BDCCD1A}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
@@ -20,6 +21,7 @@
 						<ObjectRef Name="Landing" ID="{18B75C48-022E-4D63-A6ED-6C8A16FECB2B}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Breakable_Break" ID="{E7CCDD92-658F-4D7E-B15D-CE20BA0918A5}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="WindLoopStart" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="GuardRoll" ID="{D0BC9B2F-200A-4DD7-A0E0-B80DD9E7ED6D}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PlayMusic" ID="{6E59EE28-79D6-4E5A-91BE-0963CBD13CFE}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Set_Gender_Female" ID="{A8D314FA-7D8E-4E84-9AE8-8A04A621FABB}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Pain" ID="{D86A8D18-3BB8-4EA8-A8C1-F52F2826A8D6}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>

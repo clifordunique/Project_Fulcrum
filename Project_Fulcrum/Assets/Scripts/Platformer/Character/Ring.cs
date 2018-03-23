@@ -6,11 +6,15 @@ public class Ring : MonoBehaviour
 {
 	
 	#region visualparams
-	[SerializeField] public Vector4 color = new Vector4(1,1,1,1);		// Colour.
-	[SerializeField] public Vector4 badColor = new Vector4(0,0,1,1);	// Colour.
-	[SerializeField] public Vector4 blue = new Vector4(0,0,1,1);		// Colour.
-	[SerializeField] public Vector4 red = new Vector4(1,0,0,1);			// Colour.
+	private Vector4 transparentColor = new Vector4(1,1,1,0.3f);	
+	private Vector4 color = new Vector4(1,1,1,1);				
+	private Vector4 badColor = new Vector4(0,0,1,1);			
+	private Vector4 blue = new Vector4(0.25f,0.25f,1f,1);		
+	private Vector4 red = new Vector4(1f,0.25f,0.25f,1);		
+	private Vector4 purple = new Vector4(0.5f, 0.2f, 1, 1);	
+	private Vector4 darkPurple = new Vector4(0.25f,0.1f,0.5f,1);	
 
+	private float lerpSpeed = 8;
 
 	[SerializeField][Range(0,360)] public float rotation = 0; 			// Starting rotation.
 	[SerializeField][Range(0,0.1f)] public float radius = 0; 			// Inner radius.
@@ -19,6 +23,8 @@ public class Ring : MonoBehaviour
 	[SerializeField][Range(0,6.28f)] private float fillAmount = 0; 		// How much the ring is filled, in radians. 0 to 6.28.
 	[SerializeField][Range(0,6.28f)] private float badFillAmount = 0; 	// How much the badring is filled, in radians. 0 to 6.28.
 	[SerializeField] public bool badOnTop = false; 						// Sets which colour ring sits on top.
+	[SerializeField] public bool criticalSuccess = false; 				// True when ring is near-perfect.
+	[SerializeField] public bool isTransparent = false; 				// True when ring is transparent white.
 	[SerializeField] public bool isCore = false; 						// Sets which colour ring sits on top.
 	[SerializeField] public bool ringHidden = false; 					// Sets whether or not to shrink the ring into invisibility or not.
 	[SerializeField] public bool lerpAllChanges = true; 				// Sets whether to move instantly or lerp towards real values.
@@ -26,6 +32,8 @@ public class Ring : MonoBehaviour
 	[SerializeField] public float lerpthickness = 0; 					// Transitional thickness. Moves toward real value.
 	[SerializeField] private Renderer r_Ring;							// Ring Sprite renderer
 	[SerializeField] private Renderer r_BadRing;						// badRing Sprite renderer
+	[SerializeField][ReadOnlyAttribute] private float vortexAmount = 10;
+	[SerializeField][ReadOnlyAttribute] public float lerpVortexAmount;
 	#endregion
 
 	#region gameparams
@@ -43,7 +51,9 @@ public class Ring : MonoBehaviour
 	{
 		percentBlue = 0;
 		percentFilled = 0;
+		lerpVortexAmount = 0;
 		ringHidden = true;
+		criticalSuccess = false;
 		earlyStop = false;
 	}
 
@@ -93,20 +103,27 @@ public class Ring : MonoBehaviour
 
 	private void RingLerp()
 	{
+
+		float timedLerp = Time.deltaTime*lerpSpeed;
 		if(!ringHidden)
 		{
-			if(Mathf.Abs(radius-lerpRadius)>0.001f)
+			// LERP RADIUS
+			if(Mathf.Abs(radius-lerpRadius)>0.0001f)
 			{
-				lerpRadius += (radius-lerpRadius)/8;
+				lerpRadius += (radius-lerpRadius)*timedLerp;
 			}
 			else
 			{
 				lerpRadius = radius;
 			}
 
-			if(Mathf.Abs(thickness-lerpthickness)>0.001f)
+			// LERP VORTEX MAGNITUDE
+			lerpVortexAmount = 0;
+
+			//LERP THICKNESS
+			if(Mathf.Abs(thickness-lerpthickness)>0.0001f)
 			{
-				lerpthickness += (thickness-lerpthickness)/8;
+				lerpthickness += (thickness-lerpthickness)*timedLerp;
 			}
 			else
 			{
@@ -115,16 +132,28 @@ public class Ring : MonoBehaviour
 		}
 		else
 		{
-			if(Mathf.Abs(lerpRadius)>0.001f)
+			// LERP VORTEX MAGNITUDE
+			if(Mathf.Abs(vortexAmount-lerpVortexAmount)>0.001f)
 			{
-				lerpRadius -= (lerpRadius)/8;
+				lerpVortexAmount += timedLerp*2;
 			}
-			else // Once radius is fully retracted, contract the width also.
+			else
+			{
+				lerpVortexAmount = vortexAmount;
+			}
+
+			// LERP RADIUS
+			if(lerpRadius>0.001f&&lerpVortexAmount > 1)
+			{
+				lerpRadius -= (lerpRadius)*(timedLerp/2);
+			}
+
+			if(lerpRadius<0.001f)// Once radius is fully retracted, contract the width also.
 			{
 				lerpRadius = 0;
-				if(Mathf.Abs(lerpthickness)>0.001f)
+				if(lerpthickness>0.001f)
 				{
-					lerpthickness -= (lerpthickness)/8;
+					lerpthickness -= (lerpthickness)*timedLerp;
 				}
 				else
 				{
@@ -155,7 +184,25 @@ public class Ring : MonoBehaviour
 			earlyStop = false; // If filled past 100%, could not possibly be underfilled.
 		}
 
-		if(earlyStop) //If stopped early by player, render extra fill as blue.
+		color = Color.white;
+		if(criticalSuccess)
+		{
+			badColor = darkPurple;
+			color = purple;
+			if(percentFilled <= 1)
+			{
+				badOnTop = false;
+				fillAmount = (percentFilled)*6.28f;
+				badFillAmount = 6.28f;
+			}
+			else
+			{
+				badOnTop = true;
+				fillAmount = 6.28f;
+				badFillAmount = (percentFilled-1)*6.28f;
+			}
+		}
+		else if(earlyStop) //If stopped early by player, render extra fill as blue.
 		{
 			badOnTop = false;
 			badColor = blue;
@@ -188,6 +235,11 @@ public class Ring : MonoBehaviour
 			}
 		}
 
+		if(isTransparent)
+		{
+			color = transparentColor;
+		}
+
 		if(badOnTop)
 		{
 			r_BadRing.sortingOrder = 1;
@@ -198,20 +250,25 @@ public class Ring : MonoBehaviour
 		}
 		float visualRadius = radius; //Used for lerpin'
 		float visualThickness = thickness; //Used for lerpin'
+		float visualVortex = vortexAmount; //Used for lerpin'
+
 		if(lerpAllChanges)
 		{
 			visualRadius = lerpRadius;
 			visualThickness = lerpthickness;
+			visualVortex = lerpVortexAmount;
 		}
 
 		r_Ring.material.SetFloat("_Angle", fillAmount);
 		r_Ring.material.SetFloat("_Radius", visualRadius);
 		r_Ring.material.SetColor("_Color", color);
+		r_Ring.material.SetFloat("_Vortex", visualVortex);
 		r_Ring.material.SetFloat("_RingWidth", visualThickness);
 
 		r_BadRing.material.SetFloat("_Angle", badFillAmount);
 		r_BadRing.material.SetFloat("_Radius", visualRadius);
 		r_BadRing.material.SetColor("_Color", badColor);
+		r_BadRing.material.SetFloat("_Vortex", visualVortex);
 		r_BadRing.material.SetFloat("_RingWidth", visualThickness);
 
 		Vector3 rot = new Vector3(0,0,rotation + 90);

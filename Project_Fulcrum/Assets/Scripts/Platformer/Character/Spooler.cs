@@ -19,13 +19,13 @@ public class Spooler : NetworkBehaviour
 	#endregion
 
 	#region RINGPARAMS
-	[SerializeField][Range(0,0.02f)] private float r_RingWidth;		// Thickness of rings.
-	[SerializeField][Range(0,0.02f)] private float r_RingGap;		// Static gap between rings.
-	[SerializeField][Range(0,0.02f)] private float r_BufferZone;	// Distance from core.
-	[SerializeField][Range(0,0.02f)] private float r_CoreSize;		// Core size. Keep this lower than r_BufferZone.
-	[SerializeField][Range(0,20f)] private float r_LimitRadius; 	// Max radius before overload occurs.
+	[SerializeField][Range(0,0.2f)] private float r_RingWidth;		// Thickness of rings.
+	[SerializeField][Range(0,0.05f)] private float r_RingGap;		// Static gap between rings.
+	[SerializeField][Range(0,0.5f)] private float r_BufferZone;	// Distance from core.
+	[SerializeField][Range(0,0.2f)] private float r_CoreSize;		// Core size. Keep this lower than r_BufferZone.
+	[SerializeField][Range(0,300)] private float r_LimitRadius; 	// Max radius before overload occurs.
 	[SerializeField][Range(0,20)] private int r_LimitInRings = 9; 	// Max radius measured in rings.
-	[SerializeField][Range(0,0.02f)] private float r_LimitThickness; // Thickness of outer bound ring.
+	[SerializeField][Range(0,0.04f)] private float r_LimitThickness; // Thickness of outer bound ring.
 	[SerializeField][Range(0,10f)] private float r_MaxTime;			// Time per full rotation of ring.
 	[SerializeField][ReadOnlyAttribute] private float r_CurTime;	// Amount of time since rotation started.
 	[SerializeField][ReadOnlyAttribute] private int r_TotalPower;	// Amount of total power amassed. Max of 1 per ring.
@@ -39,6 +39,8 @@ public class Spooler : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] private bool r_Paused;		// True when spooling is paused.
 	[SerializeField][ReadOnlyAttribute] private bool r_MaxReached;		// True when spooling is at its max size.
 	[SerializeField][ReadOnlyAttribute] public bool r_Active;	 	// True when a ring is mid spool.
+	[SerializeField][Range(0,0.5f)] private float r_CritRange=0.025f;// Percent distance away from 100% that the player will have critically succeeded in locking a ring.
+
 	#endregion
 
 	public bool i_GoodStance;
@@ -59,9 +61,9 @@ public class Spooler : NetworkBehaviour
 		newLimit.transform.SetParent(this.transform, false);
 		o_Limit = newLimit.GetComponent<Ring>();
 
-		o_Rings = new Ring[20];
+		o_Rings = new Ring[30];
 
-		for(int i = 0; i<20; i++)
+		for(int i = 0; i<o_Rings.Length; i++)
 		{
 			GameObject newRing = (GameObject)Instantiate(p_SpoolRingPrefab);
 			newRing.name = "Ring_"+i;
@@ -90,19 +92,19 @@ public class Spooler : NetworkBehaviour
 	void Update() 
 	{
 		i_GoodStance = true;
-//		if((!i_GoodStance)&&(r_Active))
-//		{
-//			Reset();
-//		}
-
 		o_Limit.radius = r_LimitRadius;
 
-		if(currentZoom!=o_Player.v_CameraZoomLevel)
+		if(r_OuterRadius/r_LimitRadius>0.75f)
 		{
-			currentZoom = o_Player.v_CameraZoomLevel;
-			float scaleFactor = currentZoom;
+			//print("DANGER! POWER AT "+(r_OuterRadius/r_LimitRadius*100)+" percent of maximum!!");
+		}
+
+		if(currentZoom!=o_Player.v_CameraFinalSize)
+		{
+			currentZoom = o_Player.v_CameraFinalSize;
+			float scaleFactor = currentZoom/2;
 			Vector3 scaleVector = new Vector3(scaleFactor, scaleFactor, 1);
-			o_Core.transform.localScale = scaleVector;
+			//o_Core.transform.localScale = scaleVector;
 			o_Limit.transform.localScale = scaleVector;
 			foreach(Ring r in o_Rings)
 			{
@@ -179,7 +181,34 @@ public class Spooler : NetworkBehaviour
 			if(r_OuterRingID >= 0)
 			{	
 				r_OuterRadius = r_LimitRadius;
-				DevEndScore(); 
+				o_Player.ChargeBackfire(r_OuterRingID);
+				Reset();
+				r_Paused = true;
+			}
+		}
+	}
+
+	public void Reset()
+	{
+		AbsorbAndClose();
+		o_Player.SetZonLevel(0);
+		o_Core.lerpRadius = 0;
+		o_Core.lerpthickness = 0;
+		o_Core.lerpVortexAmount = 0;
+
+		o_Limit.ringHidden = true;
+		o_Limit.lerpRadius = 0;
+		o_Limit.lerpthickness = 0;
+		o_Limit.lerpVortexAmount = 0;
+
+		foreach(Ring r in o_Rings)
+		{
+			if(r!=null)
+			{
+				r.ringHidden = true;
+				r.lerpRadius = 0;
+				r.lerpthickness = 0;
+				r.lerpVortexAmount = 0;
 			}
 		}
 	}
@@ -221,7 +250,7 @@ public class Spooler : NetworkBehaviour
 		else
 		{
 			print("Final circle, no more rings allowed.");
-			DevEndScore();
+			r_Paused = true;
 		}
 	}
 
@@ -246,7 +275,6 @@ public class Spooler : NetworkBehaviour
 		//o_Rings[r_RingNum].color = new Vector4(1,1,1,0.5f);
 		o_Rings[r_OuterRingID].UpdateVisuals();
 
-
 		AkSoundEngine.PostEvent("EnergyCharge", gameObject);
 		AkSoundEngine.SetRTPCValue("EnergyLevel", r_TotalPower, gameObject);
 
@@ -260,7 +288,17 @@ public class Spooler : NetworkBehaviour
 		print("EndRing");
 
 		r_TotalPower++;
+		o_Player.SetZonLevel(r_TotalPower);
+
 		float thePercent = o_Rings[r_OuterRingID].GetPercentWhite();
+
+		if(Math.Abs(thePercent-1)<=r_CritRange)
+		{
+			thePercent = 1;
+			AkSoundEngine.PostEvent("ChargeCrit", gameObject);
+			o_Rings[r_OuterRingID].criticalSuccess = true;
+			r_LimitRadius += (r_RingGap+r_RingWidth)/2;
+		}
 
 		if(thePercent>1)
 		{
@@ -346,45 +384,7 @@ public class Spooler : NetworkBehaviour
 			StartSpool();
 		}
 	}
-
-//	public void Reset()
-//	{
-//		print("Reset");
-//		if(!r_Active)
-//		{
-//			return;
-//		}
-//
-//		r_Paused = true;
-//		r_CurTime = 0;
-//		r_OuterRingID = -1;
-//		r_OuterRadius = 0;
-//		r_Rotation = 0;
-//		r_TotalPower = 0;
-//		r_Accuracy = 0;
-//		r_TooEarly = false;
-//
-////		o_Core.gameObject.SetActive(false);
-////		o_Limit.gameObject.SetActive(false);
-//
-//
-//		//o_FeedbackText.text = "";
-//
-//		foreach(Ring theRing in o_Rings)
-//		{
-//			if(theRing != null)
-//			{
-//				theRing.ringHidden = true;
-//				theRing.SetPercentFull(0);
-//				theRing.radius = 0;
-//				theRing.thickness = r_RingWidth;
-//				theRing.rotation = 0;
-//				theRing.lerpAllChanges = true;
-//			}
-//		}
-//		r_Active = false;
-//	}
-//
+		
 	public void AbsorbAndClose()
 	{
 		print("AbsorbAndClose");
@@ -402,23 +402,24 @@ public class Spooler : NetworkBehaviour
 		//r_Accuracy = 0;
 		if(r_OuterRingID>=0) // If at least one ring exists
 		{
-			if(!r_Paused&&o_Rings[r_OuterRingID].GetPercentFull()>1) // If final ring is over full, end it before closing.
+			if(r_OuterRingID<o_Rings.Length)
 			{
-				EndRing();
-			}
-			else if((o_Rings[r_OuterRingID].GetPercentFull()<1)) // If final ring is incomplete, discard it before closing.
-			{
-				print("Discarding incomplete outer ring");
-				o_Rings[r_OuterRingID].SetPercentFull(0);
-				r_OuterRingID--;
+				if(!r_Paused && o_Rings[r_OuterRingID].GetPercentFull()>1) // If final ring is over full, end it before closing.
+				{
+					EndRing();
+				}
+				else if((o_Rings[r_OuterRingID].GetPercentFull()<1)) // If final ring is incomplete, discard it before closing.
+				{
+					print("Discarding incomplete outer ring");
+					o_Rings[r_OuterRingID].SetPercentFull(0);
+					r_OuterRingID--;
+				}
 			}
 		}
 
 
 		o_Core.ringHidden = true;
 		o_Limit.ringHidden = true;
-//		o_Core.gameObject.SetActive(false);
-//		o_Limit.gameObject.SetActive(false);
 
 		//o_FeedbackText.text = "";
 
@@ -467,11 +468,10 @@ public class Spooler : NetworkBehaviour
 		}
 		else
 		{
-			r_OuterRadius = o_Rings[r_OuterRingID].radius;
-			r_MinRadius = r_OuterRadius+r_RingWidth+r_RingGap;
+			r_OuterRadius = o_Rings[r_OuterRingID].radius+r_RingWidth+r_RingGap;
+			r_MinRadius = r_OuterRadius;
 		
 		}
-		//o_Core.gameObject.SetActive(true);
 		o_Core.ringHidden = false;
 		o_Core.SetPercentFull(1);
 		o_Core.radius = 0;
@@ -480,29 +480,16 @@ public class Spooler : NetworkBehaviour
 		o_Core.lerpAllChanges = true;
 		o_Core.UpdateVisuals();
 
-		//o_Limit.gameObject.SetActive(true);
 		o_Limit.ringHidden = false;
 		o_Limit.SetPercentFull(1);
 		o_Limit.radius = r_LimitRadius;
 		o_Limit.thickness = r_LimitThickness;
 		o_Limit.rotation = r_Rotation;
-		o_Limit.color = new Vector4(1,1,1,0.3f);
+		o_Limit.isTransparent = true;
 		o_Limit.lerpAllChanges = true;
 		o_Limit.UpdateVisuals();
 
 		r_Active = true;
-	}
-
-
-
-	private void DevEndScore()
-	{
-		r_Paused = true;
-		//Reset();
-		float accuracyScore = 100*(r_Accuracy/r_TotalPower);
-
-//		o_FeedbackText.text = "Power Level: " + r_TotalPower + "\nAccuracy:" +(int)accuracyScore+"%";
-//		o_FeedbackText.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 500-(r_OuterRadius*300*this.transform.localScale.magnitude));
 	}
 
 	//###################################################################################################################################

@@ -49,6 +49,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;										// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
+	[SerializeField] private GameObject p_TestObject;								// Reference to any prefab you wish, allowing you to spawn that prefab by pressing F9.
 	#endregion
 	//############################################################################################################################################################################################################
 	// PHYSICS&RAYCASTING
@@ -63,8 +64,6 @@ public class Player : FighterChar
 	[SerializeField] public float i_DoubleTapDelayTime; // How short the time between presses must be to count as a doubletap.
 	public int inputBufferSize = 2;
 	[SerializeField] public Queue<FighterState> inputBuffer;
-
-
 	#endregion
 	//############################################################################################################################################################################################################
 	// DEBUGGING VARIABLES
@@ -80,8 +79,9 @@ public class Player : FighterChar
 	[SerializeField]private Vector3 v_CamWhiplashAmount;
 	[SerializeField]private Vector3 v_CamWhiplashRecovery;
 	[SerializeField]private float v_CamWhiplashM = 1;
-	[SerializeField]public float v_CameraZoomLevel = 15;
-	[SerializeField]private float v_CameraZoomGoal = 15;
+	[SerializeField]public float v_CameraZoomLevel = 12;
+	[SerializeField][ReadOnlyAttribute]public float v_CameraFinalSize;
+	[SerializeField]private float v_CameraZoomGoal = 12;
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -390,10 +390,14 @@ public class Player : FighterChar
 			if(FighterState.DevMode)
 			{
 				FighterState.DevMode = false;
+				o_NavMaster.setAllVisible = false;
+				o_NavMaster.UpdateAllSurfaces();
 			}
 			else
 			{
 				o_ProximityLiner.DetectAllFighters();
+				o_NavMaster.setAllVisible = true;
+				o_NavMaster.UpdateAllSurfaces();
 				FighterState.DevMode = true;
 			}
 			FighterState.DevKey1 = false;
@@ -480,6 +484,10 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey9)
 		{
+			if(p_TestObject!=null)
+			{
+				GameObject newBoom = (GameObject)Instantiate(p_TestObject, this.transform.position, Quaternion.identity);
+			}
 			FighterState.DevKey9 = false;
 		}
 		if(FighterState.DevKey10)
@@ -1084,7 +1092,7 @@ public class Player : FighterChar
 	{
 		v_CameraZoomGoal -= FighterState.ScrollWheel*1.5f;
 		v_CameraZoomGoal = (v_CameraZoomGoal>15) ? 15 : v_CameraZoomGoal; // Clamp max
-		v_CameraZoomGoal = (v_CameraZoomGoal<5) ? 5 : v_CameraZoomGoal; // Clamp min
+		v_CameraZoomGoal = (v_CameraZoomGoal<1) ? 1 : v_CameraZoomGoal; // Clamp min
 
 
 		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, v_CameraZoomGoal, Time.deltaTime*10);
@@ -1124,6 +1132,7 @@ public class Player : FighterChar
 				throw new Exception("ERROR: CAMERAMODE UNDEFINED.");
 			}
 		}
+		v_CameraFinalSize = o_MainCamera.orthographicSize;
 
 		o_Healthbar.SetCurHealth(FighterState.CurHealth);
 

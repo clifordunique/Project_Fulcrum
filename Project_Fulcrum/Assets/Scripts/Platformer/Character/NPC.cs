@@ -23,6 +23,7 @@ public class NPC : FighterChar {
 	[SerializeField]private float PunchDelayVariance = 0.3f;
 	[SerializeField]private float PunchCooldown;
 	[SerializeField]private bool d_Think; 									// When false, AI brain is shut down. Fighter will just stand there.
+	[SerializeField]private bool d_Dumb; 									// When true, the fighter will simply charge at enemies and not attempt to navigate to them.
 	[SerializeField]public bool d_aiDebug;									// When true, enables ai debug messaging.
 	[Space(10)]
 	[Header("NAV MESH:")]
@@ -129,12 +130,8 @@ public class NPC : FighterChar {
 			DecisionState = -1; // Idle
 		}
 
-		if(DecisionState == 1)
+		if(DecisionState == 1&&!d_Dumb)
 		{
-			//if(enemyTarget.n_CurrentSurf==null){print("enemyTarget.n_CurrentSurf==null");}
-			//if(n_CurrentSurf==null){print("this.n_CurrentSurf==null");}
-
-
 			if((enemyTarget.n_CurrentSurfID != n_CurrentSurfID) && (enemyTarget.n_CurrentSurfID != n_DestSurfID) && (enemyTarget.n_CurrentSurfID!=-1))
 			{
 				n_DestSurfID = enemyTarget.n_CurrentSurf.id;
@@ -328,8 +325,11 @@ public class NPC : FighterChar {
 			}
 			else
 			{
-				o_NavDebugMarker.position=linePos[linePos.Length-2];
-				linePos[linePos.Length-1] = o_NavDebugMarker.position;
+				if(linePos[linePos.Length-2]!=null)
+				{
+					o_NavDebugMarker.position=linePos[linePos.Length-2];
+					linePos[linePos.Length-1] = o_NavDebugMarker.position;
+				}
 			}
 			o_NavDebugLine.positionCount = linePos.Length;
 			o_NavDebugLine.SetPositions(linePos);

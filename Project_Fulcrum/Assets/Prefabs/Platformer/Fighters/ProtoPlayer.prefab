@@ -99,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4039223620323396}
   m_Layer: 5
-  m_Name: SpoolerPrefab
+  m_Name: Spooler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,7 +171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1554298656695916
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.163, y: -6.16, z: 0}
+  m_LocalPosition: {x: 12.47, y: -5.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4039223620323396}
@@ -863,6 +863,9 @@ MonoBehaviour:
   e_StrandJump:
     valueGuid: 0f144237782bfa4a9fe653ee34bc53fa
     ID: 187194041
+  e_GuardRoll:
+    valueGuid: 2f9bbcd00a20d74da0e0b80dd9e7ed6d
+    ID: 797614645
   e_SuperJump:
     valueGuid: b43a0b6b889dff44aef93dc9c0621d39
     ID: 188599998
@@ -983,7 +986,7 @@ MonoBehaviour:
   d_ClickToKnockFighter: 0
   d_SendCollisionMessages: 0
   d_SendTractionMessages: 0
-  d_Invincible: 1
+  d_Invincible: 0
   d_TickCounter: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
@@ -1054,6 +1057,8 @@ MonoBehaviour:
   p_DustEffectPrefab: {fileID: 1241283713325446, guid: 2f3c9fb2e0eed0545a0c1807da09a1c5,
     type: 2}
   p_SparkEffectPrefab: {fileID: 1241283713325446, guid: d6c2c7ebdba9baa4cb85abe4ed6c2319,
+    type: 2}
+  p_ExplosionEffectPrefab: {fileID: 1213008740301432, guid: faa097bf3e9a29740b459694638f02d3,
     type: 2}
   m_TerrainMask:
     serializedVersion: 2
@@ -1157,7 +1162,6 @@ MonoBehaviour:
     Vel: {x: 0, y: 0}
     FinalPos: {x: -413, y: -5.201796}
   v_ReversingSlideT: 5
-  v_FighterGlow: 0
   v_CameraZoom: 0
   v_CameraMode: 1
   v_DefaultCameraMode: 0
@@ -1170,11 +1174,13 @@ MonoBehaviour:
   v_DistFromLastDust: 0
   v_DistBetweenDust: 0.1
   v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
+  v_CurrentColor: {r: 0, g: 0, b: 0, a: 0}
+  v_ChargedColor: {r: 1, g: 1, b: 1, a: 1}
   v_TriggerAtkHit: 0
   v_TriggerRollOut: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
-  v_Gender: 1
+  v_Gender: 0
   v_SpeedForMaxLean: 100
   v_LeanAngle: 0
   v_PrimarySurface: 0
@@ -1249,6 +1255,8 @@ MonoBehaviour:
   o_Spooler: {fileID: 0}
   o_Healthbar: {fileID: 0}
   o_ProximityLiner: {fileID: 0}
+  p_TestObject: {fileID: 1213008740301432, guid: faa097bf3e9a29740b459694638f02d3,
+    type: 2}
   i_DoubleTapDelayTime: 0.5
   inputBufferSize: 2
   d_LastFrameSpeed: 0
@@ -1257,6 +1265,7 @@ MonoBehaviour:
   v_CamWhiplashRecovery: {x: 0, y: 0, z: 0}
   v_CamWhiplashM: 0.3
   v_CameraZoomLevel: 15
+  v_CameraFinalSize: 0
   v_CameraZoomGoal: 15
   sceneIsReady: 1
 --- !u!114 &114629398634733958
@@ -1378,11 +1387,11 @@ MonoBehaviour:
   o_Limit: {fileID: 0}
   r_RingWidth: 0.004
   r_RingGap: 0.001
-  r_BufferZone: 0.008
-  r_CoreSize: 0.006
-  r_LimitRadius: 0.06
-  r_LimitInRings: 15
-  r_LimitThickness: 0.003
+  r_BufferZone: 0.005
+  r_CoreSize: 0.003
+  r_LimitRadius: 0.05
+  r_LimitInRings: 6
+  r_LimitThickness: 0.002
   r_MaxTime: 0.5
   r_CurTime: 0
   r_TotalPower: 0
@@ -1396,6 +1405,7 @@ MonoBehaviour:
   r_Paused: 1
   r_MaxReached: 0
   r_Active: 0
+  r_CritRange: 0.025
   i_GoodStance: 0
 --- !u!120 &120180239579081978
 LineRenderer:
@@ -1853,7 +1863,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2061038505
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5485e2f56028a3c4cb54f5caa167377e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1933,7 +1943,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -179097649
-  m_SortingLayer: -2
+  m_SortingLayer: -3
   m_SortingOrder: 1000
   m_Sprite: {fileID: 21300000, guid: e306a718123cb304aa72c8d3f4311840, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.672}
@@ -1956,7 +1966,7 @@ SpriteRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9d1940df44b3477488dedefc933fc08b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1973,10 +1983,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -270496717
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2d4efec4ac1bbe844ba7994e60bdef85, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

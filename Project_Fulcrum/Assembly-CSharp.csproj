@@ -46,7 +46,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\GAF Assets\Test_Gaf_Controller.cs" />
+     <Compile Include="Assets\ActorFPSOverride.cs" />
+     <Compile Include="Assets\ExplosionEffect.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomStaticResourceLoader.cs" />
@@ -68,7 +69,9 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\MagicLogoEffect.cs" />
      <Compile Include="Assets\NavBuilderRay.cs" />
+     <Compile Include="Assets\ReleaseModeSwitch.cs" />
      <Compile Include="Assets\Scripts\AnimAudio.cs" />
      <Compile Include="Assets\Scripts\AnimHeightAdjuster.cs" />
      <Compile Include="Assets\Scripts\AnimationTester.cs" />
@@ -147,6 +150,7 @@
      <Compile Include="Assets\Scripts\TriggeredAnim.cs" />
      <Compile Include="Assets\Scripts\UninterruptibleAnim.cs" />
      <Compile Include="Assets\Shaders\ImageEffects\MinimapHolo.cs" />
+     <Compile Include="Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\ReporterGUI.cs" />
@@ -372,6 +376,7 @@
      <None Include="Assets\StreamingAssets\build_info.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\CreaseApply.shader" />
      <None Include="Assets\z_Game Jam Template\Fonts\OpenSans\License!.txt" />
+     <None Include="Assets\Shaders\Shaders\Spooler.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ChromaticAberrationShader.shader" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Shaders\Shaders\MinimapHologram.shader" />
@@ -379,6 +384,7 @@
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLitOutline.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Luminance.shader" />
      <None Include="Assets\Standard Assets\Effects\ToonShading\Shaders\ToonLit.shader" />
+     <None Include="Assets\Shaders\Shaders\AbsorbDissolve.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ColorCorrectionSelective.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\GAF\Resources\Shaders\GAFFilters.cginc" />
@@ -405,6 +411,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\VortexEffect.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Adaptation.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseAndGrain.shader" />
+     <None Include="Assets\Shaders\Shaders\ChromaticFlux.shader" />
      <None Include="Assets\Wwise\Deployment\Plugins\Mac\Debug\AkSoundEngine.bundle\Contents\Resources\readme.txt" />
      <None Include="Assets\GAF\Resources\Shaders\GAFGlow.shader" />
      <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />

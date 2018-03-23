@@ -456,6 +456,34 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="ChargeCrit" ID="{9501F9BA-610B-460F-A160-D19A81D4C2FA}">
+					<ChildrenList>
+						<Action Name="" ID="{D5130636-0230-48F3-B2B5-5010A843867F}" ShortID="843910280">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="SpoolerCrit" ID="{02B8AEDB-5276-4F92-9C26-162173795718}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="GuardRoll" ID="{D0BC9B2F-200A-4DD7-A0E0-B80DD9E7ED6D}">
+					<ChildrenList>
+						<Action Name="" ID="{44ECC7C9-B5DE-4130-887B-2739CA515AB2}" ShortID="907506558">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="GuardRoll" ID="{7FB4C3CB-4D6D-4421-ADD4-33E05255DAB4}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
