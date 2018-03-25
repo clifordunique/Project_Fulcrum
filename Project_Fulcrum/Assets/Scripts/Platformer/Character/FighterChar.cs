@@ -287,8 +287,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField] protected bool v_Gender;								// Used for character audio.
-	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 100;// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
-	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The speed at which the player's sprite is fully rotated to match the ground angle. Used to simulate gforce effects changing required body leaning direction. 
+	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 75;	// The speed at which the player's sprite is fully rotated to match the ground angle. Used to improve animation realism by leaning against GForces and wind drag. 
+	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The angle the sprite is rotated to simulate leaning. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall.
 	[SerializeField][ReadOnlyAttribute]protected bool v_WallSliding;		// Whether or not the player is wallsliding.
 	[SerializeField][ReadOnlyAttribute]protected bool v_Sliding;			// Whether or not the player is sliding.
@@ -1201,6 +1201,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdateAnimation() //FUA
 	{
+		
 		v_Sliding = false;
 		o_Anim.SetBool("WallSlide", false);
 		o_Anim.SetBool("Crouch", false);
@@ -1245,10 +1246,19 @@ public class FighterChar : NetworkBehaviour
 			o_SpriteRenderer.color = v_CurrentColor;
 		}
 
+		if(v_PrimarySurface==0)
+			FixedGroundAnimation();
+		else if(v_PrimarySurface==1)
+		{} 
+		else if(v_PrimarySurface>=2)
+			FixedWallAnimation();
+		else
+			FixedAirAnimation();
+
 		//
 		//Sprite rotation code - SRC
 		//
-
+		bool disableWindLean = false;
 		float surfaceLeanM = GetSpeed()/v_SpeedForMaxLean; // Player leans more the faster they're going. At max speed, the player model rotates so the ground is directly below them.
 		surfaceLeanM = (surfaceLeanM<1) ? surfaceLeanM : 1; // If greater than 1, clamp to 1.
 
@@ -1267,16 +1277,20 @@ public class FighterChar : NetworkBehaviour
 		{
 			spriteAngle = Get2DAngle(Perp(m_LeftNormal));
 			//if(v_WallSliding)
-				surfaceLeanM = 1;
+			surfaceLeanM = 1;
+			disableWindLean = true;
 		}
 		else if(v_PrimarySurface == 3)
 		{
 			spriteAngle = Get2DAngle(Perp(m_RightNormal));
 			//if(v_WallSliding)
 			surfaceLeanM = 1;
+			disableWindLean = true;
+
 		}
 		else
 		{
+			disableWindLean = true;
 			spriteAngle = Get2DAngle(GetVelocity(), 0);
 			testAngle = spriteAngle;
 
@@ -1297,36 +1311,9 @@ public class FighterChar : NetworkBehaviour
 			//print("spriteAngle: "+spriteAngle);
 			float angleScaling = 1;
 
-//			angleScaling = GetVelocity().y/100;
-//
-//			angleScaling = (angleScaling>1) ? 1 : angleScaling;
-//			angleScaling = (angleScaling<-1) ? -1 : angleScaling;
-
-		//	angleScaling = GetVelocity().normalized.y;
-
 			angleScaling = Mathf.Abs(GetVelocity().y/50);//*Mathf.Abs(GetVelocity().y/20); // Parabola approaching zero at y = 0, and extending to positive infinity on either side.
 
 			angleScaling = (angleScaling>1) ? 1 : angleScaling; // Clamp at 1.
-
-//			float horizontalScaling = (Mathf.Abs(GetVelocity().x)+50)/200;
-//			if(GetVelocity().x<50)
-//			{
-//				horizontalScaling = Mathf.Abs(GetVelocity().x)/50;
-//			}
-//
-//			horizontalScaling = (horizontalScaling>1) ? 1 : horizontalScaling; // Clamp at 1.
-//
-//			angleScaling *= horizontalScaling;
-//			if(angleScaling<0)
-//			{
-//				spriteAngle = -spriteAngle
-//			}
-			//angleScaling = (angleScaling<0) ? angleScaling*0.5f : angleScaling;
-
-//			if(GetVelocity().x>GetVelocity().y)
-//			{
-//				
-//			}
 
 			surfaceLeanM = angleScaling;
 
@@ -1340,7 +1327,39 @@ public class FighterChar : NetworkBehaviour
 		}
 
 		if(o_Anim.GetBool("Crouch"))
+		{
 			surfaceLeanM = 1;
+			print("CROUCHING!!!!");
+			disableWindLean = true;
+		}
+		if(!disableWindLean)
+		{
+			float leanIntoWindAngle = Get2DAngle(GetVelocity(), 0);
+			print("leanIntoWindAngle"+leanIntoWindAngle);
+
+			if(FighterState.Vel.magnitude>75 && FighterState.Vel.magnitude<100)
+			{
+				float fadein = (FighterState.Vel.magnitude-75)/(100-75);
+				spriteAngle = ((leanIntoWindAngle*fadein)+(spriteAngle*2))/3;
+				print("SpriteAngle: "+spriteAngle);
+			}
+			else if(FighterState.Vel.magnitude>=100 && FighterState.Vel.magnitude<=125)
+			{
+				float leanOutOfWindAng = Get2DAngle(-GetVelocity(), 0);
+				if(Math.Abs(leanOutOfWindAng+spriteAngle)<(Mathf.Abs(leanOutOfWindAng)+Mathf.Abs(spriteAngle))) // If one angle is negative while the other is positive, invert the sign of leanoutofwindang so they match.
+				{
+					leanOutOfWindAng *= -1;
+				}
+				float fadeOut = (FighterState.Vel.magnitude-100)/(125-100);
+				if(fadeOut>1)
+					fadeOut = 1;
+				spriteAngle = ((leanOutOfWindAng*(1-fadeOut))+(spriteAngle*2))/3;
+				print("SpriteAngle: "+spriteAngle);
+				//print("localUpDirection: "+localUpDirection);
+				print("leanOutOfWindAng: "+leanOutOfWindAng);
+				print("fadein: "+fadeOut);
+			}
+		}
 
 		//v_LeanAngle = Mathf.Lerp(v_LeanAngle, spriteAngle, Time.fixedDeltaTime*100);
 		v_LeanAngle = spriteAngle*surfaceLeanM; //remove this and enable lerp.
@@ -1368,14 +1387,6 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 
-		if(v_PrimarySurface==0)
-			FixedGroundAnimation();
-		else if(v_PrimarySurface==1)
-		{} 
-		else if(v_PrimarySurface>=2)
-			FixedWallAnimation();
-		else
-			FixedAirAnimation();
 
 		//
 		// Debug collision visualization code.
