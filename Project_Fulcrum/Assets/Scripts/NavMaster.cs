@@ -121,8 +121,8 @@ public class NavMaster : MonoBehaviour {
 
 		if(!pathFound)
 		{ 
-			return null;
 			print("No suitable path found.");
+			return null;
 		}
 		pathList.Sort();
 		return pathList.ToArray();
@@ -229,8 +229,8 @@ public class NavMaster : MonoBehaviour {
 
 		if(!pathFound)
 		{ 
-			return null;
 			print("No suitable path found.");
+			return null;
 		}
 		pathList.Sort();
 		return pathList.ToArray();

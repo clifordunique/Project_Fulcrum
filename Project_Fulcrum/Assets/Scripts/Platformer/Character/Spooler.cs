@@ -50,7 +50,10 @@ public class Spooler : NetworkBehaviour
 	void Start () 
 	{
 		o_Player = this.gameObject.GetComponent<Player>();
-
+		if(!o_Player.isLocalPlayer)
+		{
+			this.enabled = false;
+		}
 		GameObject newCore = (GameObject)Instantiate(p_SpoolRingPrefab);
 		newCore.name = "Core";
 		newCore.transform.SetParent(this.transform, false);
@@ -131,7 +134,7 @@ public class Spooler : NetworkBehaviour
 				r_OuterRadius = r_MinRadius;
 				if(r_CurTime <= r_MaxTime)
 				{
-					print("EARLY!");	
+					//print("EARLY!");	
 					float thePercent = (r_CurTime/r_MaxTime);
 					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
 					o_Rings[r_OuterRingID].radius = r_OuterRadius;
@@ -139,7 +142,7 @@ public class Spooler : NetworkBehaviour
 				}
 				else
 				{
-					print("EARLY ENDING!");	
+					//print("EARLY ENDING!");	
 					r_CurTime = r_MaxTime;
 					o_Rings[r_OuterRingID].SetPercentFull(1);
 					o_Rings[r_OuterRingID].radius = r_OuterRadius;
@@ -152,13 +155,13 @@ public class Spooler : NetworkBehaviour
 				r_CurTime += Time.deltaTime;
 				if(r_CurTime <= r_MaxTime)
 				{
-					print("SPOOLING!");	
+					//print("SPOOLING!");	
 					float thePercent = (r_CurTime/r_MaxTime);
 					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
 				}
 				else if(r_CurTime <= r_MaxTime*2)
 				{
-					print("OVERSPOOLING!");	
+					//print("OVERSPOOLING!");	
 					float thePercent = (r_CurTime/r_MaxTime);
 					r_OuterRadius = r_MinRadius*thePercent;
 					o_Rings[r_OuterRingID].SetPercentFull(thePercent);
@@ -220,14 +223,14 @@ public class Spooler : NetworkBehaviour
 			return;
 		}
 
-		print("Q Pressed");
+		//print("Q Pressed");
 
 
 		if(r_OuterRingID < o_Rings.Length && r_OuterRadius < r_LimitRadius)
 		{
 			if(r_Paused)
 			{
-				print("Adding first ring.");
+				//print("Adding first ring.");
 				r_Paused = false;
 				AddRing();
 			}
@@ -236,12 +239,12 @@ public class Spooler : NetworkBehaviour
 				if(o_Rings[r_OuterRingID].GetPercentWhite()>=1)
 				{
 					EndRing();
-					print("Ended last ring and started new.");
+					//print("Ended last ring and started new.");
 					AddRing();
 				}
 				else
 				{
-					print("Too early.");
+					//print("Too early.");
 					r_TooEarly = true;
 					o_Rings[r_OuterRingID].earlyStop = true;
 				}
@@ -249,14 +252,14 @@ public class Spooler : NetworkBehaviour
 		}
 		else
 		{
-			print("Final circle, no more rings allowed.");
+			//print("Final circle, no more rings allowed.");
 			r_Paused = true;
 		}
 	}
 
 	private void AddRing()
 	{
-		print("AddRing");
+		//print("AddRing");
 
 		r_OuterRingID++;
 
@@ -285,7 +288,7 @@ public class Spooler : NetworkBehaviour
 
 	private void EndRing() //ER
 	{
-		print("EndRing");
+		//print("EndRing");
 
 		r_TotalPower++;
 		o_Player.SetZonLevel(r_TotalPower);
@@ -387,7 +390,7 @@ public class Spooler : NetworkBehaviour
 		
 	public void AbsorbAndClose()
 	{
-		print("AbsorbAndClose");
+		//print("AbsorbAndClose");
 		if(!r_Active)
 		{
 			return;
@@ -410,7 +413,7 @@ public class Spooler : NetworkBehaviour
 				}
 				else if((o_Rings[r_OuterRingID].GetPercentFull()<1)) // If final ring is incomplete, discard it before closing.
 				{
-					print("Discarding incomplete outer ring");
+					//print("Discarding incomplete outer ring");
 					o_Rings[r_OuterRingID].SetPercentFull(0);
 					r_OuterRingID--;
 				}
@@ -440,7 +443,7 @@ public class Spooler : NetworkBehaviour
 
 	public void StartSpool()
 	{
-		print("StartSpool!");
+		//print("StartSpool!");
 		r_LimitRadius = r_CoreSize+r_BufferZone+(r_LimitInRings*(r_RingGap+r_RingWidth));
 		r_TotalPower = o_Player.GetZonLevel();
 

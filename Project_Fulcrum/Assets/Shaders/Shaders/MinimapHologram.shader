@@ -65,38 +65,33 @@
 				if(col.a != 0)
 				{
 					fixed4 pixelAbove = tex2D(_MainTex, i.uv+fixed2(0, _MainTex_TexelSize.y));
-					if(i.uv.y+_MainTex_TexelSize.y > 1)
-					{
-						pixelAbove = fixed4(0,0,0,0);
-					}
+//					if(i.uv.y+_MainTex_TexelSize.y > 1)
+//					{
+//						pixelAbove = fixed4(0,0,0,0);
+//					}
 
 					fixed4 pixelBelow = tex2D(_MainTex, i.uv-fixed2(0, _MainTex_TexelSize.y));
-					if(i.uv.y-_MainTex_TexelSize.y < 0)
-					{
-						pixelBelow = fixed4(0,0,0,0);
-					}
+//					if(i.uv.y-_MainTex_TexelSize.y < 0)
+//					{
+//						pixelBelow = fixed4(0,0,0,0);
+//					}
 
 					fixed4 pixelRight = tex2D(_MainTex, i.uv+fixed2(_MainTex_TexelSize.x, 0));
-					if(i.uv.x+_MainTex_TexelSize.x > 1)
-					{
-						pixelRight = fixed4(0,0,0,0);
-					}
+//					if(i.uv.x+_MainTex_TexelSize.x > 1)
+//					{
+//						pixelRight = fixed4(0,0,0,0);
+//					}
 
 					fixed4 pixelLeft = tex2D(_MainTex, i.uv-fixed2(_MainTex_TexelSize.x, 0));
-					if(i.uv.x-_MainTex_TexelSize.x < 0)
-					{
-						pixelLeft = fixed4(0,0,0,0);
-					}
-
+//					if(i.uv.x-_MainTex_TexelSize.x < 0)
+//					{
+//						pixelLeft = fixed4(0,0,0,0);
+//					}
+					col = fixed4(0.5,0,0,1);
 					if(pixelAbove.a * pixelBelow.a * pixelRight.a * pixelLeft.a != 0)
 					{
 						col = fixed4(0.15,0,0,1);
-						col.a = (0.75+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
-					}
-					else
-					{
-						col = fixed4(0.5,0,0,1);
-						col.a = (0.95+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
+						//col.a = (0.75+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
 					}
 				}
 
@@ -149,7 +144,7 @@
 				if(col.a != 0)
 				{
 					col = fixed4(0.5,0,0,1);
-					col.a = (0.95+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
+					//col.a = (0.95+0.05*sin(250*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/2,1.57)))));
 				}
 				else
 				{

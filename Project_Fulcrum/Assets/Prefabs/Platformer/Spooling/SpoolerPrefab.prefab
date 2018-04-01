@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4573248883109892}
   - component: {fileID: 114474303470066634}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: SpoolerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,25 +51,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71ff8d521b0c704c89d24270318aef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  o_SpoolRingPrefab: {fileID: 1490407522407120, guid: ef406ec911ba8a147b508370b25c8a54,
-    type: 2}
+  p_SpoolRingPrefab: {fileID: 0}
+  o_SpoolMixer: {fileID: 0}
+  s_SpoolUp: []
   o_Player: {fileID: 0}
+  o_FeedbackText: {fileID: 0}
   o_Rings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  o_BadRings:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  o_Core: {fileID: 0}
+  o_Limit: {fileID: 0}
   r_RingWidth: 0
   r_RingGap: 0
-  r_CurTime: 0
+  r_BufferZone: 0
+  r_CoreSize: 0
+  r_LimitRadius: 0
+  r_LimitInRings: 9
+  r_LimitThickness: 0
   r_MaxTime: 0
-  r_RingNum: 0
+  r_CurTime: 0
+  r_TotalPower: 0
+  r_OuterRadius: 0
+  r_MinRadius: 0
+  r_Rotation: 0
+  r_Accuracy: 0
+  r_Balance: 0
+  r_OuterRingID: 0
+  r_TooEarly: 0
   r_Paused: 0
+  r_MaxReached: 0
   r_Active: 0
+  r_CritRange: 0.025
+  i_GoodStance: 0

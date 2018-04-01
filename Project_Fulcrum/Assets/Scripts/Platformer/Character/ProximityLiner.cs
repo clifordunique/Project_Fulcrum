@@ -7,7 +7,7 @@ public class ProximityLiner : MonoBehaviour {
 	[ReadOnlyAttribute]public FighterChar o_LocalPlayer;
 	[ReadOnlyAttribute]public List<FighterChar> o_FighterList;
 	[ReadOnlyAttribute]public List<GameObject> o_ProxLine;
-	[ReadOnlyAttribute]public Camera camera;
+	[ReadOnlyAttribute]public Camera myCamera;
 	[ReadOnlyAttribute]public GameObject Canvas;
 	[ReadOnlyAttribute]public float outerRange = 100;
 	public GameObject p_ProxLinePrefab;
@@ -20,7 +20,7 @@ public class ProximityLiner : MonoBehaviour {
 			this.enabled = false;
 			return;
 		}
-		camera = Camera.main;
+		myCamera = Camera.main;
 		Canvas = GameObject.Find("Canvas");
 		o_ProxLine = new List<GameObject>();
 	}

@@ -167,7 +167,6 @@ public class Ring : MonoBehaviour
 
 	public void UpdateVisuals()
 	{
-
 		if(lerpAllChanges && lerpthickness<=0)
 		{
 			r_Ring.enabled = false;

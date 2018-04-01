@@ -46,7 +46,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
-	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;										// Reference to the character's spooler object, which handles power charging gameplay.
+	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_TestObject;								// Reference to any prefab you wish, allowing you to spawn that prefab by pressing F9.

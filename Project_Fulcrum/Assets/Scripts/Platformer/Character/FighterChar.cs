@@ -536,7 +536,7 @@ public class FighterChar : NetworkBehaviour
 		o_FighterAudio = this.GetComponent<FighterAudio>();
 		o_Rigidbody2D = GetComponent<Rigidbody2D>();
 
-		if(o_DustSpawnTransform.position==null)
+		if(o_DustSpawnTransform==null)
 		{
 			print("dusttransform is the issue");
 		}
@@ -548,7 +548,8 @@ public class FighterChar : NetworkBehaviour
 
 
 		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
-		o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+		ParticleSystem.EmissionModule em = o_SparkThrower.GetComponent<ParticleSystem>().emission;
+		em.enabled = false;
 
 
 
@@ -731,7 +732,7 @@ public class FighterChar : NetworkBehaviour
 		FighterState.Dead = false;
 		FighterState.CurHealth = g_MaxHealth;
 		o_Anim.SetBool("Dead", false);
-		v_CurrentColor = v_CurrentColor;
+		v_CurrentColor = v_DefaultColor;
 		o_SpriteRenderer.color = v_CurrentColor;
 	}
 
@@ -936,16 +937,8 @@ public class FighterChar : NetworkBehaviour
 			AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
 
 
-			if(FighterState.Stance == 2) // Guardroll If guarding, more resistant to landing damage.
+			if(FighterState.Stance == 2) // More resistant to landing damage if guarding.
 			{
-				if(m_IGF>=30)
-				{
-					v_TriggerRollOut = true;
-					if(FighterState.Vel.magnitude>15)
-					{
-						o_FighterAudio.GuardRollSound();
-					}
-				}
 				craterThreshold = m_GuardCraterT;
 				slamThreshold = m_GuardSlamT;
 				velPunchThreshold = m_VelPunchT;
@@ -989,7 +982,6 @@ public class FighterChar : NetworkBehaviour
 					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
-
 			}
 			else if(FighterState.Stance == 1)
 			{
@@ -1016,6 +1008,10 @@ public class FighterChar : NetworkBehaviour
 					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
 				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+			}
+			else if(FighterState.Stance == 2) // Guardroll if guard stance mitigated fall damage. More resistant to landing damage.
+			{
+				v_TriggerRollOut = true;
 			}
 			else
 			{
@@ -1146,6 +1142,7 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void UpdateAnimation()
 	{
 		o_SparkThrower.transform.position = o_DustSpawnTransform.position;
+		ParticleSystem.EmissionModule em = o_SparkThrower.GetComponent<ParticleSystem>().emission;
 		if(v_Sliding)
 		{
 			if(v_DistFromLastDust<=0)
@@ -1153,12 +1150,12 @@ public class FighterChar : NetworkBehaviour
 				if(o_EquippedShoe.soundType==1)
 				{
 					//SpawnSparkEffect();
-					o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = true;
+					em.enabled = true;
 
 				}
 				else
 				{
-					o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+					em.enabled = false;
 					SpawnDustEffect();
 				}
 
@@ -1171,7 +1168,7 @@ public class FighterChar : NetworkBehaviour
 		}
 		else
 		{
-			o_SparkThrower.GetComponent<ParticleSystem>().enableEmission = false;
+			em.enabled = false;
 		}
 	}
 
@@ -1329,19 +1326,19 @@ public class FighterChar : NetworkBehaviour
 		if(o_Anim.GetBool("Crouch"))
 		{
 			surfaceLeanM = 1;
-			print("CROUCHING!!!!");
+			//print("CROUCHING!!!!");
 			disableWindLean = true;
 		}
 		if(!disableWindLean)
 		{
 			float leanIntoWindAngle = Get2DAngle(GetVelocity(), 0);
-			print("leanIntoWindAngle"+leanIntoWindAngle);
+			//print("leanIntoWindAngle"+leanIntoWindAngle);
 
 			if(FighterState.Vel.magnitude>75 && FighterState.Vel.magnitude<100)
 			{
 				float fadein = (FighterState.Vel.magnitude-75)/(100-75);
 				spriteAngle = ((leanIntoWindAngle*fadein)+(spriteAngle*2))/3;
-				print("SpriteAngle: "+spriteAngle);
+				//print("SpriteAngle: "+spriteAngle);
 			}
 			else if(FighterState.Vel.magnitude>=100 && FighterState.Vel.magnitude<=125)
 			{
@@ -1354,10 +1351,10 @@ public class FighterChar : NetworkBehaviour
 				if(fadeOut>1)
 					fadeOut = 1;
 				spriteAngle = ((leanOutOfWindAng*(1-fadeOut))+(spriteAngle*2))/3;
-				print("SpriteAngle: "+spriteAngle);
+				//print("SpriteAngle: "+spriteAngle);
 				//print("localUpDirection: "+localUpDirection);
-				print("leanOutOfWindAng: "+leanOutOfWindAng);
-				print("fadein: "+fadeOut);
+				//print("leanOutOfWindAng: "+leanOutOfWindAng);
+				//print("fadein: "+fadeOut);
 			}
 		}
 
@@ -2067,7 +2064,6 @@ public class FighterChar : NetworkBehaviour
 		{
 			//print("Hitting wall slowly, considering correction.");
 			float wallSteepnessAngle;
-			float groundSteepnessAngle;
 
 			if ((m_LeftWalled) && (horizontalInput < 0)) 
 			{

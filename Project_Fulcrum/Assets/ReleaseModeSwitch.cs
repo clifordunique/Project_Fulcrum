@@ -17,11 +17,17 @@ public class ReleaseModeSwitch : MonoBehaviour {
 			print("STARTING GAME IN EDITOR!");
 			foreach(GameObject g in ReleaseOnlyObjects)
 			{
-				g.SetActive(false);
+				if(g!=null)
+				{
+					g.SetActive(false);
+				}
 			}
 			foreach(GameObject g in EditorOnlyObjects)
 			{
-				g.SetActive(true);
+				if(g!=null)
+				{
+					g.SetActive(true);
+				}
 			}
 		}
 		else

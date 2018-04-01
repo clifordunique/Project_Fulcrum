@@ -1,20 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Platformer\Character\FighterChar.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Shaders\ImageEffects\MinimapHolo.cs">
     <Files>
-      <File FileName="Assets\Scripts\Social\SocialManager.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Social\Scene.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Social\Actor.cs" Line="9" Column="1" />
-      <File FileName="Assets\Scripts\Social\ActorAnimator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Social\Dialogue.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="2296" Column="3" />
-      <File FileName="Assets\Editor\ProjectFulcrum\SceneNodeGraph.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Social\Dialogue_Parser.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Social\ChoicePrefabScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\Player.cs" Line="49" Column="68" />
+      <File FileName="Assets\Scripts\AnimAudio.cs" Line="1" Column="1" />
+      <File FileName="Assets\Standard Assets\Effects\ImageEffects\Shaders\CameraMotionBlur.shader" Line="1" Column="1" />
+      <File FileName="Assets\Shaders\ImageEffects\MinimapHolo.cs" Line="54" Column="51" />
+      <File FileName="Assets\Scripts\NavMaster.cs" Line="231" Column="5" />
+      <File FileName="Assets\Shaders\Shaders\MinimapHologram.shader" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Platformer\Character\FighterChar.cs" Line="2835" Column="46" />
+      <File FileName="Assets\ExplosionEffect.cs" Line="8" Column="35" />
+      <File FileName="Assets\Shaders\ImageEffects\UIHologram.cs" Line="25" Column="3" />
+      <File FileName="Assets\Shaders\Shaders\UIHologram.shader" Line="25" Column="3" />
       <File FileName="Assets\Scripts\Platformer\Character\ShoeTooltip.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\ProjectFulcrum\NavSurfaceEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets\ActorFPSOverride.cs" Line="16" Column="21" />
-      <File FileName="Assets\Scripts\Platformer\Character\FighterAudio.cs" Line="88" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

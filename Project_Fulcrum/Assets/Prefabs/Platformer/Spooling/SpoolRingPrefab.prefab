@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4957385652168484}
   - component: {fileID: 114224447615555590}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: SpoolRingPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4748437557238440}
   - component: {fileID: 212082404253105348}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: Ring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,7 +52,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4004865741860004}
   - component: {fileID: 212821386312496172}
-  m_Layer: 5
+  m_Layer: 13
   m_Name: BadRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   isTransparent: 0
   isCore: 0
   ringHidden: 0
-  lerpAllChanges: 0
+  lerpAllChanges: 1
   lerpRadius: 0
   lerpthickness: 0
   r_Ring: {fileID: 212082404253105348}

@@ -5,12 +5,12 @@ using UnityEngine;
 public class ExplosionEffect : MonoBehaviour {
 	public float maxLifeTime = 5;
 	[ReadOnlyAttribute] private float aliveDuration; 
-	private SpriteRenderer renderer;
+	private SpriteRenderer myRenderer;
 
 	// Use this for initialization
 	void Start () 
 	{
-		renderer = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+		myRenderer = this.gameObject.GetComponentInChildren<SpriteRenderer>();
 	}
 	
 	// Update is called once per frame
@@ -21,7 +21,7 @@ public class ExplosionEffect : MonoBehaviour {
 			aliveDuration += Time.deltaTime;
 			if(aliveDuration>1)
 			{
-				renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1-(aliveDuration/maxLifeTime));
+				myRenderer.color = new Color(myRenderer.color.r, myRenderer.color.g, myRenderer.color.b, 1-(aliveDuration/maxLifeTime));
 			}
 		}
 		else

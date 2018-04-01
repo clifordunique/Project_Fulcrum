@@ -16,4 +16,8 @@ public class AnimAudio : MonoBehaviour {
 	{
 		AkSoundEngine.PostEvent("Footstep", thePlayer);
 	}
+	public void GuardRollSound()
+	{
+		AkSoundEngine.PostEvent("Guardroll", thePlayer);
+	}
 }

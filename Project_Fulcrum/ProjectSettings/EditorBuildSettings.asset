@@ -20,6 +20,12 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 5fadae16b30c18148a55804409aa865a
+  - enabled: 0
+    path: Assets/Scenes/UIMOCKUP.unity
+    guid: 8d829b4382d068b4f856e5ead7225972
+  - enabled: 1
+    path: Assets/Scenes/EmptyWorld2.unity
+    guid: 93017edbc4722f84b9171f0ca95f850a
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 7d3f4c3ac8987ea4e8b4dcff759f04f1
