@@ -12,7 +12,6 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AK.Wwise.Event e_PunchHit = null;
 	[SerializeField]private AK.Wwise.Event e_Landing = null;
 	[SerializeField]private AK.Wwise.Event e_Slam = null;
-	[SerializeField]private AK.Wwise.Event e_Crater = null;
 	[SerializeField]private AK.Wwise.Event e_Jump = null;
 	[SerializeField]private AK.Wwise.Event e_StrandJump = null;
 	[SerializeField]private AK.Wwise.Event e_GuardRoll = null;
@@ -60,11 +59,6 @@ public class FighterAudio : NetworkBehaviour {
 	public void SlamSound(float impactGForce, float minT, float maxT)
 	{
 		e_Slam.Post(this.gameObject);
-	}
-
-	public void CraterSound(float impactGForce, float minT, float maxT)
-	{
-		e_Crater.Post(this.gameObject);
 	}
 
 	public void JumpSound()

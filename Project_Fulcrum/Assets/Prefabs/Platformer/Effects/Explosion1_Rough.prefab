@@ -100,6 +100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLifeTime: 5
+  e_Crater:
+    valueGuid: e2e26609768a5543896a229fbbb7bef9
+    ID: 1796283983
+  craterForce: 0
 --- !u!212 &212123883906639292
 SpriteRenderer:
   m_ObjectHideFlags: 1

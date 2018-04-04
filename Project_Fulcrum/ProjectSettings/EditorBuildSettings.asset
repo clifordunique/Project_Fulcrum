@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/UIMOCKUP.unity
     guid: 8d829b4382d068b4f856e5ead7225972
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EmptyWorld2.unity
     guid: 93017edbc4722f84b9171f0ca95f850a
   - enabled: 1

@@ -55,22 +55,21 @@ public class MinimapHolo : MonoBehaviour {
 		minimapUI.GetComponent<RawImage>().texture = outputRT;
 	}
 
-//	void OnRenderImage(RenderTexture src,RenderTexture dst)
-//	{
-//		Graphics.Blit(src, dst, holoMat, pass);
-//	}
+	void OnRenderImage(RenderTexture src,RenderTexture dst)
+	{
+		Graphics.Blit(src, dst, holoMat, pass);
+	}
+		
+	void Update () 
+	{
+		pass = 0;
+		myCam.cullingMask = 1 << 15;
+		myCam.targetTexture = baseTex;
+		myCam.Render();
 
-	// Update is called once per frame
-//	void Update () 
-//	{
-//		pass = 0;
-//		myCam.cullingMask = 1 << 15;
-//		myCam.targetTexture = baseTex;
-//		myCam.Render();
-//
-//		pass = 1;
-//		myCam.cullingMask = 1 << 16;
-//		myCam.targetTexture = outputRT;
-//		myCam.Render();
-//	}
+		pass = 1;
+		myCam.cullingMask = 1 << 16;
+		myCam.targetTexture = outputRT;
+		myCam.Render();
+	}
 }

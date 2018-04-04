@@ -22,7 +22,6 @@
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse" MaxAttenuation="100.000000"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep" MaxAttenuation="100.000000"/>
 				<Event Id="797614645" Name="GuardRoll" ObjectPath="\Events\Default Work Unit\GuardRoll" MaxAttenuation="100.000000"/>
-				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="3485259485" Name="Impact_Slam" ObjectPath="\Events\Default Work Unit\Impact_Slam"/>
 				<Event Id="2146777153" Name="Item_Equip" ObjectPath="\Events\Default Work Unit\Item_Equip" MaxAttenuation="100.000000"/>
 				<Event Id="3833651337" Name="Jump" ObjectPath="\Events\Default Work Unit\Jump"/>
@@ -74,10 +73,6 @@
 				<File Id="33186902" Language="SFX">
 					<ShortName>male_attack03.wav</ShortName>
 					<Path>SFX\male_attack03_1C9C67B2.wem</Path>
-				</File>
-				<File Id="42607697" Language="SFX">
-					<ShortName>crater01.wav</ShortName>
-					<Path>SFX\crater01_1C9C67B2.wem</Path>
 				</File>
 				<File Id="60099494" Language="SFX">
 					<ShortName>wood3.wav</ShortName>
@@ -166,10 +161,6 @@
 				<File Id="220609359" Language="SFX">
 					<ShortName>ZonPulse.wav</ShortName>
 					<Path>SFX\ZonPulse_1C9C67B2.wem</Path>
-				</File>
-				<File Id="223544122" Language="SFX">
-					<ShortName>crater02.wav</ShortName>
-					<Path>SFX\crater02_1C9C67B2.wem</Path>
 				</File>
 				<File Id="224742013" Language="SFX">
 					<ShortName>jump_water03.wav</ShortName>
@@ -283,10 +274,6 @@
 					<ShortName>female_attack02.wav</ShortName>
 					<Path>SFX\female_attack02_1C9C67B2.wem</Path>
 				</File>
-				<File Id="480740440" Language="SFX">
-					<ShortName>Windloop1.wav</ShortName>
-					<Path>SFX\Windloop1_F17FB28C.wem</Path>
-				</File>
 				<File Id="482966669" Language="SFX">
 					<ShortName>mud02.wav</ShortName>
 					<Path>SFX\mud02_1C9C67B2.wem</Path>
@@ -326,6 +313,10 @@
 				<File Id="525194768" Language="SFX">
 					<ShortName>female_jump01.wav</ShortName>
 					<Path>SFX\female_jump01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="542724620" Language="SFX">
+					<ShortName>Windloop2.wav</ShortName>
+					<Path>SFX\Windloop2_F17FB28C.wem</Path>
 				</File>
 				<File Id="568435598" Language="SFX">
 					<ShortName>wood2.wav</ShortName>
@@ -447,10 +438,6 @@
 					<ShortName>concrete_land04.wav</ShortName>
 					<Path>SFX\concrete_land04_1C9C67B2.wem</Path>
 				</File>
-				<File Id="883356947" Language="SFX">
-					<ShortName>crater03.wav</ShortName>
-					<Path>SFX\crater03_1C9C67B2.wem</Path>
-				</File>
 				<File Id="886636942" Language="SFX">
 					<ShortName>mud04.wav</ShortName>
 					<Path>SFX\mud04_1C9C67B2.wem</Path>
@@ -563,6 +550,7 @@
 			<Path>Environment.bnk</Path>
 			<IncludedEvents>
 				<Event Id="1892414574" Name="Ambient_Start" ObjectPath="\Events\Default Work Unit\Ambient_Start"/>
+				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="1718773345" Name="RiverLoopStart" ObjectPath="\Events\Default Work Unit\RiverLoopStart" MaxAttenuation="80.000000"/>
 			</IncludedEvents>
 			<IncludedMemoryFiles>
@@ -570,9 +558,17 @@
 					<ShortName>riverloop02.wav</ShortName>
 					<Path>SFX\riverloop02_DDA8542A.wem</Path>
 				</File>
+				<File Id="42607697" Language="SFX">
+					<ShortName>crater01.wav</ShortName>
+					<Path>SFX\crater01_1C9C67B2.wem</Path>
+				</File>
 				<File Id="44504001" Language="SFX">
 					<ShortName>ambience_cave02.wav</ShortName>
 					<Path>SFX\ambience_cave02_4BFAA247.wem</Path>
+				</File>
+				<File Id="81939073" Language="SFX">
+					<ShortName>Crater_NoRubble.wav</ShortName>
+					<Path>SFX\Crater_NoRubble_1C9C67B2.wem</Path>
 				</File>
 				<File Id="172087502" Language="SFX">
 					<ShortName>ambience_ruins.wav</ShortName>

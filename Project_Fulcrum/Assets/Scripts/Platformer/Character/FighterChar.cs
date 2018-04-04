@@ -267,7 +267,6 @@ public class FighterChar : NetworkBehaviour
 	#region VISUALS&SOUND
 	[Header("Visuals And Sound:")]
 	[SerializeField][Range(0,10)]protected float v_ReversingSlideT = 5;		// How fast the fighter must be going to go into a slide posture when changing directions.
-	[SerializeField][ReadOnlyAttribute] protected float v_CameraZoom; 	 	// Amount of camera zoom.
 	[SerializeField][Range(0,1)] protected int v_CameraMode; 			 	// What camera control type is in use.
 	[SerializeField][Range(0,1)] protected int v_DefaultCameraMode = 1;		// What camera control type to default to in normal gameplay.
 	[SerializeField][Range(0,1)] protected float v_CameraXLeashM; 			// How close the player can get to the edge of the screen horizontally. 1 is at the edge, whereas 0 is locked to the center of the screen.
@@ -287,12 +286,15 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField] protected bool v_Gender;								// Used for character audio.
+	[SerializeField] protected bool v_TriggerGenderChange;					// Used for character audio.
 	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 75;	// The speed at which the player's sprite is fully rotated to match the ground angle. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The angle the sprite is rotated to simulate leaning. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall.
 	[SerializeField][ReadOnlyAttribute]protected bool v_WallSliding;		// Whether or not the player is wallsliding.
 	[SerializeField][ReadOnlyAttribute]protected bool v_Sliding;			// Whether or not the player is sliding.
 	[SerializeField][ReadOnlyAttribute]protected string[] v_TerrainType;	// Type of terrain the player is stepping on. Used for audio like footsteps.
+	[SerializeField][ReadOnlyAttribute]protected bool v_ProjectileMode;		// True when the player hits a certain speed threshold and changes animations.
+	[SerializeField][ReadOnlyAttribute]protected float v_ProjectileModeT = 100;// Speed at which the player becomes a human projectile and switches to different animations.
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -367,15 +369,6 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void Awake()
 	{
 		FighterAwake();
-
-		if(v_Gender)
-		{
-			AkSoundEngine.PostEvent("Set_Gender_Male", gameObject);
-		}
-		else
-		{
-			AkSoundEngine.PostEvent("Set_Gender_Female", gameObject);
-		}
 	}
 
 	protected virtual void FixedUpdate()
@@ -513,12 +506,14 @@ public class FighterChar : NetworkBehaviour
 		print("["+d_TickCounter+"]:Saved new navconnection between surfaces "+n_TempNavCon.orig.id+" and "+n_TempNavCon.dest.id+".");
 	}
 	
-	protected virtual void FighterAwake()
+	protected void FighterAwake()
 	{
 		o_TimeManager = GameObject.Find("PFGameManager").GetComponent<TimeManager>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 		o_ItemHandler = GameObject.Find("PFGameManager").GetComponent<ItemHandler>();
 		o_NavMaster = GameObject.Find("NavMaster").GetComponent<NavMaster>();
+
+		v_TriggerGenderChange = true; // Marks the gender attribute as needing to be set by WWise.
 
 		//v_TerrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
@@ -545,8 +540,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			print("p_SparkEffectPrefab is the issue");
 		}
-
-
+			
 		o_SparkThrower = (GameObject)Instantiate(p_SparkEffectPrefab, o_DustSpawnTransform.position, Quaternion.identity, this.transform);
 		ParticleSystem.EmissionModule em = o_SparkThrower.GetComponent<ParticleSystem>().emission;
 		em.enabled = false;
@@ -770,7 +764,7 @@ public class FighterChar : NetworkBehaviour
 		Instantiate(p_DustEffectPrefab, spawnPos, Quaternion.identity);
 	}
 
-	protected virtual void SpawnExplosionEffect()
+	protected virtual void SpawnExplosionEffect(float explosionForce)
 	{
 		Vector3 spawnPos;
 		float rotation;
@@ -798,7 +792,8 @@ public class FighterChar : NetworkBehaviour
 		Quaternion spawnRotation = new Quaternion();
 		spawnRotation.eulerAngles = new Vector3(0, 0, rotation);
 
-		Instantiate(p_ExplosionEffectPrefab, spawnPos, spawnRotation);
+		GameObject newExplosion = (GameObject)Instantiate(p_ExplosionEffectPrefab, spawnPos, spawnRotation);
+		newExplosion.GetComponent<ExplosionEffect>().craterForce = explosionForce;
 	}
 
 	protected virtual void SpawnDustEffect(Vector2 spawnPos)
@@ -1174,6 +1169,17 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void FixedUpdateWwiseAudio() // FUWA
 	{
+		if(v_TriggerGenderChange)
+		{
+			if(v_Gender)
+			{
+				AkSoundEngine.PostEvent("Set_Gender_Male", gameObject);
+			}
+			else
+			{
+				AkSoundEngine.PostEvent("Set_Gender_Female", gameObject);
+			}
+		}
 		AkSoundEngine.SetRTPCValue("Health", FighterState.CurHealth, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("WindForce", FighterState.Vel.magnitude, this.gameObject);
@@ -1252,15 +1258,23 @@ public class FighterChar : NetworkBehaviour
 		else
 			FixedAirAnimation();
 
-		//
-		//Sprite rotation code - SRC
-		//
+		#region sprite rotation code
 		bool disableWindLean = false;
 		float surfaceLeanM = GetSpeed()/v_SpeedForMaxLean; // Player leans more the faster they're going. At max speed, the player model rotates so the ground is directly below them.
 		surfaceLeanM = (surfaceLeanM<1) ? surfaceLeanM : 1; // If greater than 1, clamp to 1.
 
 		float spriteAngle;
 		float testAngle = 0;
+
+		if((v_PrimarySurface != -1) && (Mathf.Abs(GetVelocity().magnitude)>=v_ProjectileModeT))
+		{
+			v_ProjectileMode = true;  // if player is moving fast, change their animations.
+		}
+
+		if(Mathf.Abs(GetVelocity().magnitude)<v_ProjectileModeT)
+		{
+			v_ProjectileMode = false; // if player is moving fast, change their animations.
+		}
 
 		if(v_PrimarySurface == 0)
 		{
@@ -1283,7 +1297,6 @@ public class FighterChar : NetworkBehaviour
 			//if(v_WallSliding)
 			surfaceLeanM = 1;
 			disableWindLean = true;
-
 		}
 		else
 		{
@@ -1314,7 +1327,7 @@ public class FighterChar : NetworkBehaviour
 
 			surfaceLeanM = angleScaling;
 
-			if(Mathf.Abs(GetVelocity().x)>100)
+			if(v_ProjectileMode)
 			{
 				surfaceLeanM = 1; 
 				spriteAngle = Get2DAngle(GetVelocity(), 0);
@@ -1334,31 +1347,28 @@ public class FighterChar : NetworkBehaviour
 			float leanIntoWindAngle = Get2DAngle(GetVelocity(), 0);
 			//print("leanIntoWindAngle"+leanIntoWindAngle);
 
-			if(FighterState.Vel.magnitude>75 && FighterState.Vel.magnitude<100)
+			if(FighterState.Vel.magnitude>(v_ProjectileModeT-25) && FighterState.Vel.magnitude<v_ProjectileModeT) // Approaching projectile mode
 			{
-				float fadein = (FighterState.Vel.magnitude-75)/(100-75);
+				float fadein = (FighterState.Vel.magnitude-(v_ProjectileModeT-25))/(25);
 				spriteAngle = ((leanIntoWindAngle*fadein)+(spriteAngle*2))/3;
 				//print("SpriteAngle: "+spriteAngle);
 			}
-			else if(FighterState.Vel.magnitude>=100 && FighterState.Vel.magnitude<=125)
+			else if(FighterState.Vel.magnitude>=v_ProjectileModeT && FighterState.Vel.magnitude<(v_ProjectileModeT+25)) // in projectile mode
 			{
 				float leanOutOfWindAng = Get2DAngle(-GetVelocity(), 0);
 				if(Math.Abs(leanOutOfWindAng+spriteAngle)<(Mathf.Abs(leanOutOfWindAng)+Mathf.Abs(spriteAngle))) // If one angle is negative while the other is positive, invert the sign of leanoutofwindang so they match.
 				{
 					leanOutOfWindAng *= -1;
 				}
-				float fadeOut = (FighterState.Vel.magnitude-100)/(125-100);
+				float fadeOut = (FighterState.Vel.magnitude-v_ProjectileModeT)/(25);
 				if(fadeOut>1)
 					fadeOut = 1;
 				spriteAngle = ((leanOutOfWindAng*(1-fadeOut))+(spriteAngle*2))/3;
-				//print("SpriteAngle: "+spriteAngle);
-				//print("localUpDirection: "+localUpDirection);
-				//print("leanOutOfWindAng: "+leanOutOfWindAng);
-				//print("fadein: "+fadeOut);
+				print("SpriteAngle: "+spriteAngle);
+				print("leanOutOfWindAng: "+leanOutOfWindAng);
+				print("fadein: "+fadeOut);
 			}
 		}
-
-		//v_LeanAngle = Mathf.Lerp(v_LeanAngle, spriteAngle, Time.fixedDeltaTime*100);
 		v_LeanAngle = spriteAngle*surfaceLeanM; //remove this and enable lerp.
 		Quaternion finalAngle = new Quaternion();
 		finalAngle.eulerAngles = new Vector3(0,0, v_LeanAngle);
@@ -1366,6 +1376,7 @@ public class FighterChar : NetworkBehaviour
 		//
 		// End of sprite transform positioning code
 		//
+		#endregion
 
 		float relativeAimDirection = -Get2DAngle((Vector2)FighterState.MouseWorldPos-(Vector2)this.transform.position, -v_LeanAngle);
 		if(m_Kneeling&&!m_Airborne)
@@ -1472,6 +1483,7 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetInteger("Stance", FighterState.Stance);
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
+		o_Anim.SetFloat("ProjectileMode", Convert.ToSingle(v_ProjectileMode));
 
 		if(v_TriggerAtkHit)
 		{
@@ -1579,18 +1591,7 @@ public class FighterChar : NetworkBehaviour
 
 	protected virtual void UpdatePlayerInput()
 	{
-		if(Input.GetMouseButtonDown(0))
-		{
-			FighterState.LeftClickPress = true;
-		}
-
-		if(Input.GetMouseButtonDown(1))
-		{
-			//FighterState.RightClick = true;
-		}
-
-		//Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		//FighterState.MouseWorldPos = Vec2(mousePoint);
+		// Extended by Player class.
 	}
 
 	protected Vector2 Vec2(Vector3 inputVector)
@@ -1660,9 +1661,10 @@ public class FighterChar : NetworkBehaviour
 		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 
 		AkSoundEngine.SetRTPCValue("GForce_Instant", m_IGF, this.gameObject);
-		o_FighterAudio.CraterSound(impactForce, m_CraterT, 1000f);
+		//o_FighterAudio.CraterSound(impactForce, m_CraterT, 1000f);
 
 		SpawnShockEffect(this.initialVel.normalized);
+		SpawnExplosionEffect(impactForce);
 
 //		GameObject newAirBurst = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
 		//		newAirBurst.GetComponentInChildren<AirBurst>().Create(true, 30+70*linScaleModifier, 0.4f, impactForce); 					//Set the parameters of the shockwave.
@@ -2110,12 +2112,15 @@ public class FighterChar : NetworkBehaviour
 		{
 			m_Kneeling = true;
 			horizontalInput = 0;
-			v_CameraMode = 2;
+//			if(GetZonLevel()>0)
+//			{
+//				v_CameraMode = 2;
+//			}
 		}
-		else
-		{
-			v_CameraMode = v_DefaultCameraMode;
-		}
+//		else
+//		{
+//			v_CameraMode = v_DefaultCameraMode;
+//		}
 
 		if(groundPara.x > 0)
 		{
@@ -2303,8 +2308,6 @@ public class FighterChar : NetworkBehaviour
 		
 	protected void WallTraction(float hInput, float vInput, Vector2 wallSurface)
 	{
-		v_CameraMode = v_DefaultCameraMode;
-
 		if(vInput>0)
 		{
 			//print("FALLIN OFF YO!");
@@ -2315,7 +2318,10 @@ public class FighterChar : NetworkBehaviour
 		{
 			m_Kneeling = true;
 			hInput = 0;
-			v_CameraMode = 2;
+//			if(v_DefaultCameraMode==3)
+//			{
+//				v_CameraMode = 2;
+//			}
 		}
 
 		if(m_LeftWalled) 	// If going up the left side wall, reverse horizontal input. This makes it so when control scheme is rotated 90 degrees, the key facing the wall will face up always. 
@@ -4262,9 +4268,10 @@ public class FighterChar : NetworkBehaviour
 		{
 			FighterState.ZonLevel--;
 		}
-		SpawnExplosionEffect();
-		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*(chargeAmount*3))));	
-		o_FighterAudio.CraterSound(FighterState.Vel.magnitude*5, m_CraterT, 1000f);
+
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*(chargeAmount*3))));
+		SpawnExplosionEffect(FighterState.Vel.magnitude*2);
+		//o_FighterAudio.CraterSound(FighterState.Vel.magnitude*5, m_CraterT, 1000f);
 	}
 
 	public float Get2DAngle(Vector2 vector2) // Get angle, from -180 to +180 degrees. Degree offset to horizontal right.

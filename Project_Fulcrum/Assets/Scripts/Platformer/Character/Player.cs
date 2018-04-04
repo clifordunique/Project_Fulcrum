@@ -45,8 +45,8 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private Text o_EnergyCounter;      			// Reference to the level of zon power (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
-	[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
-	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;					// Reference to the character's spooler object, which handles power charging gameplay.
+	//[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
+	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;					// Reference to the character's spooler component, which handles power charging gameplay.
 	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_TestObject;								// Reference to any prefab you wish, allowing you to spawn that prefab by pressing F9.
@@ -76,12 +76,17 @@ public class Player : FighterChar
 	// VISUAL&SOUND VARIABLES
 	//###########################################################################################################################################################################
 	#region VISUALS&SOUND
-	[SerializeField]private Vector3 v_CamWhiplashAmount;
-	[SerializeField]private Vector3 v_CamWhiplashRecovery;
-	[SerializeField]private float v_CamWhiplashM = 1;
-	[SerializeField]public float v_CameraZoomLevel = 12;
-	[SerializeField][ReadOnlyAttribute]public float v_CameraFinalSize;
-	[SerializeField]private float v_CameraZoomGoal = 12;
+	[SerializeField] private Vector3 v_CamWhiplashAmount;
+	[SerializeField] private Vector3 v_CamWhiplashRecovery;
+	[SerializeField] private float v_CamWhiplashM = 1;
+	[SerializeField] public float v_CameraZoomLevel = 12;
+	[SerializeField][ReadOnlyAttribute] public float v_CameraFinalSize;
+	[SerializeField] private float v_CameraScrollZoom = 12;
+	[SerializeField] private float v_CameraZoomLerp = 12;	
+	[SerializeField] private float v_SuperJumpStanceTime = 0;				// How long the player has been crouched with energy, ready to super jump.
+	[SerializeField] private float v_MaxSuperJumpStanceTime = 0.33f;			 // Max crouch time before the camera begins to pan out, letting the player see their surroundings further away so they can line jumps up easier.
+
+
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -179,7 +184,6 @@ public class Player : FighterChar
 
 		if(isLocalPlayer)
 		{
-			FixedUpdatePlayerAnimation();
 			inputBuffer.Enqueue(FighterState);
 			if(inputBuffer.Count >= inputBufferSize)
 			{
@@ -434,8 +438,12 @@ public class Player : FighterChar
 		if(FighterState.DevKey5)
 		{
 			v_DefaultCameraMode++;
-			string[] cameraNames = {"A - LockedClose","B - AimGuided","C - AimGuided SuperJump","D - AimGuidedWhiplash","E - Stationary"};
-			if(v_DefaultCameraMode>4)
+			string[] cameraNames = {"A - LockedClose","B - AimGuided","C - AimGuided SuperJump","D - AimGuidedWhiplash","E - Stationary","F - SlowMo"};
+			if(v_DefaultCameraMode==2)
+			{
+				v_DefaultCameraMode++;
+			}
+			if(v_DefaultCameraMode>5)
 			{
 				v_DefaultCameraMode = 0;
 			}
@@ -1067,11 +1075,6 @@ public class Player : FighterChar
 
 	}
 
-	protected void FixedUpdatePlayerAnimation() // FUPA
-	{
-		
-	}
-
 	protected override void ZonPulse()
 	{
 		if(FighterState.ZonLevel <= 0)
@@ -1090,15 +1093,21 @@ public class Player : FighterChar
 
 	protected void UpdatePlayerAnimation() // UPA
 	{
-		v_CameraZoomGoal -= FighterState.ScrollWheel*1.5f;
-		v_CameraZoomGoal = (v_CameraZoomGoal>15) ? 15 : v_CameraZoomGoal; // Clamp max
-		v_CameraZoomGoal = (v_CameraZoomGoal<1) ? 1 : v_CameraZoomGoal; // Clamp min
+		v_CameraScrollZoom -= FighterState.ScrollWheel*1.5f;
+		v_CameraScrollZoom = (v_CameraScrollZoom>15) ? 15 : v_CameraScrollZoom; // Clamp max
+		v_CameraScrollZoom = (v_CameraScrollZoom<1) ? 1 : v_CameraScrollZoom; // Clamp min
 
+		v_CameraMode = v_DefaultCameraMode;
+		if(m_Kneeling&&GetZonLevel()>0) // If kneeling, use superjump cam.
+		{
+			v_CameraMode = 2;
+		}
+		if((v_CameraMode==3 || v_CameraMode==2)&&o_TimeManager.GetTimeDilationM() < 1) // If set to normal camera mode, and game is in slowmo, use slowmo cam.
+		{
+			v_CameraMode = 5;
+		}
 
-		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, v_CameraZoomGoal, Time.deltaTime*10);
-
-
-
+	
 
 		switch(v_CameraMode)
 		{
@@ -1127,6 +1136,11 @@ public class Player : FighterChar
 				CameraControlTypeE(); // Locked Map Location Camera
 				break;
 			}
+		case 5:
+			{
+				CameraControlTypeF(); // SlowMo focus cam
+				break;	
+			}
 		default:
 			{
 				throw new Exception("ERROR: CAMERAMODE UNDEFINED.");
@@ -1153,17 +1167,17 @@ public class Player : FighterChar
 
 	protected void CameraControlTypeA() //CCTA - locked cam
 	{
-		
 		if(!o_MainCamera){return;}
+		v_SuperJumpStanceTime = 0;
 		if(o_MainCameraTransform.parent==null)
 		{
 			o_MainCameraTransform.parent = this.transform;
-			o_MainCameraTransform.localPosition = Vector3.zero;
+			o_MainCameraTransform.localPosition = new Vector3(0, 0, -10);
 		}
+
 		#region zoom
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
-		//v_CameraZoom = FighterState.Vel.magnitude;
 		float zoomChange = 0;
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, v_CameraScrollZoom, Time.deltaTime*10);
 		o_MainCamera.orthographicSize = v_CameraZoomLevel;
 
 		//o_MainCameraTransform.position = new Vector3(this.transform.position.x, this.transform.position.y, -10f);
@@ -1173,30 +1187,35 @@ public class Player : FighterChar
 		#endregion
 	}
 		
-	protected void CameraControlTypeB() //CCTB - aim cam
+	protected void CameraControlTypeB() //CCTB - simple aim cam
 	{
 		if(!o_MainCamera){return;}
-
+		v_SuperJumpStanceTime = 0;
 		if(o_MainCameraTransform.parent==null)
 		{
 			o_MainCameraTransform.parent = this.transform;
-			o_MainCameraTransform.localPosition = Vector3.zero;
+			o_MainCameraTransform.localPosition = new Vector3(0, 0, -10);
 		}
 
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
-		float zoomChange = 0;
-		if((0.15f*v_CameraZoom)>=5f)
+		float goalZoom;
+		float mySpeed = FighterState.Vel.magnitude;
+		float camSpeedModifier = 0;
+		if((0.15f*mySpeed)>=5f)
 		{
-			zoomChange = (0.15f*v_CameraZoom)-5f;
+			camSpeedModifier = (0.15f*mySpeed)-5f;
 		}
-		if(v_CameraZoomLevel+zoomChange >= 40f)
+
+		if(v_CameraScrollZoom+camSpeedModifier >= 40f)
 		{
-			o_MainCamera.orthographicSize = 40f;
+			goalZoom = 40f;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
+			goalZoom = v_CameraScrollZoom+camSpeedModifier;
 		}
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, goalZoom, Time.deltaTime*10);
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
+
 
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
@@ -1230,20 +1249,34 @@ public class Player : FighterChar
 			o_MainCameraTransform.localPosition = Vector3.zero;
 		}
 	
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, GetZonLevel()*25, Time.unscaledDeltaTime);
-		float zoomChange = 0;
-		if((0.15f*v_CameraZoom)>=5f)
+		float mySpeed = FighterState.Vel.magnitude;
+		if(v_SuperJumpStanceTime<v_MaxSuperJumpStanceTime)
 		{
-			zoomChange = (0.15f*v_CameraZoom)-5f;
-		}
-		if(v_CameraZoomLevel+zoomChange >= 40f) // If zoomchange (speed zoom) plus camerazoomlevel (scroll zoom) greater than the maximum, clamp it.
-		{
-			o_MainCamera.orthographicSize = 40f;
+			v_SuperJumpStanceTime += Time.unscaledDeltaTime;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
+			mySpeed = GetZonLevel()*25;
 		}
+
+		float goalZoom;
+		float camSpeedModifier = 0;
+		if((0.15f*mySpeed)>=5f)
+		{
+			camSpeedModifier = (0.15f*mySpeed)-5f;
+		}
+
+		if(v_CameraScrollZoom+camSpeedModifier >= 40f)
+		{
+			goalZoom = 40f;
+		}
+		else
+		{
+			goalZoom = v_CameraScrollZoom+camSpeedModifier;
+		}
+
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, goalZoom, Time.deltaTime*3);
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
 
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
@@ -1315,30 +1348,31 @@ public class Player : FighterChar
 	protected void CameraControlTypeD() //CCTD - whiplash aimcam - Main camera style
 	{
 		if(!o_MainCamera){return;}
-
+		v_SuperJumpStanceTime = 0;
 		if(o_MainCameraTransform.parent==null)
 		{
 			o_MainCameraTransform.parent = this.transform;
 			o_MainCameraTransform.localPosition = Vector3.zero;
 		}
 		#region zoom
-		// CameraZoom is the speed based zoom modifier
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
-
-
-		float zoomChange = 0;
-		if((0.15f*v_CameraZoom)>=5f)
+		float goalZoom;
+		float mySpeed = FighterState.Vel.magnitude;
+		float camSpeedModifier = 0;
+		if((0.15f*mySpeed)>=5f)
 		{
-			zoomChange = (0.15f*v_CameraZoom)-5f;
+			camSpeedModifier = (0.15f*mySpeed)-5f;
 		}
-		if(v_CameraZoomLevel+zoomChange >= 50f)
+
+		if(v_CameraScrollZoom+camSpeedModifier >= 40f)
 		{
-			o_MainCamera.orthographicSize = 40f;
+			goalZoom = 40f;
 		}
 		else
 		{
-			o_MainCamera.orthographicSize = v_CameraZoomLevel+zoomChange;
+			goalZoom = v_CameraScrollZoom+camSpeedModifier;
 		}
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, goalZoom, Time.deltaTime*10);
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
 
 		#endregion
 		#region position
@@ -1451,18 +1485,41 @@ public class Player : FighterChar
 
 	protected void CameraControlTypeE() // Scenic stationary camera
 	{
-		if(!o_MainCamera)
-		{
-			return;
-		}
-		v_CameraZoom = Mathf.Lerp(v_CameraZoom, FighterState.Vel.magnitude, Time.unscaledDeltaTime);
-		//v_CameraZoom = FighterState.Vel.magnitude;
-		float zoomChange = 0;
-		o_MainCamera.orthographicSize = 20f;
+		if(!o_MainCamera){return;}
+		v_SuperJumpStanceTime = 0;
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, 20f, Time.deltaTime*10);
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
 		o_MainCameraTransform.parent = null;
 		o_MainCameraTransform.position = new Vector3(-4, 263, -10f);
 	}
 
+	protected void CameraControlTypeF() //CCTF - SlowMo
+	{
+		if(!o_MainCamera){return;}
+		v_SuperJumpStanceTime = 0;
+		if(o_MainCameraTransform.parent==null)
+		{
+			o_MainCameraTransform.parent = this.transform;
+		}
+
+		float mySpeed = FighterState.Vel.magnitude;
+		float camSpeedModifier = 10f;
+		if((0.15f*mySpeed)>=10f)
+		{
+			camSpeedModifier = (0.15f*mySpeed);
+		}
+
+		float timespeed = o_TimeManager.GetTimeDilationM();
+		float zoomModifier = 1;
+		if(timespeed<1)
+		{
+			zoomModifier += (1-timespeed);
+		}
+			
+		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10);
+		v_CameraZoomLevel = Mathf.Lerp(v_CameraZoomLevel, (camSpeedModifier)/zoomModifier, Time.unscaledDeltaTime*5);
+		o_MainCamera.orthographicSize = v_CameraZoomLevel;
+	}
 
 	#endregion
 	//###################################################################################################################################

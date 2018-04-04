@@ -28,9 +28,19 @@ public class TimeManager : MonoBehaviour {
 		Time.timeScale = 1;
 	}
 
+	public void ExitTimeDilationGradual()
+	{
+		slowmoTimer = 0;
+
+		Time.timeScale = Mathf.Lerp(Time.timeScale, 1, Time.fixedUnscaledDeltaTime*5);
+		if(Mathf.Abs(Time.timeScale-1)<0.05f) // if timescale is within 0.05 of normal time speed, set it to normal
+		{
+			ExitTimeDilation();
+		} 
+	}
+
 	public float GetTimeDilationM()
 	{
-//		print("Timespeed = "+timeSpeed);
 		return timeSpeed;
 	}
 
@@ -52,7 +62,7 @@ public class TimeManager : MonoBehaviour {
 		}
 		else
 		{
-			ExitTimeDilation();
+			ExitTimeDilationGradual();
 		}
 	}
 }

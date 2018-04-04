@@ -12,6 +12,7 @@ public class Spooler : NetworkBehaviour
 	[SerializeField]private AudioMixer o_SpoolMixer;
 	[SerializeField]private AudioClip[] s_SpoolUp;
 	[SerializeField][ReadOnlyAttribute] private Player o_Player;
+	[SerializeField][ReadOnlyAttribute] private Transform o_SpoolerTransform;
 	[SerializeField]private Text o_FeedbackText;
 	[SerializeField]private Ring[] o_Rings;
 	[SerializeField]private Ring o_Core;
@@ -50,18 +51,19 @@ public class Spooler : NetworkBehaviour
 	void Start () 
 	{
 		o_Player = this.gameObject.GetComponent<Player>();
+		o_SpoolerTransform = transform.Find("SpoolerTransform");
 		if(!o_Player.isLocalPlayer)
 		{
 			this.enabled = false;
 		}
 		GameObject newCore = (GameObject)Instantiate(p_SpoolRingPrefab);
 		newCore.name = "Core";
-		newCore.transform.SetParent(this.transform, false);
+		newCore.transform.SetParent(o_SpoolerTransform, false);
 		o_Core = newCore.GetComponent<Ring>();
 
 		GameObject newLimit = (GameObject)Instantiate(p_SpoolRingPrefab);
 		newLimit.name = "Limit";
-		newLimit.transform.SetParent(this.transform, false);
+		newLimit.transform.SetParent(o_SpoolerTransform, false);
 		o_Limit = newLimit.GetComponent<Ring>();
 
 		o_Rings = new Ring[30];
@@ -70,7 +72,7 @@ public class Spooler : NetworkBehaviour
 		{
 			GameObject newRing = (GameObject)Instantiate(p_SpoolRingPrefab);
 			newRing.name = "Ring_"+i;
-			newRing.transform.SetParent(this.transform, false);
+			newRing.transform.SetParent(o_SpoolerTransform, false);
 			o_Rings[i] = newRing.GetComponent<Ring>();
 			o_Rings[i].ringHidden = true;
 		}

@@ -6659,6 +6659,46 @@
 									</ReferenceList>
 									<ChildrenList>
 										<ActorMixer Name="Wind" ID="{3E528552-260E-4FA6-A7EA-ADFFB5CAD64D}" ShortID="258175636">
+											<PropertyList>
+												<Property Name="Volume" Type="Real64">
+													<RTPCList>
+														<RTPC Name="" ID="{F6244777-AC25-48D6-AAC3-711630801E87}" ShortID="143238977">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="WindForce" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{8BE725B2-B819-40EB-82E3-B12FEEE7E3FA}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-198.99999</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>62.1118</XPos>
+																		<YPos>-200</YPos>
+																		<Flags>0</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>580.64516</XPos>
+																		<YPos>-2.45068</YPos>
+																		<Flags>0</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>4000</XPos>
+																		<YPos>2.51496</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Conversion">
 													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -6668,76 +6708,7 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="Windloop1" ID="{FF2F5717-74A3-4AB2-9C75-88378F4F8635}" ShortID="32489348">
-													<PropertyList>
-														<Property Name="IgnoreParentMaxSoundInstance" Type="bool" Value="True"/>
-														<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
-														<Property Name="Pitch" Type="int32">
-															<ModifierList>
-																<ModifierInfo>
-																	<Modifier Name="" ID="{0B2CE9B3-CB22-4717-B82E-0C8FB817C153}"/>
-																</ModifierInfo>
-															</ModifierList>
-														</Property>
-														<Property Name="Volume" Type="Real64">
-															<RTPCList>
-																<RTPC Name="" ID="{B5BF4AE0-D744-4404-AA45-93F2193666B9}" ShortID="646561517">
-																	<ReferenceList>
-																		<Reference Name="ControlInput">
-																			<ObjectRef Name="WindForce" ID="{0226325D-8969-47B2-A05E-01B803250483}" WorkUnitID="{5313AEB9-AA1B-42FE-9A64-6362320F3300}"/>
-																		</Reference>
-																	</ReferenceList>
-																	<Curve Name="" ID="{591FF599-7362-4A12-885B-D2A244E8C50B}">
-																		<PropertyList>
-																			<Property Name="Flags" Type="int32" Value="3"/>
-																		</PropertyList>
-																		<PointList>
-																			<Point>
-																				<XPos>0</XPos>
-																				<YPos>-198.99999</YPos>
-																				<Flags>5</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>62.1118</XPos>
-																				<YPos>-200</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>113.86264</XPos>
-																				<YPos>-12.34863</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>186.33541</XPos>
-																				<YPos>-7.35597</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>186.95653</XPos>
-																				<YPos>-7.31621</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>312.11181</XPos>
-																				<YPos>-4.16062</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>811.50648</XPos>
-																				<YPos>-3.16062</YPos>
-																				<Flags>0</Flags>
-																			</Point>
-																			<Point>
-																				<XPos>4000</XPos>
-																				<YPos>-3</YPos>
-																				<Flags>37</Flags>
-																			</Point>
-																		</PointList>
-																	</Curve>
-																</RTPC>
-															</RTPCList>
-														</Property>
-													</PropertyList>
+												<BlendContainer Name="WindMix" ID="{2CCA5474-87F5-448E-AE94-EF1AD7EE005C}" ShortID="673693765">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
@@ -6747,15 +6718,72 @@
 														</Reference>
 													</ReferenceList>
 													<ChildrenList>
-														<AudioFileSource Name="Windloop1" ID="{118BAA8A-276D-4CD0-B414-50F1741F2A25}" ShortID="480740440">
-															<Language>SFX</Language>
-															<AudioFile>Windloop1.wav</AudioFile>
-														</AudioFileSource>
+														<Sound Name="Windloop1" ID="{FF2F5717-74A3-4AB2-9C75-88378F4F8635}" ShortID="32489348">
+															<PropertyList>
+																<Property Name="IgnoreParentMaxSoundInstance" Type="bool" Value="True"/>
+																<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+																<Property Name="Pitch" Type="int32">
+																	<ModifierList>
+																		<ModifierInfo>
+																			<Modifier Name="" ID="{0B2CE9B3-CB22-4717-B82E-0C8FB817C153}"/>
+																		</ModifierInfo>
+																	</ModifierList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																	<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																	<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="Windloop1" ID="{118BAA8A-276D-4CD0-B414-50F1741F2A25}" ShortID="480740440">
+																	<Language>SFX</Language>
+																	<AudioFile>Windloop1.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Windloop1" ID="{118BAA8A-276D-4CD0-B414-50F1741F2A25}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="Windloop2" ID="{72BCC202-2055-488C-808E-523DE3C91892}" ShortID="113281438">
+															<PropertyList>
+																<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																	<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																	<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="Windloop2" ID="{62E66E55-70DA-433E-8BC8-08F42D8DA6EE}" ShortID="542724620">
+																	<Language>SFX</Language>
+																	<AudioFile>Windloop2.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Windloop2" ID="{62E66E55-70DA-433E-8BC8-08F42D8DA6EE}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
 													</ChildrenList>
-													<ActiveSourceList>
-														<ActiveSource Name="Windloop1" ID="{118BAA8A-276D-4CD0-B414-50F1741F2A25}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
+												</BlendContainer>
 											</ChildrenList>
 										</ActorMixer>
 										<RandomSequenceContainer Name="Crater" ID="{A539B9E0-4083-4357-86E2-B63D9D7080C7}" ShortID="32916087">
@@ -6767,8 +6795,8 @@
 															<Modifier Name="" ID="{3874D6CF-65FF-409D-AF23-1D1ED4833D00}">
 																<PropertyList>
 																	<Property Name="Enabled" Type="bool" Value="True"/>
-																	<Property Name="Max" Type="Real64" Value="200"/>
-																	<Property Name="Min" Type="Real64" Value="-400"/>
+																	<Property Name="Max" Type="Real64" Value="100"/>
+																	<Property Name="Min" Type="Real64" Value="-100"/>
 																</PropertyList>
 															</Modifier>
 														</ModifierInfo>
@@ -6823,36 +6851,13 @@
 												</Reference>
 											</ReferenceList>
 											<ChildrenList>
-												<Sound Name="crater01" ID="{F8666176-0EE9-4B7F-B0F9-9A7B9E4FF28D}" ShortID="1011004935">
-													<PropertyList>
-														<Property Name="Pitch" Type="int32">
-															<ModifierList>
-																<ModifierInfo>
-																	<Modifier Name="" ID="{F33C87D6-4002-4652-ABDA-587733DC8708}"/>
-																</ModifierInfo>
-															</ModifierList>
-														</Property>
-													</PropertyList>
-													<ReferenceList>
-														<Reference Name="Conversion">
-															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
-														</Reference>
-														<Reference Name="OutputBus">
-															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
-														</Reference>
-													</ReferenceList>
-													<ChildrenList>
-														<AudioFileSource Name="crater01" ID="{612A2AF3-7360-4063-B933-E5F00EA182B9}" ShortID="42607697">
-															<Language>SFX</Language>
-															<AudioFile>crater01.wav</AudioFile>
-														</AudioFileSource>
-													</ChildrenList>
-													<ActiveSourceList>
-														<ActiveSource Name="crater01" ID="{612A2AF3-7360-4063-B933-E5F00EA182B9}" Platform="Linked"/>
-													</ActiveSourceList>
-												</Sound>
 												<Sound Name="crater02" ID="{A06F2943-1404-4D81-B6E6-D0F43B9F1FF6}" ShortID="799064078">
 													<PropertyList>
+														<Property Name="Inclusion" Type="bool">
+															<ValueList>
+																<Value>False</Value>
+															</ValueList>
+														</Property>
 														<Property Name="Pitch" Type="int32">
 															<ModifierList>
 																<ModifierInfo>
@@ -6881,6 +6886,11 @@
 												</Sound>
 												<Sound Name="crater03" ID="{933A98AB-A8AC-40D0-AB92-97EA6BCC52DB}" ShortID="1006679405">
 													<PropertyList>
+														<Property Name="Inclusion" Type="bool">
+															<ValueList>
+																<Value>False</Value>
+															</ValueList>
+														</Property>
 														<Property Name="Pitch" Type="int32">
 															<ModifierList>
 																<ModifierInfo>
@@ -6907,6 +6917,89 @@
 														<ActiveSource Name="crater03" ID="{AB8DA035-639C-4203-BF84-10E39E6263DC}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
+												<BlendContainer Name="CraterBlend" ID="{F0069F32-FB85-49B7-8C44-FBFEE61E4E22}" ShortID="639845431">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<Sound Name="Crater_NoRubble" ID="{D0A1634C-E86E-4812-9177-6F35618F4ECD}" ShortID="221727979">
+															<PropertyList>
+																<Property Name="Pitch" Type="int32">
+																	<ValueList>
+																		<Value>-400</Value>
+																	</ValueList>
+																</Property>
+																<Property Name="Volume" Type="Real64">
+																	<ValueList>
+																		<Value>-10</Value>
+																	</ValueList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																	<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																	<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="Crater_NoRubble" ID="{284F6AA8-FBCA-4628-81BF-02C240E8C95A}" ShortID="81939073">
+																	<Language>SFX</Language>
+																	<AudioFile>Crater_NoRubble.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="Crater_NoRubble" ID="{284F6AA8-FBCA-4628-81BF-02C240E8C95A}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+														<Sound Name="crater01" ID="{F8666176-0EE9-4B7F-B0F9-9A7B9E4FF28D}" ShortID="1011004935">
+															<PropertyList>
+																<Property Name="Pitch" Type="int32">
+																	<ModifierList>
+																		<ModifierInfo>
+																			<Modifier Name="" ID="{F33C87D6-4002-4652-ABDA-587733DC8708}"/>
+																		</ModifierInfo>
+																	</ModifierList>
+																</Property>
+															</PropertyList>
+															<ReferenceList>
+																<Reference Name="Conversion">
+																	<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+																</Reference>
+																<Reference Name="Effect0" PluginName="Wwise Time Stretch" CompanyID="0" PluginID="130" PluginType="3">
+																	<ObjectRef Name="PF_TimeStretch" ID="{338BB9D8-4275-4F6C-B711-D271D7C872D7}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="Effect1" PluginName="Wwise Pitch Shifter" CompanyID="0" PluginID="136" PluginType="3">
+																	<ObjectRef Name="PF_TimeSlowPitch" ID="{A2D8C679-7B5C-4858-B26C-B54B92379109}" WorkUnitID="{2B398282-92A2-4804-BFF6-00E8EC76B8B1}"/>
+																</Reference>
+																<Reference Name="OutputBus">
+																	<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+																</Reference>
+															</ReferenceList>
+															<ChildrenList>
+																<AudioFileSource Name="crater01" ID="{612A2AF3-7360-4063-B933-E5F00EA182B9}" ShortID="42607697">
+																	<Language>SFX</Language>
+																	<AudioFile>crater01.wav</AudioFile>
+																</AudioFileSource>
+															</ChildrenList>
+															<ActiveSourceList>
+																<ActiveSource Name="crater01" ID="{612A2AF3-7360-4063-B933-E5F00EA182B9}" Platform="Linked"/>
+															</ActiveSourceList>
+														</Sound>
+													</ChildrenList>
+												</BlendContainer>
 											</ChildrenList>
 										</RandomSequenceContainer>
 										<RandomSequenceContainer Name="Slam" ID="{DC3D48A9-7007-446D-8E3E-450C1C3D6407}" ShortID="746799344">

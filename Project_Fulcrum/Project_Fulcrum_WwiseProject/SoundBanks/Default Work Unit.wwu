@@ -7,7 +7,6 @@
 					<ObjectInclusionList>
 						<ObjectRef Name="EnergyPulse" ID="{AB3CAA24-D8F9-402B-88C1-A5AF022D82B6}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PunchHit" ID="{3F8476E9-3EE2-402F-9118-F5F7AD8A30C1}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
-						<ObjectRef Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PunchSwing" ID="{45A20D95-22CE-444F-88A8-1F91E6ADBD8C}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="SuperJump" ID="{6B0B3AB4-9D88-44FF-AEF9-3DC9C0621D39}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Item_Equip" ID="{567CD688-4488-4593-94F3-F6DA017E7292}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
@@ -46,6 +45,7 @@
 				</SoundBank>
 				<SoundBank Name="Environment" ID="{C7E2D7BB-6C79-448E-AD3C-A2086F0A5828}">
 					<ObjectInclusionList>
+						<ObjectRef Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Ambient_Start" ID="{E84B38C3-64D6-45FF-9C01-1F7E11DBEEF8}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="RiverLoopStart" ID="{CA6D9160-ECF8-4B03-A030-93F1B9B74DEF}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
