@@ -120,9 +120,7 @@ public class StartOptions : NetworkBehaviour {
 	{
 		isMultiplayer = false;
 		inMainMenu = false;
-		SceneManager.LoadScene("Scenes/MultiplayerTest");
-		//Mngr.ServerChangeScene("Scenes/MultiplayerTest");
-		//NetworkClient localhost = Mngr.StartHost();
+		SceneManager.LoadScene("Scenes/OutlandsConcept");
 	}
 
 	public void ChangeSceneMultiplayer(bool randomName)

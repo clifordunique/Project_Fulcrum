@@ -18,6 +18,7 @@
 			<IncludedEvents>
 				<Event Id="4052040634" Name="Breakable_Break" ObjectPath="\Events\Default Work Unit\Breakable_Break"/>
 				<Event Id="1802268949" Name="ChargeCrit" ObjectPath="\Events\Default Work Unit\ChargeCrit" MaxAttenuation="100.000000"/>
+				<Event Id="1453204217" Name="CritJump" ObjectPath="\Events\Default Work Unit\CritJump" MaxAttenuation="100.000000"/>
 				<Event Id="2390935913" Name="EnergyCharge" ObjectPath="\Events\Default Work Unit\EnergyCharge" MaxAttenuation="100.000000"/>
 				<Event Id="1403055964" Name="EnergyPulse" ObjectPath="\Events\Default Work Unit\EnergyPulse" MaxAttenuation="100.000000"/>
 				<Event Id="1866025847" Name="Footstep" ObjectPath="\Events\Default Work Unit\Footstep" MaxAttenuation="100.000000"/>
@@ -389,6 +390,10 @@
 				<File Id="690463890" Language="SFX">
 					<ShortName>glass_break01.wav</ShortName>
 					<Path>SFX\glass_break01_1C9C67B2.wem</Path>
+				</File>
+				<File Id="699337309" Language="SFX">
+					<ShortName>CritJump.wav</ShortName>
+					<Path>SFX\CritJump_1C9C67B2.wem</Path>
 				</File>
 				<File Id="716866082" Language="SFX">
 					<ShortName>hardland01.wav</ShortName>

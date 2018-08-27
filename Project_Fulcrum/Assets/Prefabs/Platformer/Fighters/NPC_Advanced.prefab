@@ -628,21 +628,24 @@ MonoBehaviour:
   e_Slam:
     valueGuid: 694a0359b6aa6b4780d91da2bfc36721
     ID: -809707811
-  e_Crater:
-    valueGuid: e2e26609768a5543896a229fbbb7bef9
-    ID: 1796283983
   e_Jump:
     valueGuid: a39a7d94ade8a74b81ae3a3b3fbab9fa
     ID: -461315959
   e_StrandJump:
     valueGuid: 0f144237782bfa4a9fe653ee34bc53fa
     ID: 187194041
+  e_GuardRoll:
+    valueGuid: 00000000000000000000000000000000
+    ID: 0
   e_SuperJump:
     valueGuid: b43a0b6b889dff44aef93dc9c0621d39
     ID: 188599998
   e_EquipSound:
     valueGuid: 88d67c568844934594f3f6da017e7292
     ID: 2146777153
+  e_CritJump:
+    valueGuid: 00000000000000000000000000000000
+    ID: 0
   muteFootsteps: 0
 --- !u!114 &114169669962309350
 MonoBehaviour:
@@ -803,7 +806,7 @@ MonoBehaviour:
   autoJump: 0
   autoLeftClick: 0
   antiTunneling: 1
-  noGravity: 0
+  gravityEnabled: 1
   showVelocityIndicator: 0
   showContactIndicators: 0
   recoverFromFullEmbed: 1
@@ -846,10 +849,19 @@ MonoBehaviour:
   m_JumpBufferL: 0
   m_JumpBufferR: 0
   m_JumpBufferFrameAmount: 10
+  m_AirborneDelay: 0.5
+  m_AirborneDelayTimer: 0
   m_StrandJumpSpeedLossM: 0
   m_StrandJumpReflectSpd: 0
   m_StrandJumpReflectDir: {x: 0, y: 0}
   m_WidestStrandJumpAngle: 45
+  critJumpReady: 0
+  critJumpWindow: 0.17
+  critJumpTimer: 0
+  critJumpFrameWindow: 2
+  critJumpFrameTimer: 0
+  critJumpHForce: 5
+  critJumpVForce: 0
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -985,7 +997,6 @@ MonoBehaviour:
     Vel: {x: 0, y: 0}
     FinalPos: {x: 0, y: 0}
   v_ReversingSlideT: 5
-  v_CameraZoom: 0
   v_CameraMode: 1
   v_DefaultCameraMode: 1
   v_CameraXLeashM: 0.5
@@ -1004,12 +1015,19 @@ MonoBehaviour:
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 1
+  v_TriggerGenderChange: 0
   v_SpeedForMaxLean: 100
   v_LeanAngle: 0
   v_PrimarySurface: 0
+  v_TruePrimarySurface: 0
   v_WallSliding: 0
   v_Sliding: 0
   v_TerrainType: []
+  v_HighSpeedMode: 0
+  v_HighSpeedModeT: 100
+  v_FlashTimer: 0
+  v_FlashDuration: 0
+  v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxHealth: 100
@@ -1724,7 +1742,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2061038505
-  m_SortingLayer: -5
+  m_SortingLayer: -6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5485e2f56028a3c4cb54f5caa167377e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1764,7 +1782,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -270496717
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2d4efec4ac1bbe844ba7994e60bdef85, type: 3}
   m_Color: {r: 0, g: 1, b: 0.13103437, a: 1}

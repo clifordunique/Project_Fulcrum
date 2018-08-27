@@ -17,6 +17,7 @@ public class FighterAudio : NetworkBehaviour {
 	[SerializeField]private AK.Wwise.Event e_GuardRoll = null;
 	[SerializeField]private AK.Wwise.Event e_SuperJump = null;
 	[SerializeField]private AK.Wwise.Event e_EquipSound = null;
+	[SerializeField]private AK.Wwise.Event e_CritJump = null;
 
 	[SerializeField]private bool muteFootsteps;
 		
@@ -24,6 +25,11 @@ public class FighterAudio : NetworkBehaviour {
 	{
 		if(muteFootsteps){return;}
 		e_Step.Post(this.gameObject);
+	}
+
+	public void CritJumpSound()
+	{
+		e_CritJump.Post(this.gameObject);
 	}
 
 	public void ZonPulseSound()

@@ -10,7 +10,11 @@
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="Volume_Music" ID="{649077BB-B071-4B3A-B61F-2BF54CE60A99}"/>
-				<GameParameter Name="Volume_Effects" ID="{E736A88C-621F-412F-B510-FB81F13374F3}"/>
+				<GameParameter Name="Volume_Effects" ID="{E736A88C-621F-412F-B510-FB81F13374F3}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="100"/>
+					</PropertyList>
+				</GameParameter>
 			</ChildrenList>
 		</WorkUnit>
 	</GameParameters>

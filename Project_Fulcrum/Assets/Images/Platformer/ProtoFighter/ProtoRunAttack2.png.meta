@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a51a9f3b49ebb5b4791463008a4e4f16
-timeCreated: 1516644923
+timeCreated: 1535325119
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -14,6 +14,15 @@ TextureImporter:
     21300014: ProtoRunAttack2_7
     21300016: ProtoRunAttack2_8
     21300018: ProtoRunAttack2_9
+    21300020: ProtoRunAttack2_10
+    21300022: ProtoRunAttack2_11
+    21300024: ProtoRunAttack2_12
+    21300026: ProtoRunAttack2_13
+    21300028: ProtoRunAttack2_14
+    21300030: ProtoRunAttack2_15
+    21300032: ProtoRunAttack2_16
+    21300034: ProtoRunAttack2_17
+    21300036: ProtoRunAttack2_18
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -135,8 +144,8 @@ TextureImporter:
       name: ProtoRunAttack2_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 256
+        x: 512
+        y: 384
         width: 128
         height: 128
       alignment: 9
@@ -148,8 +157,8 @@ TextureImporter:
       name: ProtoRunAttack2_5
       rect:
         serializedVersion: 2
-        x: 128
-        y: 256
+        x: 640
+        y: 384
         width: 128
         height: 128
       alignment: 9
@@ -161,8 +170,8 @@ TextureImporter:
       name: ProtoRunAttack2_6
       rect:
         serializedVersion: 2
-        x: 256
-        y: 256
+        x: 768
+        y: 384
         width: 128
         height: 128
       alignment: 9
@@ -174,8 +183,8 @@ TextureImporter:
       name: ProtoRunAttack2_7
       rect:
         serializedVersion: 2
-        x: 384
-        y: 256
+        x: 896
+        y: 384
         width: 128
         height: 128
       alignment: 9
@@ -188,7 +197,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 128
+        y: 256
         width: 128
         height: 128
       alignment: 9
@@ -200,12 +209,129 @@ TextureImporter:
       name: ProtoRunAttack2_9
       rect:
         serializedVersion: 2
+        x: 128
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_10
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_11
+      rect:
+        serializedVersion: 2
         x: 384
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_12
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_13
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_14
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_15
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 256
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_16
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 128
         width: 128
         height: 128
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_17
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoRunAttack2_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

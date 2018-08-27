@@ -22,7 +22,6 @@ public class ParallaxLayer : MonoBehaviour {
 
 	GameObject gameCamera;
 	[SerializeField] public bool isNewStyle;
-	[SerializeField] public bool isCloud;
 	[SerializeField] public Vector3 worldSpaceCoords;
 	[SerializeField] private Vector3 cameraSpaceCoords;
 
@@ -58,18 +57,28 @@ public class ParallaxLayer : MonoBehaviour {
 	{
 		//float distanceFactor = Mathf.Pow((distanceKM/100f)-1, 2);
 		float distanceFactor = (1.0f/(1.0f+distanceKM));
+
+		if(moveInOppositeDirection)
+		{
+			distanceFactor = 1/distanceFactor;
+			this.transform.localScale = new Vector3(distanceFactor, distanceFactor, distanceFactor);
+		}
+		else
+		{
+			this.transform.localScale = new Vector3(distanceFactor/2,distanceFactor/2,distanceFactor/2);
+		}
+
 		//this.transform.localScale = new Vector3((1.0f/(1.0f+(distanceKM/2f))),(1.0f/(1.0f+(distanceKM/2f))),1);
-		this.transform.localScale = new Vector3(distanceFactor/2,distanceFactor/2,distanceFactor/2);
+
 		//parallaxMovement = 1-Mathf.Pow((distanceKM/100f)-1, 2);// Mathf.Log10(distanceKM);
 		moveAmount = 1-distanceFactor;
-//		if(isCloud)
-//		{	
-//			moveAmount = 1-(distanceFactor*1.5f);
-//			moveAmount = (moveAmount>1) ? 1 : moveAmount;
-//		}
+
 		if(!Application.isPlaying && !options.moveParallax){return;}
 		cameraSpaceCoords = worldSpaceCoords+((gameCamera.transform.position-worldSpaceCoords)*moveAmount);
 		cameraSpaceCoords = (Vector2)cameraSpaceCoords;
+
+//		cameraSpaceCoords *= (moveInOppositeDirection) ? -1f : 1f;
+
 		transform.position = cameraSpaceCoords;
 	}
 

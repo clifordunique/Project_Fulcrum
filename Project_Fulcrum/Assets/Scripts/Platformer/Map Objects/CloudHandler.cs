@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
+
+// Author's note: the imprecision caused by lerping colours of integer precision causes clouds made of many layers to have very obvious colour jumps. 
+//If you see jittery and unsmooth transitions of colour that is why.
+
 public class CloudHandler : MonoBehaviour {
 	[SerializeField]private GameObject p_CloudLayer;		// Cloudlayer Prefab.
 	[SerializeField][ReadOnlyAttribute]private GameObject[] o_CloudLayer; 	// Array of all cloud layers.
@@ -12,16 +16,17 @@ public class CloudHandler : MonoBehaviour {
 	public int layerDensity;			// How many cloud cutouts will span between the foreground and the max zDistanceKM. More layers = more realistic.
 	public Color startColor;			// Foreground cloud colour.
 	public Color endColor;				// Most distant cloud colour.
+	public Gradient colGradient;		// Gradient of the start and end colours.
 	public float startScaleX = 2;		// Size of foreground cloud.
 	public float startScaleY = 2;		// Size of foreground cloud.
 	public Transform parallaxHolder; 	// Transform that acts as parent to all parallaxLayers
 	public float cloudXRandomness = 200; 		// Horizontal "shuffling" of layers.
-	public int layerCount;
+	[ReadOnlyAttribute][SerializeField] int layerCount;
 
 	[Header("Important Variables")]
 	[Range(1,4)][SerializeField] private float distanceSizeRatio = 1.25f;
 	[Range(0,1)][SerializeField] private float distanceParallaxRatio = 1f;
-	[SerializeField] private float distributionCurveM = 0;
+	[SerializeField][ReadOnlyAttribute] private float distributionCurveM = 0.7f;
 
 	private float current_cloudLayerElevation;
 	private float current_zDistanceKM;				
@@ -34,15 +39,18 @@ public class CloudHandler : MonoBehaviour {
 
 	public void GenerateClouds()
 	{
-		parallaxHolder = GameObject.Find("CloudParallax").transform;
+		if(parallaxHolder==null)
+		{
+			//parallaxHolder = GameObject.Find("CloudParallax").transform;
+			parallaxHolder = this.transform;
+		}
 		Vector2 cloudOrigin = new Vector2(0, cloudLayerElevation);
 		GameObject realCloudLayer = (GameObject)Instantiate(p_CloudLayer, cloudOrigin, Quaternion.identity);
 		realCloudLayer.transform.localScale = new Vector3(startScaleX*0.5f,startScaleY*0.5f,1);
 		realCloudLayer.layer = 15;
 		ParallaxLayer prlx = realCloudLayer.GetComponent<ParallaxLayer>();
 		prlx.enabled = false;
-		//prlx.speedX = 0;
-		//prlx.speedY = 0;
+
 		SpriteRenderer[] cloudRenderer = realCloudLayer.GetComponentsInChildren<SpriteRenderer>();
 		foreach(SpriteRenderer sp in cloudRenderer)
 		{
@@ -88,12 +96,14 @@ public class CloudHandler : MonoBehaviour {
 	GameObject SetupCloudLayer(int layerDepth, int totalLayers)
 	{
 		layerCount = totalLayers;
-		float multiplier = ((float)layerDepth)/totalLayers;
+		float multiplier = ((float)layerDepth)/((float)totalLayers);
 		float distanceKilometers = (100f*multiplier*multiplier*multiplier);
 		Vector2 cloudOrigin = new Vector2(0, cloudLayerElevation);
 		GameObject newCloudLayer = (GameObject)Instantiate(p_CloudLayer, cloudOrigin, Quaternion.identity);
-		Color dynamiColor = Color.Lerp(startColor,endColor,(distanceKilometers/100));
+		Color dynamiColor = Color.Lerp(startColor,endColor,(distanceKilometers/zDistanceKM));
 		//float distanceKilometers = (float)layerDepth*(float)layerDepth*distributionCurveM;
+
+		print("CloudModifier: "+(distanceKilometers/100));
 
 		newCloudLayer.GetComponent<CloudLayer>().Initialize(layerDepth, distanceKilometers, dynamiColor, cloudOrigin);
 
@@ -121,9 +131,26 @@ public class CloudHandler : MonoBehaviour {
 			print("ERROR: Cloudlayer is null.");
 			return;
 		}
-		float multiplier = ((float)layerDepth)/layerCount;
+		float multiplier = ((float)layerDepth)/((float)layerCount);
 		float distanceKilometers = (100f*multiplier*multiplier*multiplier);
-		Color dynamiColor = Color.Lerp(startColor,endColor,(distanceKilometers/100));
+		//print("CloudModifier: "+(distanceKilometers/zDistanceKM));
+
+//		float r = Mathf.Lerp(startColor.r, endColor.r, (distanceKilometers/zDistanceKM));
+//		float g = Mathf.Lerp(startColor.g, endColor.g, (distanceKilometers/zDistanceKM));
+//		float b = Mathf.Lerp(startColor.b, endColor.b, (distanceKilometers/zDistanceKM));
+//		float a = Mathf.Lerp(startColor.a, endColor.a, (distanceKilometers/zDistanceKM));
+//
+		//Color dynamiColor = Color.Lerp(startColor,endColor,multiplier);
+		//Color dynamiColor = new Color(r,g,b,a);
+
+//		int red = 	(int)(dynamiColor.r*255);
+//		int green = (int)(dynamiColor.g*255);
+//		int blue = 	(int)(dynamiColor.b*255);
+//		int alpha = (int)(dynamiColor.a*255);
+
+		Color dynamiColor = colGradient.Evaluate(multiplier);
+
+		//print(layerDepth+" -- ("+red+","+green+","+blue+","+alpha+").");
 		Vector2 cloudOrigin = new Vector2(0, cloudLayerElevation);
 
 		o_CloudLayer[layerDepth-1].GetComponent<CloudLayer>().Adjust(layerDepth, distanceKilometers, dynamiColor, cloudOrigin);

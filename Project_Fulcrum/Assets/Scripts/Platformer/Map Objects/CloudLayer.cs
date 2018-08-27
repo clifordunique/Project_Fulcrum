@@ -40,7 +40,6 @@ public class CloudLayer : MonoBehaviour {
 	{
 		parallaxLayer = this.GetComponent<ParallaxLayer>();	
 		parallaxLayer.isNewStyle = true;
-		parallaxLayer.isCloud = true;
 		allClouds = new GameObject[cloudCount];
 		spriteWidth = cloudSpritesL[0].GetComponent<SpriteRenderer>().bounds.size.x;
 		//print("Initializing! \n LayerDepth: "+lyrDepth+"\n DistanceKM: "+distKM+"\n Colour: "+color);

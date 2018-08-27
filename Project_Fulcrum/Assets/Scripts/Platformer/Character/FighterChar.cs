@@ -47,7 +47,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
 	[SerializeField] protected bool autoLeftClick;			// When true, fighter will behave as if left click is pressed.
 	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
-	[SerializeField] protected bool noGravity;				// Disable gravity.
+	[SerializeField] protected bool gravityEnabled;			// Enables gravity.
 	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
 	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
@@ -67,56 +67,80 @@ public class FighterChar : NetworkBehaviour
 	//###########################################################################################################################################################################
 	#region MOVEMENT HANDLING
 	[Header("Movement Tuning:")]
-	[Tooltip("The instant starting speed while moving")][SerializeField] 
-	protected float m_MinSpeed = 10f; 							// The instant starting speed while moving
-	[Tooltip("The fastest the fighter can travel along land.")][SerializeField] 
-	protected float m_MaxRunSpeed = 200f;						// The fastest the fighter can travel along land.
-	[Tooltip("Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)")][Range(0,2)][SerializeField] 
-	protected float m_StartupAccelRate = 0.8f;    		// Speed the fighter accelerates within the traction change threshold. (Changing directions acceleration)
-	[Tooltip("How fast the fighter accelerates with input.")][Range(0,5)][SerializeField] 
-	protected float m_LinearAccelRate = 0.4f;		// How fast the fighter accelerates with input.
-	[Tooltip("Amount of vertical force added when the fighter jumps.")][SerializeField] 
-	protected float m_VJumpForce = 40f;                  		// Amount of vertical force added when the fighter jumps.
-	[Tooltip("Amount of horizontal force added when the fighter jumps.")][SerializeField] 
-	protected float m_HJumpForce = 5f;  						// Amount of horizontal force added when the fighter jumps.
-	[Tooltip("Amount of vertical force added when the fighter walljumps.")][SerializeField] 
-	protected float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the fighter walljumps.
-	[Tooltip("Amount of horizontal force added when the fighter walljumps.")][SerializeField] 
-	protected float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the fighter walljumps.
-	[Tooltip("Threshold where movement changes from exponential to linear acceleration.")][SerializeField] 
-	protected float m_TractionChangeT = 20f;					// Threshold where movement changes from exponential to linear acceleration.  
-	[Tooltip("Speed threshold at which wallsliding traction changes.")]	[SerializeField] 
-	protected float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
-	[Tooltip("How fast the fighter decelerates when changing direction.")][Range(0,5)][SerializeField] 
-	protected float m_LinearStopRate = 2f; 		// How fast the fighter decelerates when changing direction.
-	[Tooltip("How fast the fighter decelerates with no input.")][Range(0,5)][SerializeField] 
-	protected float m_LinearSlideRate = 0.35f;		// How fast the fighter decelerates with no input.
-	[Tooltip("How fast the fighter decelerates when running too fast.")][Range(0,5)][SerializeField] 
-	protected float m_LinearOverSpeedRate = 0.1f;	// How fast the fighter decelerates when running too fast.
-	[Tooltip("Any impacts at sharper angles than this will start to slow the fighter down.")][Range(1,89)][SerializeField] 
-	protected float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the fighter down. Reaches full halt at m_ImpactDecelMaxAngle.
-	[Tooltip("Any impacts at sharper angles than this will result in a full halt.")][Range(1,89)][SerializeField] 
-	protected float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
-	[Tooltip("Changes the angle at which steeper angles start to linearly lose traction")][Range(1,89)][SerializeField] 
-	protected float m_TractionLossMinAngle = 45f; // Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
-	[Tooltip("Changes the angle at which fighter loses ALL traction")][Range(45,90)][SerializeField] 
-	protected float m_TractionLossMaxAngle = 78f;// Changes the angle at which fighter loses ALL traction, and starts slipping back down. Default of 90 degrees.
-	[Tooltip("Changes how fast the fighter slides down overly steep slopes.")][Range(0,2)][SerializeField] 
-	protected float m_SlippingAcceleration = 1f;  	// Changes how fast the fighter slides down overly steep slopes.
-	[Tooltip("How long the fighter can cling to walls before gravity takes over.")][Range(0.5f,3)][SerializeField] 
-	protected float m_SurfaceClingTime = 1f; 	// How long the fighter can cling to walls before gravity takes over.
-	[Tooltip("This is the amount of impact GForce required for a full-duration ceiling cling.")][Range(20,70)][SerializeField] 
-	protected float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
-	[Tooltip("This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.")][ReadOnlyAttribute]
-	protected Vector2 m_ExpiredNormal;						// This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.
-	[Tooltip("Amount of time the fighter has been clung to a wall.")][ReadOnlyAttribute]
-	protected float m_TimeSpentHanging = 0f;					// Amount of time the fighter has been clung to a wall.
-	[Tooltip("Max time the fighter can cling to a wall.")][ReadOnlyAttribute]
-	protected float m_MaxTimeHanging = 0f;					// Max time the fighter can cling to current wall.
-	[Tooltip("How deep into objects the character can be before actually colliding with them. ")][Range(0,0.5f)][SerializeField]
-	protected float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
-	[Tooltip("How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.")][Range(0.01f,0.4f)][SerializeField]
-	protected float m_MinEmbed = 0.01f; 	// How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.
+	[Tooltip("The instant starting speed while moving")]
+	[SerializeField] protected float m_MinSpeed = 10f; 						
+
+	[Tooltip("The fastest the fighter can travel along land.")]
+	[SerializeField] protected float m_MaxRunSpeed = 200f;					
+
+	[Tooltip("Speed the fighter accelerates within the traction change threshold. (acceleration while changing direction)")]
+	[Range(0,2)][SerializeField] protected float m_StartupAccelRate = 0.8f;   
+
+	[Tooltip("How fast the fighter accelerates with input.")]
+	[Range(0,5)][SerializeField] protected float m_LinearAccelRate = 0.4f;		
+
+	[Tooltip("Amount of vertical force added when the fighter jumps.")]
+	[SerializeField] protected float m_VJumpForce = 40f;                  		
+
+	[Tooltip("Amount of horizontal force added when the fighter jumps.")]
+	[SerializeField] protected float m_HJumpForce = 5f;  						
+
+	[Tooltip("Amount of vertical force added when the fighter walljumps.")]
+	[SerializeField] protected float m_WallVJumpForce = 20f;                  	
+
+	[Tooltip("Amount of horizontal force added when the fighter walljumps.")]
+	[SerializeField] protected float m_WallHJumpForce = 10f;  					
+
+	[Tooltip("Threshold where movement changes from exponential to linear acceleration.")]
+	[SerializeField] protected float m_TractionChangeT = 20f;					
+
+	[Tooltip("Speed threshold at which wallsliding traction changes.")]	
+	[SerializeField] protected float m_WallTractionT = 20f;						
+
+	[Tooltip("How fast the fighter decelerates when changing direction.")]
+	[Range(0,5)][SerializeField] protected float m_LinearStopRate = 2f; 		
+
+	[Tooltip("How fast the fighter decelerates with no input.")]
+	[Range(0,5)][SerializeField] protected float m_LinearSlideRate = 0.35f;		
+
+	[Tooltip("How fast the fighter decelerates when running too fast.")]
+	[Range(0,5)][SerializeField] protected float m_LinearOverSpeedRate = 0.1f;	
+
+	[Tooltip("Any impacts at sharper angles than this will start to slow the fighter down.")]
+	[Range(1,89)][SerializeField] protected float m_ImpactDecelMinAngle = 20f;	
+
+	[Tooltip("Any impacts at sharper angles than this will result in a full halt.")]
+	[Range(1,89)][SerializeField] protected float m_ImpactDecelMaxAngle = 80f;	
+
+	[Tooltip("Changes the angle at which steeper angles start to linearly lose traction")]
+	[Range(1,89)][SerializeField] protected float m_TractionLossMinAngle = 45f; 
+
+	[Tooltip("Changes the angle at which fighter loses ALL traction")][Range(45,90)]
+	[SerializeField] protected float m_TractionLossMaxAngle = 78f;
+
+	[Tooltip("Changes how fast the fighter slides down overly steep slopes.")]
+	[Range(0,2)][SerializeField] protected float m_SlippingAcceleration = 1f;  	
+
+	[Tooltip("How long the fighter can cling to walls before gravity takes over.")]
+	[Range(0.5f,3)][SerializeField] protected float m_SurfaceClingTime = 1f; 	
+
+	[Tooltip("This is the amount of impact GForce required for a full-duration ceiling cling.")]
+	[Range(20,70)][SerializeField] protected float m_ClingReqGForce = 50f;		
+
+	[Tooltip("This is the normal of the last surface clung to, to make sure the fighter doesn't repeatedly cling the same surface after clingtime expires.")]
+	[ReadOnlyAttribute]protected Vector2 m_ExpiredNormal;						
+
+	[Tooltip("Amount of time the fighter has been clung to a wall.")]
+	[ReadOnlyAttribute]protected float m_TimeSpentHanging = 0f;					
+
+	[Tooltip("Max time the fighter can cling to a wall.")]
+	[ReadOnlyAttribute]protected float m_MaxTimeHanging = 0f;					
+
+	[Tooltip("How deep into objects the character can be before actually colliding with them. ")]
+	[Range(0,0.5f)][SerializeField]protected float m_MaxEmbed = 0.02f;			
+
+	[Tooltip("How deep into objects the character will sit by default. A value of zero will cause physics errors because the fighter is not technically *touching* the surface.")]
+	[Range(0.01f,0.4f)][SerializeField]protected float m_MinEmbed = 0.01f; 
 
 	[Space(10)]
 
@@ -133,11 +157,14 @@ public class FighterChar : NetworkBehaviour
 
 	[Space(10)]
 
-	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides a _ frame buffer to allow players to jump after leaving the ground.
-	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides a _ frame buffer to allow players to jump after leaving the ceiling.
-	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferL; //Provides a _ frame buffer to allow players to jump after leaving the leftwall.
-	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferR; //Provides a _ frame buffer to allow players to jump after leaving the rightwall.
-	[Tooltip("")][SerializeField][Range(1,600)] protected int m_JumpBufferFrameAmount; //Dictates the duration of the jump buffer in physics frames.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferG; //Provides an n frame buffer to allow players to jump after leaving the ground.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferC; //Provides an n frame buffer to allow players to jump after leaving the ceiling.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferL; //Provides an n frame buffer to allow players to jump after leaving the leftwall.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute]protected int m_JumpBufferR; //Provides an n frame buffer to allow players to jump after leaving the rightwall.
+	[Tooltip("")][SerializeField][Range(1,600)] protected int m_JumpBufferFrameAmount; //Dictates the duration of the jump buffer (in physics frames).
+
+	[Tooltip("")][SerializeField][Range(0,2)] protected float m_AirborneDelay = 0.5f; //Amount of time after leaving the ground that the player behaves as if they are airborne. Prevents jittering caused by small bumps in the environment.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute] protected float m_AirborneDelayTimer; //Time remaining before the player is treated as airborne upon leaving a surface.
 
 	[Space(10)]
 
@@ -145,6 +172,27 @@ public class FighterChar : NetworkBehaviour
 	[Tooltip("")][SerializeField] protected float m_StrandJumpReflectSpd;
 	[Tooltip("")][SerializeField] protected Vector2 m_StrandJumpReflectDir;
 	[Tooltip("")][SerializeField][Range(0f,180f)] protected float m_WidestStrandJumpAngle;
+
+	[Space(10)]
+
+	[Tooltip("True when a jump command will result in a critical jump.")]
+	[SerializeField] protected bool critJumpReady;
+
+	[Tooltip("Starting duration of the critical jump window.")]
+	[SerializeField] protected float critJumpWindow = 0.17f;
+
+	[Tooltip("Amount of time the player has after landing before the crit jump window closes.")]
+	[SerializeField][ReadOnlyAttribute] protected float critJumpTimer;
+
+	[Tooltip("Starting duration of the critical jump frame window.")]
+	[SerializeField] protected int critJumpFrameWindow = 2;
+
+	[Tooltip("An extra fallback for low FPS players, the minimum number of frames that must play after landing before the crit jump window closes.")]
+	[SerializeField][ReadOnlyAttribute] protected int critJumpFrameTimer;
+
+	[Tooltip("Amount of bonus force from a crit jump.")]
+	[SerializeField][Range(1f,2f)] protected float critJumpBonusM = 1.33f; 
+
 	#endregion
 
 	//############################################################################################################################################################################################################
@@ -289,12 +337,17 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool v_TriggerGenderChange;					// Used for character audio.
 	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 75;	// The speed at which the player's sprite is fully rotated to match the ground angle. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The angle the sprite is rotated to simulate leaning. Used to improve animation realism by leaning against GForces and wind drag. 
-	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall.
+	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall. Lingers for a moment before going airborne, in order to hide microbumps in the terrain which would cause animation stuttering.
+	[SerializeField][ReadOnlyAttribute]protected int v_TruePrimarySurface;	// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall. More accurate version of primary surface that does not linger for a moment upon leaving a surface. 
 	[SerializeField][ReadOnlyAttribute]protected bool v_WallSliding;		// Whether or not the player is wallsliding.
 	[SerializeField][ReadOnlyAttribute]protected bool v_Sliding;			// Whether or not the player is sliding.
 	[SerializeField][ReadOnlyAttribute]protected string[] v_TerrainType;	// Type of terrain the player is stepping on. Used for audio like footsteps.
-	[SerializeField][ReadOnlyAttribute]protected bool v_ProjectileMode;		// True when the player hits a certain speed threshold and changes animations.
-	[SerializeField][ReadOnlyAttribute]protected float v_ProjectileModeT = 100;// Speed at which the player becomes a human projectile and switches to different animations.
+	[SerializeField][ReadOnlyAttribute]protected bool v_HighSpeedMode;		// True when the player hits a certain speed threshold and changes animations.
+	[SerializeField][ReadOnlyAttribute]protected float v_HighSpeedModeT = 100;// Speed at which the player becomes a human projectile and switches to different animations.
+	[SerializeField][ReadOnlyAttribute]protected float v_FlashTimer; 		// Remaining time on a flash effect.
+	[SerializeField][ReadOnlyAttribute]protected float v_FlashDuration; 	// Duration that a flash effect lasts for.
+	[SerializeField][ReadOnlyAttribute]protected Color v_FlashColour; 		// Colour of the player flash.
+
 	#endregion 
 	//############################################################################################################################################################################################################
 	// GAMEPLAY VARIABLES
@@ -413,6 +466,13 @@ public class FighterChar : NetworkBehaviour
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
 
+	protected void FlashEffect(float myDuration, Color myColor)
+	{
+		v_FlashDuration = myDuration;
+		v_FlashTimer = myDuration;
+		v_FlashColour = myColor;
+	}
+
 	protected void UpdateCurrentNavSurf()
 	{
 		if(n_PlayerTraversing)
@@ -423,15 +483,15 @@ public class FighterChar : NetworkBehaviour
 
 		Vector3 contactTransform;
 
-		if(v_PrimarySurface==0)
+		if(v_TruePrimarySurface==0)
 		{
 			contactTransform = this.m_GroundFoot.position;
 		}
-		else if(v_PrimarySurface==1)
+		else if(v_TruePrimarySurface==1)
 		{
 			contactTransform = this.m_CeilingFoot.position;
 		}
-		else if(v_PrimarySurface==2)
+		else if(v_TruePrimarySurface==2)
 		{
 			contactTransform = this.m_LeftSide.position;
 		}
@@ -442,12 +502,12 @@ public class FighterChar : NetworkBehaviour
 		NavSurface[] surfaceList = o_NavMaster.GetSurfaces();
 		for(int i = 0; i<surfaceList.Length; i++)
 		{
-			if( surfaceList[i].DistFromLine(this.m_GroundFoot.position)<=n_MaxSurfLineDist && surfaceList[i].surfaceType == v_PrimarySurface)
+			if( surfaceList[i].DistFromLine(this.m_GroundFoot.position)<=n_MaxSurfLineDist && surfaceList[i].surfaceType == v_TruePrimarySurface)
 			{
 				n_CurrentSurf = surfaceList[i];
 				n_CurrentSurfID = n_CurrentSurf.id;
 				n_LastSurface = n_CurrentSurf;
-				if(n_PlayerTraversing&&v_PrimarySurface!=-1) // If touching a new surface and not airborne, set that as the destination of your traversal.
+				if(n_PlayerTraversing&&v_TruePrimarySurface!=-1) // If touching a new surface and not airborne, set that as the destination of your traversal.
 					EndPlayerTraverse();
 				break;
 			}
@@ -845,33 +905,50 @@ public class FighterChar : NetworkBehaviour
 		initialVel = FighterState.Vel;
 		v_WallSliding = false; // Set to false, and changed to true in WallTraction().
 
+
+
 		if(m_Grounded)
 		{//Locomotion!
 			Traction(CtrlH, CtrlV);
+			m_AirborneDelayTimer = m_AirborneDelay;
 			v_PrimarySurface = 0;
+			v_TruePrimarySurface = 0;
 		}
 		else if(m_LeftWalled)
 		{//Wallsliding!
 			//print("Walltraction!");
 			WallTraction(CtrlH, CtrlV, m_LeftNormal);
+			m_AirborneDelayTimer = m_AirborneDelay;
 			v_PrimarySurface = 2;
+			v_TruePrimarySurface = 2;
 		}
 		else if(m_RightWalled)
 		{//Wallsliding!
 			WallTraction(CtrlH, CtrlV, m_RightNormal);
+			m_AirborneDelayTimer = m_AirborneDelay;
 			v_PrimarySurface = 3;
+			v_TruePrimarySurface = 3;
 		}
 //		else if(m_Ceilinged)
 //		{
 //			WallTraction(CtrlH, m_CeilingNormal);
 //		}
-		else if(!noGravity)
-		{//Gravity!
-			v_PrimarySurface = -1;
+		else if(gravityEnabled)
+		{ // Airborne with gravity!
+			if(m_AirborneDelayTimer>0)
+			{
+				m_AirborneDelayTimer -= Time.fixedDeltaTime;
+			}
+			else
+			{			
+				v_PrimarySurface = -1;
+			}
+			v_TruePrimarySurface = -1;
 			AirControl(CtrlH);
 			FighterState.Vel = new Vector2 (FighterState.Vel.x, FighterState.Vel.y - 1f);
-			m_Ceilinged = false;
+			//m_Ceilinged = false; ??? reenable if buggy loopdeloops
 		}	
+			
 
 		errorDetectingRecursionCount = 0; //Used for WorldCollizion(); (note: colliZion is used to help searches for the keyword 'collision' by filtering out extraneous matches)
 
@@ -1096,6 +1173,35 @@ public class FighterChar : NetworkBehaviour
 	protected virtual void FixedUpdateLogic() //FUL
 	{
 
+		if(v_PrimarySurface==-1)
+		{
+			critJumpFrameTimer = critJumpFrameWindow;
+			critJumpTimer = critJumpWindow;
+		}
+		else
+		{
+			if(critJumpTimer>=0)
+			{
+				critJumpTimer -= Time.fixedDeltaTime;
+			}
+			if(critJumpFrameTimer>=0)
+			{
+				critJumpFrameTimer -= Time.frameCount;
+			}
+		}
+
+		if( (critJumpTimer>0 || critJumpFrameTimer>0) && (this.IsPlayer()) ) // If fighter is a player, and has recently hit the ground, crit jump is ready.
+		{
+//			print("CritJumpTimer:"+critJumpTimer);
+//			print("CritJumpFrameTimer:"+critJumpFrameTimer);
+			critJumpReady = true;
+		}
+		else
+		{
+			critJumpReady = false;
+		}
+
+
 		if(g_FighterCollisionCD>0)
 		{
 			g_FighterCollisionCD -= Time.fixedDeltaTime;
@@ -1249,6 +1355,13 @@ public class FighterChar : NetworkBehaviour
 			o_SpriteRenderer.color = v_CurrentColor;
 		}
 
+		if(v_FlashTimer>0)
+		{
+			v_FlashTimer -= Time.fixedDeltaTime;
+			float flashMultiplier = (v_FlashTimer/v_FlashDuration);
+			o_SpriteRenderer.color = Color.Lerp(v_CurrentColor, v_FlashColour, flashMultiplier);
+		}
+
 		if(v_PrimarySurface==0)
 			FixedGroundAnimation();
 		else if(v_PrimarySurface==1)
@@ -1266,14 +1379,14 @@ public class FighterChar : NetworkBehaviour
 		float spriteAngle;
 		float testAngle = 0;
 
-		if((v_PrimarySurface != -1) && (Mathf.Abs(GetVelocity().magnitude)>=v_ProjectileModeT))
+		if((v_PrimarySurface != -1) && (Mathf.Abs(GetVelocity().magnitude)>=v_HighSpeedModeT)) // If airborne and moving fast
 		{
-			v_ProjectileMode = true;  // if player is moving fast, change their animations.
+			v_HighSpeedMode = true;  // if player is moving fast, change their animations.
 		}
 
-		if(Mathf.Abs(GetVelocity().magnitude)<v_ProjectileModeT)
+		if(Mathf.Abs(GetVelocity().magnitude)<v_HighSpeedModeT)
 		{
-			v_ProjectileMode = false; // if player is moving fast, change their animations.
+			v_HighSpeedMode = false; // if player is moving slow, change their animation to normal.
 		}
 
 		if(v_PrimarySurface == 0)
@@ -1327,7 +1440,7 @@ public class FighterChar : NetworkBehaviour
 
 			surfaceLeanM = angleScaling;
 
-			if(v_ProjectileMode)
+			if(v_HighSpeedMode)
 			{
 				surfaceLeanM = 1; 
 				spriteAngle = Get2DAngle(GetVelocity(), 0);
@@ -1347,20 +1460,20 @@ public class FighterChar : NetworkBehaviour
 			float leanIntoWindAngle = Get2DAngle(GetVelocity(), 0);
 			//print("leanIntoWindAngle"+leanIntoWindAngle);
 
-			if(FighterState.Vel.magnitude>(v_ProjectileModeT-25) && FighterState.Vel.magnitude<v_ProjectileModeT) // Approaching projectile mode
+			if(FighterState.Vel.magnitude>(v_HighSpeedModeT-25) && FighterState.Vel.magnitude<v_HighSpeedModeT) // Approaching projectile mode
 			{
-				float fadein = (FighterState.Vel.magnitude-(v_ProjectileModeT-25))/(25);
+				float fadein = (FighterState.Vel.magnitude-(v_HighSpeedModeT-25))/(25);
 				spriteAngle = ((leanIntoWindAngle*fadein)+(spriteAngle*2))/3;
 				//print("SpriteAngle: "+spriteAngle);
 			}
-			else if(FighterState.Vel.magnitude>=v_ProjectileModeT && FighterState.Vel.magnitude<(v_ProjectileModeT+25)) // in projectile mode
+			else if(FighterState.Vel.magnitude>=v_HighSpeedModeT && FighterState.Vel.magnitude<(v_HighSpeedModeT+25)) // in projectile mode
 			{
 				float leanOutOfWindAng = Get2DAngle(-GetVelocity(), 0);
 				if(Math.Abs(leanOutOfWindAng+spriteAngle)<(Mathf.Abs(leanOutOfWindAng)+Mathf.Abs(spriteAngle))) // If one angle is negative while the other is positive, invert the sign of leanoutofwindang so they match.
 				{
 					leanOutOfWindAng *= -1;
 				}
-				float fadeOut = (FighterState.Vel.magnitude-v_ProjectileModeT)/(25);
+				float fadeOut = (FighterState.Vel.magnitude-v_HighSpeedModeT)/(25);
 				if(fadeOut>1)
 					fadeOut = 1;
 				spriteAngle = ((leanOutOfWindAng*(1-fadeOut))+(spriteAngle*2))/3;
@@ -1483,7 +1596,7 @@ public class FighterChar : NetworkBehaviour
 		o_Anim.SetInteger("Stance", FighterState.Stance);
 		o_Anim.SetBool("Stunned", g_Stunned);
 		o_Anim.SetBool("Staggered", g_Staggered);
-		o_Anim.SetFloat("ProjectileMode", Convert.ToSingle(v_ProjectileMode));
+		o_Anim.SetFloat("ProjectileMode", Convert.ToSingle(v_HighSpeedMode));
 
 		if(v_TriggerAtkHit)
 		{
@@ -2527,6 +2640,7 @@ public class FighterChar : NetworkBehaviour
 		if(!m_Grounded&&!m_Ceilinged)
 		{
 			v_PrimarySurface = 2;
+			v_TruePrimarySurface = 2;
 		}
 
 		Vector2 setCharPos = leftCheck.point;
@@ -2614,8 +2728,11 @@ public class FighterChar : NetworkBehaviour
 		rightSideContact = true;
 		m_RightWalled = true;
 
-		if(!m_Grounded&&!m_Ceilinged)
+		if(!m_Grounded && !m_Ceilinged)
+		{
 			v_PrimarySurface = 3;
+			v_TruePrimarySurface = 3;
+		}
 
 		Vector2 setCharPos = rightCheck.point;
 		setCharPos.x -= (m_RightSideLength-m_MinEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
@@ -2691,6 +2808,7 @@ public class FighterChar : NetworkBehaviour
 			
 		m_Grounded = true;
 		v_PrimarySurface = 0;
+		v_TruePrimarySurface = 0;
 
 		Vector2 setCharPos = groundCheck.point;
 		setCharPos.y = setCharPos.y+m_GroundFootLength-m_MinEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
@@ -4021,13 +4139,21 @@ public class FighterChar : NetworkBehaviour
 	protected void Jump(float horizontalInput)
 	{
 		Vector2 preJumpVelocity = FighterState.Vel;
+		float jumpVelBonusM = 1;
+
+		if(critJumpReady)
+		{
+			FlashEffect(0.2f, Color.yellow);
+			o_FighterAudio.CritJumpSound();
+			jumpVelBonusM = critJumpBonusM;
+		}
+
 		if(m_Grounded&&m_Ceilinged)
 		{
 			if(d_SendCollisionMessages)
 			{print("Grounded and Ceilinged, nowhere to jump!");}
 			//FighterState.JumpKey = false;
 		}
-		//	else if(m_Grounded)
 		else if(m_JumpBufferG>0)
 		{
 			//m_LeftWallBlocked = false;
@@ -4039,20 +4165,20 @@ public class FighterChar : NetworkBehaviour
 				StartPlayerTraverse(); // Generating a jump-type nav connection between the start and end of this jump
 			}
 
-			if(FighterState.Vel.y >= 0)
+			if(FighterState.Vel.y >= 0) // If falling, jump will nullify downward momentum.
 			{
-				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), FighterState.Vel.y+m_VJumpForce);
+				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput*jumpVelBonusM), FighterState.Vel.y+(m_VJumpForce*jumpVelBonusM));
 			}
 			else
 			{
-				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
+				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput*jumpVelBonusM), (m_VJumpForce*jumpVelBonusM));
 			}
 			o_FighterAudio.JumpSound();
-			//FighterState.JumpKey = false;
 			m_Grounded = false; // Watch this.
 			v_PrimarySurface = -1;
+			m_AirborneDelayTimer = -1;
+			v_TruePrimarySurface = -1;
 		}
-		//else if(m_LeftWalled)m_JumpBufferG>0
 		else if(m_JumpBufferL>0)
 		{
 			if(d_SendCollisionMessages)
@@ -4061,15 +4187,15 @@ public class FighterChar : NetworkBehaviour
 			}
 			if(FighterState.Vel.y < 0)
 			{
-				FighterState.Vel = new Vector2(m_WallHJumpForce, m_WallVJumpForce);
+				FighterState.Vel = new Vector2( (m_WallHJumpForce*jumpVelBonusM), (m_WallVJumpForce*jumpVelBonusM) );
 			}
-			else if(FighterState.Vel.y <= (2*m_WallVJumpForce))
+			else if(FighterState.Vel.y <= (2*m_WallVJumpForce)) // If not ascending too fast, add vertical jump power to jump.
 			{
-				FighterState.Vel = new Vector2(m_WallHJumpForce, FighterState.Vel.y+m_WallVJumpForce);
+				FighterState.Vel = new Vector2( (m_WallHJumpForce*jumpVelBonusM), FighterState.Vel.y+(m_WallVJumpForce*jumpVelBonusM) );
 			}
-			else
+			else // If ascending too fast, add no more vertical speed and just add horizontal.
 			{
-				FighterState.Vel = new Vector2(m_WallHJumpForce, FighterState.Vel.y);
+				FighterState.Vel = new Vector2( (m_WallHJumpForce*jumpVelBonusM), FighterState.Vel.y);
 			}
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
@@ -4080,8 +4206,9 @@ public class FighterChar : NetworkBehaviour
 				StartPlayerTraverse();
 			}
 			v_PrimarySurface = -1;
+			m_AirborneDelayTimer = -1;
+			v_TruePrimarySurface = -1;
 		}
-		//else if(m_RightWalled)
 		else if(m_JumpBufferR>0)
 		{
 			if(d_SendCollisionMessages)
@@ -4090,15 +4217,15 @@ public class FighterChar : NetworkBehaviour
 			}
 			if(FighterState.Vel.y < 0)
 			{
-				FighterState.Vel = new Vector2(-m_WallHJumpForce, m_WallVJumpForce);
+				FighterState.Vel = new Vector2( (-m_WallHJumpForce*jumpVelBonusM), (m_WallVJumpForce*jumpVelBonusM) );
 			}
 			else if(FighterState.Vel.y <= m_WallVJumpForce)
 			{
-				FighterState.Vel = new Vector2(-m_WallHJumpForce, FighterState.Vel.y+m_WallVJumpForce);
+				FighterState.Vel = new Vector2( (-m_WallHJumpForce*jumpVelBonusM), FighterState.Vel.y+(m_WallVJumpForce*jumpVelBonusM) );
 			}
 			else
 			{
-				FighterState.Vel = new Vector2(-m_WallHJumpForce, FighterState.Vel.y);
+				FighterState.Vel = new Vector2( (-m_WallHJumpForce*jumpVelBonusM), FighterState.Vel.y );
 			}
 
 			o_FighterAudio.JumpSound();
@@ -4110,17 +4237,18 @@ public class FighterChar : NetworkBehaviour
 				StartPlayerTraverse();
 			}
 			v_PrimarySurface = -1;
+			m_AirborneDelayTimer = -1;
+			v_TruePrimarySurface = -1;
 		}
-		//else if(m_Ceilinged)
 		else if(m_JumpBufferC>0)
 		{
 			if(FighterState.Vel.y <= 0)
 			{
-				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), FighterState.Vel.y -m_VJumpForce);
+				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput*jumpVelBonusM), FighterState.Vel.y-(m_VJumpForce*jumpVelBonusM));
 			}
 			else
 			{
-				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
+				FighterState.Vel = new Vector2(FighterState.Vel.x+(m_HJumpForce*horizontalInput*jumpVelBonusM), -(m_VJumpForce*jumpVelBonusM));
 			}
 			o_FighterAudio.JumpSound();
 			//FighterState.JumpKey = false;
@@ -4131,6 +4259,8 @@ public class FighterChar : NetworkBehaviour
 			}
 			m_Ceilinged = false;
 			v_PrimarySurface = -1;
+			m_AirborneDelayTimer = -1;
+			v_TruePrimarySurface = -1;
 		}
 		else
 		{
@@ -4150,7 +4280,17 @@ public class FighterChar : NetworkBehaviour
 			FighterState.ZonLevel--;
 		}
 		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*FighterState.ZonLevel)));	
+
 		o_FighterAudio.JumpSound();
+		v_PrimarySurface = -1;
+		v_TruePrimarySurface = -1;
+		m_AirborneDelayTimer = -1;
+
+		m_JumpBufferG = 0;
+		m_JumpBufferC = 0;
+		m_JumpBufferL = 0;
+		m_JumpBufferR = 0;
+
 	}
 
 	protected void StrandJumpTypeA(float horizontalInput, float verticalInput) //SJTA
@@ -4456,7 +4596,8 @@ public class FighterChar : NetworkBehaviour
 
 	public void TakeDamage(int dmgAmount)
 	{
-		if(d_Invincible){return;}
+		if(dmgAmount==0||d_Invincible){return;}
+		FlashEffect(0.2f, Color.red);
 		FighterState.CurHealth -= dmgAmount;
 		if(dmgAmount>15)
 		{

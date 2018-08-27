@@ -16,6 +16,7 @@ namespace AK
         static const AkUniqueID AMBIENT_START = 1892414574U;
         static const AkUniqueID BREAKABLE_BREAK = 4052040634U;
         static const AkUniqueID CHARGECRIT = 1802268949U;
+        static const AkUniqueID CRITJUMP = 1453204217U;
         static const AkUniqueID ENERGYCHARGE = 2390935913U;
         static const AkUniqueID ENERGYPULSE = 1403055964U;
         static const AkUniqueID FOOTSTEP = 1866025847U;

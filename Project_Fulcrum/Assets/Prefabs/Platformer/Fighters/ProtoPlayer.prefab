@@ -266,7 +266,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.47, y: -5.98, z: 0}
+  m_LocalPosition: {x: 12.47, y: -6.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4039223620323396}
@@ -691,6 +691,9 @@ MonoBehaviour:
   e_EquipSound:
     valueGuid: 88d67c568844934594f3f6da017e7292
     ID: 2146777153
+  e_CritJump:
+    valueGuid: 102909bcbefaba4db1d30d38ea8ab16d
+    ID: 1453204217
   muteFootsteps: 0
 --- !u!114 &114132217005915654
 MonoBehaviour:
@@ -798,7 +801,7 @@ MonoBehaviour:
   autoJump: 0
   autoLeftClick: 0
   antiTunneling: 1
-  noGravity: 0
+  gravityEnabled: 1
   showVelocityIndicator: 0
   showContactIndicators: 0
   recoverFromFullEmbed: 1
@@ -841,10 +844,19 @@ MonoBehaviour:
   m_JumpBufferL: 0
   m_JumpBufferR: 0
   m_JumpBufferFrameAmount: 10
+  m_AirborneDelay: 0.25
+  m_AirborneDelayTimer: 0
   m_StrandJumpSpeedLossM: 0
   m_StrandJumpReflectSpd: 0
   m_StrandJumpReflectDir: {x: 0, y: 0}
   m_WidestStrandJumpAngle: 45
+  critJumpReady: 0
+  critJumpWindow: 0.1
+  critJumpTimer: 0
+  critJumpFrameWindow: 1
+  critJumpFrameTimer: 2
+  critJumpHForce: 5
+  critJumpVForce: 5
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -998,16 +1010,20 @@ MonoBehaviour:
   v_TriggerRollOut: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
-  v_Gender: 0
-  v_TriggerGenderChange: 0
+  v_Gender: 1
+  v_TriggerGenderChange: 1
   v_SpeedForMaxLean: 100
   v_LeanAngle: 0
   v_PrimarySurface: 0
+  v_TruePrimarySurface: 0
   v_WallSliding: 0
   v_Sliding: 0
   v_TerrainType: []
-  v_ProjectileMode: 0
-  v_ProjectileModeT: 100
+  v_HighSpeedMode: 0
+  v_HighSpeedModeT: 100
+  v_FlashTimer: 0
+  v_FlashDuration: 0
+  v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxHealth: 100
@@ -1795,8 +1811,8 @@ SpriteRenderer:
   m_SortingLayerID: -270496717
   m_SortingLayer: -4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300018, guid: f799b968f8cdd044a8cb8b341aaa28dd, type: 3}
-  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 2d4efec4ac1bbe844ba7994e60bdef85, type: 3}
+  m_Color: {r: 0.774286, g: 0.80142415, b: 0.829, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

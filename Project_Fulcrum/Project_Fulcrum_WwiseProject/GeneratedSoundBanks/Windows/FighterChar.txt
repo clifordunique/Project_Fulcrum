@@ -6,6 +6,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	797614645	GuardRoll			\Default Work Unit\GuardRoll	
 	1119192506	SlideLoopStart			\Default Work Unit\SlideLoopStart	
 	1403055964	EnergyPulse			\Default Work Unit\EnergyPulse	
+	1453204217	CritJump			\Default Work Unit\CritJump	
 	1541588287	Set_Gender_Male			\Default Work Unit\Set_Gender_Male	
 	1721707775	WindLoopStart			\Default Work Unit\WindLoopStart	
 	1802268949	ChargeCrit			\Default Work Unit\ChargeCrit	
@@ -170,6 +171,7 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	674098254	female_attack04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\female_attack04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Voice\attack\female\female_attack04		114844
 	681338594	dirt07	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\dirt07_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Dirt\dirt07		55264
 	690463890	glass_break01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\glass_break01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Breakable\Break\Break_Glass\glass_break01		324408
+	699337309	CritJump	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\CritJump_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Abilities\CritJump		195140
 	716866082	hardland01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\hardland01_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Pain\hardland01		39814
 	726817041	slam04	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\slam04_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Slam\slam04		129972
 	729360042	sand3	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Windows\SFX\sand3_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\FighterChar\Footsteps\Sand\sand3		78656

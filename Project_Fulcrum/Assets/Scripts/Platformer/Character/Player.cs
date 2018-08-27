@@ -205,6 +205,7 @@ public class Player : FighterChar
 		//
 		if(!sceneIsReady){return;}
 		if(!isLocalPlayer){return;}
+
 		UpdatePlayerInput();
 		UpdatePlayerAnimation();
 	}
@@ -926,6 +927,7 @@ public class Player : FighterChar
 	protected override void UpdatePlayerInput() //UPI
 	{
 		if(!isLocalPlayer){return;}
+
 		//
 		// Individual keydown presses
 		//

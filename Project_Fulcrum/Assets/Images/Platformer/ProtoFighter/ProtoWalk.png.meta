@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ddfa51718cb49ae49a8abfd0432d3a33
-timeCreated: 1515885383
+timeCreated: 1532540436
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -8,6 +8,10 @@ TextureImporter:
     21300002: ProtoWalk_1
     21300004: ProtoWalk_2
     21300006: ProtoWalk_3
+    21300008: ProtoWalk_4
+    21300010: ProtoWalk_5
+    21300012: ProtoWalk_6
+    21300014: ProtoWalk_7
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -103,8 +107,8 @@ TextureImporter:
       name: ProtoWalk_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
+        x: 256
+        y: 128
         width: 128
         height: 128
       alignment: 9
@@ -116,7 +120,59 @@ TextureImporter:
       name: ProtoWalk_3
       rect:
         serializedVersion: 2
+        x: 384
+        y: 128
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoWalk_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoWalk_5
+      rect:
+        serializedVersion: 2
         x: 128
+        y: 0
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoWalk_6
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 128
+        height: 128
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ProtoWalk_7
+      rect:
+        serializedVersion: 2
+        x: 384
         y: 0
         width: 128
         height: 128

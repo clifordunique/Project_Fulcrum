@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 [ExecuteInEditMode]
 public class ParallaxHandler : MonoBehaviour {
 	[SerializeField] float distributionCurveM = 0.25f;
+	[SerializeField] private bool foregroundMode = false;
 	int updateEvery100Frames = 0;
 
 
@@ -25,20 +26,34 @@ public class ParallaxHandler : MonoBehaviour {
 			para.distanceKM = (100f*multiplier*multiplier*multiplier);
 //			print("dist:"+para.distanceKM);
 //			print("children:"+children);
-
-			if(myGameObject.GetComponent<SortingGroup>())
+			if(foregroundMode) // If parallaxhandler is for foreground objects, invert direction of displacement.
 			{
-				mySortingGroup = myGameObject.GetComponent<SortingGroup>();
-				mySortingGroup.sortingOrder = -100-(((i+1)*2)+1);
+				if(myGameObject.GetComponent<SortingGroup>())
+				{
+					mySortingGroup = myGameObject.GetComponent<SortingGroup>();
+					mySortingGroup.sortingOrder = 100+(((i+1)*2)+1);
+				}
+				else
+				{
+					mySortingGroup = myGameObject.AddComponent<SortingGroup>();
+					mySortingGroup.sortingOrder = 100+(((i+1)*2)+1);
+				}
+				mySortingGroup.sortingLayerName = "Foreground";
 			}
-			else
+			else // if not in foreground mode, make each layer deeper in the background instead.
 			{
-				mySortingGroup = myGameObject.AddComponent<SortingGroup>();
-				mySortingGroup.sortingOrder = -100-(((i+1)*2)+1);
+				if(myGameObject.GetComponent<SortingGroup>())
+				{
+					mySortingGroup = myGameObject.GetComponent<SortingGroup>();
+					mySortingGroup.sortingOrder = -100-(((i+1)*2)+1);
+				}
+				else
+				{
+					mySortingGroup = myGameObject.AddComponent<SortingGroup>();
+					mySortingGroup.sortingOrder = -100-(((i+1)*2)+1);
+				}
+				mySortingGroup.sortingLayerName = "Background";
 			}
-
-			mySortingGroup.sortingLayerName = "Background";
-
 		}
 	}
 

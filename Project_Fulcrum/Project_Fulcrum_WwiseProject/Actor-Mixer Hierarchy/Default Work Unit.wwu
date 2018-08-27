@@ -2748,6 +2748,25 @@
 														<ActiveSource Name="GuardRoll" ID="{0B944025-672D-478A-AB9B-53C13E0863BE}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
+												<Sound Name="CritJump" ID="{579FC900-8F39-4628-8159-D803437E2444}" ShortID="991138854">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{0A9450C1-9C37-4C99-8B8F-0C433EF7F2A0}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{4DC7524F-D084-4E19-B269-06E531B8C38F}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="CritJump" ID="{C9E75E7D-471B-4077-839C-59CAC4E9AE2D}" ShortID="699337309">
+															<Language>SFX</Language>
+															<AudioFile>CritJump.wav</AudioFile>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="CritJump" ID="{C9E75E7D-471B-4077-839C-59CAC4E9AE2D}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
 											</ChildrenList>
 										</ActorMixer>
 										<SwitchContainer Name="Landing" ID="{88EDFA2F-343C-443C-BEED-DDE4048BADBC}" ShortID="124828094">

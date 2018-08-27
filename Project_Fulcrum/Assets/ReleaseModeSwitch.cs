@@ -7,12 +7,13 @@ public class ReleaseModeSwitch : MonoBehaviour {
 	[SerializeField]private GameObject[] ReleaseOnlyObjects;
 	[SerializeField]private GameObject[] EditorOnlyObjects;
 	[SerializeField][ReadOnlyAttribute]private NavMaster theNavMaster;
+	[SerializeField] private bool disableReleaseMode;
 
 	// Use this for initialization
 	void Awake() 
 	{
 		theNavMaster = GameObject.Find("NavMaster").GetComponent<NavMaster>();
-		if(Application.isEditor)
+		if(Application.isEditor||disableReleaseMode)
 		{
 			print("STARTING GAME IN EDITOR!");
 			foreach(GameObject g in ReleaseOnlyObjects)

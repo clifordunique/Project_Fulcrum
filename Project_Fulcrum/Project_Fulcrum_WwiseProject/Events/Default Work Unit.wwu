@@ -484,6 +484,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="CritJump" ID="{BC092910-FABE-4DBA-B1D3-0D38EA8AB16D}">
+					<ChildrenList>
+						<Action Name="" ID="{0B4EB1C4-7608-4E76-B958-93B780B1D098}" ShortID="194147312">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="CritJump" ID="{579FC900-8F39-4628-8159-D803437E2444}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

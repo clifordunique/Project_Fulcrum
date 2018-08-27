@@ -30,5 +30,8 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 7d3f4c3ac8987ea4e8b4dcff759f04f1
   - enabled: 1
+    path: Assets/Scenes/OutlandsConcept.unity
+    guid: 1e0645b85deebf6419ef1e04954f9263
+  - enabled: 1
     path: Assets/Scenes/MultiplayerTest.unity
     guid: 15734fbe00ff1af49ac65d385c063480

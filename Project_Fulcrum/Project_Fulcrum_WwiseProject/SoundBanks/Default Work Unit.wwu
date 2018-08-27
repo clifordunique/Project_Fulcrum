@@ -20,6 +20,7 @@
 						<ObjectRef Name="Landing" ID="{18B75C48-022E-4D63-A6ED-6C8A16FECB2B}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Breakable_Break" ID="{E7CCDD92-658F-4D7E-B15D-CE20BA0918A5}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="WindLoopStart" ID="{5A80F901-EDED-4D7F-AA89-CBE8E07AF099}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="CritJump" ID="{BC092910-FABE-4DBA-B1D3-0D38EA8AB16D}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="GuardRoll" ID="{D0BC9B2F-200A-4DD7-A0E0-B80DD9E7ED6D}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="PlayMusic" ID="{6E59EE28-79D6-4E5A-91BE-0963CBD13CFE}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Set_Gender_Female" ID="{A8D314FA-7D8E-4E84-9AE8-8A04A621FABB}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
