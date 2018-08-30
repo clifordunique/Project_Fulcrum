@@ -14,14 +14,17 @@ public class UIHologram : MonoBehaviour {
 	[SerializeField][ReadOnlyAttribute] private RenderTexture outputRT;
 	[SerializeField][ReadOnlyAttribute] private Camera myInputCam; // Camera that gives UIHologram its rendertexture input.
 
-
+//	void LateUpdate()
+//	{
+//		myInputCam.Render();
+//	}
 
 	// Use this for initialization
 	void Start () 
 	{
 		int scrW = Screen.width;
 		int scrH = Screen.height;
-		outputRT = new RenderTexture((int)(scrW), (int)(scrH), 0);
+		outputRT = new RenderTexture((int)(scrW), (int)(scrH), 24);
 //		outputRT.anisoLevel = 0;
 //		outputRT.filterMode = FilterMode.Point;
 //		outputRT.antiAliasing = 1;

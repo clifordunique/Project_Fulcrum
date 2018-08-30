@@ -128,7 +128,7 @@ public class CloudHandler : MonoBehaviour {
 	{
 		if(!o_CloudLayer[layerDepth-1])
 		{
-			print("ERROR: Cloudlayer is null.");
+			//print("ERROR: Cloudlayer is null.");
 			return;
 		}
 		float multiplier = ((float)layerDepth)/((float)layerCount);

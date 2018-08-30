@@ -22,7 +22,8 @@
 		// No culling or depth
 		Cull Off
 		ZWrite Off
-		ZTest [unity_GUIZTestMode]
+//		ZTest [unity_GUIZTestMode]
+		ZTest Off
 
 
 		Tags

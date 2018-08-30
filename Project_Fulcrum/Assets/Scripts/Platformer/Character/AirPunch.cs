@@ -25,7 +25,7 @@ public class AirPunch : MonoBehaviour {
 			if(!alreadyHitSomething)
 			{
 				alreadyHitSomething = true;
-				punchThrower.PunchConnect(theObject.gameObject, aimDirection);
+				punchThrower.LightPunchConnect(theObject.gameObject, aimDirection);
 			}
 		}
 	}

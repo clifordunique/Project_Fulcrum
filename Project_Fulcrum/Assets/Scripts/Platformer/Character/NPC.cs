@@ -901,7 +901,7 @@ public class NPC : FighterChar {
 	protected override void Respawn()
 	{
 		FighterState.Dead = false;
-		FighterState.CurHealth = g_MaxHealth;
+		FighterState.CurVigor = g_MaxVigor;
 		o_Anim.SetBool("Dead", false);
 		o_SpriteRenderer.color = new Color(1,0.6f,0,1);
 	}

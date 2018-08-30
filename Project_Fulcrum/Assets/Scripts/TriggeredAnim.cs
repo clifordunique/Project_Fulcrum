@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// This script allows you to create trigger parameters. 
+// You set the trigger flag to true to activate the animation, and when it plays, it sets it back to false.
+// This ensures that any triggered animation plays exactly once, which may not be the case if non-mecanim scripts are responsible for setting it false after.
+
 public class TriggeredAnim : StateMachineBehaviour {
 
 	public string triggerName;

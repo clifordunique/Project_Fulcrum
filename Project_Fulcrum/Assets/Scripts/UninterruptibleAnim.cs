@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// This script locks in the specified animation, making it uninterruptible for its duration.
 public class UninterruptibleAnim : StateMachineBehaviour {
 
 	 // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state

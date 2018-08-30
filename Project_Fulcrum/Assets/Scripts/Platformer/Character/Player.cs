@@ -47,7 +47,7 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	//[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
 	[SerializeField][ReadOnlyAttribute] public Spooler o_Spooler;					// Reference to the character's spooler component, which handles power charging gameplay.
-	[SerializeField][ReadOnlyAttribute] public Healthbar o_Healthbar;				// Reference to the Healthbar UI element.
+	[SerializeField][ReadOnlyAttribute] public VigorBar o_VigorBar;				// Reference to the VigorBar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_TestObject;								// Reference to any prefab you wish, allowing you to spawn that prefab by pressing F9.
 	#endregion
@@ -138,7 +138,7 @@ public class Player : FighterChar
 		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
 		o_EnergyCounter = GameObject.Find("Energy Counter").GetComponent<Text>();
-		o_Healthbar = GameObject.Find("Healthbar").GetComponent<Healthbar>();
+		o_VigorBar = GameObject.Find("VigorBar").GetComponent<VigorBar>();
 		o_Spooler = this.gameObject.GetComponent<Spooler>();
 		o_ShoeTooltip = GameObject.Find("ShoeTooltip").GetComponent<ShoeTooltip>();
 		o_ShoeTooltip.SetFighter(this);
@@ -516,7 +516,8 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey11)
 		{
-			v_TriggerAtkHit = true;
+//			v_TriggerRollOut = true;
+			v_TriggerFlinched = true;
 			FighterState.DevKey11 = false;
 		}
 		if(FighterState.DevKey12)
@@ -1150,7 +1151,7 @@ public class Player : FighterChar
 		}
 		v_CameraFinalSize = o_MainCamera.orthographicSize;
 
-		o_Healthbar.SetCurHealth(FighterState.CurHealth);
+		o_VigorBar.SetCurVigor(FighterState.CurVigor);
 
 		d_DeltaV = Math.Abs(d_LastFrameSpeed-FighterState.Vel.magnitude);
 		d_LastFrameSpeed = FighterState.Vel.magnitude;

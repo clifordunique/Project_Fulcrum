@@ -330,6 +330,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public Color v_ChargedColor; 							// Colour the fighter will be when fully charged.
 	[SerializeField][ReadOnlyAttribute] public bool v_TriggerAtkHit;		// Set to true to activate the attack hit animation.
 	[SerializeField][ReadOnlyAttribute] public bool v_TriggerRollOut;		// Set to true to activate the guard roll animation.
+	[SerializeField][ReadOnlyAttribute] public bool v_TriggerFlinched;		// Set to true to activate the flinch animation.
 
 	[SerializeField][ReadOnlyAttribute] protected float v_AirForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
@@ -357,7 +358,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool g_VelocityPunching;					// True when fighter is channeling a velocity fuelled punch.
 	[SerializeField] protected float g_VelocityPunchChargeTime;			// Min duration the fighter can be stunned from slamming the ground.
 
-	[SerializeField] protected int g_MaxHealth = 100;					// Max health.
+	[SerializeField] protected int g_MaxVigor = 100;					// Max health.
 	[SerializeField] protected int g_MinSlamDMG = 5;					// Min damage a slam impact can deal.
 	[SerializeField] protected int g_MaxSlamDMG = 30;					// Max damage a slam impact can deal.	
 	[SerializeField] protected int g_MinCrtrDMG = 30;					// Min damage a crater impact can deal.
@@ -578,7 +579,7 @@ public class FighterChar : NetworkBehaviour
 		//v_TerrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
 
-		FighterState.CurHealth = 100;					// Current health.
+		FighterState.CurVigor = 100;					// Current health.
 		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
 		Vector2 fighterOrigin = new Vector2(this.transform.position.x, this.transform.position.y);
 
@@ -771,7 +772,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(FighterState.DevMode)
 		{
-			FighterState.CurHealth = 100;
+			FighterState.CurVigor = 100;
 			return;
 		}
 		FighterState.Dead = true;
@@ -784,7 +785,7 @@ public class FighterChar : NetworkBehaviour
 	{
 
 		FighterState.Dead = false;
-		FighterState.CurHealth = g_MaxHealth;
+		FighterState.CurVigor = g_MaxVigor;
 		o_Anim.SetBool("Dead", false);
 		v_CurrentColor = v_DefaultColor;
 		o_SpriteRenderer.color = v_CurrentColor;
@@ -1036,7 +1037,7 @@ public class FighterChar : NetworkBehaviour
 				g_CurStun = stunTime;				 			// Stunned for stunTime.
 				g_Stunned = true;
 				TakeDamage((int)damagedealt);		// Damaged by fall.
-				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+				if(FighterState.CurVigor < 0){FighterState.CurVigor = 0;}
 			}
 			else if(m_IGF >= slamThreshold)
 			{
@@ -1053,7 +1054,7 @@ public class FighterChar : NetworkBehaviour
 				{
 					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
-				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+				if(FighterState.CurVigor < 0){FighterState.CurVigor = 0;}
 			}
 			else if(FighterState.Stance == 1)
 			{
@@ -1079,7 +1080,7 @@ public class FighterChar : NetworkBehaviour
 				{
 					TakeDamage((int)damagedealt);		 // Damaged by fall.
 				}
-				if(FighterState.CurHealth < 0){FighterState.CurHealth = 0;}
+				if(FighterState.CurVigor < 0){FighterState.CurVigor = 0;}
 			}
 			else if(FighterState.Stance == 2) // Guardroll if guard stance mitigated fall damage. More resistant to landing damage.
 			{
@@ -1222,7 +1223,7 @@ public class FighterChar : NetworkBehaviour
 			g_Stunned = false;
 		}
 			
-		if(FighterState.CurHealth <= 0)
+		if(FighterState.CurVigor <= 0)
 		{
 			if(!FighterState.Dead)
 			{
@@ -1286,7 +1287,7 @@ public class FighterChar : NetworkBehaviour
 				AkSoundEngine.PostEvent("Set_Gender_Female", gameObject);
 			}
 		}
-		AkSoundEngine.SetRTPCValue("Health", FighterState.CurHealth, this.gameObject);
+		AkSoundEngine.SetRTPCValue("Vigor", FighterState.CurVigor, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Speed", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("WindForce", FighterState.Vel.magnitude, this.gameObject);
 		AkSoundEngine.SetRTPCValue("Velocity_X", FighterState.Vel.x, this.gameObject);
@@ -1603,11 +1604,17 @@ public class FighterChar : NetworkBehaviour
 			v_TriggerAtkHit = false;
 			o_Anim.SetBool("TriggerPunchHit", true);
 		}
-		if(v_TriggerRollOut)
+		else if(v_TriggerRollOut)
 		{
 			v_TriggerRollOut = false;
 			o_Anim.SetBool("TriggerRollOut", true);
 		}
+		else if(v_TriggerFlinched)
+		{
+			v_TriggerFlinched = false;
+			o_Anim.SetBool("TriggerFlinched", true);
+		}
+
 
 		float multiplier = 1; // Animation playspeed multiplier that increases with higher velocity
 
@@ -3075,6 +3082,7 @@ public class FighterChar : NetworkBehaviour
 		//
 		v_TriggerAtkHit = true;
 		o_FighterAudio.PunchHitSound();
+		opponent.v_TriggerFlinched = true;
 		if((this.IsPlayer() || opponent.IsPlayer())&&(impactDamageM>v_PunchStrengthSlowmoT))
 		{
 			o_TimeManager.TimeDilation(0.1f, 0.75f+0.75f*impactDamageM);
@@ -4286,6 +4294,11 @@ public class FighterChar : NetworkBehaviour
 		v_TruePrimarySurface = -1;
 		m_AirborneDelayTimer = -1;
 
+		m_Ceilinged = false;
+		m_Grounded = false;
+		m_LeftWalled = false;
+		m_RightWalled = false;
+
 		m_JumpBufferG = 0;
 		m_JumpBufferC = 0;
 		m_JumpBufferL = 0;
@@ -4464,8 +4477,8 @@ public class FighterChar : NetworkBehaviour
 		//print("Changing direction to" +newDirection);
 	}
 
-	public void PunchConnect(GameObject victim, Vector2 aimDirection)
-	{
+	public void LightPunchConnect(GameObject victim, Vector2 aimDirection)
+	{// This is for simple one-click punches. Velocity punches use a different function.
 		if((isAPlayer&&!isLocalPlayer)|| !isAPlayer&&!isServer){return;}
 		FighterChar enemyFighter = null;
 
@@ -4476,6 +4489,15 @@ public class FighterChar : NetworkBehaviour
 		if(enemyFighter != null)
 		{
 			enemyFighter.TakeDamage(5);
+			enemyFighter.v_TriggerFlinched = true;
+			enemyFighter.facingDirection = (this.transform.position.x-enemyFighter.transform.position.x < 0) ? false : true; // If you are to their left, face left. Otherwise, right.
+
+			if(!enemyFighter.IsPlayer())
+			{
+				enemyFighter.g_CurStun = 0.2f;
+				enemyFighter.g_Staggered = true;
+			}
+
 			enemyFighter.FighterState.Vel += aimDirection.normalized*5;
 			o_FighterAudio.PunchHitSound();
 
@@ -4488,8 +4510,6 @@ public class FighterChar : NetworkBehaviour
 			Vector3 RotInfluence = new Vector3(0,0,0);
 			Vector3 PosInfluence = new Vector3(posX,posY,0);
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
-
-			//print("Punch connected locally");
 		}
 
 		CmdPunchConnect(victim, aimDirection);
@@ -4598,7 +4618,7 @@ public class FighterChar : NetworkBehaviour
 	{
 		if(dmgAmount==0||d_Invincible){return;}
 		FlashEffect(0.2f, Color.red);
-		FighterState.CurHealth -= dmgAmount;
+		FighterState.CurVigor -= dmgAmount;
 		if(dmgAmount>15)
 		{
 			o_FighterAudio.PainSound();
@@ -4617,7 +4637,7 @@ public class FighterChar : NetworkBehaviour
 {
 	[SerializeField][ReadOnlyAttribute]public int ZonLevel;					// Level of fighter Zon Power.
 	[SerializeField][ReadOnlyAttribute]public bool DevMode;					// Turns on all dev cheats.
-	[SerializeField][ReadOnlyAttribute]public int CurHealth;				// Current health.
+	[SerializeField][ReadOnlyAttribute]public int CurVigor;				// Current health.
 	[SerializeField][ReadOnlyAttribute]public bool Dead;					// True when the fighter's health reaches 0 and they die.
 	[SerializeField][ReadOnlyAttribute]public int Stance;					// Combat stance which dictates combat actions and animations. 0 = neutral, 1 = attack(leftmouse), 2 = guard(rightclick). 
 
