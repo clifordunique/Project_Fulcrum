@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ZonPulse : MonoBehaviour {
+public class EtherPulse : MonoBehaviour {
 	
 	public FighterChar originFighter;
 	[ReadOnlyAttribute][SerializeField] float pulseRadius;

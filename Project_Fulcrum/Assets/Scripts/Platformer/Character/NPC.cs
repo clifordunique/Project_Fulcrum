@@ -84,7 +84,7 @@ public class NPC : FighterChar {
 		FixedUpdateAnimation();
 		FighterState.RightClickPress = false;
 		FighterState.LeftClickPress = false;
-		FighterState.ZonKeyPress = false;
+		FighterState.EtherKeyPress = false;
 	}
 	#endregion
 	//###################################################################################################################################
@@ -921,7 +921,7 @@ public class NPC : FighterChar {
 			FighterState.DownKeyHold = false;
 			FighterState.RightKeyHold = false;
 			FighterState.JumpKeyPress = false;
-			FighterState.ZonKeyPress = false;
+			FighterState.EtherKeyPress = false;
 		}
 
 		//################################################################################
@@ -985,7 +985,7 @@ public class NPC : FighterChar {
 		{
 			if(m_Kneeling)
 			{
-				//ZonJump(FighterState.PlayerMouseVector.normalized);
+				//EtherJump(FighterState.PlayerMouseVector.normalized);
 			}
 			else
 			{
@@ -1020,7 +1020,7 @@ public class NPC : FighterChar {
 
 		if(FighterState.DisperseKeyPress)
 		{
-			ZonPulse();
+			EtherPulse();
 			FighterState.DisperseKeyPress = false;
 		}
 
@@ -1049,7 +1049,7 @@ public class NPC : FighterChar {
 
 		if(FighterState.DisperseKeyPress)
 		{
-			ZonPulse();
+			EtherPulse();
 			FighterState.DisperseKeyPress = false;
 		}
 
@@ -1058,7 +1058,7 @@ public class NPC : FighterChar {
 		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
 		FighterState.LeftClickPress = false; 	
 		FighterState.RightClickPress = false;
-		FighterState.ZonKeyPress = false;				
+		FighterState.EtherKeyPress = false;				
 		FighterState.DisperseKeyPress = false;				
 		FighterState.JumpKeyPress = false;				
 		FighterState.LeftKeyPress = false;

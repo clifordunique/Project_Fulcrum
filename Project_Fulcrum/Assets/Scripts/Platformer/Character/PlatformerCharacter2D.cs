@@ -54,8 +54,8 @@
 //	[Range(0,0.5f)][SerializeField] private float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
 //	[Range(0.01f,0.4f)][SerializeField] private float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
 //	[Space(10)]
-//	[SerializeField] private float m_ZonJumpForcePerCharge = 10f; 				// How much force does each Zon Charge add to the jump power?
-//	[SerializeField] private float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
+//	[SerializeField] private float m_EtherJumpForcePerCharge = 10f; 				// How much force does each Ether Charge add to the jump power?
+//	[SerializeField] private float m_EtherJumpForceBase = 40f; 					// How much force does a no-power Ether jump have?
 //	[Space(10)]
 //	[SerializeField] private float m_SlamT = 100f; 								// Impact threshold for slam
 //	[SerializeField] private float m_CraterT = 200f; 							// Impact threshold for crater
@@ -151,7 +151,7 @@
 //	private bool i_RightKey;
 //	private bool i_UpKey;
 //	private bool i_DownKey;
-//	private bool i_ZonKey;
+//	private bool i_EtherKey;
 //	private int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 //	private int CtrlV; 					// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
 //	private bool facingDirection; 		// True means right, false means left.
@@ -185,7 +185,7 @@
 //	//###########################################################################################################################################################################
 //	#region VISUALS&SOUND
 //	[Header("Visuals And Sound:")]
-//	[SerializeField]private int v_ZonLevel;							//	Level of player Zon Power.
+//	[SerializeField]private int v_EtherLevel;							//	Level of player Ether Power.
 //	[SerializeField][Range(0,10)]private float v_ReversingSlideT; 	// How fast the player must be going to go into a slide posture when changing directions.
 //	[SerializeField]private float v_CameraZoom; 					// Amount of camera zoom.
 //	[SerializeField][Range(0,3)]private int v_PlayerGlow;			// Amount of player "energy glow" effect.
@@ -195,8 +195,8 @@
 //	//###########################################################################################################################################################################
 //	#region GAMEPLAY VARIABLES
 //	[Header("Gameplay:")]
-//	[SerializeField]private int g_ZonJumpCharge;					//	Level of power channelled into current jump.
-//	[SerializeField][ReadOnlyAttribute] private int g_ZonStance;	// Which stance is the player in? -1 = no stance.
+//	[SerializeField]private int g_EtherJumpCharge;					//	Level of power channelled into current jump.
+//	[SerializeField][ReadOnlyAttribute] private int g_EtherStance;	// Which stance is the player in? -1 = no stance.
 //	[SerializeField] private int g_CurHealth;						// Current health.
 //	[SerializeField] private int g_MaxHealth;						// Max health.
 //	[SerializeField] private int g_MinSlamDMG;						// Min damage a slam impact can deal.
@@ -281,7 +281,7 @@
 //		m_Impact = false;
 //		m_Landing = false;
 //		m_Kneeling = false;
-//		g_ZonStance = -1;
+//		g_EtherStance = -1;
 //
 //		//print("Initial Pos: " + startingPos);
 //		//print("Initial Vel: " +  m_Vel);
@@ -329,18 +329,18 @@
 //		{
 //			m_Kneeling = true;
 //			CtrlH = 0;
-//			g_ZonStance = 0; // Kneeling stance.
+//			g_EtherStance = 0; // Kneeling stance.
 //		}
 //		else
 //		{
-//			g_ZonJumpCharge=0;
+//			g_EtherJumpCharge=0;
 //		}
 //
 //		if(i_JumpKey)
 //		{
 //			if(m_Kneeling)
 //			{
-//				ZonJump(i_PlayerMouseVector.normalized);
+//				EtherJump(i_PlayerMouseVector.normalized);
 //			}
 //			else
 //			{
@@ -485,7 +485,7 @@
 //		//Animator Controls
 //		//
 //
-//		v_PlayerGlow = v_ZonLevel;
+//		v_PlayerGlow = v_EtherLevel;
 //		if (v_PlayerGlow > 7){v_PlayerGlow = 7;}
 //
 //		if(v_PlayerGlow>2)
@@ -614,7 +614,7 @@
 //
 //		i_RightClick = false;
 //		i_LeftClick = false;
-//		i_ZonKey = false;
+//		i_EtherKey = false;
 //
 //    }
 //
@@ -632,7 +632,7 @@
 //			
 //		if(Input.GetButtonDown("Spooling"))
 //		{
-//			i_ZonKey = true;				
+//			i_EtherKey = true;				
 //		}
 //
 //		Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -2343,11 +2343,11 @@
 //		}
 //	}
 //
-//	private void ZonJump(Vector2 jumpNormal)
+//	private void EtherJump(Vector2 jumpNormal)
 //	{
-//		g_ZonJumpCharge = o_Spooler.GetTotalPower();
-//		m_Vel = jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*g_ZonJumpCharge));
-//		g_ZonJumpCharge = 0;		
+//		g_EtherJumpCharge = o_Spooler.GetTotalPower();
+//		m_Vel = jumpNormal*(m_EtherJumpForceBase+(m_EtherJumpForcePerCharge*g_EtherJumpCharge));
+//		g_EtherJumpCharge = 0;		
 //		i_JumpKey = false;
 //		o_CharAudio.JumpSound();
 //		o_Spooler.Reset();
@@ -2380,24 +2380,24 @@
 //		return m_Spd;
 //	}
 //
-//	public void SetZonLevel(int zonLevel)
+//	public void SetEtherLevel(int EtherLevel)
 //	{
-//		v_ZonLevel = zonLevel;
+//		v_EtherLevel = EtherLevel;
 //	}
 //
-//	public int GetZonLevel()
+//	public int GetEtherLevel()
 //	{
-//		return v_ZonLevel;
+//		return v_EtherLevel;
 //	}
 //
-//	public int GetZonStance()
+//	public int GetEtherStance()
 //	{
-//		return g_ZonStance; //-1 is none, 0 is kneeling, 1 is AD.
+//		return g_EtherStance; //-1 is none, 0 is kneeling, 1 is AD.
 //	}
 //
-//	public void DissipateZon()
+//	public void DissipateEther()
 //	{
-//		// Executes when the player leaves zon stance without using power.
+//		// Executes when the player leaves Ether stance without using power.
 //	}
 //
 //	#endregion

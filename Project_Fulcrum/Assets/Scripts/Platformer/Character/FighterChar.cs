@@ -144,8 +144,8 @@ public class FighterChar : NetworkBehaviour
 
 	[Space(10)]
 
-	[Tooltip("")][SerializeField] protected float m_ZonJumpForcePerCharge = 5f; 				// How much force does each Zon Charge add to the jump power?
-	[Tooltip("")][SerializeField] protected float m_ZonJumpForceBase = 40f; 					// How much force does a no-power Zon jump have?
+	[Tooltip("")][SerializeField] protected float m_EtherJumpForcePerCharge = 5f; 				// How much force does each Ether Charge add to the jump power?
+	[Tooltip("")][SerializeField] protected float m_EtherJumpForceBase = 40f; 					// How much force does a no-power Ether jump have?
 
 	[Space(10)]
 
@@ -223,7 +223,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected Transform o_DebugAngleDisplay;	// Reference to a transform of an angle display child transform of the player.
 	[SerializeField][ReadOnlyAttribute] protected NavMaster o_NavMaster;			// Global navmesh handler for the level.
 
-	[SerializeField] public GameObject p_ZonPulse;				// Reference to the Zon Pulse prefab, a pulsewave that emanates from the fighter when they disperse zon power.
+	[SerializeField] public GameObject p_EtherPulse;				// Reference to the Ether Pulse prefab, a pulsewave that emanates from the fighter when they disperse ether force.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
@@ -445,7 +445,7 @@ public class FighterChar : NetworkBehaviour
 		FixedUpdateWwiseAudio();
 //		FighterState.RightClick = false;
 //		FighterState.LeftClick = false;
-//		FighterState.ZonKey = false;
+//		FighterState.EtherKey = false;
 //		FighterState.DisperseKey = false;
 	}
 
@@ -640,7 +640,7 @@ public class FighterChar : NetworkBehaviour
 		m_RemainingVelM = 1f;
 
 		Shoe startingShoe = Instantiate(o_ItemHandler.shoes[p_DefaultShoeID], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
-		EquipShoe(startingShoe);
+		EquipItem(startingShoe);
 
 
 		if(!(showVelocityIndicator||FighterState.DevMode)){
@@ -668,7 +668,36 @@ public class FighterChar : NetworkBehaviour
 		o_EquippedShoe.Drop();
 	}
 
-	public virtual void EquipShoe(Shoe shoe) // Equip a shoe object. Set argument to null to equip barefoot.
+	public virtual void UnequipWeapon()
+	{
+//		if(o_EquippedShoe == null){return;}
+//		if(o_EquippedShoe.itemID==0)
+//		{
+//			print("Cannot unequip feet!");
+//			o_EquippedShoe.DestroyThis();
+//			return;
+//		}
+//		o_EquippedShoe.Drop();
+	}
+
+	public virtual void UnequipGadget()
+	{
+		//		if(o_EquippedShoe == null){return;}
+		//		if(o_EquippedShoe.itemID==0)
+		//		{
+		//			print("Cannot unequip feet!");
+		//			o_EquippedShoe.DestroyThis();
+		//			return;
+		//		}
+		//		o_EquippedShoe.Drop();
+	}
+
+	public virtual void EquipItem(Item item)
+	{
+		print("Generic Item not supported! Item is a template class!");
+	}
+
+	public virtual void EquipItem(Shoe shoe) // Equip a shoe object. Set argument to null to equip barefoot.
 	{		
 		if(shoe==null)
 		{
@@ -689,8 +718,8 @@ public class FighterChar : NetworkBehaviour
 		this.m_HJumpForce = shoe.m_HJumpForce;  				
 		this.m_WallVJumpForce = shoe.m_WallVJumpForce;           
 		this.m_WallHJumpForce = shoe.m_WallHJumpForce;  			
-		this.m_ZonJumpForcePerCharge = shoe.m_ZonJumpForcePerCharge; 	
-		this.m_ZonJumpForceBase = shoe.m_ZonJumpForceBase; 		
+		this.m_EtherJumpForcePerCharge = shoe.m_EtherJumpForcePerCharge; 	
+		this.m_EtherJumpForceBase = shoe.m_EtherJumpForceBase; 		
 
 		this.m_TractionChangeT = shoe.m_TractionChangeT;			
 		this.m_WallTractionT = shoe.m_WallTractionT;			
@@ -1139,7 +1168,7 @@ public class FighterChar : NetworkBehaviour
 		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
 		FighterState.LeftClickPress = false; 	
 		FighterState.RightClickPress = false;
-		FighterState.ZonKeyPress = false;
+		FighterState.EtherKeyPress = false;
 		FighterState.ShiftKeyPress = false;
 		FighterState.DisperseKeyPress = false;				
 		FighterState.JumpKeyPress = false;				
@@ -1339,7 +1368,7 @@ public class FighterChar : NetworkBehaviour
 			}
 		}
 			
-		float fighterGlow = FighterState.ZonLevel;
+		float fighterGlow = FighterState.EtherLevel;
 		if (fighterGlow > 7){fighterGlow = 7;}
 
 		if(fighterGlow>0)
@@ -2142,20 +2171,20 @@ public class FighterChar : NetworkBehaviour
 		}
 	}
 
-	protected virtual void ZonPulse()
+	protected virtual void EtherPulse()
 	{
-		if(FighterState.ZonLevel <= 0)
+		if(FighterState.EtherLevel <= 0)
 		{
 			return;
 		}
 
-		FighterState.ZonLevel--;
+		FighterState.EtherLevel--;
 		//o_ProximityLiner.ClearAllFighters();
-		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
-		newZonPulse.GetComponentInChildren<ZonPulse>().originFighter = this;
-		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
-		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
-		o_FighterAudio.ZonPulseSound();
+		GameObject newEtherPulse = (GameObject)Instantiate(p_EtherPulse, this.transform.position, Quaternion.identity);
+		newEtherPulse.GetComponentInChildren<EtherPulse>().originFighter = this;
+		newEtherPulse.GetComponentInChildren<EtherPulse>().pulseRange = 150+(FighterState.EtherLevel*50);
+		//o_ProximityLiner.outerRange = 100+(FighterState.EtherLevel*25);
+		o_FighterAudio.EtherPulseSound();
 	}
 
 	protected float GetSteepness(Vector2 vectorPara)
@@ -2232,7 +2261,7 @@ public class FighterChar : NetworkBehaviour
 		{
 			m_Kneeling = true;
 			horizontalInput = 0;
-//			if(GetZonLevel()>0)
+//			if(GetEtherLevel()>0)
 //			{
 //				v_CameraMode = 2;
 //			}
@@ -4281,13 +4310,13 @@ public class FighterChar : NetworkBehaviour
 		m_JumpBufferR = 0;
 	}
 
-	protected void ZonJump(Vector2 jumpNormal)
+	protected void EtherJump(Vector2 jumpNormal)
 	{
-		if(FighterState.ZonLevel > 0)
+		if(FighterState.EtherLevel > 0)
 		{
-			FighterState.ZonLevel--;
+			FighterState.EtherLevel--;
 		}
-		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*FighterState.ZonLevel)));	
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_EtherJumpForceBase+(m_EtherJumpForcePerCharge*FighterState.EtherLevel)));	
 
 		o_FighterAudio.JumpSound();
 		v_PrimarySurface = -1;
@@ -4309,7 +4338,7 @@ public class FighterChar : NetworkBehaviour
 	protected void StrandJumpTypeA(float horizontalInput, float verticalInput) //SJTA
 	{
 		float numberOfInputs = Math.Abs(horizontalInput)+Math.Abs(verticalInput);
-		if(FighterState.Vel.magnitude>=20&&FighterState.ZonLevel > 0&&numberOfInputs > 0)
+		if(FighterState.Vel.magnitude>=20&&FighterState.EtherLevel > 0&&numberOfInputs > 0)
 		{
 			//print("STRANDJUMP!");
 			Vector2 oldDirection = FighterState.Vel.normalized;
@@ -4389,7 +4418,7 @@ public class FighterChar : NetworkBehaviour
 			m_StrandJumpReflectSpd = FighterState.Vel.magnitude*(1-m_StrandJumpSpeedLossM);
 			m_StrandJumpReflectDir = newDirection;
 
-			FighterState.ZonLevel--;
+			FighterState.EtherLevel--;
 			o_FighterAudio.StrandJumpSound();
 		}
 	}
@@ -4417,12 +4446,12 @@ public class FighterChar : NetworkBehaviour
 		g_Stunned = true;
 		g_CurStun = 2+chargeAmount/10;
 		Vector2 jumpNormal = -FighterState.PlayerMouseVector.normalized;
-		if(FighterState.ZonLevel > 0)
+		if(FighterState.EtherLevel > 0)
 		{
-			FighterState.ZonLevel--;
+			FighterState.EtherLevel--;
 		}
 
-		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_ZonJumpForceBase+(m_ZonJumpForcePerCharge*(chargeAmount*3))));
+		FighterState.Vel = FighterState.Vel+(jumpNormal*(m_EtherJumpForceBase+(m_EtherJumpForcePerCharge*(chargeAmount*3))));
 		SpawnExplosionEffect(FighterState.Vel.magnitude*2);
 		//o_FighterAudio.CraterSound(FighterState.Vel.magnitude*5, m_CraterT, 1000f);
 	}
@@ -4586,14 +4615,14 @@ public class FighterChar : NetworkBehaviour
 		return FighterState.Vel.magnitude;
 	}
 
-	public void SetZonLevel(int zonLevel)
+	public void SetEtherLevel(int etherLevel)
 	{
-		FighterState.ZonLevel = zonLevel;
+		FighterState.EtherLevel = etherLevel;
 	}
 
-	public int GetZonLevel()
+	public int GetEtherLevel()
 	{
-		return FighterState.ZonLevel;
+		return FighterState.EtherLevel;
 	}
 
 	public void SetSpeed(Vector2 inputVelocity, float speed)
@@ -4635,7 +4664,7 @@ public class FighterChar : NetworkBehaviour
 
 [System.Serializable] public struct FighterState
 {
-	[SerializeField][ReadOnlyAttribute]public int ZonLevel;					// Level of fighter Zon Power.
+	[SerializeField][ReadOnlyAttribute]public int EtherLevel;					// Level of fighter Ether Power.
 	[SerializeField][ReadOnlyAttribute]public bool DevMode;					// Turns on all dev cheats.
 	[SerializeField][ReadOnlyAttribute]public int CurVigor;				// Current health.
 	[SerializeField][ReadOnlyAttribute]public bool Dead;					// True when the fighter's health reaches 0 and they die.
@@ -4680,7 +4709,7 @@ public class FighterChar : NetworkBehaviour
 
 
 
-	[SerializeField][ReadOnlyAttribute]public bool ZonKeyPress;
+	[SerializeField][ReadOnlyAttribute]public bool EtherKeyPress;
 	[SerializeField][ReadOnlyAttribute]public bool DisperseKeyPress;
 	[SerializeField][ReadOnlyAttribute]public bool DevkeyTilde;
 	[SerializeField][ReadOnlyAttribute]public bool DevKey1;

@@ -151,7 +151,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1306559093083546
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,8 +304,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1271522054906898}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1697, y: -100, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -148.33, y: -6.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4400483855208910}
@@ -716,8 +716,7 @@ MonoBehaviour:
   critJumpTimer: 0
   critJumpFrameWindow: 2
   critJumpFrameTimer: 2
-  critJumpHForce: 0
-  critJumpVForce: 0
+  critJumpBonusM: 1.33
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -735,7 +734,7 @@ MonoBehaviour:
   o_Rigidbody2D: {fileID: 0}
   o_DebugAngleDisplay: {fileID: 0}
   o_NavMaster: {fileID: 0}
-  p_ZonPulse: {fileID: 0}
+  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -750,7 +749,8 @@ MonoBehaviour:
     type: 2}
   p_SparkEffectPrefab: {fileID: 1241283713325446, guid: d6c2c7ebdba9baa4cb85abe4ed6c2319,
     type: 2}
-  p_ExplosionEffectPrefab: {fileID: 0}
+  p_ExplosionEffectPrefab: {fileID: 1213008740301432, guid: faa097bf3e9a29740b459694638f02d3,
+    type: 2}
   m_TerrainMask:
     serializedVersion: 2
     m_Bits: 32768
@@ -798,7 +798,7 @@ MonoBehaviour:
   FighterState:
     ZonLevel: 0
     DevMode: 0
-    CurHealth: 0
+    CurVigor: 0
     Dead: 0
     Stance: 0
     JumpKeyPress: 0
@@ -868,6 +868,7 @@ MonoBehaviour:
   v_ChargedColor: {r: 0, g: 0, b: 0, a: 0}
   v_TriggerAtkHit: 0
   v_TriggerRollOut: 0
+  v_TriggerFlinched: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
@@ -886,7 +887,7 @@ MonoBehaviour:
   v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
-  g_MaxHealth: 100
+  g_MaxVigor: 100
   g_MinSlamDMG: 5
   g_MaxSlamDMG: 30
   g_MinCrtrDMG: 30

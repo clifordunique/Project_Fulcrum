@@ -39,10 +39,10 @@ public class Player : FighterChar
 	//###########################################################################################################################################################################
 	#region OBJECT REFERENCES
 	[Header("Player Components:")]
-	[SerializeField][ReadOnlyAttribute] private ShoeTooltip o_ShoeTooltip;      			// Reference to the speed indicator (dev tool).
+	[SerializeField][ReadOnlyAttribute] private ItemSlot o_ShoeSlot;      			// Reference to the shoe item slot in the HUD.
 	[SerializeField][ReadOnlyAttribute] private Text o_Speedometer;      			// Reference to the speed indicator (dev tool).
 	[SerializeField][ReadOnlyAttribute] private Reporter o_Reporter;      			// Reference to the console (dev tool).
-	[SerializeField][ReadOnlyAttribute] private Text o_EnergyCounter;      			// Reference to the level of zon power (dev tool).
+	[SerializeField][ReadOnlyAttribute] private EnergySpiralUI o_EnergySpiral;      // Reference to the UI element that displays ether energy.
 	[SerializeField][ReadOnlyAttribute] private Camera o_MainCamera;				// Reference to the main camera.
 	[SerializeField][ReadOnlyAttribute] private Transform o_MainCameraTransform;	// Reference to the main camera's parent's transform, used to move it.
 	//[SerializeField][ReadOnlyAttribute] private CameraShaker o_CamShaker;			// Reference to the main camera's shaking controller.
@@ -137,11 +137,11 @@ public class Player : FighterChar
 		o_MainCameraTransform.SetParent(this.transform);
 		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
 		o_Speedometer = GameObject.Find("Speedometer").GetComponent<Text>();
-		o_EnergyCounter = GameObject.Find("Energy Counter").GetComponent<Text>();
+		o_EnergySpiral = GameObject.Find("EnergySpiral").GetComponent<EnergySpiralUI>();
 		o_VigorBar = GameObject.Find("VigorBar").GetComponent<VigorBar>();
 		o_Spooler = this.gameObject.GetComponent<Spooler>();
-		o_ShoeTooltip = GameObject.Find("ShoeTooltip").GetComponent<ShoeTooltip>();
-		o_ShoeTooltip.SetFighter(this);
+		o_ShoeSlot = GameObject.Find("ShoeSlot").GetComponent<ItemSlot>();
+		o_ShoeSlot.SetFighter(this);
 	}
 
 	protected void Start()
@@ -178,7 +178,7 @@ public class Player : FighterChar
 		{
 			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
 		}
-		FixedUpdateLogic();			// Deals with variables such as life and zon power
+		FixedUpdateLogic();			// Deals with variables such as life and ether power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.
 		FixedUpdateWwiseAudio();
 
@@ -222,7 +222,12 @@ public class Player : FighterChar
 	#region CUSTOM FUNCTIONS
 
 
-	public override void EquipShoe(Shoe shoe)
+	public override void EquipItem(Item item)
+	{
+		print("Generic Item not supported! Item is a virtual class!");
+	}
+		
+	public override void EquipItem(Shoe shoe)
 	{
 		if(shoe==null)
 		{
@@ -243,8 +248,8 @@ public class Player : FighterChar
 		this.m_HJumpForce = shoe.m_HJumpForce;  				
 		this.m_WallVJumpForce = shoe.m_WallVJumpForce;           
 		this.m_WallHJumpForce = shoe.m_WallHJumpForce;  			
-		this.m_ZonJumpForcePerCharge = shoe.m_ZonJumpForcePerCharge; 	
-		this.m_ZonJumpForceBase = shoe.m_ZonJumpForceBase; 		
+		this.m_EtherJumpForcePerCharge = shoe.m_EtherJumpForcePerCharge; 	
+		this.m_EtherJumpForceBase = shoe.m_EtherJumpForceBase; 		
 
 		this.m_TractionChangeT = shoe.m_TractionChangeT;			
 		this.m_WallTractionT = shoe.m_WallTractionT;			
@@ -282,7 +287,7 @@ public class Player : FighterChar
 		}
 		if(isLocalPlayer)
 		{
-			o_ShoeTooltip.SetShoe(shoe);
+			o_ShoeSlot.SetItem(shoe);
 		}
 	}
 
@@ -433,7 +438,7 @@ public class Player : FighterChar
 
 		if(FighterState.DevKey4)
 		{
-			FighterState.ZonLevel = 8;
+			FighterState.EtherLevel = 8;
 			FighterState.DevKey4 = false;
 		}
 		if(FighterState.DevKey5)
@@ -542,7 +547,7 @@ public class Player : FighterChar
 			FighterState.DownKeyHold = false;
 			FighterState.RightKeyHold = false;
 			FighterState.JumpKeyPress = false;
-			FighterState.ZonKeyPress = false;
+			FighterState.EtherKeyPress = false;
 			FighterState.DisperseKeyPress = false;
 		}
 
@@ -550,7 +555,7 @@ public class Player : FighterChar
 		//### ALL INPUT AFTER THIS POINT IS DISABLED WHEN THE FIGHTER IS INCAPACITATED. ###
 		//#################################################################################
 
-		if(FighterState.ZonKeyPress)
+		if(FighterState.EtherKeyPress)
 		{
 			o_Spooler.LockRing();
 		}
@@ -666,11 +671,11 @@ public class Player : FighterChar
 		if(FighterState.JumpKeyPress)
 		{
 			FighterState.JumpKeyPress = false;
-			if(CtrlV<0 && !m_Airborne) // If holding down and on a surface, allow zonjump.
+			if(CtrlV<0 && !m_Airborne) // If holding down and on a surface, allow etherjump.
 			{
-				if(FighterState.ZonLevel>0)
+				if(FighterState.EtherLevel>0)
 				{
-					ZonJump(FighterState.PlayerMouseVector.normalized);
+					EtherJump(FighterState.PlayerMouseVector.normalized);
 				}
 			}
 			else if(m_JumpBufferG>0 || m_JumpBufferC>0 || m_JumpBufferL>0 || m_JumpBufferR>0)
@@ -856,7 +861,7 @@ public class Player : FighterChar
 
 		if(FighterState.DisperseKeyPress)
 		{
-			ZonPulse();
+			EtherPulse();
 			FighterState.DisperseKeyPress = false;
 		}
 			
@@ -885,7 +890,7 @@ public class Player : FighterChar
 			
 		if(FighterState.DisperseKeyPress)
 		{
-			ZonPulse();
+			EtherPulse();
 			FighterState.DisperseKeyPress = false;
 		}
 
@@ -893,7 +898,7 @@ public class Player : FighterChar
 		// FixedUpdate can run multiple times before Update refreshes, so a keydown input can be registered as true multiple times before update changes it back to false, instead of just the intended one time.
 		FighterState.LeftClickPress = false; 	
 		FighterState.RightClickPress = false;
-		FighterState.ZonKeyPress = false;				
+		FighterState.EtherKeyPress = false;				
 		FighterState.DisperseKeyPress = false;				
 		FighterState.JumpKeyPress = false;				
 		FighterState.LeftKeyPress = false;
@@ -945,7 +950,7 @@ public class Player : FighterChar
 		}
 		if(Input.GetButtonDown("Q"))
 		{
-			FighterState.ZonKeyPress = true;				
+			FighterState.EtherKeyPress = true;				
 		}
 		if(Input.GetButtonDown("Shift"))
 		{
@@ -1078,20 +1083,20 @@ public class Player : FighterChar
 
 	}
 
-	protected override void ZonPulse()
+	protected override void EtherPulse()
 	{
-		if(FighterState.ZonLevel <= 0)
+		if(FighterState.EtherLevel <= 0)
 		{
 			return;
 		}
 
-		FighterState.ZonLevel--;
+		FighterState.EtherLevel--;
 		o_ProximityLiner.ClearAllFighters();
-		GameObject newZonPulse = (GameObject)Instantiate(p_ZonPulse, this.transform.position, Quaternion.identity);
-		newZonPulse.GetComponentInChildren<ZonPulse>().originFighter = this;
-		newZonPulse.GetComponentInChildren<ZonPulse>().pulseRange = 150+(FighterState.ZonLevel*50);
-		//o_ProximityLiner.outerRange = 100+(FighterState.ZonLevel*25);
-		o_FighterAudio.ZonPulseSound();
+		GameObject newEtherPulse = (GameObject)Instantiate(p_EtherPulse, this.transform.position, Quaternion.identity);
+		newEtherPulse.GetComponentInChildren<EtherPulse>().originFighter = this;
+		newEtherPulse.GetComponentInChildren<EtherPulse>().pulseRange = 150+(FighterState.EtherLevel*50);
+		//o_ProximityLiner.outerRange = 100+(FighterState.EtherLevel*25);
+		o_FighterAudio.EtherPulseSound();
 	}
 
 	protected void UpdatePlayerAnimation() // UPA
@@ -1101,7 +1106,7 @@ public class Player : FighterChar
 		v_CameraScrollZoom = (v_CameraScrollZoom<1) ? 1 : v_CameraScrollZoom; // Clamp min
 
 		v_CameraMode = v_DefaultCameraMode;
-		if(m_Kneeling&&GetZonLevel()>0) // If kneeling, use superjump cam.
+		if(m_Kneeling&&GetEtherLevel()>0) // If kneeling, use superjump cam.
 		{
 			v_CameraMode = 2;
 		}
@@ -1162,9 +1167,9 @@ public class Player : FighterChar
 			o_Speedometer.text = ""+Math.Round(FighterState.Vel.magnitude,0);
 			//o_Speedometer.text = ""+Math.Round(d_DeltaV,0);
 		}
-		if(o_EnergyCounter!=null)
+		if(o_EnergySpiral!=null)
 		{
-			o_EnergyCounter.text = ""+FighterState.ZonLevel;
+			o_EnergySpiral.SetCurEnergy(FighterState.EtherLevel);
 		}
 	}
 
@@ -1259,7 +1264,7 @@ public class Player : FighterChar
 		}
 		else
 		{
-			mySpeed = GetZonLevel()*25;
+			mySpeed = GetEtherLevel()*25;
 		}
 
 		float goalZoom;
@@ -1404,7 +1409,7 @@ public class Player : FighterChar
 //		if(o_MainCameraTransform.position.x+camAverageX-xDistanceToEdge>this.transform.position.x) //If the edge of the proposed camera position is beyond the player, snap it back
 //		{
 //			print("Too far left!");
-//			//camAverageX = this.transform.position.x+(xDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+//			//camAverageX = this.transform.position.x+(xDistanceToEdge); //If it's outside of the leashEthere, lock it to the edge.
 //		}
 //		if(o_MainCameraTransform.position.x+camAverageX+xDistanceToEdge<this.transform.position.x)
 //		{
@@ -1415,7 +1420,7 @@ public class Player : FighterChar
 //		if(o_MainCameraTransform.position.y+camAverageY-yDistanceToEdge>this.transform.position.y) //If the edge of the proposed camera position is beyond the player, snap it back
 //		{
 //			print("Too far down!");
-//			//camAverageY = this.transform.position.y+(yDistanceToEdge); //If it's outside of the leashzone, lock it to the edge.
+//			//camAverageY = this.transform.position.y+(yDistanceToEdge); //If it's outside of the leashEthere, lock it to the edge.
 //		}
 //		if(o_MainCameraTransform.position.y+camAverageY+yDistanceToEdge<this.transform.position.y)
 //		{

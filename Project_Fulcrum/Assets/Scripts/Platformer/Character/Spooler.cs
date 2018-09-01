@@ -22,7 +22,7 @@ public class Spooler : NetworkBehaviour
 	#region RINGPARAMS
 	[SerializeField][Range(0,0.2f)] private float r_RingWidth;		// Thickness of rings.
 	[SerializeField][Range(0,0.05f)] private float r_RingGap;		// Static gap between rings.
-	[SerializeField][Range(0,0.5f)] private float r_BufferZone;	// Distance from core.
+	[SerializeField][Range(0,0.5f)] private float r_BufferZone;		// Distance from core.
 	[SerializeField][Range(0,0.2f)] private float r_CoreSize;		// Core size. Keep this lower than r_BufferZone.
 	[SerializeField][Range(0,300)] private float r_LimitRadius; 	// Max radius before overload occurs.
 	[SerializeField][Range(0,20)] private int r_LimitInRings = 9; 	// Max radius measured in rings.
@@ -196,7 +196,7 @@ public class Spooler : NetworkBehaviour
 	public void Reset()
 	{
 		AbsorbAndClose();
-		o_Player.SetZonLevel(0);
+		o_Player.SetEtherLevel(0);
 		o_Core.lerpRadius = 0;
 		o_Core.lerpthickness = 0;
 		o_Core.lerpVortexAmount = 0;
@@ -293,7 +293,7 @@ public class Spooler : NetworkBehaviour
 		//print("EndRing");
 
 		r_TotalPower++;
-		o_Player.SetZonLevel(r_TotalPower);
+		o_Player.SetEtherLevel(r_TotalPower);
 
 		float thePercent = o_Rings[r_OuterRingID].GetPercentWhite();
 
@@ -428,7 +428,7 @@ public class Spooler : NetworkBehaviour
 
 		//o_FeedbackText.text = "";
 
-		o_Player.SetZonLevel(r_TotalPower);
+		o_Player.SetEtherLevel(r_TotalPower);
 
 		foreach(Ring r in o_Rings)
 		{
@@ -447,7 +447,7 @@ public class Spooler : NetworkBehaviour
 	{
 		//print("StartSpool!");
 		r_LimitRadius = r_CoreSize+r_BufferZone+(r_LimitInRings*(r_RingGap+r_RingWidth));
-		r_TotalPower = o_Player.GetZonLevel();
+		r_TotalPower = o_Player.GetEtherLevel();
 
 		for(int i = 0; i<r_TotalPower; i++)
 		{

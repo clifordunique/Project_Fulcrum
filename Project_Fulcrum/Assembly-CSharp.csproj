@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\ActorFPSOverride.cs" />
      <Compile Include="Assets\AnimRandomizer.cs" />
+     <Compile Include="Assets\EnergySpiralUI.cs" />
      <Compile Include="Assets\ExplosionEffect.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFCustomResourceLoader.cs" />
@@ -70,6 +71,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\ItemSlot.cs" />
      <Compile Include="Assets\MagicLogoEffect.cs" />
      <Compile Include="Assets\NavBuilderRay.cs" />
      <Compile Include="Assets\ReleaseModeSwitch.cs" />
@@ -94,6 +96,7 @@
      <Compile Include="Assets\Scripts\Platformer\Character\CameraController.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\CharacterAudio.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Character\EtherPulse.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\FighterAudio.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\FighterChar.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\KineticObject.cs" />
@@ -109,9 +112,9 @@
      <Compile Include="Assets\Scripts\Platformer\Character\StrandJumpEffect.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VelocityPunch.cs" />
      <Compile Include="Assets\Scripts\Platformer\Character\VigorBar.cs" />
-     <Compile Include="Assets\Scripts\Platformer\Character\ZonPulse.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\DeformMeshTest.cs" />
      <Compile Include="Assets\Scripts\Platformer\Experiments\TextureGenerator.cs" />
+     <Compile Include="Assets\Scripts\Platformer\Item.cs" />
      <Compile Include="Assets\Scripts\Platformer\ItemHandler.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\Breakable.cs" />
      <Compile Include="Assets\Scripts\Platformer\Map Objects\CloudHandler.cs" />

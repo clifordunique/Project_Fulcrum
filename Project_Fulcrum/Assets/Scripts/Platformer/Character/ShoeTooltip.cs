@@ -43,7 +43,7 @@ public class ShoeTooltip : MonoBehaviour {
 
 	public void DropShoe()
 	{
-		myFighter.EquipShoe(null);
+		myFighter.EquipItem(null);
 	}
 	 
 	public void SetShoe(Shoe newShoe)
@@ -51,7 +51,7 @@ public class ShoeTooltip : MonoBehaviour {
 		if(newShoe!=null)
 		{
 			myShoe = newShoe;
-			itemName.text = newShoe.shoeName;
+			itemName.text = newShoe.itemName;
 			itemIcon.sprite = newShoe.GetComponent<SpriteRenderer>().sprite;
 		}
 	}

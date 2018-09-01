@@ -479,7 +479,7 @@ of a lowpass value (computed in the next section) to the final result.
     #endif    
     
 /*----------------------------------------------------------------------------
-                    CHOOSE VERTICAL OR HORIZONTAL SEARCH
+                    CHOOSE VERTICAL OR HORIEtherTAL SEARCH
 ------------------------------------------------------------------------------
 FXAA uses the following local neighborhood,
  

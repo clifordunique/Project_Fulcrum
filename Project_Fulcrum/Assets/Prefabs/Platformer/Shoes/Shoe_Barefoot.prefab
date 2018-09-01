@@ -89,9 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab6a5ef209049d41aa84b9024e65ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shoeName: Barefoot
+  itemType: 0
+  itemName: Barefoot
+  itemDesc: +2 Grip \n +2 Ouchies
   shoeID: 0
-  shoeDesc: '"Better than nothing, I suppose..."'
   soundType: 0
   m_MinSpeed: 10
   m_MaxRunSpeed: 200
@@ -100,8 +101,8 @@ MonoBehaviour:
   m_HJumpForce: 5
   m_WallVJumpForce: 30
   m_WallHJumpForce: 10
-  m_ZonJumpForcePerCharge: 5
-  m_ZonJumpForceBase: 50
+  m_EtherJumpForcePerCharge: 5
+  m_EtherJumpForceBase: 40
   m_TractionChangeT: 20
   m_WallTractionT: 20
   m_LinearStopRate: 2
@@ -151,7 +152,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -179097649
-  m_SortingLayer: -2
+  m_SortingLayer: -3
   m_SortingOrder: 1000
   m_Sprite: {fileID: 21300000, guid: 38245788144b88b49a8cd888083b833e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

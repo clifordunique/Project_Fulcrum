@@ -661,7 +661,7 @@ MonoBehaviour:
   e_Pain:
     valueGuid: 188d6ad8b83ba84ea8c1f52f2826a8d6
     ID: 1996139369
-  e_ZonPulse:
+  e_EtherPulse:
     valueGuid: 24aa3cabf9d82b4088c1a5af022d82b6
     ID: 1403055964
   e_Punch:
@@ -832,8 +832,8 @@ MonoBehaviour:
   m_ClingReqGForce: 50
   m_MaxEmbed: 0.02
   m_MinEmbed: 0.01
-  m_ZonJumpForcePerCharge: 5
-  m_ZonJumpForceBase: 40
+  m_EtherJumpForcePerCharge: 5
+  m_EtherJumpForceBase: 40
   m_VelPunchT: 60
   m_SlamT: 60
   m_CraterT: 150
@@ -855,8 +855,7 @@ MonoBehaviour:
   critJumpTimer: 0
   critJumpFrameWindow: 1
   critJumpFrameTimer: 2
-  critJumpHForce: 5
-  critJumpVForce: 5
+  critJumpBonusM: 1.33
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -874,7 +873,8 @@ MonoBehaviour:
   o_Rigidbody2D: {fileID: 0}
   o_DebugAngleDisplay: {fileID: 0}
   o_NavMaster: {fileID: 0}
-  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
+  p_EtherPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9,
+    type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -936,9 +936,9 @@ MonoBehaviour:
   m_Kneeling: 0
   m_WorldImpact: 0
   FighterState:
-    ZonLevel: 0
+    EtherLevel: 0
     DevMode: 0
-    CurHealth: 100
+    CurVigor: 0
     Dead: 0
     Stance: 0
     JumpKeyPress: 0
@@ -972,7 +972,7 @@ MonoBehaviour:
     RightKeyDoubleTapDelay: 0
     UpKeyDoubleTapDelay: 0
     DownKeyDoubleTapDelay: 0
-    ZonKeyPress: 0
+    EtherKeyPress: 0
     DisperseKeyPress: 0
     DevkeyTilde: 0
     DevKey1: 0
@@ -1008,6 +1008,7 @@ MonoBehaviour:
   v_ChargedColor: {r: 1, g: 1, b: 1, a: 1}
   v_TriggerAtkHit: 0
   v_TriggerRollOut: 0
+  v_TriggerFlinched: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 1
@@ -1026,7 +1027,7 @@ MonoBehaviour:
   v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
-  g_MaxHealth: 100
+  g_MaxVigor: 100
   g_MinSlamDMG: 5
   g_MaxSlamDMG: 30
   g_MinCrtrDMG: 30
@@ -1082,14 +1083,15 @@ MonoBehaviour:
     averageTraversalTime: 0
   n_LastSurface: {fileID: 0}
   n_SpecialAction: 0
-  o_ShoeTooltip: {fileID: 0}
+  o_ShoeSlot: {fileID: 0}
   o_Speedometer: {fileID: 0}
   o_Reporter: {fileID: 0}
   o_EnergyCounter: {fileID: 0}
+  o_EnergySpiral: {fileID: 0}
   o_MainCamera: {fileID: 0}
   o_MainCameraTransform: {fileID: 0}
   o_Spooler: {fileID: 0}
-  o_Healthbar: {fileID: 0}
+  o_VigorBar: {fileID: 0}
   o_ProximityLiner: {fileID: 0}
   p_TestObject: {fileID: 1213008740301432, guid: faa097bf3e9a29740b459694638f02d3,
     type: 2}

@@ -7,7 +7,7 @@ public class FighterAudio : NetworkBehaviour {
 
 	[SerializeField]private AK.Wwise.Event e_Step = null;
 	[SerializeField]private AK.Wwise.Event e_Pain = null;
-	[SerializeField]private AK.Wwise.Event e_ZonPulse = null;
+	[SerializeField]private AK.Wwise.Event e_EtherPulse = null;
 	[SerializeField]private AK.Wwise.Event e_Punch = null;
 	[SerializeField]private AK.Wwise.Event e_PunchHit = null;
 	[SerializeField]private AK.Wwise.Event e_Landing = null;
@@ -32,9 +32,9 @@ public class FighterAudio : NetworkBehaviour {
 		e_CritJump.Post(this.gameObject);
 	}
 
-	public void ZonPulseSound()
+	public void EtherPulseSound()
 	{
-		e_ZonPulse.Post(this.gameObject);
+		e_EtherPulse.Post(this.gameObject);
 	}
 
 	public void PainSound()

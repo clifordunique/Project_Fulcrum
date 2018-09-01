@@ -35,7 +35,7 @@ Transform:
   m_GameObject: {fileID: 1965207187077970}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -51,10 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71ff8d521b0c704c89d24270318aef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p_SpoolRingPrefab: {fileID: 0}
+  p_SpoolRingPrefab: {fileID: 1490407522407120, guid: ef406ec911ba8a147b508370b25c8a54,
+    type: 2}
   o_SpoolMixer: {fileID: 0}
   s_SpoolUp: []
   o_Player: {fileID: 0}
+  o_SpoolerTransform: {fileID: 0}
   o_FeedbackText: {fileID: 0}
   o_Rings:
   - {fileID: 0}
@@ -64,14 +66,14 @@ MonoBehaviour:
   - {fileID: 0}
   o_Core: {fileID: 0}
   o_Limit: {fileID: 0}
-  r_RingWidth: 0
-  r_RingGap: 0
-  r_BufferZone: 0
-  r_CoreSize: 0
-  r_LimitRadius: 0
+  r_RingWidth: 0.004
+  r_RingGap: 0.001
+  r_BufferZone: 0.005
+  r_CoreSize: 0.003
+  r_LimitRadius: 0.05
   r_LimitInRings: 9
-  r_LimitThickness: 0
-  r_MaxTime: 0
+  r_LimitThickness: 0.002
+  r_MaxTime: 0.5
   r_CurTime: 0
   r_TotalPower: 0
   r_OuterRadius: 0

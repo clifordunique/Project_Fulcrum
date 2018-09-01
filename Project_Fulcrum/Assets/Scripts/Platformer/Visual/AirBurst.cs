@@ -10,7 +10,7 @@ public class AirBurst : WindEffector {
 	[ReadOnlyAttribute][SerializeField]public float g_Duration; 	// Duration of the airburst. Recommended to make this >= g_ExpandTime
 	[ReadOnlyAttribute][SerializeField]public float g_TimeAlive; 	// Time since the airburst appeared. When it reaches duration, the airburst is destroyed.
 	//[ReadOnlyAttribute][SerializeField]public bool g_IsShockwave;	// When true, sets windType to 0(radial shockwave). When false, sets windType to 1(radial blow).
-	[ReadOnlyAttribute][SerializeField]public WindZone g_WindZone; 	// Windzone - Unity component used to effect particle systems.
+	[ReadOnlyAttribute][SerializeField]public WindZone g_WindZone; 	// WindEthere - Unity component used to effect particle systems.
 
 	// Use this for initialization
 	void Awake() 
@@ -22,7 +22,6 @@ public class AirBurst : WindEffector {
 		blowDirection = Vector2.zero;
 		g_IntensityDefault = 300;
 		g_Intensity = g_IntensityDefault;
-		//g_WindType = 0;
 	}
 
 	public void Create(bool isShockwave, float minRange, float maxRange, float expandTime, float duration, float intensity)
