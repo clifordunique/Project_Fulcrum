@@ -6,6 +6,7 @@ using AK.Wwise;
 public class FighterAudio : NetworkBehaviour {
 
 	[SerializeField]private AK.Wwise.Event e_Step = null;
+	[SerializeField]private AK.Wwise.Event e_Gunshot = null;
 	[SerializeField]private AK.Wwise.Event e_Pain = null;
 	[SerializeField]private AK.Wwise.Event e_EtherPulse = null;
 	[SerializeField]private AK.Wwise.Event e_Punch = null;
@@ -25,6 +26,12 @@ public class FighterAudio : NetworkBehaviour {
 	{
 		if(muteFootsteps){return;}
 		e_Step.Post(this.gameObject);
+	}
+
+	public void GunshotSound()
+	{
+		if(muteFootsteps){return;}
+		e_Gunshot.Post(this.gameObject);
 	}
 
 	public void CritJumpSound()

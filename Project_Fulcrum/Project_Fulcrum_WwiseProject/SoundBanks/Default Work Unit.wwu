@@ -48,6 +48,7 @@
 					<ObjectInclusionList>
 						<ObjectRef Name="Impact_Crater" ID="{0966E2E2-8A76-4355-896A-229FBBB7BEF9}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="Ambient_Start" ID="{E84B38C3-64D6-45FF-9C01-1F7E11DBEEF8}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Gunshot" ID="{B0059F1F-FCA6-4AB9-9BA4-E657EA5FE493}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 						<ObjectRef Name="RiverLoopStart" ID="{CA6D9160-ECF8-4B03-A030-93F1B9B74DEF}" WorkUnitID="{EE082732-7104-4433-8F48-C87E70A099B2}" Filter="7" Origin="Manual"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>

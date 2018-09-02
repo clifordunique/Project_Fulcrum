@@ -498,6 +498,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Gunshot" ID="{B0059F1F-FCA6-4AB9-9BA4-E657EA5FE493}">
+					<ChildrenList>
+						<Action Name="" ID="{2CFA3C42-34B4-4784-A035-9B2B2FC25325}" ShortID="903860552">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Gunshot" ID="{B294A4DC-2494-4122-8F0C-28BD20154304}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

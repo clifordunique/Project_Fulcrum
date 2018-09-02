@@ -555,6 +555,7 @@
 			<Path>Environment.bnk</Path>
 			<IncludedEvents>
 				<Event Id="1892414574" Name="Ambient_Start" ObjectPath="\Events\Default Work Unit\Ambient_Start"/>
+				<Event Id="1287408361" Name="Gunshot" ObjectPath="\Events\Default Work Unit\Gunshot"/>
 				<Event Id="1796283983" Name="Impact_Crater" ObjectPath="\Events\Default Work Unit\Impact_Crater"/>
 				<Event Id="1718773345" Name="RiverLoopStart" ObjectPath="\Events\Default Work Unit\RiverLoopStart" MaxAttenuation="80.000000"/>
 			</IncludedEvents>
@@ -590,6 +591,10 @@
 				<File Id="931815851" Language="SFX">
 					<ShortName>riverloop01.wav</ShortName>
 					<Path>SFX\riverloop01_AB9C8EB4.wem</Path>
+				</File>
+				<File Id="1057810319" Language="SFX">
+					<ShortName>Gunshot1.wav</ShortName>
+					<Path>SFX\Gunshot1_1C9C67B2.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>

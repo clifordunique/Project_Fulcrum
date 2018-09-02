@@ -176,7 +176,7 @@ public class Player : FighterChar
 		}
 		else
 		{
-			FixedUpdatePhysics(); // Change this to take time.deltatime as an input so you can implement time dilation.
+			FixedUpdatePhysics(); // Change this to take time as an input so you can implement local time dilation.
 		}
 		FixedUpdateLogic();			// Deals with variables such as life and ether power
 		FixedUpdateAnimation();		// Animates the character based on movement and input.

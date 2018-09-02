@@ -658,6 +658,9 @@ MonoBehaviour:
   e_Step:
     valueGuid: 26ac86d82f62264cbb8bcbe28c6d6151
     ID: 1866025847
+  e_Gunshot:
+    valueGuid: 1f9f05b0a6fcb94a9ba4e657ea5fe493
+    ID: 1287408361
   e_Pain:
     valueGuid: 188d6ad8b83ba84ea8c1f52f2826a8d6
     ID: 1996139369
@@ -992,6 +995,8 @@ MonoBehaviour:
     PlayerMouseVector: {x: 413, y: 5.201796}
     Vel: {x: 0, y: 0}
     FinalPos: {x: -413, y: -5.201796}
+  facingDirection: 0
+  facingDirectionV: 0
   v_ReversingSlideT: 5
   v_CameraMode: 1
   v_DefaultCameraMode: 0
@@ -1086,7 +1091,6 @@ MonoBehaviour:
   o_ShoeSlot: {fileID: 0}
   o_Speedometer: {fileID: 0}
   o_Reporter: {fileID: 0}
-  o_EnergyCounter: {fileID: 0}
   o_EnergySpiral: {fileID: 0}
   o_MainCamera: {fileID: 0}
   o_MainCameraTransform: {fileID: 0}

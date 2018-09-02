@@ -21,6 +21,7 @@ namespace AK
         static const AkUniqueID ENERGYPULSE = 1403055964U;
         static const AkUniqueID FOOTSTEP = 1866025847U;
         static const AkUniqueID GUARDROLL = 797614645U;
+        static const AkUniqueID GUNSHOT = 1287408361U;
         static const AkUniqueID IMPACT_CRATER = 1796283983U;
         static const AkUniqueID IMPACT_SLAM = 3485259485U;
         static const AkUniqueID ITEM_EQUIP = 2146777153U;

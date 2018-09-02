@@ -345,7 +345,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1928130839739408}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 27.86, y: -99.72, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4788423811657578}
@@ -634,7 +634,7 @@ MonoBehaviour:
   e_Pain:
     valueGuid: 188d6ad8b83ba84ea8c1f52f2826a8d6
     ID: 1996139369
-  e_ZonPulse:
+  e_EtherPulse:
     valueGuid: 24aa3cabf9d82b4088c1a5af022d82b6
     ID: 1403055964
   e_Punch:
@@ -656,8 +656,8 @@ MonoBehaviour:
     valueGuid: 0f144237782bfa4a9fe653ee34bc53fa
     ID: 187194041
   e_GuardRoll:
-    valueGuid: 00000000000000000000000000000000
-    ID: 0
+    valueGuid: 2f9bbcd00a20d74da0e0b80dd9e7ed6d
+    ID: 797614645
   e_SuperJump:
     valueGuid: b43a0b6b889dff44aef93dc9c0621d39
     ID: 188599998
@@ -665,8 +665,8 @@ MonoBehaviour:
     valueGuid: 88d67c568844934594f3f6da017e7292
     ID: 2146777153
   e_CritJump:
-    valueGuid: 00000000000000000000000000000000
-    ID: 0
+    valueGuid: 102909bcbefaba4db1d30d38ea8ab16d
+    ID: 1453204217
   muteFootsteps: 0
 --- !u!114 &114307651348943018
 MonoBehaviour:
@@ -842,8 +842,8 @@ MonoBehaviour:
   m_ClingReqGForce: 50
   m_MaxEmbed: 0.02
   m_MinEmbed: 0.01
-  m_ZonJumpForcePerCharge: 5
-  m_ZonJumpForceBase: 40
+  m_EtherJumpForcePerCharge: 5
+  m_EtherJumpForceBase: 40
   m_VelPunchT: 60
   m_SlamT: 100
   m_CraterT: 200
@@ -865,8 +865,7 @@ MonoBehaviour:
   critJumpTimer: 0
   critJumpFrameWindow: 2
   critJumpFrameTimer: 0
-  critJumpHForce: 5
-  critJumpVForce: 0
+  critJumpBonusM: 1.33
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -884,7 +883,7 @@ MonoBehaviour:
   o_Rigidbody2D: {fileID: 0}
   o_DebugAngleDisplay: {fileID: 0}
   o_NavMaster: {fileID: 0}
-  p_ZonPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9, type: 2}
+  p_EtherPulse: {fileID: 0}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
     type: 2}
   p_DebugMarker: {fileID: 1064489989033018, guid: 0260b6c1c00fb094e85fbf1a33f7cb2d,
@@ -945,9 +944,9 @@ MonoBehaviour:
   m_Kneeling: 0
   m_WorldImpact: 0
   FighterState:
-    ZonLevel: 0
+    EtherLevel: 0
     DevMode: 0
-    CurHealth: 0
+    CurVigor: 0
     Dead: 0
     Stance: 0
     JumpKeyPress: 0
@@ -981,7 +980,7 @@ MonoBehaviour:
     RightKeyDoubleTapDelay: 0
     UpKeyDoubleTapDelay: 0
     DownKeyDoubleTapDelay: 0
-    ZonKeyPress: 0
+    EtherKeyPress: 0
     DisperseKeyPress: 0
     DevkeyTilde: 0
     DevKey1: 0
@@ -1017,6 +1016,7 @@ MonoBehaviour:
   v_ChargedColor: {r: 0, g: 0, b: 0, a: 0}
   v_TriggerAtkHit: 0
   v_TriggerRollOut: 0
+  v_TriggerFlinched: 0
   v_AirForgiveness: 0
   v_PunchStrengthSlowmoT: 0.5
   v_Gender: 0
@@ -1035,7 +1035,7 @@ MonoBehaviour:
   v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
-  g_MaxHealth: 100
+  g_MaxVigor: 100
   g_MinSlamDMG: 5
   g_MaxSlamDMG: 30
   g_MinCrtrDMG: 30
@@ -1101,7 +1101,7 @@ MonoBehaviour:
   PunchDelayVariance: 0.3
   PunchCooldown: 0
   d_Think: 0
-  d_Dumb: 1
+  d_DumbNav: 0
   d_aiDebug: 0
   n_NavState: 0
   n_TraversalTime: 0

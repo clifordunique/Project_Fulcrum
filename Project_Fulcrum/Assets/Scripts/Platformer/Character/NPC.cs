@@ -14,37 +14,38 @@ public class NPC : FighterChar {
 	// AI VARIABLES
 	//###########################################################################################################################################################################
 	[Header("NPC AI:")]
-	[SerializeField][ReadOnlyAttribute]private FighterChar enemyTarget; 	// Reference to the enemy combatant the NPC wants to fight.
-	[SerializeField][ReadOnlyAttribute]private float distanceToTarget; 		// Distance from enemy target.
-	[SerializeField][ReadOnlyAttribute]private float attackRange = 1f;		// Range at which the NPC will stop running and punch.
-	[SerializeField][ReadOnlyAttribute]private Vector2 goalLocation;		// Location that the NPC attempts to run at when in simple mode. Does not use pathfinding.
-	[SerializeField][ReadOnlyAttribute]private int DecisionState;			// Defines what action the NPC is currently trying to do.
-	[SerializeField]private float PunchDelay = 1;
-	[SerializeField]private float PunchDelayVariance = 0.3f;
-	[SerializeField]private float PunchCooldown;
-	[SerializeField]private bool d_Think; 									// When false, AI brain is shut down. Fighter will just stand there.
-	[SerializeField]private bool d_Dumb; 									// When true, the fighter will simply charge at enemies and not attempt to navigate to them.
+	[SerializeField][ReadOnlyAttribute]protected FighterChar enemyTarget; 	// Reference to the enemy combatant the NPC wants to fight.
+	[SerializeField][ReadOnlyAttribute]protected float distanceToTarget; 		// Distance from enemy target.
+	[SerializeField][ReadOnlyAttribute]protected Vector2 goalLocation;		// Location that the NPC attempts to run at when in simple mode. Does not use pathfinding.
+	[SerializeField][ReadOnlyAttribute]protected int DecisionState;			// Defines what action the NPC is currently trying to do.
+	[SerializeField]protected float attackRange = 1f;		// Range at which the NPC will stop running and punch.
+	[SerializeField]protected float PunchDelay = 1;
+	[SerializeField]protected float PunchDelayVariance = 0.3f;
+	[SerializeField][ReadOnlyAttribute]protected float PunchCooldown;
+	[SerializeField]protected bool d_Think; 									// When false, AI brain is shut down. Fighter will just stand there.
+	[SerializeField]protected bool d_DumbNav; 								// When true, the fighter will simply charge at enemies and not attempt to navigate to them.
+
 	[SerializeField]public bool d_aiDebug;									// When true, enables ai debug messaging.
 	[Space(10)]
 	[Header("NAV MESH:")]
-	[SerializeField][ReadOnlyAttribute] private int n_NavState = 0; // Used for nav movement state machine.
-	[SerializeField][ReadOnlyAttribute] private float n_TraversalTime; // Time the NPC has been attempting a traversal.
-	[SerializeField][ReadOnlyAttribute] private bool n_AtExit; // True when the NPC has a destination and is at the exit point leading to that destination.
-	[SerializeField][ReadOnlyAttribute] private bool n_HasJumped; // True once the NPC has expended its one jump to reach its destination.
-	[SerializeField][ReadOnlyAttribute] private float n_WindUpGoal = -1; // Goal location on the current surface to get enough runway to make the jump.
-	[SerializeField][ReadOnlyAttribute] private float n_TraversalTimer = 0; // Time the NPC has been attempting a traversal. Once it exceeds its maximum, the traversal is deemed a failure.
-	[SerializeField][ReadOnlyAttribute] private int n_PathProgress; // Indicates which connection of the current path the NPC is on. 
-	[SerializeField][ReadOnlyAttribute] private bool n_Traversing; // True when the NPC is moving between surfaces.
-	[SerializeField][ReadOnlyAttribute] private bool n_HasAPath; // True when the NPC has an active currentpath
+	[SerializeField][ReadOnlyAttribute] protected int n_NavState = 0; // Used for nav movement state machine.
+	[SerializeField][ReadOnlyAttribute] protected float n_TraversalTime; // Time the NPC has been attempting a traversal.
+	[SerializeField][ReadOnlyAttribute] protected bool n_AtExit; // True when the NPC has a destination and is at the exit point leading to that destination.
+	[SerializeField][ReadOnlyAttribute] protected bool n_HasJumped; // True once the NPC has expended its one jump to reach its destination.
+	[SerializeField][ReadOnlyAttribute] protected float n_WindUpGoal = -1; // Goal location on the current surface to get enough runway to make the jump.
+	[SerializeField][ReadOnlyAttribute] protected float n_TraversalTimer = 0; // Time the NPC has been attempting a traversal. Once it exceeds its maximum, the traversal is deemed a failure.
+	[SerializeField][ReadOnlyAttribute] protected int n_PathProgress; // Indicates which connection of the current path the NPC is on. 
+	[SerializeField][ReadOnlyAttribute] protected bool n_Traversing; // True when the NPC is moving between surfaces.
+	[SerializeField][ReadOnlyAttribute] protected bool n_HasAPath; // True when the NPC has an active currentpath.
 
 
-	[SerializeField][ReadOnlyAttribute] private LineRenderer o_NavDebugLine; // Line between NavDebugMarker and the NPC.
-	[SerializeField][ReadOnlyAttribute] private Transform o_NavDebugMarker; // Set to the position of the current goal point.
-	[SerializeField][ReadOnlyAttribute] private NavPath n_CurrentPath; // Currentpath is a chain of navconnections which lead to the NPC's desired final destination.
-	[SerializeField][ReadOnlyAttribute] private NavConnection n_ActiveConnection; // Connection the NPC is traversing.
-	[SerializeField][ReadOnlyAttribute] private NavSurface n_DestSurf;	// Surface the AI is trying to reach.
-	[SerializeField] private int n_DestSurfID = -1; // ID of the destination surface.
-	[SerializeField][ReadOnlyAttribute] private float n_SurfLineDist; // Distance from the current surface.
+	[SerializeField][ReadOnlyAttribute] protected LineRenderer o_NavDebugLine; // Line between NavDebugMarker and the NPC.
+	[SerializeField][ReadOnlyAttribute] protected Transform o_NavDebugMarker; // Set to the position of the current goal point.
+	[SerializeField][ReadOnlyAttribute] protected NavPath n_CurrentPath; // Currentpath is a chain of navconnections which lead to the NPC's desired final destination.
+	[SerializeField][ReadOnlyAttribute] protected NavConnection n_ActiveConnection; // Connection the NPC is traversing.
+	[SerializeField][ReadOnlyAttribute] protected NavSurface n_DestSurf;	// Surface the AI is trying to reach.
+	[SerializeField] protected int n_DestSurfID = -1; // ID of the destination surface.
+	[SerializeField][ReadOnlyAttribute] protected float n_SurfLineDist; // Distance from the current surface.
 
 	//########################################################################################################################################
 	// CORE FUNCTIONS
@@ -92,9 +93,52 @@ public class NPC : FighterChar {
 	//###################################################################################################################################
 	#region Custom Functions
 
-	protected void FixedUpdateAI()
+	protected virtual void FixedUpdateAI()
 	{
-		#region Knowledge Gathering
+		FixedUpdateAIThink(); // Gathers information and decides which mode to use
+
+		#region Decision Making
+		switch (DecisionState)
+		{
+		case 0: // Searching
+			{
+				if(d_aiDebug){print("searching...");}
+				o_NavDebugMarker.position=this.transform.position;
+				Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
+				o_NavDebugLine.SetPositions(positions);
+				
+				NavSearchSimple();
+
+				break;
+			}
+		case 1: // Pursuing
+			{
+				if(d_aiDebug){print("Chasing!");}
+				NavPursuitMelee();
+				break;
+			}
+
+		case 2: // Attacking
+			{
+				if(d_aiDebug){print("ATTACKING!");}
+				NavAttackMeleeSimple();
+				break;
+			}
+		case 3: // Traversing NavMesh
+			{
+				NavMeshMovement();
+				break;
+			}
+		default: // Idle
+			{
+				break;
+			}
+		}
+		#endregion
+	}
+
+	protected virtual void FixedUpdateAIThink() //FUAIT
+	{
 		if(PunchCooldown > 0)
 		{
 			PunchCooldown -= Time.fixedDeltaTime;
@@ -130,7 +174,7 @@ public class NPC : FighterChar {
 			DecisionState = -1; // Idle
 		}
 
-		if(DecisionState == 1&&!d_Dumb)
+		if(DecisionState == 1&&!d_DumbNav)
 		{
 			if((enemyTarget.n_CurrentSurfID != n_CurrentSurfID) && (enemyTarget.n_CurrentSurfID != n_DestSurfID) && (enemyTarget.n_CurrentSurfID!=-1))
 			{
@@ -152,99 +196,76 @@ public class NPC : FighterChar {
 			DecisionState = 3; // Mindlessly running to a destination which is only set manually.
 		}
 
-		#endregion
-
-		#region Decision Making
-		switch (DecisionState)
-		{
-		case 0: // Searching
-			{
-				o_NavDebugMarker.position=this.transform.position;
-				Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
-				o_NavDebugLine.SetPositions(positions);
-				if(d_aiDebug){print("searching...");}
-				int layerMask = 1 << 13;
-				Collider2D[] NearbyEntities = Physics2D.OverlapCircleAll(this.FighterState.FinalPos, 10f, layerMask, -1, 1);
-				foreach(Collider2D i in NearbyEntities)
-				{
-					if(this.GetComponent<Collider2D>() == i){continue;}
-					if(d_aiDebug){print("TESTING ENTITY:"+i);}
-					FighterChar fighter = i.GetComponent<FighterChar>();
-					if(enemyTarget==null&&fighter!=null)
-					{
-						if(fighter.isAlive()&&fighter.IsPlayer())
-						{
-							enemyTarget = fighter;
-						}
-					}
-				}
-				break;
-			}
-		case 1: // Pursuing
-			{
-				if(d_aiDebug){print("Chasing!");}
-
-				this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
-
-				o_NavDebugMarker.position=(Vector3)this.FighterState.MouseWorldPos;
-				Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
-				o_NavDebugLine.SetPositions(positions);
-
-				if(goalLocation.x < 0)
-				{
-					this.FighterState.LeftKeyHold = true;
-					this.FighterState.RightKeyHold = false;
-				}
-				else if(goalLocation.x > 0)
-				{
-					this.FighterState.RightKeyHold = true;
-					this.FighterState.LeftKeyHold = false;
-				}
-				else
-				{
-					this.FighterState.RightKeyHold = false;
-					this.FighterState.LeftKeyHold = false;
-				}
-				if( (this.GetSpeed() >= 30) && (PunchCooldown<=0) )
-				{
-					this.FighterState.LeftClickHold = true;
-					this.FighterState.LeftClickPress = true;
-				}
-				break;
-			}
-		case 2: // Attacking
-			{
-				if(d_aiDebug){print("ATTACKING!");}
-				o_NavDebugMarker.position=(Vector3)enemyTarget.GetPosition();
-				Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
-				o_NavDebugLine.SetPositions(positions);
-
-				this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
-
-				this.FighterState.RightKeyHold = false;
-				this.FighterState.LeftKeyHold = false;
-
-				if(PunchCooldown <= 0)
-				{
-					this.FighterState.LeftClickRelease = true;
-					PunchCooldown = PunchDelay + UnityEngine.Random.Range(-PunchDelayVariance,PunchDelayVariance);
-				}
-				break;
-			}
-		case 3: // Traversing NavMesh
-			{
-				NavMeshMovement();
-				break;
-			}
-		default: // Idle
-			{
-				break;
-			}
-		}
-		#endregion
 	}
 
-	private void NavMeshMovement()
+	protected void NavSearchSimple() //NSS
+	{
+		int layerMask = 1 << 13;
+		Collider2D[] NearbyEntities = Physics2D.OverlapCircleAll(this.FighterState.FinalPos, 10f, layerMask, -1, 1);
+		foreach(Collider2D i in NearbyEntities)
+		{
+			if(this.GetComponent<Collider2D>() == i){continue;}
+			if(d_aiDebug){print("TESTING ENTITY:"+i);}
+			FighterChar fighter = i.GetComponent<FighterChar>();
+			if(enemyTarget==null&&fighter!=null)
+			{
+				if(fighter.isAlive()&&fighter.IsPlayer())
+				{
+					enemyTarget = fighter;
+				}
+			}
+		}
+	}
+
+	protected void NavPursuitMelee() //NPM
+	{
+		this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
+
+		o_NavDebugMarker.position=(Vector3)this.FighterState.MouseWorldPos;
+		Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
+		o_NavDebugLine.SetPositions(positions);
+
+		if(goalLocation.x < 0)
+		{
+			this.FighterState.LeftKeyHold = true;
+			this.FighterState.RightKeyHold = false;
+		}
+		else if(goalLocation.x > 0)
+		{
+			this.FighterState.RightKeyHold = true;
+			this.FighterState.LeftKeyHold = false;
+		}
+		else
+		{
+			this.FighterState.RightKeyHold = false;
+			this.FighterState.LeftKeyHold = false;
+		}
+		if( (this.GetSpeed() >= 30) && (PunchCooldown<=0) )
+		{
+			this.FighterState.LeftClickHold = true;
+			this.FighterState.LeftClickPress = true;
+		}
+	}
+
+	protected void NavAttackMeleeSimple() // NAMS
+	{
+		o_NavDebugMarker.position=(Vector3)enemyTarget.GetPosition();
+		Vector3[] positions = {this.transform.position,o_NavDebugMarker.position};
+		o_NavDebugLine.SetPositions(positions);
+
+		this.FighterState.MouseWorldPos = enemyTarget.GetPosition();
+
+		this.FighterState.RightKeyHold = false;
+		this.FighterState.LeftKeyHold = false;
+
+		if(PunchCooldown <= 0)
+		{
+			this.FighterState.LeftClickRelease = true;
+			PunchCooldown = PunchDelay + UnityEngine.Random.Range(-PunchDelayVariance,PunchDelayVariance);
+		}
+	}
+
+	protected void NavMeshMovement()
 	{
 		#region Nav Knowledge Gathering
 
@@ -395,7 +416,7 @@ public class NPC : FighterChar {
 		#endregion
 	}
 
-	private void NavWallSlide(NavConnection navCon)
+	protected void NavWallSlide(NavConnection navCon)
 	{
 		if(d_aiDebug){print("["+d_TickCounter+"]:NavSlideToExitPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
@@ -482,7 +503,7 @@ public class NPC : FighterChar {
 		}
 	}
 
-	private void SetCurrentPath()
+	protected void SetCurrentPath()
 	{
 		NavPath[] pathChoices = o_NavMaster.GetPathList(n_CurrentSurf.id, n_DestSurf.id);	
 		if(pathChoices!=null)
@@ -509,7 +530,7 @@ public class NPC : FighterChar {
 		}
 	}
 
-	private void SetDestination()
+	protected void SetDestination()
 	{
 		n_ActiveConnection=null;
 		n_CurrentPath=null;
@@ -534,7 +555,7 @@ public class NPC : FighterChar {
 		}
 	}
 		
-	private void EndTraverse(bool successful)
+	protected void EndTraverse(bool successful)
 	{
 		if(successful)
 		{
@@ -571,7 +592,7 @@ public class NPC : FighterChar {
 		n_HasJumped = false;
 	}
 
-	private void NavGotoWindupPoint()
+	protected void NavGotoWindupPoint()
 	{
 		if(d_aiDebug){print("["+d_TickCounter+"]:NavGotoWindupPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
@@ -599,7 +620,7 @@ public class NPC : FighterChar {
 		}
 	}
 
-	private void NavGotoExitPoint(NavConnection navCon)
+	protected void NavGotoExitPoint(NavConnection navCon)
 	{
 		if(d_aiDebug){print("["+d_TickCounter+"]:NavGotoExitPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
@@ -761,7 +782,7 @@ public class NPC : FighterChar {
 		}
 	}
 
-	private void NavTraverse(NavConnection navCon)
+	protected void NavTraverse(NavConnection navCon)
 	{
 		if(navCon==null)
 		{

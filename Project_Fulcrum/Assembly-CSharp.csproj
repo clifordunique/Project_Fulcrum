@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\ActorFPSOverride.cs" />
      <Compile Include="Assets\AnimRandomizer.cs" />
+     <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\EnergySpiralUI.cs" />
      <Compile Include="Assets\ExplosionEffect.cs" />
      <Compile Include="Assets\GAF\Examples\Scripts\GAFClipsCreator.cs" />
@@ -73,6 +74,7 @@
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
      <Compile Include="Assets\ItemSlot.cs" />
      <Compile Include="Assets\MagicLogoEffect.cs" />
+     <Compile Include="Assets\NPC_Gunner.cs" />
      <Compile Include="Assets\NavBuilderRay.cs" />
      <Compile Include="Assets\ReleaseModeSwitch.cs" />
      <Compile Include="Assets\Scripts\AnimAudio.cs" />

@@ -1,4 +1,5 @@
 Event	ID	Name			Wwise Object Path	Notes
+	1287408361	Gunshot			\Default Work Unit\Gunshot	
 	1718773345	RiverLoopStart			\Default Work Unit\RiverLoopStart	
 	1796283983	Impact_Crater			\Default Work Unit\Impact_Crater	Crater and slam are kept seperate rather than using a switch because they are triggered from different blocks of code in my game. They are distinct effects rather than a linear increase. 
 	1892414574	Ambient_Start			\Default Work Unit\Ambient_Start	
@@ -29,4 +30,5 @@ In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	776139243	ambience_rural	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ambience_rural_347AFE5E.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Ambient\ambience_rural		4787660
 	862610851	ambience_city	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\ambience_city_F17FB28C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Ambient\ambience_city		7767312
 	931815851	riverloop01	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\riverloop01_AB9C8EB4.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Water\riverloop01		1212888
+	1057810319	Gunshot	C:\GameDev\Project_Fulcrum\Project_Fulcrum\Project_Fulcrum_WwiseProject\.cache\Mac\SFX\Gunshot1_1C9C67B2.wem		\Actor-Mixer Hierarchy\Default Work Unit\Master\Master_Effects\Environment\Gunshot\Gunshot		360440
 

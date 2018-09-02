@@ -47,7 +47,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected bool autoJump;				// When true, fighter jumps instantly on every surface.
 	[SerializeField] protected bool autoLeftClick;			// When true, fighter will behave as if left click is pressed.
 	[SerializeField] protected bool antiTunneling = true;	// When true, fighter will be pushed out of objects they are stuck in.
-	[SerializeField] protected bool gravityEnabled;			// Enables gravity.
+	[SerializeField] protected bool gravityEnabled = true;	// Enables gravity.
 	[SerializeField] protected bool showVelocityIndicator;	// Shows a line tracing the character's movement path.
 	[SerializeField] protected bool showContactIndicators;	// Shows fighter's surface-contact raycasts, which turn green when touching something.
 	[SerializeField] protected bool recoverFromFullEmbed=true;// When true and the fighter is fully stuck in something, teleports fighter to last good position.
@@ -223,7 +223,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] protected Transform o_DebugAngleDisplay;	// Reference to a transform of an angle display child transform of the player.
 	[SerializeField][ReadOnlyAttribute] protected NavMaster o_NavMaster;			// Global navmesh handler for the level.
 
-	[SerializeField] public GameObject p_EtherPulse;				// Reference to the Ether Pulse prefab, a pulsewave that emanates from the fighter when they disperse ether force.
+	[SerializeField] public GameObject p_EtherPulse;			// Reference to the Ether Pulse prefab, a pulsewave that emanates from the fighter when they disperse ether force.
 	[SerializeField] public GameObject p_AirPunchPrefab;		// Reference to the air punch attack prefab.
 	[SerializeField] public GameObject p_DebugMarker;			// Reference to a sprite prefab used to mark locations ingame during development.
 	[SerializeField] public GameObject p_ShockEffectPrefab;		// Reference to the shock visual effect prefab.
@@ -305,8 +305,8 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] protected FighterState FighterState;// Struct holding all networked fighter info.
 	protected int CtrlH; 													// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 	protected int CtrlV; 													// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-	protected bool facingDirection; 										// True means right, false means left.
-	protected int facingDirectionV; 										// 1 means up, -1 means down, and 0 means horizontal.
+	public bool facingDirection; 										// True means right, false means left.
+	public int facingDirectionV; 										// 1 means up, -1 means down, and 0 means horizontal.
 
 	#endregion
 	//############################################################################################################################################################################################################
@@ -336,7 +336,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][Range(0,1)]protected float v_PunchStrengthSlowmoT=0.5f;// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField] protected bool v_Gender;								// Used for character audio.
 	[SerializeField] protected bool v_TriggerGenderChange;					// Used for character audio.
-	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 75;	// The speed at which the player's sprite is fully rotated to match the ground angle. Used to improve animation realism by leaning against GForces and wind drag. 
+	[SerializeField][Range(0, 1000)]protected float v_SpeedForMaxLean = 100;// The speed at which the player's sprite is fully rotated to match the ground angle. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected float v_LeanAngle;			// The angle the sprite is rotated to simulate leaning. Used to improve animation realism by leaning against GForces and wind drag. 
 	[SerializeField][ReadOnlyAttribute]protected int v_PrimarySurface;		// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall. Lingers for a moment before going airborne, in order to hide microbumps in the terrain which would cause animation stuttering.
 	[SerializeField][ReadOnlyAttribute]protected int v_TruePrimarySurface;	// The main surface the player is running on. -1 is airborne, 0 is ground, 1 is ceiling, 2 is leftwall, 3 is rightwall. More accurate version of primary surface that does not linger for a moment upon leaving a surface. 
@@ -356,7 +356,7 @@ public class FighterChar : NetworkBehaviour
 	#region GAMEPLAY VARIABLES
 	[Header("Gameplay:")]
 	[SerializeField] protected bool g_VelocityPunching;					// True when fighter is channeling a velocity fuelled punch.
-	[SerializeField] protected float g_VelocityPunchChargeTime;			// Min duration the fighter can be stunned from slamming the ground.
+	[SerializeField] protected float g_VelocityPunchChargeTime = 0.5f;			// Min duration the fighter can be stunned from slamming the ground.
 
 	[SerializeField] protected int g_MaxVigor = 100;					// Max health.
 	[SerializeField] protected int g_MinSlamDMG = 5;					// Min damage a slam impact can deal.
@@ -372,7 +372,7 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField] public int g_IsInGrass;							// True when greater than 1. The number equates to how many grass tiles the fighter is touching.
 	[SerializeField] public bool g_FighterCollision = true;				// While true, this fighter will collide with other fighters
 	[SerializeField][ReadOnlyAttribute] public float g_FighterCollisionCD;					// Time after a fightercollision that further collision is disabled. This is the current time remaining.
-	[SerializeField] public float g_FighterCollisionCDLength = 1f;		// Time after a fightercollision that further collision is disabled. This is the duration to wait. Later this should be modified to only affect one fighter.
+	[SerializeField] public float g_FighterCollisionCDLength = 0.25f;		// Time after a fightercollision that further collision is disabled. This is the duration to wait. Later this should be modified to only affect one fighter.
 	[SerializeField][ReadOnlyAttribute]protected float g_CurStun = 0;	// How much longer the fighter is stunned after a fall. When this value is > 0  the fighter is stunned.
 	[SerializeField] protected float g_MaxClashDisparity = 500;			// The speed difference at which the damage a clash deals reaches its max. For example, if set to 500, one player must be going 500 Kph faster than their opponent to deal 100% damage. If value is lost, try starting with 500 to test.
 	[SerializeField] protected float g_MaxClashDamage = 300;			// Max damage dealt by any clash of fighters. (A clash is when two fighters collide in attack stance)
