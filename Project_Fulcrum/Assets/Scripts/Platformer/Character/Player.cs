@@ -166,8 +166,8 @@ public class Player : FighterChar
 				FighterState = inputBuffer.Dequeue();
 			}
 		}
-		d_TickCounter++;
-		d_TickCounter = (d_TickCounter > 60) ? 0 : d_TickCounter; // Rolls back to zero when hitting 60
+		d.tickCounter++;
+		d.tickCounter = (d.tickCounter > 60) ? 0 : d.tickCounter; // Rolls back to zero when hitting 60
 		FixedUpdateProcessInput();
 		UpdateCurrentNavSurf();
 		if(k_IsKinematic)
@@ -374,18 +374,18 @@ public class Player : FighterChar
 			CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 		}	
 
-		if(FighterState.LeftClickHold&&(FighterState.DevMode||d_ClickToKnockFighter))
+		if(FighterState.LeftClickHold&&(FighterState.DevMode||d.clickToKnockFighter))
 		{
 			FighterState.Vel += FighterState.PlayerMouseVector*20*Time.fixedDeltaTime;
 			//print("Knocking the fighter.");
 		}	
 
 		// Automatic input options.
-		if(autoJump)
+		if(d.autoJump)
 		{
 			FighterState.JumpKeyPress = true;
 		}
-		if(autoLeftClick)
+		if(d.autoLeftClick)
 		{
 			FighterState.LeftClickPress = true;
 			FighterState.LeftClickHold = true;
@@ -425,13 +425,13 @@ public class Player : FighterChar
 
 		if(FighterState.DevKey3)
 		{
-			if(autoPressLeft==false)
+			if(d.autoPressLeft==false)
 			{
-				autoPressLeft = true;
+				d.autoPressLeft = true;
 			}
 			else
 			{
-				autoPressLeft = false;
+				d.autoPressLeft = false;
 			}
 			FighterState.DevKey3 = false;
 		}
@@ -581,11 +581,11 @@ public class Player : FighterChar
 		if((FighterState.LeftKeyHold && FighterState.RightKeyHold) || !(FighterState.LeftKeyHold||FighterState.RightKeyHold))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoPressLeft||autoPressRight)|| IsDisabled())
+			if(!(d.autoPressLeft||d.autoPressRight)|| IsDisabled())
 			{
 				CtrlH = 0;
 			}
-			else if(autoPressLeft)
+			else if(d.autoPressLeft)
 			{
 				CtrlH = -1;
 			}
@@ -630,11 +630,11 @@ public class Player : FighterChar
 		if((FighterState.DownKeyHold && FighterState.UpKeyHold) || !(FighterState.UpKeyHold||FighterState.DownKeyHold))
 		{
 			//print("BOTH OR NEITHER");
-			if(!(autoPressDown||autoPressUp)||IsDisabled())
+			if(!(d.autoPressDown||d.autoPressUp)||IsDisabled())
 			{
 				CtrlV = 0;
 			}
-			else if(autoPressDown)
+			else if(d.autoPressDown)
 			{
 				CtrlV = -1;
 			}
@@ -833,7 +833,7 @@ public class Player : FighterChar
 			StrandJumpTypeA(strandJumpHorz, strandJumpVert);
 		}
 
-		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!m_Kneeling)
 		{
 			if(IsVelocityPunching())
 			{

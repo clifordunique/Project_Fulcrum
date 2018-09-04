@@ -124,6 +124,25 @@ public class NPC_Gunner : NPC
 
 	}
 
+	protected virtual void FixedUpdateAIAnimation()
+	{
+		if(PunchDelay<1)
+		{
+			// change animation
+		}
+		if(enemyTarget!=null)
+		{
+			if(enemyTarget.IsDevMode())
+			{
+				o_NavDebugMarker.gameObject.SetActive(false);
+			}
+			else
+			{
+				o_NavDebugMarker.gameObject.SetActive(false);
+			}
+		}
+	}
+
 	//###################################################################################################################################
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################

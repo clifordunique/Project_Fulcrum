@@ -23,9 +23,10 @@ public class NPC : FighterChar {
 	[SerializeField]protected float PunchDelayVariance = 0.3f;
 	[SerializeField][ReadOnlyAttribute]protected float PunchCooldown;
 	[SerializeField]protected bool d_Think; 									// When false, AI brain is shut down. Fighter will just stand there.
-	[SerializeField]protected bool d_DumbNav; 								// When true, the fighter will simply charge at enemies and not attempt to navigate to them.
+	[SerializeField]protected bool d_DumbNav; 									// When true, the fighter will simply charge at enemies and not attempt to navigate to them.
+	[SerializeField]protected float leashRange = -1; 							// Distance at which the AI will give up on chasing the enemy. Negative values disable leash range and allow the AI to chase forever.
 
-	[SerializeField]public bool d_aiDebug;									// When true, enables ai debug messaging.
+	[SerializeField]public bool d_aiDebug;										// When true, enables ai debug messaging.
 	[Space(10)]
 	[Header("NAV MESH:")]
 	[SerializeField][ReadOnlyAttribute] protected int n_NavState = 0; // Used for nav movement state machine.
@@ -68,8 +69,8 @@ public class NPC : FighterChar {
 
 	protected override void FixedUpdate()
 	{
-		d_TickCounter++;
-		d_TickCounter = (d_TickCounter > 60) ? 0 : d_TickCounter; // Rolls back to zero when hitting 60
+		d.tickCounter++;
+		d.tickCounter = (d.tickCounter > 60) ? 0 : d.tickCounter; // Rolls back to zero when hitting 60
 		UpdateCurrentNavSurf();
 		if(k_IsKinematic)
 		{
@@ -83,6 +84,7 @@ public class NPC : FighterChar {
 		}
 		FixedUpdateLogic();
 		FixedUpdateAnimation();
+		FixedUpdateAIAnimation();
 		FighterState.RightClickPress = false;
 		FighterState.LeftClickPress = false;
 		FighterState.EtherKeyPress = false;
@@ -92,6 +94,21 @@ public class NPC : FighterChar {
 	// CUSTOM FUNCTIONS
 	//###################################################################################################################################
 	#region Custom Functions
+
+	protected virtual void FixedUpdateAIAnimation()
+	{
+		if(enemyTarget!=null)
+		{
+			if(enemyTarget.IsDevMode())
+			{
+				o_NavDebugMarker.gameObject.SetActive(false);
+			}
+			else
+			{
+				o_NavDebugMarker.gameObject.SetActive(false);
+			}
+		}
+	}
 
 	protected virtual void FixedUpdateAI()
 	{
@@ -146,17 +163,25 @@ public class NPC : FighterChar {
 
 		if(enemyTarget)
 		{
+			goalLocation = enemyTarget.GetPosition()-this.GetPosition();
+			distanceToTarget = goalLocation.magnitude;
 			if(enemyTarget.isAlive())
 			{
-				goalLocation = enemyTarget.GetPosition()-this.GetPosition();
-				distanceToTarget = goalLocation.magnitude;
-				if(distanceToTarget <= attackRange)
+				if((leashRange>0) && (distanceToTarget>=leashRange)) // if leashRange is active (>0) and the enemy is outside of leash range, give up.
 				{
-					DecisionState = 2; // Attacking
+					enemyTarget = null;
+					DecisionState = 0; // Searching
 				}
-				else
+				else // If not outside of range, chase and attack.
 				{
-					DecisionState = 1; // Pursuing
+					if(distanceToTarget<=attackRange)
+					{
+						DecisionState = 2; // Attacking
+					}
+					else
+					{
+						DecisionState = 1; // Pursuing
+					}
 				}
 			}
 			else
@@ -209,7 +234,7 @@ public class NPC : FighterChar {
 			FighterChar fighter = i.GetComponent<FighterChar>();
 			if(enemyTarget==null&&fighter!=null)
 			{
-				if(fighter.isAlive()&&fighter.IsPlayer())
+				if(fighter.isAlive()&&fighter.IsEnemyOf(this.g_Team))
 				{
 					enemyTarget = fighter;
 				}
@@ -291,14 +316,14 @@ public class NPC : FighterChar {
 			{
 				if(!n_HasAPath) // If no path yet, get one.
 				{
-					if(d_aiDebug){print("["+d_TickCounter+"]:Set new currentpath.");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Set new currentpath.");}
 					SetCurrentPath();
 				}
 				if(n_HasAPath) // If NPC now has path, use it.
 				{
 					if(n_CurrentPath==null)
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]: n_CurrentPath==null");}
+						if(d_aiDebug){print("["+d.tickCounter+"]: n_CurrentPath==null");}
 					}
 					n_ActiveConnection = n_CurrentPath.edges[n_PathProgress];
 
@@ -418,7 +443,7 @@ public class NPC : FighterChar {
 
 	protected void NavWallSlide(NavConnection navCon)
 	{
-		if(d_aiDebug){print("["+d_TickCounter+"]:NavSlideToExitPoint");}
+		if(d_aiDebug){print("["+d.tickCounter+"]:NavSlideToExitPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
 		float distFromExitPoint = linPos-navCon.exitPosition;
 
@@ -429,8 +454,8 @@ public class NPC : FighterChar {
 			if(distFromExitPoint<0) // if past the destination, get a new path.
 			{
 				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), 0);
-				if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
-				if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, passed exitpoint and must turn around.");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+				if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, passed exitpoint and must turn around.");}
 			}
 			else
 			{
@@ -462,8 +487,8 @@ public class NPC : FighterChar {
 				if(distFromExitPoint<0) // if the destination is passed.
 				{
 					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), 0);
-					if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel positive, Vel Negative, passed exitpoint and must turn around.");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel positive, Vel Negative, passed exitpoint and must turn around.");}
 				}
 				if(navCon.orig.surfaceType==3) // Run up the right wall.
 				{
@@ -492,13 +517,13 @@ public class NPC : FighterChar {
 		{
 			if((FighterState.Vel.x>=navCon.minExitVel) && (FighterState.Vel.x<=navCon.maxExitVel))
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:EXITING.");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:EXITING.");}
 				n_AtExit = true;
 			}
 			else
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:min("+navCon.minExitVel+"), Vel("+FighterState.Vel.x+"), max("+navCon.maxExitVel+")");}
-				if(d_aiDebug){print("["+d_TickCounter+"]:Vel["+FighterState.Vel.x+"] <= minExitVel("+navCon.maxExitVel+")");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:min("+navCon.minExitVel+"), Vel("+FighterState.Vel.x+"), max("+navCon.maxExitVel+")");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:Vel["+FighterState.Vel.x+"] <= minExitVel("+navCon.maxExitVel+")");}
 			}
 		}
 	}
@@ -510,11 +535,11 @@ public class NPC : FighterChar {
 		{
 			if(pathChoices[0]==null)
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]: pathChoices[0]==null upon creation!");}
+				if(d_aiDebug){print("["+d.tickCounter+"]: pathChoices[0]==null upon creation!");}
 			}
 			else if(pathChoices[0].edges==null)
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]: pathChoices[0].edges==null upon creation!");}
+				if(d_aiDebug){print("["+d.tickCounter+"]: pathChoices[0].edges==null upon creation!");}
 			}
 			else
 			{
@@ -525,7 +550,7 @@ public class NPC : FighterChar {
 		}
 		else
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:No pathchoices were found!");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:No pathchoices were found!");}
 			n_DestSurfID = -1;
 		}
 	}
@@ -541,7 +566,7 @@ public class NPC : FighterChar {
 			if(n_DestSurfID != n_CurrentSurfID)
 			{
 				n_DestSurf = o_NavMaster.GetSurfaces()[n_DestSurfID];
-				if(d_aiDebug){print("["+d_TickCounter+"]:Destination set to NavSurface["+n_DestSurfID+"]");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:Destination set to NavSurface["+n_DestSurfID+"]");}
 			}
 			else
 			{
@@ -566,11 +591,11 @@ public class NPC : FighterChar {
 			n_CurrentPath.edges[n_PathProgress].averageTraversalTime = (n_CurrentPath.edges[n_PathProgress].averageTraversalTime+n_TraversalTimer)/2;
 
 
-			if(d_aiDebug){print("["+d_TickCounter+"]:Arrived at destination!!");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:Arrived at destination!!");}
 			n_PathProgress++;
 			if(n_PathProgress>=n_CurrentPath.edges.Length)
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:Path traversal completed :)");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:Path traversal completed :)");}
 				n_CurrentPath = null;
 				n_HasAPath = false;
 				n_DestSurfID = -1;
@@ -594,11 +619,11 @@ public class NPC : FighterChar {
 
 	protected void NavGotoWindupPoint()
 	{
-		if(d_aiDebug){print("["+d_TickCounter+"]:NavGotoWindupPoint");}
+		if(d_aiDebug){print("["+d.tickCounter+"]:NavGotoWindupPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
 		float distToWindupPoint = linPos-n_WindUpGoal;
 
-		if(d_aiDebug){print("["+d_TickCounter+"]: distToWindupPoint="+distToWindupPoint+"("+linPos+"-"+n_WindUpGoal+")");}
+		if(d_aiDebug){print("["+d.tickCounter+"]: distToWindupPoint="+distToWindupPoint+"("+linPos+"-"+n_WindUpGoal+")");}
 
 		if(Mathf.Abs(distToWindupPoint)>0.25f)
 		{
@@ -615,14 +640,14 @@ public class NPC : FighterChar {
 		}
 		else
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:At windup point!");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:At windup point!");}
 			n_WindUpGoal = -1;
 		}
 	}
 
 	protected void NavGotoExitPoint(NavConnection navCon)
 	{
-		if(d_aiDebug){print("["+d_TickCounter+"]:NavGotoExitPoint");}
+		if(d_aiDebug){print("["+d.tickCounter+"]:NavGotoExitPoint");}
 		float linPos = n_CurrentSurf.WorldToLinPos(this.m_GroundFoot.position);
 		float distFromExitPoint = linPos-navCon.exitPosition;
 
@@ -633,39 +658,39 @@ public class NPC : FighterChar {
 				if(distFromExitPoint<0) // if the destination is in the other direction, turn around.
 				{
 					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), 0);
-					if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
 					n_WindUpGoal = navCon.exitPosition+distanceNeeded-0.1f;
 					if(n_WindUpGoal<0)
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]:Windupgoal is past the edge of the surface! Cannot use this connection.");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:Windupgoal is past the edge of the surface! Cannot use this connection.");}
 					}
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, passed exitpoint and must turn around.");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, passed exitpoint and must turn around.");}
 				}
 				else if(FighterState.Vel.x<navCon.minExitVel+0.5f) // If going too fast.
 				{
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, speed too fast");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, speed too fast");}
 					// Do nothing! You will slow down over time. Replace this with a deceleration distance equation in the future for better results.
 				}
 				else if(FighterState.Vel.x<navCon.maxExitVel-0.5f) // If going fast enough, keep accelerating up to the max velocity anyway.
 				{
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, speed good");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, speed good");}
 					FighterState.LeftKeyHold = true;
 				}
 				else // If not going fast enough
 				{
 					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.maxExitVel), FighterState.Vel.x);
-					if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
 
 					if(distanceNeeded>distFromExitPoint) // If the player does not have enough room to reach speed, set a starting point further back.
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]:NOT ENOUGH RUNWAY!");}
-						if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, speed too slow, setting windup point");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:NOT ENOUGH RUNWAY!");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, speed too slow, setting windup point");}
 
 						n_WindUpGoal = navCon.exitPosition+distanceNeeded+0.1f;
 					}
 					else 								// If the player has enough room to reach speed, just run.
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Negative, speed too slow, accelerating");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Negative, speed too slow, accelerating");}
 						FighterState.LeftKeyHold = true;
 					}
 				}
@@ -673,18 +698,18 @@ public class NPC : FighterChar {
 			}
 			else// if(FighterState.Vel.x>0) // if x velocity is positive, away from the exit point, decelerate to turn around.
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Negative, Vel Positive, reversing direction");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Negative, Vel Positive, reversing direction");}
 				FighterState.LeftKeyHold = true;
 				float distanceForStop = NavGetWindupDist(0, FighterState.Vel.x);
-				if(d_aiDebug){print("["+d_TickCounter+"]:DistanceForStop: "+distanceForStop);}
+				if(d_aiDebug){print("["+d.tickCounter+"]:DistanceForStop: "+distanceForStop);}
 			}
 //			else
 //			{
 //				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.maxExitVel));
-//				print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distToExitPoint);
+//				print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distToExitPoint);
 //				if(distanceNeeded<distToExitPoint) // if more distance is needed in the negative direction
 //				{
-//					print("["+d_TickCounter+"]:Stationary: NOT ENOUGH RUNWAY!");
+//					print("["+d.tickCounter+"]:Stationary: NOT ENOUGH RUNWAY!");
 //					n_WindUpGoal = navCon.exitPosition+distanceNeeded+0.1f;
 //				}
 //				else
@@ -700,34 +725,34 @@ public class NPC : FighterChar {
 				if(distFromExitPoint>0) // if the destination is in the other direction, turn around.
 				{
 					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), 0);
-					if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
 					n_WindUpGoal = navCon.exitPosition+distanceNeeded-0.1f;
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Positive, passed exitpoint and must turn around.");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Positive, passed exitpoint and must turn around.");}
 				}
 				else if(FighterState.Vel.x>n_ActiveConnection.maxExitVel-0.5f) 		// If going too fast.
 				{
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Positive, speed too fast");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Positive, speed too fast");}
 					// Do nothing! You will slow down over time. Replace this with a deceleration distance equation in the future for better results.
 				}
 				else if(FighterState.Vel.x>n_ActiveConnection.minExitVel+0.5f) // If going fast enough, keep accelerating up to the max velocity anyway.
 				{
-					if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Positive, speed good");}
+					if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Positive, speed good");}
 					FighterState.RightKeyHold = true;
 				}
 				else 														// If not going fast enough.
 				{
 					float distanceNeeded = NavGetWindupDist((n_ActiveConnection.minExitVel), FighterState.Vel.x);
-					if(d_aiDebug){print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
+					if(d_aiDebug){print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distFromExitPoint);}
 
 					if(distanceNeeded<distFromExitPoint) // If the player does not have enough room to reach speed, set a starting point further back.
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]:NOT ENOUGH RUNWAY!");}
-						if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Positive, speed too slow, setting windup point");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:NOT ENOUGH RUNWAY!");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Positive, speed too slow, setting windup point");}
 						n_WindUpGoal = navCon.exitPosition+distanceNeeded-0.1f;
 					}
 					else
 					{
-						if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Positive, speed too slow, accelerating");}
+						if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Positive, speed too slow, accelerating");}
 						FighterState.RightKeyHold = true; // If the player has enough room to reach speed, just run.
 					}
 				}
@@ -736,16 +761,16 @@ public class NPC : FighterChar {
 			{
 				FighterState.RightKeyHold = true;
 				float distanceForStop = NavGetWindupDist(0, FighterState.Vel.x);
-				if(d_aiDebug){print("["+d_TickCounter+"]:ExitVel Positive, Vel Negative, reversing direction");}
-				if(d_aiDebug){print("["+d_TickCounter+"]:DistanceForStop: "+distanceForStop);}
+				if(d_aiDebug){print("["+d.tickCounter+"]:ExitVel Positive, Vel Negative, reversing direction");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:DistanceForStop: "+distanceForStop);}
 			}
 //			else // x velocity stationary
 //			{
 ////				float distanceNeeded = NavGetWindupDist((n_ActiveConnection.exitVel.x-n_ActiveConnection.exitVelRange));
-////				print("["+d_TickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distToExitPoint);
+////				print("["+d.tickCounter+"]:Distance needed: "+distanceNeeded+", distToExitPoint: "+distToExitPoint);
 ////				if(distanceNeeded>distToExitPoint)
 ////				{
-////					print("["+d_TickCounter+"]:Stationary: NOT ENOUGH RUNWAY!");
+////					print("["+d.tickCounter+"]:Stationary: NOT ENOUGH RUNWAY!");
 ////					n_WindUpGoal = navCon.exitPosition+distanceNeeded-0.1f;
 ////				}
 ////				else
@@ -771,13 +796,13 @@ public class NPC : FighterChar {
 		{
 			if((FighterState.Vel.x>=navCon.minExitVel) && (FighterState.Vel.x<=navCon.maxExitVel))
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:EXITING.");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:EXITING.");}
 				n_AtExit = true;
 			}
 			else
 			{
-				if(d_aiDebug){print("["+d_TickCounter+"]:min("+navCon.minExitVel+"), Vel("+FighterState.Vel.x+"), max("+navCon.maxExitVel+")");}
-				if(d_aiDebug){print("["+d_TickCounter+"]:Vel["+FighterState.Vel.x+"] <= minExitVel("+navCon.maxExitVel+")");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:min("+navCon.minExitVel+"), Vel("+FighterState.Vel.x+"), max("+navCon.maxExitVel+")");}
+				if(d_aiDebug){print("["+d.tickCounter+"]:Vel["+FighterState.Vel.x+"] <= minExitVel("+navCon.maxExitVel+")");}
 			}
 		}
 	}
@@ -786,12 +811,12 @@ public class NPC : FighterChar {
 	{
 		if(navCon==null)
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:navCon NULL! ARGH");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:navCon NULL! ARGH");}
 		}
 
 		if(n_DestSurf==null)
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:n_destsurf NULL!");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:n_destsurf NULL!");}
 		}
 
 		n_TraversalTimer += Time.fixedDeltaTime;
@@ -801,13 +826,13 @@ public class NPC : FighterChar {
 		}
 		if(n_TraversalTimer>navCon.traversaltimeout)
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:Traversal timeout! Recalculating...");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:Traversal timeout! Recalculating...");}
 			EndTraverse(false);
 			return;
 		}
 		if((n_CurrentSurfID!=-1) && (n_CurrentSurfID != n_DestSurfID)&&(n_HasJumped))
 		{
-			if(d_aiDebug){print("["+d_TickCounter+"]:Bad landing! Attempting again...");}
+			if(d_aiDebug){print("["+d.tickCounter+"]:Bad landing! Attempting again...");}
 			EndTraverse(false);
 			return;
 		}
@@ -896,9 +921,9 @@ public class NPC : FighterChar {
 		}
 
 		if(Mathf.Abs(reqVel)<m_TractionChangeT)
-		if(d_aiDebug){print("["+d_TickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel);}
+		if(d_aiDebug){print("["+d.tickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel);}
 		else
-		if(d_aiDebug){print("["+d_TickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel+". AboveThreshDist: "+linDistAboveThreshold+", BelowThreshDist="+fastDist);}
+		if(d_aiDebug){print("["+d.tickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel+". AboveThreshDist: "+linDistAboveThreshold+", BelowThreshDist="+fastDist);}
 
 		return distance;
 	}
@@ -908,7 +933,7 @@ public class NPC : FighterChar {
 		float distanceNeeded = NavGetWindupDist(reqVel);
 		float distanceNotNeeded = NavGetWindupDist(curVel);
 		float finalDistance = distanceNeeded-distanceNotNeeded;
-		if(d_aiDebug){print("["+d_TickCounter+"]:Total Windup Distance: "+distanceNeeded+"-"+distanceNotNeeded+"="+(distanceNeeded-distanceNotNeeded)+" to reach "+reqVel+" kph from "+curVel+" kph.");}
+		if(d_aiDebug){print("["+d.tickCounter+"]:Total Windup Distance: "+distanceNeeded+"-"+distanceNotNeeded+"="+(distanceNeeded-distanceNotNeeded)+" to reach "+reqVel+" kph from "+curVel+" kph.");}
 		return finalDistance;
 	}
 
@@ -952,11 +977,11 @@ public class NPC : FighterChar {
 		FighterState.PlayerMouseVector = FighterState.MouseWorldPos-Vec2(this.transform.position);
 		if(!(FighterState.LeftKeyHold||FighterState.RightKeyHold) || (FighterState.LeftKeyHold && FighterState.RightKeyHold))
 		{
-			if(!(autoPressLeft||autoPressRight))
+			if(!(d.autoPressLeft||d.autoPressRight))
 			{
 				CtrlH = 0;
 			}
-			else if(autoPressLeft)
+			else if(d.autoPressLeft)
 			{
 				CtrlH = -1;
 			}
@@ -1014,7 +1039,7 @@ public class NPC : FighterChar {
 			}
 		}
 
-		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d_ClickToKnockFighter)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!m_Kneeling)
 		{
 			if(IsVelocityPunching())
 			{
