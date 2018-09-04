@@ -28,39 +28,39 @@
 //	//###########################################################################################################################################################################
 //	#region MOVEMENT HANDLING
 //	[Header("Movement Tuning:")]
-//	[SerializeField] private float m_MinSpeed = 10f; 							// The instant starting speed while moving
-//	[SerializeField] private float m_MaxRunSpeed;								// The fastest the player can travel along land.
+//	[SerializeField] private float m.minSpeed = 10f; 							// The instant starting speed while moving
+//	[SerializeField] private float m.maxRunSpeed;								// The fastest the player can travel along land.
 //	[Range(0,2)][SerializeField] private float m_Acceleration = 1f;    			// Speed the player accelerates at
-//	[SerializeField] private float m_VJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
-//	[SerializeField] private float m_HJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
-//	[SerializeField] private float m_WallVJumpForce = 20f;                  	// Amount of vertical force added when the player walljumps.
-//	[SerializeField] private float m_WallHJumpForce = 10f;  					// Amount of horizontal force added when the player walljumps.
-//	[SerializeField] private float m_TractionChangeT = 20f;						// Threshold where movement changes from exponential to linear acceleration.  
-//	[SerializeField] private float m_WallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
-//	[Range(0,5)][SerializeField] private float m_LinearStopRate = 1f; 			// How fast the player decelerates when changing direction.
-//	[Range(0,5)][SerializeField] private float m_LinearSlideRate = 0.20f;		// How fast the player decelerates with no input.
-//	[Range(0,5)][SerializeField] private float m_LinearOverSpeedRate = 0.10f;	// How fast the player decelerates when running too fast.
-//	[Range(0,5)][SerializeField] private float m_LinearAccelRate = 0.35f;		// How fast the player accelerates with input.
-//	[Range(1,89)][SerializeField] private float m_ImpactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m_ImpactDecelMaxAngle.
-//	[Range(1,89)][SerializeField] private float m_ImpactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m_ImpactDecelMinAngle!!
-//	[Range(1,89)][SerializeField] private float m_TractionLossMinAngle = 45f; 	// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
-//	[Range(45,90)][SerializeField] private float m_TractionLossMaxAngle = 90f; 	// Changes the angle at which player loses ALL traction, and starts slipping back down. Default of 90 degrees.
-//	[Range(0,2)][SerializeField] private float m_SlippingAcceleration = 1f;  	// Changes how fast the player slides down overly steep slopes.
-//	[Range(0.5f,3)][SerializeField] private float m_SurfaceClingTime = 1f; 		// How long the player can cling to walls before gravity takes over.
-//	[Range(20,70)][SerializeField] private float m_ClingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
-//	[ReadOnlyAttribute]private Vector2 m_ExpiredNormal;							// This is the normal of the last surface clung to, to make sure the player doesn't repeatedly cling the same surface after clingtime expires.
-//	[ReadOnlyAttribute]private float m_TimeSpentHanging = 0f;					// Amount of time the player has been clung to a wall.
-//	[ReadOnlyAttribute]private float m_MaxTimeHanging = 0f;						// Max time the player can cling to current wall.
-//	[Range(0,0.5f)][SerializeField] private float m_MaxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m_MinEmbed!!!
-//	[Range(0.01f,0.4f)][SerializeField] private float m_MinEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
+//	[SerializeField] private float m.vJumpForce = 40f;                  		// Amount of vertical force added when the player jumps.
+//	[SerializeField] private float m.hJumpForce = 5f;  							// Amount of horizontal force added when the player jumps.
+//	[SerializeField] private float m.wallVJumpForce = 20f;                  	// Amount of vertical force added when the player walljumps.
+//	[SerializeField] private float m.wallHJumpForce = 10f;  					// Amount of horizontal force added when the player walljumps.
+//	[SerializeField] private float m.tractionChangeT = 20f;						// Threshold where movement changes from exponential to linear acceleration.  
+//	[SerializeField] private float m.wallTractionT = 20f;						// Speed threshold at which wallsliding traction changes.
+//	[Range(0,5)][SerializeField] private float m.linearStopRate = 1f; 			// How fast the player decelerates when changing direction.
+//	[Range(0,5)][SerializeField] private float m.linearSlideRate = 0.20f;		// How fast the player decelerates with no input.
+//	[Range(0,5)][SerializeField] private float m.linearOverSpeedRate = 0.10f;	// How fast the player decelerates when running too fast.
+//	[Range(0,5)][SerializeField] private float m.linearAccelRate = 0.35f;		// How fast the player accelerates with input.
+//	[Range(1,89)][SerializeField] private float m.impactDecelMinAngle = 20f;	// Any impacts at sharper angles than this will start to slow the player down. Reaches full halt at m.impactDecelMaxAngle.
+//	[Range(1,89)][SerializeField] private float m.impactDecelMaxAngle = 80f;	// Any impacts at sharper angles than this will result in a full halt. DO NOT SET THIS LOWER THAN m.impactDecelMinAngle!!
+//	[Range(1,89)][SerializeField] private float m.tractionLossMinAngle = 45f; 	// Changes the angle at which steeper angles start to linearly lose traction, and eventually starts slipping back down. Default of 45 degrees.
+//	[Range(45,90)][SerializeField] private float m.tractionLossMaxAngle = 90f; 	// Changes the angle at which player loses ALL traction, and starts slipping back down. Default of 90 degrees.
+//	[Range(0,2)][SerializeField] private float m.slippingAcceleration = 1f;  	// Changes how fast the player slides down overly steep slopes.
+//	[Range(0.5f,3)][SerializeField] private float m.surfaceClingTime = 1f; 		// How long the player can cling to walls before gravity takes over.
+//	[Range(20,70)][SerializeField] private float m.clingReqGForce = 50f;		// This is the amount of impact GForce required for a full-duration ceiling cling.
+//	[ReadOnlyAttribute]private Vector2 m.expiredNormal;							// This is the normal of the last surface clung to, to make sure the player doesn't repeatedly cling the same surface after clingtime expires.
+//	[ReadOnlyAttribute]private float m.timeSpentHanging = 0f;					// Amount of time the player has been clung to a wall.
+//	[ReadOnlyAttribute]private float m.maxTimeHanging = 0f;						// Max time the player can cling to current wall.
+//	[Range(0,0.5f)][SerializeField] private float m.maxEmbed = 0.02f;			// How deep into objects the character can be before actually colliding with them. MUST BE GREATER THAN m.minEmbed!!!
+//	[Range(0.01f,0.4f)][SerializeField] private float m.minEmbed = 0.01f; 		// How deep into objects the character will sit by default. A value of zero will cause physics errors because the player is not technically *touching* the surface.
 //	[Space(10)]
-//	[SerializeField] private float m_EtherJumpForcePerCharge = 10f; 				// How much force does each Ether Charge add to the jump power?
-//	[SerializeField] private float m_EtherJumpForceBase = 40f; 					// How much force does a no-power Ether jump have?
+//	[SerializeField] private float m.etherJumpForcePerCharge = 10f; 				// How much force does each Ether Charge add to the jump power?
+//	[SerializeField] private float m.etherJumpForceBase = 40f; 					// How much force does a no-power Ether jump have?
 //	[Space(10)]
-//	[SerializeField] private float m_SlamT = 100f; 								// Impact threshold for slam
-//	[SerializeField] private float m_CraterT = 200f; 							// Impact threshold for crater
-//	[SerializeField] private float m_GuardSlamT = 100f; 						// Guarded Impact threshold for slam
-//	[SerializeField] private float m_GuardCraterT = 200f; 						// Guarded Impact threshold for crater
+//	[SerializeField] private float m.slamT = 100f; 								// Impact threshold for slam
+//	[SerializeField] private float m.craterT = 200f; 							// Impact threshold for crater
+//	[SerializeField] private float m.guardSlamT = 100f; 						// Guarded Impact threshold for slam
+//	[SerializeField] private float m.guardCraterT = 200f; 						// Guarded Impact threshold for crater
 //
 //
 //	#endregion
@@ -79,9 +79,9 @@
 //	[SerializeField] public Spooler o_Spooler;				// Reference to the character's spooler object, which handles power charging gameplay.
 //	[SerializeField] public GameObject p_DebugMarker;		// Reference to a sprite prefab used to mark locations ingame during development.
 //	[SerializeField] public Healthbar o_Healthbar;			// Reference to the Healthbar UI element.
-//	private Animator o_Anim;           						// Reference to the character's animator component.
-//    private Rigidbody2D o_Rigidbody2D;						// Reference to the character's physics body.
-//	private SpriteRenderer o_SpriteRenderer;				// Reference to the character's sprite renderer.
+//	private Animator o.anim;           						// Reference to the character's animator component.
+//    private Rigidbody2D o.rigidbody2D;						// Reference to the character's physics body.
+//	private SpriteRenderer o.spriteRenderer;				// Reference to the character's sprite renderer.
 //	#endregion
 //	//############################################################################################################################################################################################################
 //	// PHYSICS&RAYCASTING
@@ -111,32 +111,32 @@
 //	private Vector2 m_RightNormal;			// Vector with slope of RightWall.
 //
 //	[Header("Player State:")]
-//	private Vector3 lastSafePosition;										//Used to revert player position if they get totally stuck in something.
-//	[SerializeField][ReadOnlyAttribute]private float m_IGF; 				//"Instant G-Force" of the impact this frame.
-//	[SerializeField][ReadOnlyAttribute]private float m_CGF; 				//"Continuous G-Force" over time.
-//	[SerializeField][ReadOnlyAttribute]private float m_RemainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
+//	private Vector3 phys.lastSafePosition;										//Used to revert player position if they get totally stuck in something.
+//	[SerializeField][ReadOnlyAttribute]private float phys.IGF; 				//"Instant G-Force" of the impact this frame.
+//	[SerializeField][ReadOnlyAttribute]private float phys.CGF; 				//"Continuous G-Force" over time.
+//	[SerializeField][ReadOnlyAttribute]private float phys.remainingVelM;		//Remaining velocity proportion after an impact. Range: 0-1.
 //	[SerializeField][ReadOnlyAttribute]public float m_Spd;					//Current speed.
 //	[SerializeField][ReadOnlyAttribute]public Vector2 m_Vel;				//Current (x,y) velocity.
-//	[SerializeField][ReadOnlyAttribute]private Vector2 m_RemainingMovement; //Remaining (x,y) movement after impact.
-//	[SerializeField][ReadOnlyAttribute]private bool groundContact;			//True when touching surface.
-//	[SerializeField][ReadOnlyAttribute]private bool ceilingContact;			//True when touching surface.
-//	[SerializeField][ReadOnlyAttribute]private bool leftSideContact;		//True when touching surface.
-//	[SerializeField][ReadOnlyAttribute]private bool rightSideContact;		
+//	[SerializeField][ReadOnlyAttribute]private Vector2 phys.remainingMovement; //Remaining (x,y) movement after impact.
+//	[SerializeField][ReadOnlyAttribute]private bool phys.groundContact;			//True when touching surface.
+//	[SerializeField][ReadOnlyAttribute]private bool phys.ceilingContact;			//True when touching surface.
+//	[SerializeField][ReadOnlyAttribute]private bool phys.leftSideContact;		//True when touching surface.
+//	[SerializeField][ReadOnlyAttribute]private bool phys.rightSideContact;		
 //	[Space(10)]
-//	[SerializeField][ReadOnlyAttribute]private bool m_Grounded;
-//	[SerializeField][ReadOnlyAttribute]private bool m_Ceilinged; 
-//	[SerializeField][ReadOnlyAttribute]private bool m_LeftWalled; 
-//	[SerializeField][ReadOnlyAttribute]private bool m_RightWalled;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.grounded;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.ceilinged; 
+//	[SerializeField][ReadOnlyAttribute]private bool phys.leftWalled; 
+//	[SerializeField][ReadOnlyAttribute]private bool phys.rightWalled;
 //	[Space(10)]
-//	[SerializeField][ReadOnlyAttribute]private bool m_GroundBlocked;
-//	[SerializeField][ReadOnlyAttribute]private bool m_CeilingBlocked; 
-//	[SerializeField][ReadOnlyAttribute]private bool m_LeftWallBlocked; 
-//	[SerializeField][ReadOnlyAttribute]private bool m_RightWallBlocked; 
+//	[SerializeField][ReadOnlyAttribute]private bool phys.groundBlocked;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.ceilingBlocked; 
+//	[SerializeField][ReadOnlyAttribute]private bool phys.leftWallBlocked; 
+//	[SerializeField][ReadOnlyAttribute]private bool phys.rightWallBlocked; 
 //	[Space(10)]
-//	[SerializeField][ReadOnlyAttribute]private bool m_SurfaceCling;
-//	[SerializeField][ReadOnlyAttribute]private bool m_Airborne;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.surfaceCling;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.airborne;
 //	[SerializeField][ReadOnlyAttribute]private bool m_Landing;
-//	[SerializeField][ReadOnlyAttribute]private bool m_Kneeling;
+//	[SerializeField][ReadOnlyAttribute]private bool phys.kneeling;
 //	[SerializeField][ReadOnlyAttribute]private bool m_Impact;
 //
 //	#endregion
@@ -154,7 +154,7 @@
 //	private bool i_EtherKey;
 //	private int CtrlH; 					// Tracks horizontal keys pressed. Values are -1 (left), 0 (none), or 1 (right). 
 //	private int CtrlV; 					// Tracks vertical keys pressed. Values are -1 (down), 0 (none), or 1 (up).
-//	private bool facingDirection; 		// True means right, false means left.
+//	private bool v.facingDirection; 		// True means right, false means left.
 //	private Vector2 i_MouseWorldPos;	// Mouse position in world coordinates.
 //	private Vector2 i_PlayerMouseVector;// Vector pointing from the player to their mouse position.
 //	#endregion
@@ -186,7 +186,7 @@
 //	#region VISUALS&SOUND
 //	[Header("Visuals And Sound:")]
 //	[SerializeField]private int v_EtherLevel;							//	Level of player Ether Power.
-//	[SerializeField][Range(0,10)]private float v_ReversingSlideT; 	// How fast the player must be going to go into a slide posture when changing directions.
+//	[SerializeField][Range(0,10)]private float v.reversingSlideT; 	// How fast the player must be going to go into a slide posture when changing directions.
 //	[SerializeField]private float v_CameraZoom; 					// Amount of camera zoom.
 //	[SerializeField][Range(0,3)]private int v_PlayerGlow;			// Amount of player "energy glow" effect.
 //	#endregion 
@@ -244,14 +244,14 @@
 //		m_RightSideLength = m_RightSideOffset.magnitude;
 //
 //
-//		o_Anim = o_CharSprite.GetComponent<Animator>();
-//        o_Rigidbody2D = GetComponent<Rigidbody2D>();
-//		o_SpriteRenderer = o_CharSprite.GetComponent<SpriteRenderer>();
+//		o.anim = o_CharSprite.GetComponent<Animator>();
+//        o.rigidbody2D = GetComponent<Rigidbody2D>();
+//		o.spriteRenderer = o_CharSprite.GetComponent<SpriteRenderer>();
 //
-//		lastSafePosition = new Vector2(0,0);
-//		m_RemainingMovement = new Vector2(0,0);
-//		m_RemainingVelM = 1f;
-//		//print(m_RemainingMovement);
+//		phys.lastSafePosition = new Vector2(0,0);
+//		phys.remainingMovement = new Vector2(0,0);
+//		phys.remainingVelM = 1f;
+//		//print(phys.remainingMovement);
 //
 //		o_CamShaker = o_MainCamera.GetComponent<CameraShaker>();
 //
@@ -270,17 +270,17 @@
 //
 //    private void FixedUpdate()
 //	{
-//		Vector2 finalPos = new Vector2(this.transform.position.x+m_RemainingMovement.x, this.transform.position.y+m_RemainingMovement.y);
+//		Vector2 finalPos = new Vector2(this.transform.position.x+phys.remainingMovement.x, this.transform.position.y+phys.remainingMovement.y);
 //		this.transform.position = finalPos;
 //
 //		UpdateContactNormals(true);
 //
-//		Vector2 initialVel = m_Vel;
+//		Vector2 phys.initialVel = m_Vel;
 //		i_PlayerMouseVector =  i_MouseWorldPos-Vec2(this.transform.position);
 //
 //		m_Impact = false;
 //		m_Landing = false;
-//		m_Kneeling = false;
+//		phys.kneeling = false;
 //		g_EtherStance = -1;
 //
 //		//print("Initial Pos: " + startingPos);
@@ -317,17 +317,17 @@
 //			
 //		if (CtrlH < 0) 
 //		{
-//			facingDirection = false; //true means right (the direction), false means left.
+//			v.facingDirection = false; //true means right (the direction), false means left.
 //		} 
 //		else if (CtrlH > 0)
 //		{
-//			facingDirection = true; //true means right (the direction), false means left.
+//			v.facingDirection = true; //true means right (the direction), false means left.
 //		}
 //
 //		//print("CTRLH=" + CtrlH);
-//		if(i_DownKey&&m_Grounded)
+//		if(i_DownKey&&phys.grounded)
 //		{
-//			m_Kneeling = true;
+//			phys.kneeling = true;
 //			CtrlH = 0;
 //			g_EtherStance = 0; // Kneeling stance.
 //		}
@@ -338,7 +338,7 @@
 //
 //		if(i_JumpKey)
 //		{
-//			if(m_Kneeling)
+//			if(phys.kneeling)
 //			{
 //				EtherJump(i_PlayerMouseVector.normalized);
 //			}
@@ -376,22 +376,22 @@
 //
 //		#endregion
 //
-//		if(m_Grounded)
+//		if(phys.grounded)
 //		{//Locomotion!
 //			Traction(CtrlH);
 //		}
-//		else if(m_RightWalled)
+//		else if(phys.rightWalled)
 //		{//Wallsliding!
 //			WallTraction(CtrlH,m_RightNormal);
 //		}
-//		else if(m_LeftWalled)
+//		else if(phys.leftWalled)
 //		{
 //			WallTraction(CtrlH,m_LeftNormal);
 //		}
 //		else if(!noGravity)
 //		{//Gravity!
 //			m_Vel = new Vector2 (m_Vel.x, m_Vel.y - 1);
-//			m_Ceilinged = false;
+//			phys.ceilinged = false;
 //		}
 //		
 //			
@@ -400,72 +400,72 @@
 //		//print("Velocity before Coll ision: "+m_Vel);
 //		//print("Position before Coll ision: "+this.transform.position);
 //
-//		m_RemainingVelM = 1f;
-//		m_RemainingMovement = m_Vel*Time.fixedDeltaTime;
+//		phys.remainingVelM = 1f;
+//		phys.remainingMovement = m_Vel*Time.fixedDeltaTime;
 //		Vector2 startingPos = this.transform.position;
 //
-//		//print("m_RemainingMovement before collision: "+m_RemainingMovement);
+//		//print("phys.remainingMovement before collision: "+phys.remainingMovement);
 //
 //		Collision();
 //	
 //		//print("Per frame velocity at end of Collizion() "+m_Vel*Time.fixedDeltaTime);
 //		//print("Velocity at end of Collizion() "+m_Vel);
 //		//print("Per frame velocity at end of updatecontactnormals "+m_Vel*Time.fixedDeltaTime);
-//		//print("m_RemainingMovement after collision: "+m_RemainingMovement);
+//		//print("phys.remainingMovement after collision: "+phys.remainingMovement);
 //
 //		Vector2 distanceTravelled = new Vector2(this.transform.position.x-startingPos.x,this.transform.position.y-startingPos.y);
 //		//print("distanceTravelled: "+distanceTravelled);
-//		//print("m_RemainingMovement: "+m_RemainingMovement);
-//		//print("m_RemainingMovement after removing distancetravelled: "+m_RemainingMovement);
+//		//print("phys.remainingMovement: "+phys.remainingMovement);
+//		//print("phys.remainingMovement after removing distancetravelled: "+phys.remainingMovement);
 //
-//		if(initialVel.magnitude>0)
+//		if(phys.initialVel.magnitude>0)
 //		{
-//			m_RemainingVelM = (((initialVel.magnitude*Time.fixedDeltaTime)-distanceTravelled.magnitude)/(initialVel.magnitude*Time.fixedDeltaTime));
+//			phys.remainingVelM = (((phys.initialVel.magnitude*Time.fixedDeltaTime)-distanceTravelled.magnitude)/(phys.initialVel.magnitude*Time.fixedDeltaTime));
 //		}
 //		else
 //		{
-//			m_RemainingVelM = 1f;
+//			phys.remainingVelM = 1f;
 //		}
 //
-//		//print("m_RemainingVelM: "+m_RemainingVelM);
-//		//print("movement after distance travelled: "+m_RemainingMovement);
+//		//print("phys.remainingVelM: "+phys.remainingVelM);
+//		//print("movement after distance travelled: "+phys.remainingMovement);
 //		//print("Speed this frame: "+m_Vel.magnitude);
 //
-//		m_RemainingMovement = m_Vel*m_RemainingVelM*Time.fixedDeltaTime;
+//		phys.remainingMovement = m_Vel*phys.remainingVelM*Time.fixedDeltaTime;
 //
-//		//print("Corrected remaining movement: "+m_RemainingMovement);
+//		//print("Corrected remaining movement: "+phys.remainingMovement);
 //
 //		m_Spd = m_Vel.magnitude;
 //
-//		Vector2 deltaV = m_Vel-initialVel;
-//		m_IGF = deltaV.magnitude;
-//		m_CGF += m_IGF;
-//		if(m_CGF>=1){m_CGF --;}
-//		if(m_CGF>=10){m_CGF -= (m_CGF/10);}
+//		Vector2 deltaV = m_Vel-phys.initialVel;
+//		phys.IGF = deltaV.magnitude;
+//		phys.CGF += phys.IGF;
+//		if(phys.CGF>=1){phys.CGF --;}
+//		if(phys.CGF>=10){phys.CGF -= (phys.CGF/10);}
 //
-//		//if(m_CGF>=200)
+//		//if(phys.CGF>=200)
 //		//{
-//		//	//m_CGF = 0f;
-//		//	print("m_CGF over limit!!");	
+//		//	//phys.CGF = 0f;
+//		//	print("phys.CGF over limit!!");	
 //		//}
 //
 //		if(m_Impact)
 //		{
-//			if(m_IGF >= m_CraterT)
+//			if(phys.IGF >= m.craterT)
 //			{
 //				Crater();
 //			}
-//			else if(m_IGF >= m_SlamT)
+//			else if(phys.IGF >= m.slamT)
 //			{
 //				Slam();
 //			}
 //			else
 //			{
-//				o_CharAudio.LandingSound(m_IGF);
+//				o_CharAudio.LandingSound(phys.IGF);
 //			}
 //		}
 //		//print("Per frame velocity at end of physics frame: "+m_Vel*Time.fixedDeltaTime);
-//		//print("m_RemainingMovement at end of physics frame: "+m_RemainingMovement);
+//		//print("phys.remainingMovement at end of physics frame: "+phys.remainingMovement);
 //		//print("Pos at end of physics frame: "+this.transform.position);
 //		//print("##############################################################################################");
 //		//print("FinaL Pos: " + this.transform.position);
@@ -475,7 +475,7 @@
 ////		#region audio
 ////		if(m_Landing)
 ////		{
-////			o_CharAudio.LandingSound(m_IGF); // Makes a landing sound when the player hits ground, using the impact force to determine loudness.
+////			o_CharAudio.LandingSound(phys.IGF); // Makes a landing sound when the player hits ground, using the impact force to determine loudness.
 ////		}
 ////		#endregion
 //
@@ -499,38 +499,38 @@
 //			o_TempLight.intensity = 2;
 //		}
 //
-//		o_Anim.SetBool("Walled", false);
+//		o.anim.SetBool("Walled", false);
 //
-//		if(m_LeftWalled&&!m_Grounded)
+//		if(phys.leftWalled&&!phys.grounded)
 //		{
-//			o_Anim.SetBool("Walled", true);
-//			facingDirection = false;
+//			o.anim.SetBool("Walled", true);
+//			v.facingDirection = false;
 //			o_CharSprite.transform.localPosition = new Vector3(0.13f, 0f,0f);
 //		}
 //
-//		if(m_RightWalled&&!m_Grounded)
+//		if(phys.rightWalled&&!phys.grounded)
 //		{
-//			o_Anim.SetBool("Walled", true);
-//			facingDirection = true;
+//			o.anim.SetBool("Walled", true);
+//			v.facingDirection = true;
 //			o_CharSprite.transform.localPosition = new Vector3(-0.13f, 0f,0f);
 //		}
 //
-//		if(m_Grounded || !(m_RightWalled||m_LeftWalled))
+//		if(phys.grounded || !(phys.rightWalled||phys.leftWalled))
 //		{
 //			o_CharSprite.transform.localPosition = new Vector3(0f,0f,0f);
 //		}
 //
-//		if (!facingDirection) //If facing left
+//		if (!v.facingDirection) //If facing left
 //		{
 //			//print("FACING LEFT!   "+h)
 //			o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
-//			if(m_Vel.x > 0 && m_Spd >= v_ReversingSlideT)
+//			if(m_Vel.x > 0 && m_Spd >= v.reversingSlideT)
 //			{
-//				o_Anim.SetBool("Crouch", true);
+//				o.anim.SetBool("Crouch", true);
 //			}
 //			else
 //			{
-//				o_Anim.SetBool("Crouch", false);
+//				o.anim.SetBool("Crouch", false);
 //			}
 //		} 
 //		else //If facing right
@@ -538,28 +538,28 @@
 //			//print("FACING RIGHT!   "+h);
 //
 //			o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
-//			if(m_Vel.x < 0 && m_Spd >= v_ReversingSlideT)
+//			if(m_Vel.x < 0 && m_Spd >= v.reversingSlideT)
 //			{
-//				o_Anim.SetBool("Crouch", true);
+//				o.anim.SetBool("Crouch", true);
 //			}
 //			else
 //			{
-//				o_Anim.SetBool("Crouch", false);
+//				o.anim.SetBool("Crouch", false);
 //			}
 //		}
 //			
-//		if(m_Kneeling)
+//		if(phys.kneeling)
 //		{
-//			o_Anim.SetBool("Crouch", true);
+//			o.anim.SetBool("Crouch", true);
 //
 //			if((i_MouseWorldPos.x-this.transform.position.x)<0)
 //			{
-//				facingDirection = false;
+//				v.facingDirection = false;
 //				o_CharSprite.transform.localScale = new Vector3 (-1f, 1f, 1f);
 //			}
 //			else
 //			{
-//				facingDirection = true;
+//				v.facingDirection = true;
 //				o_CharSprite.transform.localScale = new Vector3 (1f, 1f, 1f);
 //			}
 //		}
@@ -567,22 +567,22 @@
 //		Vector3[] debugLineVector = new Vector3[3];
 //
 //		debugLineVector[0].x = -distanceTravelled.x;
-//		debugLineVector[0].y = -(distanceTravelled.y+(m_GroundFootLength-m_MaxEmbed));
+//		debugLineVector[0].y = -(distanceTravelled.y+(m_GroundFootLength-m.maxEmbed));
 //		debugLineVector[0].z = 0f;
 //
 //		debugLineVector[1].x = 0f;
-//		debugLineVector[1].y = -(m_GroundFootLength-m_MaxEmbed);
+//		debugLineVector[1].y = -(m_GroundFootLength-m.maxEmbed);
 //		debugLineVector[1].z = 0f;
 //
-//		debugLineVector[2].x = m_RemainingMovement.x;
-//		debugLineVector[2].y = (m_RemainingMovement.y)-(m_GroundFootLength-m_MaxEmbed);
+//		debugLineVector[2].x = phys.remainingMovement.x;
+//		debugLineVector[2].y = (phys.remainingMovement.y)-(m_GroundFootLength-m.maxEmbed);
 //		debugLineVector[2].z = 0f;
 //
 //		m_DebugLine.SetPositions(debugLineVector);
 //
-//		o_Anim.SetFloat("Speed", m_Vel.magnitude);
+//		o.anim.SetFloat("Speed", m_Vel.magnitude);
 //
-//		if(m_Vel.magnitude >= m_TractionChangeT )
+//		if(m_Vel.magnitude >= m.tractionChangeT )
 //		{
 //			m_DebugLine.endColor = Color.white;
 //			m_DebugLine.startColor = Color.white;
@@ -600,15 +600,15 @@
 //			multiplier = ((m_Vel.magnitude - 20) / 20)+1;
 //		}
 //
-//		o_Anim.SetFloat("Multiplier", multiplier);
+//		o.anim.SetFloat("Multiplier", multiplier);
 //
-//		if (!m_Grounded&&!m_LeftWalled&!m_RightWalled) 
+//		if (!phys.grounded&&!phys.leftWalled&!phys.rightWalled) 
 //		{
-//			o_Anim.SetBool("Ground", false);
+//			o.anim.SetBool("Ground", false);
 //		}
 //		else
 //		{
-//			o_Anim.SetBool("Ground", true);
+//			o.anim.SetBool("Ground", true);
 //		}
 //		#endregion
 //
@@ -648,7 +648,7 @@
 //			o_Speedometer.text = ""+Math.Round(m_Vel.magnitude,0);
 //		}
 //
-//		if (!i_JumpKey && (m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+//		if (!i_JumpKey && (phys.grounded||phys.ceilinged||phys.leftWalled||phys.rightWalled))
 //		{
 //			// Read the jump input in Update so button presses aren't missed.
 //
@@ -677,7 +677,7 @@
 //
 //	private void Crater() // Triggered when character impacts anything REALLY hard.
 //	{
-//		float Multiplier = (m_IGF+m_CraterT)/(2*m_CraterT);
+//		float Multiplier = (phys.IGF+m.craterT)/(2*m.craterT);
 //		//print(Multiplier);
 //		if(Multiplier >=2){Multiplier = 2;}
 //		float Magnitude = Multiplier;
@@ -688,9 +688,9 @@
 //		Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
 //		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 //
-//		o_CharAudio.CraterSound(m_IGF, m_CraterT, 1000f);
+//		o_CharAudio.CraterSound(phys.IGF, m.craterT, 1000f);
 //
-//		float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*((m_IGF-m_CraterT)/(1000f-m_CraterT))); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
+//		float damagedealt = g_MinCrtrDMG+((g_MaxCrtrDMG-g_MinCrtrDMG)*((phys.IGF-m.craterT)/(1000f-m.craterT))); // Damage dealt scales linearly from minDMG to maxDMG, reaching max damage at a 1000 kph impact.
 //		g_CurHealth -= (int)damagedealt;
 //		if(g_CurHealth < 0){g_CurHealth = 100;}
 //		o_Healthbar.SetCurHealth(g_CurHealth);
@@ -699,7 +699,7 @@
 //
 //	private void Slam() // Triggered when character impacts anything too hard.
 //	{
-//		float Multiplier = (m_IGF+m_SlamT)/(2*m_SlamT);
+//		float Multiplier = (phys.IGF+m.slamT)/(2*m.slamT);
 //		//print(Multiplier);
 //		if(Multiplier >=2){Multiplier = 2;}
 //		float Magnitude = 0.5f;
@@ -712,9 +712,9 @@
 //		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
 //		print("SLAMMIN!");
 //
-//		o_CharAudio.SlamSound(m_IGF, m_SlamT, m_CraterT);
+//		o_CharAudio.SlamSound(phys.IGF, m.slamT, m.craterT);
 //
-//		float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*((m_IGF-m_SlamT)/(m_CraterT-m_SlamT))); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
+//		float damagedealt = g_MinSlamDMG+((g_MaxSlamDMG-g_MinSlamDMG)*((phys.IGF-m.slamT)/(m.craterT-m.slamT))); // Damage dealt scales linearly from minDMG to maxDMG, as you go from the min Slam Threshold to min Crater Threshold (impact speed)
 //		g_CurHealth -= (int)damagedealt;
 //		if(g_CurHealth < 0){g_CurHealth = 100;}
 //		o_Healthbar.SetCurHealth(g_CurHealth);
@@ -723,7 +723,7 @@
 //	private void Collision()	// Handles all collisions with terrain geometry.
 //	{
 //
-//		//print ("Collision->m_Grounded=" + m_Grounded);
+//		//print ("Collision->phys.grounded=" + phys.grounded);
 //		float crntSpeed = m_Vel.magnitude*Time.fixedDeltaTime; //Current speed.
 //		//print("DC Executing");
 //		errorDetectingRecursionCount++;
@@ -736,27 +736,27 @@
 //			
 //		if(m_Vel.x > 0.001f)
 //		{
-//			m_LeftWallBlocked = false;
+//			phys.leftWallBlocked = false;
 //		}
 //
 //		if(m_Vel.x < -0.001f)
 //		{
-//			m_RightWallBlocked = false;
+//			phys.rightWallBlocked = false;
 //		}
 //	
 //		#region collision raytesting
 //
 //		Vector2 adjustedBot = m_GroundFoot.position; // AdjustedBot marks the end of the ground raycast, but 0.02 shorter.
-//		adjustedBot.y += m_MaxEmbed;
+//		adjustedBot.y += m.maxEmbed;
 //
 //		Vector2 adjustedTop = m_CeilingFoot.position; // AdjustedTop marks the end of the ceiling raycast, but 0.02 shorter.
-//		adjustedTop.y -= m_MaxEmbed;
+//		adjustedTop.y -= m.maxEmbed;
 //
 //		Vector2 adjustedLeft = m_LeftSide.position; // AdjustedLeft marks the end of the left wall raycast, but 0.02 shorter.
-//		adjustedLeft.x += m_MaxEmbed;
+//		adjustedLeft.x += m.maxEmbed;
 //
 //		Vector2 adjustedRight = m_RightSide.position; // AdjustedRight marks the end of the right wall raycast, but 0.02 shorter.
-//		adjustedRight.x -= m_MaxEmbed;
+//		adjustedRight.x -= m.maxEmbed;
 //
 //		//RaycastHit2D groundCheck = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, mask);
 //		RaycastHit2D[] predictedLoc = new RaycastHit2D[4];
@@ -1002,16 +1002,16 @@
 //
 //		float slopeMultiplier = 0;
 //	
-//		if(steepnessAngle > m_TractionLossMinAngle)
+//		if(steepnessAngle > m.tractionLossMinAngle)
 //		{
-//			if(steepnessAngle >= m_TractionLossMaxAngle)
+//			if(steepnessAngle >= m.tractionLossMaxAngle)
 //			{
 //				//print("MAXED OUT!");
 //				slopeMultiplier = 1;
 //			}
 //			else
 //			{
-//				slopeMultiplier = ((steepnessAngle-m_TractionLossMinAngle)/(m_TractionLossMaxAngle-m_TractionLossMinAngle));
+//				slopeMultiplier = ((steepnessAngle-m.tractionLossMinAngle)/(m.tractionLossMaxAngle-m.tractionLossMinAngle));
 //			}
 //
 //			//print("slopeMultiplier: "+ slopeMultiplier);
@@ -1019,7 +1019,7 @@
 //		}
 //
 //
-//		if(((m_LeftWallBlocked)&&(horizontalInput < 0)) || ((m_RightWallBlocked)&&(horizontalInput > 0)))
+//		if(((phys.leftWallBlocked)&&(horizontalInput < 0)) || ((phys.rightWallBlocked)&&(horizontalInput > 0)))
 //		{// If running at an obstruction you're up against.
 //			//print("Running against a wall.");
 //			horizontalInput = 0;
@@ -1038,25 +1038,25 @@
 //			}
 //			else
 //			{
-//				m_Vel = ChangeSpeedLinear (m_Vel, -m_LinearSlideRate);
+//				m_Vel = ChangeSpeedLinear (m_Vel, -m.linearSlideRate);
 //			}
 //		}
 //		else if((horizontalInput > 0 && m_Vel.x >= 0) || (horizontalInput < 0 && m_Vel.x <= 0))
 //		{//if pressing same button as move direction, move to MAXSPEED.
 //			//print("Moving with keypress");
-//			if(rawSpeed < m_MaxRunSpeed)
+//			if(rawSpeed < m.maxRunSpeed)
 //			{
 //				//print("Rawspeed("+rawSpeed+") less than max");
-//				if(rawSpeed > m_TractionChangeT)
+//				if(rawSpeed > m.tractionChangeT)
 //				{
 //					//print("LinAccel-> " + rawSpeed);
 //					if(m_Vel.y > 0)
 //					{ 	// If climbing, recieve uphill movement penalty.
-//						m_Vel = ChangeSpeedLinear(m_Vel, m_LinearAccelRate*(1-slopeMultiplier));
+//						m_Vel = ChangeSpeedLinear(m_Vel, m.linearAccelRate*(1-slopeMultiplier));
 //					}
 //					else
 //					{
-//						m_Vel = ChangeSpeedLinear(m_Vel, m_LinearAccelRate);
+//						m_Vel = ChangeSpeedLinear(m_Vel, m.linearAccelRate);
 //					}
 //				}
 //				else if(rawSpeed < 0.001)
@@ -1067,7 +1067,7 @@
 //				else
 //				{
 //					//print("ExpAccel-> " + rawSpeed);
-//					float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
+//					float eqnX = (1+Mathf.Abs((1/m.tractionChangeT )*rawSpeed));
 //					float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 //
 //					float addedSpeed = curveMultiplier*(m_Acceleration);
@@ -1082,29 +1082,29 @@
 //			}
 //			else
 //			{
-//				if(rawSpeed < m_MaxRunSpeed+1)
+//				if(rawSpeed < m.maxRunSpeed+1)
 //				{
-//					rawSpeed = m_MaxRunSpeed;
-//					m_Vel = SetSpeed(m_Vel,m_MaxRunSpeed);
+//					rawSpeed = m.maxRunSpeed;
+//					m_Vel = SetSpeed(m_Vel,m.maxRunSpeed);
 //				}
 //				else
 //				{
 //					//print("Rawspeed("+rawSpeed+") more than max.");
-//					m_Vel = ChangeSpeedLinear (m_Vel, -m_LinearOverSpeedRate);
+//					m_Vel = ChangeSpeedLinear (m_Vel, -m.linearOverSpeedRate);
 //				}
 //			}
 //		}
 //		else if((horizontalInput > 0 && m_Vel.x < 0) || (horizontalInput < 0 && m_Vel.x > 0))
 //		{//if pressing button opposite of move direction, slow to zero exponentially.
-//			if(rawSpeed > m_TractionChangeT )
+//			if(rawSpeed > m.tractionChangeT )
 //			{
 //				//print("LinDecel");
-//				m_Vel = ChangeSpeedLinear (m_Vel, -m_LinearStopRate);
+//				m_Vel = ChangeSpeedLinear (m_Vel, -m.linearStopRate);
 //			}
 //			else
 //			{
 //				//print("Decelerating");
-//				float eqnX = (1+Mathf.Abs((1/m_TractionChangeT )*rawSpeed));
+//				float eqnX = (1+Mathf.Abs((1/m.tractionChangeT )*rawSpeed));
 //				float curveMultiplier = 1+(1/(eqnX*eqnX)); // Goes from 1/4 to 1, increasing as speed approaches 0.
 //				float addedSpeed = curveMultiplier*(m_Acceleration-slopeMultiplier);
 //				m_Vel = (m_Vel.normalized)*(rawSpeed-2*addedSpeed);
@@ -1128,11 +1128,11 @@
 //			downSlope = Vector2.down;
 //		}
 //
-//		m_Vel += downSlope*m_SlippingAcceleration*slopeMultiplier;
+//		m_Vel += downSlope*m.slippingAcceleration*slopeMultiplier;
 //
 //		//	TESTINGSLOPES
 //		//print("downSlope="+downSlope);
-//		//print("m_SlippingAcceleration="+m_SlippingAcceleration);
+//		//print("m.slippingAcceleration="+m.slippingAcceleration);
 //		//print("slopeMultiplier="+slopeMultiplier);
 //
 //			//ChangeSpeedLinear(m_Vel, );
@@ -1155,7 +1155,7 @@
 //
 //		float steepnessAngle = Vector2.Angle(Vector2.up,wallPerp);
 //
-//		if(m_RightWalled)
+//		if(phys.rightWalled)
 //		{
 //			steepnessAngle = 180f - steepnessAngle;
 //		}
@@ -1165,40 +1165,40 @@
 //			steepnessAngle=0;
 //		}
 //
-//		if(steepnessAngle > 90 && (wallSurface != m_ExpiredNormal)) //If the sliding surface is upside down, and hasn't already been clung to.
+//		if(steepnessAngle > 90 && (wallSurface != m.expiredNormal)) //If the sliding surface is upside down, and hasn't already been clung to.
 //		{
-//			if(!m_SurfaceCling)
+//			if(!phys.surfaceCling)
 //			{
-//				m_TimeSpentHanging = 0;
-//				m_MaxTimeHanging = 0;
-//				m_SurfaceCling = true;
-//				if(m_CGF >= m_ClingReqGForce)
+//				m.timeSpentHanging = 0;
+//				m.maxTimeHanging = 0;
+//				phys.surfaceCling = true;
+//				if(phys.CGF >= m.clingReqGForce)
 //				{
-//					m_MaxTimeHanging = m_SurfaceClingTime;
+//					m.maxTimeHanging = m.surfaceClingTime;
 //				}
 //				else
 //				{
-//					m_MaxTimeHanging = m_SurfaceClingTime*(m_CGF/m_ClingReqGForce);
+//					m.maxTimeHanging = m.surfaceClingTime*(phys.CGF/m.clingReqGForce);
 //				}
-//				//print("m_MaxTimeHanging="+m_MaxTimeHanging);
+//				//print("m.maxTimeHanging="+m.maxTimeHanging);
 //			}
 //			else
 //			{
-//				m_TimeSpentHanging += Time.fixedDeltaTime;
-//				//print("time=("+m_TimeSpentHanging+"/"+m_MaxTimeHanging+")");
-//				if(m_TimeSpentHanging>=m_MaxTimeHanging)
+//				m.timeSpentHanging += Time.fixedDeltaTime;
+//				//print("time=("+m.timeSpentHanging+"/"+m.maxTimeHanging+")");
+//				if(m.timeSpentHanging>=m.maxTimeHanging)
 //				{
-//					m_SurfaceCling = false;
-//					m_ExpiredNormal = wallSurface;
+//					phys.surfaceCling = false;
+//					m.expiredNormal = wallSurface;
 //					//print("EXPIRED!");
 //				}
 //			}
 //		}
 //		else
 //		{
-//			m_SurfaceCling = false;
-//			m_TimeSpentHanging = 0;
-//			m_MaxTimeHanging = 0;
+//			phys.surfaceCling = false;
+//			m.timeSpentHanging = 0;
+//			m.maxTimeHanging = 0;
 //		}
 //
 //		//print("Wall Steepness Angle:"+steepnessAngle);
@@ -1207,7 +1207,7 @@
 //		// Movement code //
 //		///////////////////
 //
-//		if(m_SurfaceCling)
+//		if(phys.surfaceCling)
 //		{
 //			if(m_Vel.y > 0)
 //			{
@@ -1215,7 +1215,7 @@
 //			}
 //			else if(m_Vel.y <= 0)
 //			{
-//				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) )
+//				if( (horizontalInput<0 && phys.leftWalled) || (horizontalInput>0 && phys.rightWalled) )
 //				{
 //					m_Vel = ChangeSpeedLinear(m_Vel,0.1f);
 //				}
@@ -1229,11 +1229,11 @@
 //		{
 //			if(m_Vel.y > 0)
 //			{
-//				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+//				if( (horizontalInput<0 && phys.leftWalled) || (horizontalInput>0 && phys.rightWalled) ) // If pressing key toward wall direction.
 //				{
 //					m_Vel.y -= 0.8f; //Decelerate slower.
 //				}
-//				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+//				else if((horizontalInput>0 && phys.leftWalled) || (horizontalInput<0 && phys.rightWalled)) // If pressing key opposite wall direction.
 //				{
 //					m_Vel.y -= 1.2f; //Decelerate faster.
 //				}
@@ -1244,11 +1244,11 @@
 //			}
 //			else if(m_Vel.y <= 0)
 //			{
-//				if( (horizontalInput<0 && m_LeftWalled) || (horizontalInput>0 && m_RightWalled) ) // If pressing key toward wall direction.
+//				if( (horizontalInput<0 && phys.leftWalled) || (horizontalInput>0 && phys.rightWalled) ) // If pressing key toward wall direction.
 //				{
 //					m_Vel.y -= 0.1f; //Accelerate downward slower.
 //				}
-//				else if((horizontalInput>0 && m_LeftWalled) || (horizontalInput<0 && m_RightWalled)) // If pressing key opposite wall direction.
+//				else if((horizontalInput>0 && phys.leftWalled) || (horizontalInput<0 && phys.rightWalled)) // If pressing key opposite wall direction.
 //				{
 //					m_Vel.y -= 1.2f; //Accelerate downward faster.
 //				}
@@ -1267,7 +1267,7 @@
 //		//print ("leftCheck.normal=" + leftCheck.normal);
 //		//print("preleftwall Pos:" + this.transform.position);
 //
-//		if (m_Airborne)
+//		if (phys.airborne)
 //		{
 //			print("Airborne before impact.");
 //			m_Impact = true;
@@ -1275,10 +1275,10 @@
 //		}
 //
 //		//m_Impact = true;
-//		m_LeftWalled = true;
+//		phys.leftWalled = true;
 //		Vector2 setCharPos = leftCheck.point;
-//		setCharPos.x += (m_LeftSideLength-m_MinEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
-//		//setCharPos.y -= m_MinEmbed;
+//		setCharPos.x += (m_LeftSideLength-m.minEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
+//		//setCharPos.y -= m.minEmbed;
 //		//print("Sent to Pos:" + setCharPos);
 //
 //		this.transform.position = setCharPos;
@@ -1290,31 +1290,31 @@
 //		{
 ////			if(antiTunneling){
 ////				Vector2 surfacePosition = leftCheck2.point;
-////				surfacePosition.x += m_LeftSideLength-m_MinEmbed;
+////				surfacePosition.x += m_LeftSideLength-m.minEmbed;
 ////				//print("Sent to Pos:" + surfacePosition);
 ////				this.transform.position = surfacePosition;
 ////			}
 //		}
 //		else
 //		{
-//			m_LeftWalled = false;
+//			phys.leftWalled = false;
 //		}
 //
 //		m_LeftNormal = leftCheck2.normal;
 //
-//		if(m_Grounded)
+//		if(phys.grounded)
 //		{
 //			print("LeftGroundWedge detected during left collision.");
 //			OmniWedge(0,2);
 //		}
 //
-//		if(m_Ceilinged)
+//		if(phys.ceilinged)
 //		{
 //			print("LeftCeilingWedge detected during left collision.");
 //			OmniWedge(2,1);
 //		}
 //
-//		if(m_RightWalled)
+//		if(phys.rightWalled)
 //		{
 //			print("THERE'S PROBLEMS.");
 //			//OmniWedge(2,3);
@@ -1330,7 +1330,7 @@
 //		//print ("groundCheck.normal=" + groundCheck.normal);
 //		//print("prerightwall Pos:" + this.transform.position);
 //
-//		if (m_Airborne)
+//		if (phys.airborne)
 //		{
 //			print("Airborne before impact.");
 //			m_Impact = true;
@@ -1338,11 +1338,11 @@
 //		}
 //
 //		//m_Impact = true;
-//		rightSideContact = true;
-//		m_RightWalled = true;
+//		phys.rightSideContact = true;
+//		phys.rightWalled = true;
 //		Vector2 setCharPos = rightCheck.point;
-//		setCharPos.x -= (m_RightSideLength-m_MinEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
-//		//setCharPos.y -= m_MinEmbed;  //Embed slightly in ground to ensure raycasts still hit ground.
+//		setCharPos.x -= (m_RightSideLength-m.minEmbed); //Embed slightly in wall to ensure raycasts still hit wall.
+//		//setCharPos.y -= m.minEmbed;  //Embed slightly in ground to ensure raycasts still hit ground.
 //
 //		//print("Sent to Pos:" + setCharPos);
 //		//print("Sent to normal:" + groundCheck.normal);
@@ -1356,32 +1356,32 @@
 //		{
 ////			if(antiTunneling){
 ////				Vector2 surfacePosition = rightCheck2.point;
-////				surfacePosition.x -= (m_RightSideLength-m_MinEmbed);
+////				surfacePosition.x -= (m_RightSideLength-m.minEmbed);
 ////				//print("Sent to Pos:" + surfacePosition);
 ////				this.transform.position = surfacePosition;
 ////			}
 //		}
 //		else
 //		{
-//			m_RightWalled = false;
+//			phys.rightWalled = false;
 //		}
 //
 //		m_RightNormal = rightCheck2.normal;
 //		//print ("Final Position2:  " + this.transform.position);
 //
-//		if(m_Grounded)
+//		if(phys.grounded)
 //		{
 //			print("RightGroundWedge detected during right collision.");
 //			OmniWedge(0,3);
 //		}
 //
-//		if(m_LeftWalled)
+//		if(phys.leftWalled)
 //		{
 //			print("THERE'S PROBLEMS.");
 //			//OmniWedge(2,3);
 //		}
 //
-//		if(m_Ceilinged)
+//		if(phys.ceilinged)
 //		{
 //			print("RightCeilingWedge detected during right collision.");
 //			OmniWedge(3,1);
@@ -1391,9 +1391,9 @@
 //		
 //	private void ToGround(RaycastHit2D groundCheck) 
 //	{ //Sets the new position of the player and their ground normal.
-//		print ("m_Grounded=" + m_Grounded);
+//		print ("phys.grounded=" + phys.grounded);
 //
-//		if (m_Airborne)
+//		if (phys.airborne)
 //		{
 //			print("Airborne before impact.");
 //			m_Impact = true;
@@ -1401,9 +1401,9 @@
 //		}
 //
 //		//m_Impact = true;
-//		m_Grounded = true;
+//		phys.grounded = true;
 //		Vector2 setCharPos = groundCheck.point;
-//		setCharPos.y = setCharPos.y+m_GroundFootLength-m_MinEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
+//		setCharPos.y = setCharPos.y+m_GroundFootLength-m.minEmbed; //Embed slightly in ground to ensure raycasts still hit ground.
 //		this.transform.position = setCharPos;
 //
 //		//print("Sent to Pos:" + setCharPos);
@@ -1414,7 +1414,7 @@
 //		{
 ////			if(antiTunneling){
 ////				Vector2 surfacePosition = groundCheck2.point;
-////				surfacePosition.y += m_GroundFootLength-m_MinEmbed;
+////				surfacePosition.y += m_GroundFootLength-m.minEmbed;
 ////				this.transform.position = surfacePosition;
 ////				print("Antitunneling executed during impact.");
 ////			}
@@ -1424,12 +1424,12 @@
 //			//print ("Impact Pos:  " + groundCheck.point);
 //			//print("Reflected back into the air!");
 //			//print("Transform position: " + this.transform.position);
-//			//print("RB2D position: " + o_Rigidbody2D.position);
+//			//print("RB2D position: " + o.rigidbody2D.position);
 //			//print("Velocity : " + m_Vel);
 //			//print("Speed : " + m_Vel.magnitude);
 //			//print(" ");
 //			//print(" ");	
-//			m_Grounded = false;
+//			phys.grounded = false;
 //		}
 //
 //		if(groundCheck.normal.y == 0f)
@@ -1440,19 +1440,19 @@
 //
 //		m_GroundNormal = groundCheck2.normal;
 //
-//		if(m_Ceilinged)
+//		if(phys.ceilinged)
 //		{
 //			print("CeilGroundWedge detected during ground collision.");
 //			OmniWedge(0,1);
 //		}
 //
-//		if(m_LeftWalled)
+//		if(phys.leftWalled)
 //		{
 //			print("LeftGroundWedge detected during ground collision.");
 //			OmniWedge(0,2);
 //		}
 //
-//		if(m_RightWalled)
+//		if(phys.rightWalled)
 //		{
 //			print("RightGroundWedge detected during groundcollision.");
 //			OmniWedge(0,3);
@@ -1469,7 +1469,7 @@
 //		//print ("We've hit ceiling, sir!!");
 //		//print ("ceilingCheck.normal=" + ceilingCheck.normal);
 //
-//		if (m_Airborne)
+//		if (phys.airborne)
 //		{
 //			print("Airborne before impact.");
 ////			m_Landing = true;
@@ -1477,9 +1477,9 @@
 //		}
 //
 //		//m_Impact = true;
-//		m_Ceilinged = true;
+//		phys.ceilinged = true;
 //		Vector2 setCharPos = ceilingCheck.point;
-//		setCharPos.y -= (m_GroundFootLength-m_MinEmbed); //Embed slightly in ceiling to ensure raycasts still hit ceiling.
+//		setCharPos.y -= (m_GroundFootLength-m.minEmbed); //Embed slightly in ceiling to ensure raycasts still hit ceiling.
 //		this.transform.position = setCharPos;
 //
 //		RaycastHit2D ceilingCheck2 = Physics2D.Raycast(this.transform.position, Vector2.up, m_GroundFootLength, mask);
@@ -1487,14 +1487,14 @@
 //		{
 ////			if(antiTunneling){
 ////				Vector2 surfacePosition = ceilingCheck2.point;
-////				surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
+////				surfacePosition.y -= (m_CeilingFootLength-m.minEmbed);
 ////				this.transform.position = surfacePosition;
 ////			}
 //		}
 //		else
 //		{
 //			print("Ceilinged = false?");
-//			m_Ceilinged = false;
+//			phys.ceilinged = false;
 //		}
 //
 //		if(ceilingCheck.normal.y == 0f)
@@ -1505,19 +1505,19 @@
 //
 //		m_CeilingNormal = ceilingCheck2.normal;
 //
-//		if(m_Grounded)
+//		if(phys.grounded)
 //		{
 //			print("CeilGroundWedge detected during ceiling collision.");
 //			OmniWedge(0,1);
 //		}
 //
-//		if(m_LeftWalled)
+//		if(phys.leftWalled)
 //		{
 //			print("LeftCeilWedge detected during ceiling collision.");
 //			OmniWedge(2,1);
 //		}
 //
-//		if(m_RightWalled)
+//		if(phys.rightWalled)
 //		{
 //			print("RightGroundWedge detected during ceiling collision.");
 //			OmniWedge(3,1);
@@ -1555,7 +1555,7 @@
 //	private void DirectionChange(Vector2 newNormal)
 //	{
 //		//print("DirectionChange");
-//		m_ExpiredNormal = new Vector2(0,0); //Used for wallslides. This resets the surface normal that wallcling is set to ignore.
+//		m.expiredNormal = new Vector2(0,0); //Used for wallslides. This resets the surface normal that wallcling is set to ignore.
 //
 //		Vector2 initialDirection = m_Vel.normalized;
 //		Vector2 newPerp = Perp(newNormal);
@@ -1640,13 +1640,13 @@
 //
 //		float speedLossMult = 1; // The % of speed retained, based on sharpness of impact angle. A direct impact = full stop.
 //
-//		if(impactAngle <= m_ImpactDecelMinAngle)
+//		if(impactAngle <= m.impactDecelMinAngle)
 //		{ // Angle lower than min, no speed penalty.
 //			speedLossMult = 1;
 //		}
-//		else if(impactAngle < m_ImpactDecelMaxAngle)
+//		else if(impactAngle < m.impactDecelMaxAngle)
 //		{ // In the midrange, administering momentum loss on a curve leading from min to max.
-//			speedLossMult = 1-Mathf.Pow((impactAngle-m_ImpactDecelMinAngle)/(m_ImpactDecelMaxAngle-m_ImpactDecelMinAngle),2); // See Workflowy notes section for details on this formula.
+//			speedLossMult = 1-Mathf.Pow((impactAngle-m.impactDecelMinAngle)/(m.impactDecelMaxAngle-m.impactDecelMinAngle),2); // See Workflowy notes section for details on this formula.
 //		}
 //		else
 //		{ // Angle beyond max, momentum halted. 
@@ -1759,7 +1759,7 @@
 //			Vector2 groundPosition = lowerHit.point;
 //			if(lowerContact == 0) //ground contact
 //			{
-//				groundPosition.y += (m_GroundFootLength-m_MinEmbed);
+//				groundPosition.y += (m_GroundFootLength-m.minEmbed);
 //			}
 //			else if(lowerContact == 1) //ceiling contact
 //			{
@@ -1767,11 +1767,11 @@
 //			}
 //			else if(lowerContact == 2) //left contact
 //			{
-//				groundPosition.x += (m_LeftSideLength-m_MinEmbed);
+//				groundPosition.x += (m_LeftSideLength-m.minEmbed);
 //			}
 //			else if(lowerContact == 3) //right contact
 //			{
-//				groundPosition.x -= (m_RightSideLength-m_MinEmbed);
+//				groundPosition.x -= (m_RightSideLength-m.minEmbed);
 //			}
 //
 //			this.transform.position = groundPosition;
@@ -1861,13 +1861,13 @@
 //			{
 //				moveAmount = SuperUnwedger(cPerp, gPerp, true, embedDepth);
 //				//print("Left wedge!");
-//				m_LeftWallBlocked = true;
+//				phys.leftWallBlocked = true;
 //			}
 //			else if(convergenceValue < 0)
 //			{
 //				moveAmount = SuperUnwedger(cPerp, gPerp, false, embedDepth);
 //				//print("Right wedge!");
-//				m_RightWallBlocked = true;
+//				phys.rightWallBlocked = true;
 //			}
 //			else
 //			{
@@ -1893,16 +1893,16 @@
 //
 //	private void UpdateContactNormals(bool posCorrection)
 //	{
-//		m_Grounded = false;
-//		m_Ceilinged = false;
-//		m_LeftWalled = false;
-//		m_RightWalled = false;
-//		m_Airborne = false;
+//		phys.grounded = false;
+//		phys.ceilinged = false;
+//		phys.leftWalled = false;
+//		phys.rightWalled = false;
+//		phys.airborne = false;
 //
-//		groundContact = false;
-//		ceilingContact = false;
-//		leftSideContact = false;
-//		rightSideContact = false;
+//		phys.groundContact = false;
+//		phys.ceilingContact = false;
+//		phys.leftSideContact = false;
+//		phys.rightSideContact = false;
 //
 //		//m_GroundNormal = new Vector2(0,0);
 //		//m_CeilingNormal = new Vector2(0,0);
@@ -1926,50 +1926,50 @@
 //
 //		if (directionContacts[0]) 
 //		{
-//			groundContact = true;
+//			phys.groundContact = true;
 //			m_GroundLine.endColor = Color.green;
 //			m_GroundLine.startColor = Color.green;
 //			m_GroundNormal = directionContacts[0].normal;
-//			m_Grounded = true;
+//			phys.grounded = true;
 //		} 
 //			
 //		if (directionContacts[1]) 
 //		{
-//			ceilingContact = true;
+//			phys.ceilingContact = true;
 //			m_CeilingLine.endColor = Color.green;
 //			m_CeilingLine.startColor = Color.green;
 //			m_CeilingNormal = directionContacts[1].normal;
-//			m_Ceilinged = true;
+//			phys.ceilinged = true;
 //		} 
 //
 //
 //		if (directionContacts[2])
 //		{
 //			m_LeftNormal = directionContacts[2].normal;
-//			leftSideContact = true;
+//			phys.leftSideContact = true;
 //			m_LeftSideLine.endColor = Color.green;
 //			m_LeftSideLine.startColor = Color.green;
-//			m_LeftWalled = true;
+//			phys.leftWalled = true;
 //		} 
 //
 //		if (directionContacts[3])
 //		{
 //			m_RightNormal = directionContacts[3].normal;
-//			rightSideContact = true;
+//			phys.rightSideContact = true;
 //			m_RightSideLine.endColor = Color.green;
 //			m_RightSideLine.startColor = Color.green;
-//			m_RightWalled = true;
+//			phys.rightWalled = true;
 //		} 
 //
-//		if(!(m_Grounded&&m_Ceilinged))
+//		if(!(phys.grounded&&phys.ceilinged))
 //		{
-//			if(!m_RightWalled)
+//			if(!phys.rightWalled)
 //			{
-//				m_RightWallBlocked = false;
+//				phys.rightWallBlocked = false;
 //			}
-//			if(!m_LeftWalled)
+//			if(!phys.leftWalled)
 //			{
-//				m_LeftWallBlocked = false;
+//				phys.leftWallBlocked = false;
 //			}
 //		}
 //
@@ -1977,9 +1977,9 @@
 //		{
 //			AntiTunneler(directionContacts);
 //		}
-//		if(!(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+//		if(!(phys.grounded||phys.ceilinged||phys.leftWalled||phys.rightWalled))
 //		{
-//			m_Airborne = true;	
+//			phys.airborne = true;	
 //		}
 //	}
 //
@@ -1987,23 +1987,23 @@
 //	{
 //		bool[] isEmbedded = {false, false, false, false};
 //		int contactCount = 0;
-//		if(groundContact){contactCount++;}
-//		if(ceilingContact){contactCount++;}
-//		if(leftSideContact){contactCount++;}
-//		if(rightSideContact){contactCount++;}
+//		if(phys.groundContact){contactCount++;}
+//		if(phys.ceilingContact){contactCount++;}
+//		if(phys.leftSideContact){contactCount++;}
+//		if(phys.rightSideContact){contactCount++;}
 //
 //		int embedCount = 0;
-//		if(groundContact && ((m_GroundFootLength-contacts[0].distance)>=0.011f))	{isEmbedded[0]=true; embedCount++;} //If embedded too deep in this surface.
-//		if(ceilingContact && ((m_CeilingFootLength-contacts[1].distance)>=0.011f))	{isEmbedded[1]=true; embedCount++;} //If embedded too deep in this surface.
-//		if(leftSideContact && ((m_LeftSideLength-contacts[2].distance)>=0.011f))	{isEmbedded[2]=true; embedCount++;} //If embedded too deep in this surface.
-//		if(rightSideContact && ((m_RightSideLength-contacts[3].distance)>=0.011f))	{isEmbedded[3]=true; embedCount++;} //If embedded too deep in this surface.
+//		if(phys.groundContact && ((m_GroundFootLength-contacts[0].distance)>=0.011f))	{isEmbedded[0]=true; embedCount++;} //If embedded too deep in this surface.
+//		if(phys.ceilingContact && ((m_CeilingFootLength-contacts[1].distance)>=0.011f))	{isEmbedded[1]=true; embedCount++;} //If embedded too deep in this surface.
+//		if(phys.leftSideContact && ((m_LeftSideLength-contacts[2].distance)>=0.011f))	{isEmbedded[2]=true; embedCount++;} //If embedded too deep in this surface.
+//		if(phys.rightSideContact && ((m_RightSideLength-contacts[3].distance)>=0.011f))	{isEmbedded[3]=true; embedCount++;} //If embedded too deep in this surface.
 //
 //		switch(contactCount)
 //		{
 //			case 0: //No embedded contacts. Save this position as the most recent valid one and move on.
 //			{
 //				//print("No embedding! :)");
-//				lastSafePosition = this.transform.position;
+//				phys.lastSafePosition = this.transform.position;
 //				break;
 //			}
 //			case 1: //One side is embedded. Simply push out to remove it.
@@ -2011,36 +2011,36 @@
 //				if(isEmbedded[0])
 //				{
 //					Vector2 surfacePosition = contacts[0].point;
-//					surfacePosition.y += (m_GroundFootLength-m_MinEmbed);
+//					surfacePosition.y += (m_GroundFootLength-m.minEmbed);
 //					this.transform.position = surfacePosition;
 //				}
 //				else if(isEmbedded[1])
 //				{
 //					Vector2 surfacePosition = contacts[1].point;
-//					surfacePosition.y -= (m_CeilingFootLength-m_MinEmbed);
+//					surfacePosition.y -= (m_CeilingFootLength-m.minEmbed);
 //					this.transform.position = surfacePosition;
 //				}
 //				else if(isEmbedded[2])
 //				{
 //					Vector2 surfacePosition = contacts[2].point;
-//					surfacePosition.x += ((m_LeftSideLength)-m_MinEmbed);
+//					surfacePosition.x += ((m_LeftSideLength)-m.minEmbed);
 //					this.transform.position = surfacePosition;
 //				}
 //				else if(isEmbedded[3])
 //				{
 //					Vector2 surfacePosition = contacts[3].point;
-//					surfacePosition.x -= ((m_RightSideLength)-m_MinEmbed);
+//					surfacePosition.x -= ((m_RightSideLength)-m.minEmbed);
 //					this.transform.position = surfacePosition;
 //				}
 //				else
 //				{
-//					lastSafePosition = this.transform.position;
+//					phys.lastSafePosition = this.transform.position;
 //				}
 //				break;
 //			}
 //			case 2: //Two sides are touching. Use the 2-point unwedging algorithm to resolve.
 //			{
-//				if(groundContact&&ceilingContact)
+//				if(phys.groundContact&&phys.ceilingContact)
 //				{
 //					//if(m_GroundNormal != m_CeilingNormal)
 //					{
@@ -2048,7 +2048,7 @@
 //						OmniWedge(0,1);
 //					}
 //				}
-//				else if(groundContact&&leftSideContact)
+//				else if(phys.groundContact&&phys.leftSideContact)
 //				{
 //					if(m_GroundNormal != m_LeftNormal)
 //					{
@@ -2058,11 +2058,11 @@
 //					{
 //						//print("Same surface, 1-point unwedging.");
 //						Vector2 surfacePosition = contacts[0].point;
-//						surfacePosition.y += (m_GroundFootLength-m_MinEmbed);
+//						surfacePosition.y += (m_GroundFootLength-m.minEmbed);
 //						this.transform.position = surfacePosition;
 //					}
 //				}
-//				else if(groundContact&&rightSideContact)
+//				else if(phys.groundContact&&phys.rightSideContact)
 //				{
 //					if(m_GroundNormal != m_RightNormal)
 //					{
@@ -2072,25 +2072,25 @@
 //					{
 //						//print("Same surface, 1-point unwedging.");
 //						Vector2 surfacePosition = contacts[0].point;
-//						surfacePosition.y += (m_GroundFootLength-m_MinEmbed);
+//						surfacePosition.y += (m_GroundFootLength-m.minEmbed);
 //						this.transform.position = surfacePosition;
 //					}
 //				}
-//				else if(ceilingContact&&leftSideContact)
+//				else if(phys.ceilingContact&&phys.leftSideContact)
 //				{
 //					//if(m_CeilingNormal != m_LeftNormal)
 //					{
 //						OmniWedge(2,1);
 //					}
 //				}
-//				else if(ceilingContact&&rightSideContact)
+//				else if(phys.ceilingContact&&phys.rightSideContact)
 //				{
 //					//if(m_CeilingNormal != m_RightNormal)
 //					{
 //						OmniWedge(3,1);
 //					}
 //				}
-//				else if(leftSideContact&&rightSideContact)
+//				else if(phys.leftSideContact&&phys.rightSideContact)
 //				{
 //					throw new Exception("Unhandled horizontal wedge detected.");
 //					//OmniWedge(3,2);
@@ -2107,7 +2107,7 @@
 //				print("FULL embedding! :C");
 //				if(recoverFromFullEmbed)
 //				{
-//					this.transform.position = lastSafePosition;
+//					this.transform.position = phys.lastSafePosition;
 //				}
 //				break;
 //			}
@@ -2266,76 +2266,76 @@
 //
 //	private void Jump(float horizontalInput)
 //	{
-//		if(m_Grounded&&m_Ceilinged)
+//		if(phys.grounded&&phys.ceilinged)
 //		{
 //			print("Grounded and Ceilinged, nowhere to jump!");
 //			i_JumpKey = false;
 //		}
-//		else if(m_Grounded)
+//		else if(phys.grounded)
 //		{
 //			if(m_Vel.y >= 0)
 //			{
-//				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), m_Vel.y+m_VJumpForce);
+//				m_Vel = new Vector2(m_Vel.x+(m.hJumpForce*horizontalInput), m_Vel.y+m.vJumpForce);
 //			}
 //			else
 //			{
-//				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), m_VJumpForce);
+//				m_Vel = new Vector2(m_Vel.x+(m.hJumpForce*horizontalInput), m.vJumpForce);
 //			}
 //			o_CharAudio.JumpSound();
 //			i_JumpKey = false;
 //		}
-//		else if(m_LeftWalled)
+//		else if(phys.leftWalled)
 //		{
 //			print("Leftwalljumping!");
 //			if(m_Vel.y < 0)
 //			{
-//				m_Vel = new Vector2(m_WallHJumpForce, m_WallVJumpForce);
+//				m_Vel = new Vector2(m.wallHJumpForce, m.wallVJumpForce);
 //			}
-//			else if(m_Vel.y <= (2*m_WallVJumpForce))
+//			else if(m_Vel.y <= (2*m.wallVJumpForce))
 //			{
-//				m_Vel = new Vector2(m_WallHJumpForce, m_Vel.y+m_WallVJumpForce);
+//				m_Vel = new Vector2(m.wallHJumpForce, m_Vel.y+m.wallVJumpForce);
 //			}
 //			else
 //			{
-//				m_Vel = new Vector2(m_WallHJumpForce, m_Vel.y);
+//				m_Vel = new Vector2(m.wallHJumpForce, m_Vel.y);
 //			}
 //			o_CharAudio.JumpSound();
 //			i_JumpKey = false;
-//			m_LeftWalled = false;
+//			phys.leftWalled = false;
 //		}
-//		else if(m_RightWalled)
+//		else if(phys.rightWalled)
 //		{
 //			print("Rightwalljumping!");
 //			if(m_Vel.y < 0)
 //			{
-//				m_Vel = new Vector2(-m_WallHJumpForce, m_WallVJumpForce);
+//				m_Vel = new Vector2(-m.wallHJumpForce, m.wallVJumpForce);
 //			}
-//			else if(m_Vel.y <= m_WallVJumpForce)
+//			else if(m_Vel.y <= m.wallVJumpForce)
 //			{
-//				m_Vel = new Vector2(-m_WallHJumpForce, m_Vel.y+m_WallVJumpForce);
+//				m_Vel = new Vector2(-m.wallHJumpForce, m_Vel.y+m.wallVJumpForce);
 //			}
 //			else
 //			{
-//				m_Vel = new Vector2(-m_WallHJumpForce, m_Vel.y);
+//				m_Vel = new Vector2(-m.wallHJumpForce, m_Vel.y);
 //			}
 //
 //			o_CharAudio.JumpSound();
 //			i_JumpKey = false;
-//			m_RightWalled = false;
+//			phys.rightWalled = false;
 //		}
-//		else if(m_Ceilinged)
+//		else if(phys.ceilinged)
 //		{
 //			if(m_Vel.y <= 0)
 //			{
-//				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), m_Vel.y -m_VJumpForce);
+//				m_Vel = new Vector2(m_Vel.x+(m.hJumpForce*horizontalInput), m_Vel.y -m.vJumpForce);
 //			}
 //			else
 //			{
-//				m_Vel = new Vector2(m_Vel.x+(m_HJumpForce*horizontalInput), -m_VJumpForce);
+//				m_Vel = new Vector2(m_Vel.x+(m.hJumpForce*horizontalInput), -m.vJumpForce);
 //			}
 //			o_CharAudio.JumpSound();
 //			i_JumpKey = false;
-//			m_Ceilinged = false;
+//			phys.ceilinged = false;
 //		}
 //		else
 //		{
@@ -2346,7 +2346,7 @@
 //	private void EtherJump(Vector2 jumpNormal)
 //	{
 //		g_EtherJumpCharge = o_Spooler.GetTotalPower();
-//		m_Vel = jumpNormal*(m_EtherJumpForceBase+(m_EtherJumpForcePerCharge*g_EtherJumpCharge));
+//		m_Vel = jumpNormal*(m.etherJumpForceBase+(m.etherJumpForcePerCharge*g_EtherJumpCharge));
 //		g_EtherJumpCharge = 0;		
 //		i_JumpKey = false;
 //		o_CharAudio.JumpSound();
@@ -2362,12 +2362,12 @@
 //	#region PUBLIC FUNCTIONS
 //	public float GetInstantGForce()
 //	{
-//		return m_IGF;
+//		return phys.IGF;
 //	}
 //
 //	public float GetContinuousGForce()
 //	{
-//		return m_CGF;
+//		return phys.CGF;
 //	}
 //
 //	public Vector2 GetVelocity()

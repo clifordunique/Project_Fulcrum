@@ -49,12 +49,14 @@
      <Compile Include="Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\CloudEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\CutoutMeshHandler.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\FighterCharHandler.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\GrassColourerInterface.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\NavBuilderRayEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\NavMasterEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\NavSurfaceEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\ParallaxOptionEditor.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\SceneNodeGraph.cs" />
+     <Compile Include="Assets\Editor\ProjectFulcrum\ShoeHandler.cs" />
      <Compile Include="Assets\Editor\ProjectFulcrum\TEST_PFBuildHandler.cs" />
      <Compile Include="Assets\Editor\ReadOnlyAttributeDrawer\ReadOnlyAttributeDrawer.cs" />
      <Compile Include="Assets\GAF\Scripts\Asset\Editor\GAFAnimationAssetEditor.cs" />

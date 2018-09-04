@@ -530,7 +530,7 @@ public class NPC : FighterChar {
 
 	protected void SetCurrentPath()
 	{
-		NavPath[] pathChoices = o_NavMaster.GetPathList(n_CurrentSurf.id, n_DestSurf.id);	
+		NavPath[] pathChoices = o.navMaster.GetPathList(n_CurrentSurf.id, n_DestSurf.id);	
 		if(pathChoices!=null)
 		{
 			if(pathChoices[0]==null)
@@ -561,11 +561,11 @@ public class NPC : FighterChar {
 		n_CurrentPath=null;
 		n_HasAPath = false;
 
-		if( n_DestSurfID!=-1 && n_DestSurfID<o_NavMaster.GetSurfaces().Length)
+		if( n_DestSurfID!=-1 && n_DestSurfID<o.navMaster.GetSurfaces().Length)
 		{
 			if(n_DestSurfID != n_CurrentSurfID)
 			{
-				n_DestSurf = o_NavMaster.GetSurfaces()[n_DestSurfID];
+				n_DestSurf = o.navMaster.GetSurfaces()[n_DestSurfID];
 				if(d_aiDebug){print("["+d.tickCounter+"]:Destination set to NavSurface["+n_DestSurfID+"]");}
 			}
 			else
@@ -897,18 +897,18 @@ public class NPC : FighterChar {
 	{
 		float distance;
 
-		float linDist = ((reqVel*reqVel)/(m_LinearAccelRate/Time.fixedDeltaTime));
+		float linDist = ((reqVel*reqVel)/(m.linearAccelRate/Time.fixedDeltaTime));
 		if(d_aiDebug){print("linDist="+linDist);}
-		float linDistBelowThreshold = ((m_TractionChangeT*m_TractionChangeT)/(m_LinearAccelRate/Time.fixedDeltaTime));
+		float linDistBelowThreshold = ((m.tractionChangeT*m.tractionChangeT)/(m.linearAccelRate/Time.fixedDeltaTime));
 		if(d_aiDebug){print("linDistBelowThreshold="+linDistBelowThreshold);}
 		float linDistAboveThreshold = linDist-linDistBelowThreshold;
 
-		float fastDist = ((m_TractionChangeT*m_TractionChangeT)/(m_StartupAccelRate/Time.fixedDeltaTime));
+		float fastDist = ((m.tractionChangeT*m.tractionChangeT)/(m.startupAccelRate/Time.fixedDeltaTime));
 
 
-		if(Mathf.Abs(reqVel)<m_TractionChangeT)
+		if(Mathf.Abs(reqVel)<m.tractionChangeT)
 		{
-			distance = ((reqVel*reqVel)/(m_StartupAccelRate/Time.fixedDeltaTime));
+			distance = ((reqVel*reqVel)/(m.startupAccelRate/Time.fixedDeltaTime));
 		}
 		else
 		{
@@ -920,7 +920,7 @@ public class NPC : FighterChar {
 			distance *= -1;
 		}
 
-		if(Mathf.Abs(reqVel)<m_TractionChangeT)
+		if(Mathf.Abs(reqVel)<m.tractionChangeT)
 		if(d_aiDebug){print("["+d.tickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel);}
 		else
 		if(d_aiDebug){print("["+d.tickCounter+"]:Windup Distance: "+distance+" for vel of "+reqVel+". AboveThreshDist: "+linDistAboveThreshold+", BelowThreshDist="+fastDist);}
@@ -948,15 +948,15 @@ public class NPC : FighterChar {
 	{
 		FighterState.Dead = false;
 		FighterState.CurVigor = g_MaxVigor;
-		o_Anim.SetBool("Dead", false);
-		o_SpriteRenderer.color = new Color(1,0.6f,0,1);
+		o.anim.SetBool("Dead", false);
+		o.spriteRenderer.color = new Color(1,0.6f,0,1);
 	}
 
 	protected override void FixedUpdateProcessInput() // FUPI
 	{
-		m_WorldImpact = false; //Placeholder??
+		phys.worldImpact = false; //Placeholder??
 		FighterState.Stance = 0;
-		m_Kneeling = false;
+		phys.kneeling = false;
 
 		if(IsDisabled())
 		{
@@ -1001,35 +1001,35 @@ public class NPC : FighterChar {
 
 		if (CtrlH < 0) 
 		{
-			facingDirection = false; //true means right (the direction), false means left.
+			v.facingDirection = false; //true means right (the direction), false means left.
 		} 
 		else if (CtrlH > 0)
 		{
-			facingDirection = true; //true means right (the direction), false means left.
+			v.facingDirection = true; //true means right (the direction), false means left.
 		}
 
-		if(m_Airborne)
+		if(phys.airborne)
 		{
 			if(FighterState.Vel.x>0)
 			{
-				facingDirection = true;
+				v.facingDirection = true;
 			}
 			else if(FighterState.Vel.x<0)
 			{
-				facingDirection = false;
+				v.facingDirection = false;
 			}
 		}
 
-		if(FighterState.DownKeyHold&&m_Grounded)
+		if(FighterState.DownKeyHold&&phys.grounded)
 		{
-			m_Kneeling = true;
+			phys.kneeling = true;
 			CtrlH = 0;
 		}
 
 
-		if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		if(FighterState.JumpKeyPress&&(phys.grounded||phys.ceilinged||phys.leftWalled||phys.rightWalled))
 		{
-			if(m_Kneeling)
+			if(phys.kneeling)
 			{
 				//EtherJump(FighterState.PlayerMouseVector.normalized);
 			}
@@ -1039,11 +1039,11 @@ public class NPC : FighterChar {
 			}
 		}
 
-		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!phys.kneeling)
 		{
 			if(IsVelocityPunching())
 			{
-				v_TriggerAtkHit = true;
+				v.triggerAtkHit = true;
 			}
 			else
 			{
@@ -1078,19 +1078,19 @@ public class NPC : FighterChar {
 			if((FighterState.LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
 				g_VelocityPunching = true;
-				o_VelocityPunch.inUse = true;
+				o.velocityPunch.inUse = true;
 			}
 			else
 			{
 				g_VelocityPunching = false;
-				o_VelocityPunch.inUse = false;
+				o.velocityPunch.inUse = false;
 			}
 		}
 		else
 		{
 			FighterState.LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
-			o_VelocityPunch.inUse = false;
+			o.velocityPunch.inUse = false;
 		}
 
 		if(FighterState.DisperseKeyPress)

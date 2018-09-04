@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour {
 					if(opponent.isAlive())
 					{
 						opponent.TakeDamage(damage);
-						opponent.v_TriggerFlinched = true;
+						opponent.v.triggerFlinched = true;
 						bool facingdir = true;
 						if((opponent.GetPosition().x-this.transform.position.x) > 0)
 						{
@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour {
 							// Cause screen shake.
 						}
 
-						hit.collider.GetComponent<FighterChar>().facingDirection = facingdir;
+						hit.collider.GetComponent<FighterChar>().v.facingDirection = facingdir;
 					}
 				}
 				Destroy(this.transform.gameObject);

@@ -196,7 +196,7 @@ public class NPC_Gunner : NPC
 
 		//shockEffect.GetComponentInChildren<SpriteRenderer>().color = new Color(100,100,100,50);
 		shockEffect.transform.localScale = theLocalScale;
-		o_FighterAudio.GunshotSound();
+		o.fighterAudio.GunshotSound();
 	}
 
 	protected void NavAttackGunSimple()

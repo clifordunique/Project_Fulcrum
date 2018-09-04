@@ -29,11 +29,7 @@ using UnityEditor;
 [System.Serializable]
 public class Player : FighterChar
 {        	
-	//############################################################################################################################################################################################################
-	// HANDLING VARIABLES
-	//###########################################################################################################################################################################
-	#region MOVEMENT HANDLING
-	#endregion
+
 	//############################################################################################################################################################################################################
 	// OBJECT REFERENCES
 	//###########################################################################################################################################################################
@@ -50,11 +46,6 @@ public class Player : FighterChar
 	[SerializeField][ReadOnlyAttribute] public VigorBar o_VigorBar;				// Reference to the VigorBar UI element.
 	[SerializeField][ReadOnlyAttribute] private ProximityLiner o_ProximityLiner;	// Reference to the proximity line handler object. This handles the little lines indicating the direction of offscreen enemies.
 	[SerializeField] private GameObject p_TestObject;								// Reference to any prefab you wish, allowing you to spawn that prefab by pressing F9.
-	#endregion
-	//############################################################################################################################################################################################################
-	// PHYSICS&RAYCASTING
-	//###########################################################################################################################################################################
-	#region PHYSICS&RAYCASTING
 	#endregion
 	//##########################################################################################################################################################################
 	// PLAYER INPUT VARIABLES
@@ -132,7 +123,7 @@ public class Player : FighterChar
 		if(!isLocalPlayer||!isClient){return;}
 		print("Executing post-scenelaunch player code!");
 		o_MainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-		v_DefaultCameraMode = 3;
+		v.defaultCameraMode = 3;
 		o_MainCameraTransform = o_MainCamera.transform.parent.transform;
 		o_MainCameraTransform.SetParent(this.transform);
 		o_MainCameraTransform.localPosition = new Vector3(0, 0, -10f);
@@ -231,7 +222,7 @@ public class Player : FighterChar
 	{
 		if(shoe==null)
 		{
-			shoe = Instantiate(o_ItemHandler.shoes[0], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
+			shoe = Instantiate(o.itemHandler.shoes[0], this.transform.position, Quaternion.identity).GetComponent<Shoe>();
 		}
 
 		UnequipShoe(); // Drop old shoes.
@@ -240,50 +231,50 @@ public class Player : FighterChar
 		/// Movestat code
 		///
 
-		this.m_MinSpeed = shoe.m_MinSpeed;					
-		this.m_MaxRunSpeed = shoe.m_MaxRunSpeed;				
-		this.m_StartupAccelRate = shoe.m_StartupAccelRate;  			
+		this.m.minSpeed = shoe.m.minSpeed;					
+		this.m.maxRunSpeed = shoe.m.maxRunSpeed;				
+		this.m.startupAccelRate = shoe.m.startupAccelRate;  			
 
-		this.m_VJumpForce = shoe.m_VJumpForce;               
-		this.m_HJumpForce = shoe.m_HJumpForce;  				
-		this.m_WallVJumpForce = shoe.m_WallVJumpForce;           
-		this.m_WallHJumpForce = shoe.m_WallHJumpForce;  			
-		this.m_EtherJumpForcePerCharge = shoe.m_EtherJumpForcePerCharge; 	
-		this.m_EtherJumpForceBase = shoe.m_EtherJumpForceBase; 		
+		this.m.vJumpForce = shoe.m.vJumpForce;               
+		this.m.hJumpForce = shoe.m.hJumpForce;  				
+		this.m.wallVJumpForce = shoe.m.wallVJumpForce;           
+		this.m.wallHJumpForce = shoe.m.wallHJumpForce;  			
+		this.m.etherJumpForcePerCharge = shoe.m.etherJumpForcePerCharge; 	
+		this.m.etherJumpForceBase = shoe.m.etherJumpForceBase; 		
 
-		this.m_TractionChangeT = shoe.m_TractionChangeT;			
-		this.m_WallTractionT = shoe.m_WallTractionT;			
-		this.m_LinearStopRate = shoe.m_LinearStopRate; 			
-		this.m_LinearSlideRate = shoe.m_LinearSlideRate;			
-		this.m_LinearOverSpeedRate = shoe.m_LinearOverSpeedRate;		
-		this.m_LinearAccelRate = shoe.m_LinearAccelRate;			
-		this.m_ImpactDecelMinAngle = shoe.m_ImpactDecelMinAngle;
-		this.m_ImpactDecelMaxAngle = shoe.m_ImpactDecelMaxAngle;
-		this.m_TractionLossMinAngle = shoe.m_TractionLossMinAngle; 
-		this.m_TractionLossMaxAngle = shoe.m_TractionLossMaxAngle;
-		this.m_SlippingAcceleration = shoe.m_SlippingAcceleration;  	
-		this.m_SurfaceClingTime = shoe.m_SurfaceClingTime;
-		this.m_ClingReqGForce = shoe.m_ClingReqGForce;
+		this.m.tractionChangeT = shoe.m.tractionChangeT;			
+		this.m.wallTractionT = shoe.m.wallTractionT;			
+		this.m.linearStopRate = shoe.m.linearStopRate; 			
+		this.m.linearSlideRate = shoe.m.linearSlideRate;			
+		this.m.linearOverSpeedRate = shoe.m.linearOverSpeedRate;		
+		this.m.linearAccelRate = shoe.m.linearAccelRate;			
+		this.m.impactDecelMinAngle = shoe.m.impactDecelMinAngle;
+		this.m.impactDecelMaxAngle = shoe.m.impactDecelMaxAngle;
+		this.m.tractionLossMinAngle = shoe.m.tractionLossMinAngle; 
+		this.m.tractionLossMaxAngle = shoe.m.tractionLossMaxAngle;
+		this.m.slippingAcceleration = shoe.m.slippingAcceleration;  	
+		this.m.surfaceClingTime = shoe.m.surfaceClingTime;
+		this.m.clingReqGForce = shoe.m.clingReqGForce;
 
-		this.m_SlamT = shoe.m_SlamT;					
-		this.m_CraterT = shoe.m_CraterT; 					
-		this.m_GuardSlamT = shoe.m_GuardSlamT; 				
-		this.m_GuardCraterT = shoe.m_GuardCraterT;				
+		this.m.slamT = shoe.m.slamT;					
+		this.m.craterT = shoe.m.craterT; 					
+		this.m.guardSlamT = shoe.m.guardSlamT; 				
+		this.m.guardCraterT = shoe.m.guardCraterT;				
 
-		this.m_StrandJumpSpeedLossM = shoe.m_StrandJumpSpeedLossM;
-		this.m_WidestStrandJumpAngle = shoe.m_WidestStrandJumpAngle;
+		this.m.strandJumpSpeedLossM = shoe.m.strandJumpSpeedLossM;
+		this.m.widestStrandJumpAngle = shoe.m.widestStrandJumpAngle;
 
 		///
 		/// Non movestat code
 		///
-		o_EquippedShoe = shoe;
+		o.equippedShoe = shoe;
 		shoe.PickedUpBy(this);
 
 		AkSoundEngine.SetRTPCValue("ShoeType_ID", shoe.soundType);
 
 		if(shoe.shoeID!=0)
 		{
-			o_FighterAudio.EquipSound();
+			o.fighterAudio.EquipSound();
 		}
 		if(isLocalPlayer)
 		{
@@ -306,12 +297,12 @@ public class Player : FighterChar
 
 		if(aimDirection.x<0)
 		{
-			facingDirection = false;
+			v.facingDirection = false;
 			xTransform = -1f;
 		}
 		else
 		{
-			facingDirection = true;
+			v.facingDirection = true;
 		}
 
 		Quaternion punchAngle = Quaternion.LookRotation(aimDirection);
@@ -355,9 +346,9 @@ public class Player : FighterChar
 
 	protected override void FixedUpdateProcessInput() // FUPI
 	{
-		m_WorldImpact = false; //Placeholder??
+		phys.worldImpact = false; //Placeholder??
 		FighterState.Stance = 0;
-		m_Kneeling = false;
+		phys.kneeling = false;
 
 		if(FighterState.RightClickPress&&(FighterState.DevMode))
 		{
@@ -400,14 +391,14 @@ public class Player : FighterChar
 			if(FighterState.DevMode)
 			{
 				FighterState.DevMode = false;
-				o_NavMaster.setAllVisible = false;
-				o_NavMaster.UpdateAllSurfaces();
+				o.navMaster.setAllVisible = false;
+				o.navMaster.UpdateAllSurfaces();
 			}
 			else
 			{
 				o_ProximityLiner.DetectAllFighters();
-				o_NavMaster.setAllVisible = true;
-				o_NavMaster.UpdateAllSurfaces();
+				o.navMaster.setAllVisible = true;
+				o.navMaster.UpdateAllSurfaces();
 				FighterState.DevMode = true;
 			}
 			FighterState.DevKey1 = false;
@@ -443,17 +434,17 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey5)
 		{
-			v_DefaultCameraMode++;
+			v.defaultCameraMode++;
 			string[] cameraNames = {"A - LockedClose","B - AimGuided","C - AimGuided SuperJump","D - AimGuidedWhiplash","E - Stationary","F - SlowMo"};
-			if(v_DefaultCameraMode==2)
+			if(v.defaultCameraMode==2)
 			{
-				v_DefaultCameraMode++;
+				v.defaultCameraMode++;
 			}
-			if(v_DefaultCameraMode>5)
+			if(v.defaultCameraMode>5)
 			{
-				v_DefaultCameraMode = 0;
+				v.defaultCameraMode = 0;
 			}
-			print("Camera mode "+cameraNames[v_DefaultCameraMode]);
+			print("Camera mode "+cameraNames[v.defaultCameraMode]);
 			FighterState.DevKey5 = false;
 		}
 		if(FighterState.DevKey6)
@@ -465,27 +456,27 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey7)
 		{
-			float timeSpeed = o_TimeManager.GetTimeDilationM();
+			float timeSpeed = o.timeManager.GetTimeDilationM();
 
 			if(timeSpeed<=0.1f)
 			{
-				o_TimeManager.TimeDilation(0.25f);
+				o.timeManager.TimeDilation(0.25f);
 			}
 			else if(timeSpeed<=0.25f)
 			{
-				o_TimeManager.TimeDilation(1);
+				o.timeManager.TimeDilation(1);
 			}
 			else
 			{
-				o_TimeManager.TimeDilation(0.1f);
+				o.timeManager.TimeDilation(0.1f);
 			}
 			FighterState.DevKey7 = false;
 		}
 		if(FighterState.DevKey8)
 		{
-			v_Gender = (v_Gender) ? false : true;
+			v.gender = (v.gender) ? false : true;
 
-			if(v_Gender)
+			if(v.gender)
 			{
 				AkSoundEngine.PostEvent("Set_Gender_Male", gameObject);
 			}
@@ -521,8 +512,8 @@ public class Player : FighterChar
 		}
 		if(FighterState.DevKey11)
 		{
-//			v_TriggerRollOut = true;
-			v_TriggerFlinched = true;
+//			v.triggerRollOut = true;
+			v.triggerFlinched = true;
 			FighterState.DevKey11 = false;
 		}
 		if(FighterState.DevKey12)
@@ -607,22 +598,22 @@ public class Player : FighterChar
 
 		if (CtrlH < 0) 
 		{
-			facingDirection = false; //true means right (the direction), false means left.
+			v.facingDirection = false; //true means right (the direction), false means left.
 		} 
 		else if (CtrlH > 0)
 		{
-			facingDirection = true; //true means right (the direction), false means left.
+			v.facingDirection = true; //true means right (the direction), false means left.
 		}
 
-		if(m_Airborne)
+		if(phys.airborne)
 		{
 			if(FighterState.Vel.x>0)
 			{
-				facingDirection = true;
+				v.facingDirection = true;
 			}
 			else if(FighterState.Vel.x<0)
 			{
-				facingDirection = false;
+				v.facingDirection = false;
 			}
 		}
 
@@ -656,29 +647,29 @@ public class Player : FighterChar
 
 		if(CtrlV<0)
 		{
-			facingDirectionV = -1; //true means up (the direction), false means down.
+			v.facingDirectionV = -1; //true means up (the direction), false means down.
 		}
 		else if(CtrlV>0)
 		{
-			facingDirectionV = 1; //true means up (the direction), false means down.
+			v.facingDirectionV = 1; //true means up (the direction), false means down.
 		}
 		else
 		{
-			facingDirectionV = 0;	
+			v.facingDirectionV = 0;	
 		}
 			
-		//if(FighterState.JumpKeyPress&&(m_Grounded||m_Ceilinged||m_LeftWalled||m_RightWalled))
+		//if(FighterState.JumpKeyPress&&(phys.grounded||phys.ceilinged||phys.leftWalled||phys.rightWalled))
 		if(FighterState.JumpKeyPress)
 		{
 			FighterState.JumpKeyPress = false;
-			if(CtrlV<0 && !m_Airborne) // If holding down and on a surface, allow etherjump.
+			if(CtrlV<0 && !phys.airborne) // If holding down and on a surface, allow etherjump.
 			{
 				if(FighterState.EtherLevel>0)
 				{
 					EtherJump(FighterState.PlayerMouseVector.normalized);
 				}
 			}
-			else if(m_JumpBufferG>0 || m_JumpBufferC>0 || m_JumpBufferL>0 || m_JumpBufferR>0)
+			else if(m.jumpBufferG>0 || m.jumpBufferC>0 || m.jumpBufferL>0 || m.jumpBufferR>0)
 			{
 				Jump(CtrlH);
 			}
@@ -833,11 +824,11 @@ public class Player : FighterChar
 			StrandJumpTypeA(strandJumpHorz, strandJumpVert);
 		}
 
-		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!m_Kneeling)
+		if(FighterState.LeftClickRelease&&!(FighterState.DevMode||d.clickToKnockFighter)&&!phys.kneeling)
 		{
 			if(IsVelocityPunching())
 			{
-				v_TriggerAtkHit = true;
+				v.triggerAtkHit = true;
 			}
 			else
 			{
@@ -873,19 +864,19 @@ public class Player : FighterChar
 			if((FighterState.LeftClickHoldDuration>=g_VelocityPunchChargeTime) && (!this.isSliding()))
 			{
 				g_VelocityPunching = true;
-				o_VelocityPunch.inUse = true;
+				o.velocityPunch.inUse = true;
 			}
 			else
 			{
 				g_VelocityPunching = false;
-				o_VelocityPunch.inUse = false;
+				o.velocityPunch.inUse = false;
 			}
 		}
 		else
 		{
 			FighterState.LeftClickHoldDuration = 0;
 			g_VelocityPunching = false;
-			o_VelocityPunch.inUse = false;
+			o.velocityPunch.inUse = false;
 		}
 			
 		if(FighterState.DisperseKeyPress)
@@ -1096,7 +1087,7 @@ public class Player : FighterChar
 		newEtherPulse.GetComponentInChildren<EtherPulse>().originFighter = this;
 		newEtherPulse.GetComponentInChildren<EtherPulse>().pulseRange = 150+(FighterState.EtherLevel*50);
 		//o_ProximityLiner.outerRange = 100+(FighterState.EtherLevel*25);
-		o_FighterAudio.EtherPulseSound();
+		o.fighterAudio.EtherPulseSound();
 	}
 
 	protected void UpdatePlayerAnimation() // UPA
@@ -1105,19 +1096,19 @@ public class Player : FighterChar
 		v_CameraScrollZoom = (v_CameraScrollZoom>15) ? 15 : v_CameraScrollZoom; // Clamp max
 		v_CameraScrollZoom = (v_CameraScrollZoom<1) ? 1 : v_CameraScrollZoom; // Clamp min
 
-		v_CameraMode = v_DefaultCameraMode;
-		if(m_Kneeling&&GetEtherLevel()>0) // If kneeling, use superjump cam.
+		v.cameraMode = v.defaultCameraMode;
+		if(phys.kneeling&&GetEtherLevel()>0) // If kneeling, use superjump cam.
 		{
-			v_CameraMode = 2;
+			v.cameraMode = 2;
 		}
-		if((v_CameraMode==3 || v_CameraMode==2)&&o_TimeManager.GetTimeDilationM() < 1) // If set to normal camera mode, and game is in slowmo, use slowmo cam.
+		if((v.cameraMode==3 || v.cameraMode==2)&&o.timeManager.GetTimeDilationM() < 1) // If set to normal camera mode, and game is in slowmo, use slowmo cam.
 		{
-			v_CameraMode = 5;
+			v.cameraMode = 5;
 		}
 
 	
 
-		switch(v_CameraMode)
+		switch(v.cameraMode)
 		{
 		case 0: 
 			{
@@ -1229,14 +1220,14 @@ public class Player : FighterChar
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
 
 
-		Vector3 topRightEdge= new Vector3((1+v_CameraXLeashM)/2, (1+v_CameraYLeashM)/2, 0f);
+		Vector3 topRightEdge= new Vector3((1+v.cameraXLeashM)/2, (1+v.cameraYLeashM)/2, 0f);
 		Vector3 theMiddle 	= new Vector3(0.5f, 0.5f, 0f);
 		topRightEdge = o_MainCamera.ViewportToWorldPoint(topRightEdge);
 		theMiddle = o_MainCamera.ViewportToWorldPoint(theMiddle);
 		float xDistanceToEdge = topRightEdge.x-theMiddle.x;
 		float yDistanceToEdge = topRightEdge.y-theMiddle.y;
 
-		Vector3 topRightMax = new Vector3((1+v_CameraXLeashLim)/2, (1+v_CameraXLeashLim)/2, 0f);
+		Vector3 topRightMax = new Vector3((1+v.cameraXLeashLim)/2, (1+v.cameraXLeashLim)/2, 0f);
 		topRightMax = o_MainCamera.ViewportToWorldPoint(topRightMax);
 		float xDistanceToMax = topRightMax.x-theMiddle.x;
 		float yDistanceToMax = topRightMax.y-theMiddle.y;
@@ -1289,14 +1280,14 @@ public class Player : FighterChar
 		float camAverageX = (FighterState.MouseWorldPos.x-this.transform.position.x)/3;
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
 
-		Vector3 topRightEdge= new Vector3((1+v_CameraXLeashM)/2, (1+v_CameraYLeashM)/2, 0f);
+		Vector3 topRightEdge= new Vector3((1+v.cameraXLeashM)/2, (1+v.cameraYLeashM)/2, 0f);
 		Vector3 theMiddle 	= new Vector3(0.5f, 0.5f, 0f);
 		topRightEdge = o_MainCamera.ViewportToWorldPoint(topRightEdge);
 		theMiddle = o_MainCamera.ViewportToWorldPoint(theMiddle);
 		float xDistanceToEdge = topRightEdge.x-theMiddle.x;
 		float yDistanceToEdge = topRightEdge.y-theMiddle.y;
 
-		Vector3 topRightMax = new Vector3((1+v_CameraXLeashLim)/2, (1+v_CameraXLeashLim)/2, 0f);
+		Vector3 topRightMax = new Vector3((1+v.cameraXLeashLim)/2, (1+v.cameraXLeashLim)/2, 0f);
 		topRightMax = o_MainCamera.ViewportToWorldPoint(topRightMax);
 		float xDistanceToMax = topRightMax.x-theMiddle.x;
 		float yDistanceToMax = topRightMax.y-theMiddle.y;
@@ -1388,14 +1379,14 @@ public class Player : FighterChar
 		float camAverageY = (FighterState.MouseWorldPos.y-this.transform.position.y)/3;
 
 
-		Vector3 topRightEdge= new Vector3((1+v_CameraXLeashM)/2, (1+v_CameraYLeashM)/2, 0f);
+		Vector3 topRightEdge= new Vector3((1+v.cameraXLeashM)/2, (1+v.cameraYLeashM)/2, 0f);
 		Vector3 theMiddle 	= new Vector3(0.5f, 0.5f, 0f);
 		topRightEdge = o_MainCamera.ViewportToWorldPoint(topRightEdge);
 		theMiddle = o_MainCamera.ViewportToWorldPoint(theMiddle);
 		float xDistanceToEdge = topRightEdge.x-theMiddle.x;
 		float yDistanceToEdge = topRightEdge.y-theMiddle.y;
 
-		Vector3 topRightMax = new Vector3((1+v_CameraXLeashLim)/2, (1+v_CameraXLeashLim)/2, 0f);
+		Vector3 topRightMax = new Vector3((1+v.cameraXLeashLim)/2, (1+v.cameraXLeashLim)/2, 0f);
 		topRightMax = o_MainCamera.ViewportToWorldPoint(topRightMax);
 		float xDistanceToMax = topRightMax.x-theMiddle.x;
 		float yDistanceToMax = topRightMax.y-theMiddle.y;
@@ -1517,7 +1508,7 @@ public class Player : FighterChar
 			camSpeedModifier = (0.15f*mySpeed);
 		}
 
-		float timespeed = o_TimeManager.GetTimeDilationM();
+		float timespeed = o.timeManager.GetTimeDilationM();
 		float zoomModifier = 1;
 		if(timespeed<1)
 		{

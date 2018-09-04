@@ -797,85 +797,97 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2dcfe234c37db84ab80d947b1cfd5c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoPressLeft: 0
-  autoPressRight: 0
-  autoPressDown: 0
-  autoPressUp: 0
-  autoJump: 0
-  autoLeftClick: 0
-  antiTunneling: 1
-  gravityEnabled: 1
-  showVelocityIndicator: 0
-  showContactIndicators: 0
-  recoverFromFullEmbed: 1
-  d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 0
-  d_SendTractionMessages: 0
-  d_Invincible: 0
-  d_TickCounter: 0
-  m_MinSpeed: 10
-  m_MaxRunSpeed: 200
-  m_StartupAccelRate: 0.8
-  m_LinearAccelRate: 0.4
-  m_VJumpForce: 40
-  m_HJumpForce: 5
-  m_WallVJumpForce: 30
-  m_WallHJumpForce: 10
-  m_TractionChangeT: 30
-  m_WallTractionT: 20
-  m_LinearStopRate: 2
-  m_LinearSlideRate: 0.35
-  m_LinearOverSpeedRate: 0.1
-  m_ImpactDecelMinAngle: 20
-  m_ImpactDecelMaxAngle: 80
-  m_TractionLossMinAngle: 45
-  m_TractionLossMaxAngle: 78
-  m_SlippingAcceleration: 1
-  m_SurfaceClingTime: 1
-  m_ClingReqGForce: 50
-  m_MaxEmbed: 0.02
-  m_MinEmbed: 0.01
-  m_EtherJumpForcePerCharge: 5
-  m_EtherJumpForceBase: 40
-  m_VelPunchT: 60
-  m_SlamT: 60
-  m_CraterT: 150
-  m_GuardSlamT: 120
-  m_GuardCraterT: 300
-  m_JumpBufferG: 10
-  m_JumpBufferC: 0
-  m_JumpBufferL: 0
-  m_JumpBufferR: 0
-  m_JumpBufferFrameAmount: 10
-  m_AirborneDelay: 0.25
-  m_AirborneDelayTimer: 0
-  m_StrandJumpSpeedLossM: 0
-  m_StrandJumpReflectSpd: 0
-  m_StrandJumpReflectDir: {x: 0, y: 0}
-  m_WidestStrandJumpAngle: 45
-  critJumpReady: 0
-  critJumpWindow: 0.1
-  critJumpTimer: 0
-  critJumpFrameWindow: 1
-  critJumpFrameTimer: 2
-  critJumpBonusM: 1.33
+  d:
+    errorDetectingRecursionCount: 0
+    autoPressLeft: 0
+    autoPressRight: 0
+    autoPressDown: 0
+    autoPressUp: 0
+    autoJump: 0
+    autoLeftClick: 0
+    antiTunneling: 1
+    gravityEnabled: 1
+    showVelocityIndicator: 0
+    showContactIndicators: 0
+    recoverFromFullEmbed: 1
+    clickToKnockFighter: 0
+    sendCollisionMessages: 0
+    sendTractionMessages: 0
+    invincible: 0
+    tickCounter: 0
+    debugLine: {fileID: 120180239579081978}
+    groundLine: {fileID: 120180239579081978}
+    ceilingLine: {fileID: 120815217252953778}
+    leftSideLine: {fileID: 120455239781308918}
+    rightSideLine: {fileID: 120650385646910106}
+  m:
+    minSpeed: 10
+    maxRunSpeed: 200
+    startupAccelRate: 0.8
+    linearAccelRate: 0.4
+    vJumpForce: 40
+    hJumpForce: 5
+    wallVJumpForce: 20
+    wallHJumpForce: 10
+    tractionChangeT: 20
+    wallTractionT: 20
+    linearStopRate: 2
+    linearSlideRate: 0.35
+    linearOverSpeedRate: 0.1
+    impactDecelMinAngle: 20
+    impactDecelMaxAngle: 80
+    tractionLossMinAngle: 45
+    tractionLossMaxAngle: 78
+    slippingAcceleration: 1
+    surfaceClingTime: 1
+    clingReqGForce: 50
+    expiredNormal: {x: 0, y: 0}
+    timeSpentHanging: 0
+    maxTimeHanging: 0
+    maxEmbed: 0.02
+    minEmbed: 0.01
+    etherJumpForcePerCharge: 5
+    etherJumpForceBase: 40
+    velPunchT: 60
+    slamT: 100
+    craterT: 200
+    guardSlamT: 200
+    guardCraterT: 400
+    jumpBufferG: 0
+    jumpBufferC: 0
+    jumpBufferL: 0
+    jumpBufferR: 0
+    jumpBufferFrameAmount: 10
+    airborneDelay: 0.5
+    airborneDelayTimer: 0
+    strandJumpSpeedLossM: 0
+    strandJumpReflectSpd: 0
+    strandJumpReflectDir: {x: 0, y: 0}
+    widestStrandJumpAngle: 45
+    critJumpReady: 0
+    critJumpWindow: 0.17
+    critJumpTimer: 0
+    critJumpFrameWindow: 2
+    critJumpFrameTimer: 0
+    critJumpBonusM: 1.33
+  o:
+    fighterAudio: {fileID: 0}
+    velocityPunch: {fileID: 0}
+    spriteTransform: {fileID: 0}
+    dustSpawnTransform: {fileID: 0}
+    timeManager: {fileID: 0}
+    spriteRenderer: {fileID: 0}
+    itemHandler: {fileID: 0}
+    equippedShoe: {fileID: 0}
+    sparkThrower: {fileID: 0}
+    anim: {fileID: 0}
+    rigidbody2D: {fileID: 0}
+    debugAngleDisplay: {fileID: 0}
+    navMaster: {fileID: 0}
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
   k_StrandJumpSlowdownLinear: 5
-  o_FighterAudio: {fileID: 114126041391509338}
-  o_VelocityPunch: {fileID: 0}
-  o_SpriteTransform: {fileID: 0}
-  o_DustSpawnTransform: {fileID: 0}
-  o_TimeManager: {fileID: 0}
-  o_SpriteRenderer: {fileID: 0}
-  o_ItemHandler: {fileID: 0}
-  o_EquippedShoe: {fileID: 0}
-  o_SparkThrower: {fileID: 0}
-  o_Anim: {fileID: 0}
-  o_Rigidbody2D: {fileID: 0}
-  o_DebugAngleDisplay: {fileID: 0}
-  o_NavMaster: {fileID: 0}
   p_EtherPulse: {fileID: 1341837186064918, guid: 32669e170dad2a94d92c8734796a5fa9,
     type: 2}
   p_AirPunchPrefab: {fileID: 1382452388647406, guid: 7644444a3a5290a4d86efcac5f635147,
@@ -1030,6 +1042,7 @@ MonoBehaviour:
   v_FlashTimer: 0
   v_FlashDuration: 0
   v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
+  g_Team: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxVigor: 100

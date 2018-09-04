@@ -18,7 +18,7 @@ public class VelocityPunch : MonoBehaviour {
 		myFighter = myParent.GetComponent<FighterChar>();
 		mySprite = this.GetComponent<SpriteRenderer>();
 		myTrailRenderer = this.transform.GetComponent<TrailRenderer>();
-		punchThreshold = myFighter.m_VelPunchT;
+		punchThreshold = myFighter.m.velPunchT;
 		punchMinThreshold = punchThreshold/4;
 	}
 	

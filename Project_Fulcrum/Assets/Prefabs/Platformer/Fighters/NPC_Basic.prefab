@@ -655,68 +655,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30244a32ac93af4b9e6242ffe6cfd6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoPressLeft: 0
-  autoPressRight: 0
-  autoPressDown: 0
-  autoPressUp: 0
-  autoJump: 0
-  autoLeftClick: 0
-  antiTunneling: 1
-  gravityEnabled: 1
-  showVelocityIndicator: 0
-  showContactIndicators: 0
-  recoverFromFullEmbed: 1
-  d_ClickToKnockFighter: 0
-  d_SendCollisionMessages: 0
-  d_SendTractionMessages: 0
-  d_Invincible: 0
-  d_TickCounter: 0
-  m_MinSpeed: 10
-  m_MaxRunSpeed: 200
-  m_StartupAccelRate: 0.8
-  m_LinearAccelRate: 0.4
-  m_VJumpForce: 40
-  m_HJumpForce: 5
-  m_WallVJumpForce: 20
-  m_WallHJumpForce: 10
-  m_TractionChangeT: 20
-  m_WallTractionT: 20
-  m_LinearStopRate: 2
-  m_LinearSlideRate: 0.35
-  m_LinearOverSpeedRate: 0.1
-  m_ImpactDecelMinAngle: 20
-  m_ImpactDecelMaxAngle: 80
-  m_TractionLossMinAngle: 45
-  m_TractionLossMaxAngle: 78
-  m_SlippingAcceleration: 1
-  m_SurfaceClingTime: 1
-  m_ClingReqGForce: 50
-  m_MaxEmbed: 0.02
-  m_MinEmbed: 0.01
-  m_EtherJumpForcePerCharge: 5
-  m_EtherJumpForceBase: 40
-  m_VelPunchT: 60
-  m_SlamT: 100
-  m_CraterT: 200
-  m_GuardSlamT: 200
-  m_GuardCraterT: 400
-  m_JumpBufferG: 0
-  m_JumpBufferC: 0
-  m_JumpBufferL: 0
-  m_JumpBufferR: 0
-  m_JumpBufferFrameAmount: 10
-  m_AirborneDelay: 0.5
-  m_AirborneDelayTimer: 0
-  m_StrandJumpSpeedLossM: 0
-  m_StrandJumpReflectSpd: 0
-  m_StrandJumpReflectDir: {x: 0, y: 0}
-  m_WidestStrandJumpAngle: 45
-  critJumpReady: 0
-  critJumpWindow: 0
-  critJumpTimer: 0
-  critJumpFrameWindow: 2
-  critJumpFrameTimer: 2
-  critJumpBonusM: 1.33
+  d:
+    errorDetectingRecursionCount: 0
+    autoPressLeft: 0
+    autoPressRight: 0
+    autoPressDown: 0
+    autoPressUp: 0
+    autoJump: 0
+    autoLeftClick: 0
+    antiTunneling: 1
+    gravityEnabled: 1
+    showVelocityIndicator: 0
+    showContactIndicators: 0
+    recoverFromFullEmbed: 1
+    clickToKnockFighter: 0
+    sendCollisionMessages: 0
+    sendTractionMessages: 0
+    invincible: 0
+    tickCounter: 0
+    debugLine: {fileID: 0}
+    groundLine: {fileID: 0}
+    ceilingLine: {fileID: 0}
+    leftSideLine: {fileID: 0}
+    rightSideLine: {fileID: 0}
+  m:
+    minSpeed: 0
+    maxRunSpeed: 0
+    startupAccelRate: 0
+    linearAccelRate: 0
+    vJumpForce: 0
+    hJumpForce: 0
+    wallVJumpForce: 0
+    wallHJumpForce: 0
+    tractionChangeT: 0
+    wallTractionT: 0
+    linearStopRate: 0
+    linearSlideRate: 0
+    linearOverSpeedRate: 0
+    impactDecelMinAngle: 0
+    impactDecelMaxAngle: 0
+    tractionLossMinAngle: 0
+    tractionLossMaxAngle: 0
+    slippingAcceleration: 0
+    surfaceClingTime: 0
+    clingReqGForce: 0
+    expiredNormal: {x: 0, y: 0}
+    timeSpentHanging: 0
+    maxTimeHanging: 0
+    maxEmbed: 0
+    minEmbed: 0
+    etherJumpForcePerCharge: 0
+    etherJumpForceBase: 0
+    velPunchT: 0
+    slamT: 0
+    craterT: 0
+    guardSlamT: 0
+    guardCraterT: 0
+    jumpBufferG: 0
+    jumpBufferC: 0
+    jumpBufferL: 0
+    jumpBufferR: 0
+    jumpBufferFrameAmount: 0
+    airborneDelay: 0
+    airborneDelayTimer: 0
+    strandJumpSpeedLossM: 0
+    strandJumpReflectSpd: 0
+    strandJumpReflectDir: {x: 0, y: 0}
+    widestStrandJumpAngle: 0
+    critJumpReady: 0
+    critJumpWindow: 0
+    critJumpTimer: 0
+    critJumpFrameWindow: 0
+    critJumpFrameTimer: 0
+    critJumpBonusM: 0
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -887,6 +898,7 @@ MonoBehaviour:
   v_FlashTimer: 0
   v_FlashDuration: 0
   v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
+  g_Team: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
   g_MaxVigor: 100
@@ -956,6 +968,7 @@ MonoBehaviour:
   PunchCooldown: 0
   d_Think: 1
   d_DumbNav: 0
+  leashRange: 250
   d_aiDebug: 0
   n_NavState: 0
   n_TraversalTime: 0
