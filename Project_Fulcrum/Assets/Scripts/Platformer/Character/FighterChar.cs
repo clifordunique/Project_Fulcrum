@@ -238,6 +238,26 @@ public class FighterChar : NetworkBehaviour
 	//###################################################################################################################################
 	#region CUSTOM FUNCTIONS
 
+	public void Teleport(Vector2 destination, bool resetVelocity)
+	{
+		this.FighterState.FinalPos = destination;
+		this.GetComponent<InterpolatedTransform>().ForgetPreviousTransforms();
+		if(resetVelocity)
+		{
+			this.FighterState.Vel = Vector2.zero;
+		}
+	}
+
+	public void Teleport(Vector3 destination, bool resetVelocity)
+	{
+		this.FighterState.FinalPos = (Vector2)destination;
+		this.GetComponent<InterpolatedTransform>().ForgetPreviousTransforms();
+		if(resetVelocity)
+		{
+			this.FighterState.Vel = Vector2.zero;
+		}
+	}
+
 	protected void FlashEffect(float myDuration, Color myColor)
 	{
 		v.flashDuration = myDuration;
@@ -1597,6 +1617,31 @@ public class FighterChar : NetworkBehaviour
 		GameObject newWindGust = (GameObject)Instantiate(p_AirBurstPrefab, this.transform.position, Quaternion.identity);
 		newWindGust.GetComponentInChildren<AirBurst>().Create(false, 0, 30+70*impactStrengthM, 0.8f, impactStrengthM*3, impactForce); 		//Set the parameters of the afterslam wind.
 		newWindGust.name = "AirGust";
+	}
+
+	public void ShakeFighter(float mag)
+	{
+		if(!this.IsPlayer()){return;} 
+		float Magnitude = mag;
+		float Roughness = 10f;
+		float FadeOutTime = 2.5f;
+		float FadeInTime = 0f;
+		Vector3 RotInfluence = new Vector3(1,1,1);
+		Vector3 PosInfluence = new Vector3(0.15f,0.15f,0.15f);
+		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
+	}
+
+	public void ShakeFighter(float myMagnitude, float myRoughness, float myFadeInTime, float myFadeOutTime, Vector3 myPosInfluence, Vector3 myRotInfluence)
+	{
+		if(!this.IsPlayer()){return;} 
+		float Magnitude = myMagnitude;
+		float Roughness = myRoughness;
+		float FadeInTime = myFadeInTime;
+		float FadeOutTime = myFadeOutTime;
+		Vector3 PosInfluence = myPosInfluence;
+		Vector3 RotInfluence = myRotInfluence;
+		CameraShaker.Instance.ShakeOnce(Magnitude, Roughness, FadeInTime, FadeOutTime, PosInfluence, RotInfluence);
+
 	}
 
 	public void Slam(float impactForce) // Triggered when character impacts anything too hard.
@@ -4446,6 +4491,12 @@ public class FighterChar : NetworkBehaviour
 			return true;
 		}
 	}
+
+	public int GetTeam()
+	{
+		return g_Team;
+	}
+
 
 
 	#endregion

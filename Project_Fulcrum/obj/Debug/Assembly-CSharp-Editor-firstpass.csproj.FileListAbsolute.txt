@@ -61,9 +61,6 @@ C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debu
 C:\Users\Sean Mcfarlane\Desktop\PF_REPO\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-Editor-firstpass.pdb
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp-Editor-firstpass.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Assembly-CSharp-Editor-firstpass.pdb
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.dll
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAFConverter.dll
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAFEditor.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\Ionic.Zip.Reduced.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\nunit.framework.dll
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.Advertisements.dll
@@ -113,7 +110,6 @@ C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.HoloLens.x
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.Purchasing.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.VR.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEngine.VR.xml
-C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\GAF.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\Temp\bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-Editor-firstpass.csprojResolveAssemblyReference.cache
 C:\GameDev\Project_Fulcrum\Project_Fulcrum\obj\Debug\Assembly-CSharp-Editor-firstpass.dll

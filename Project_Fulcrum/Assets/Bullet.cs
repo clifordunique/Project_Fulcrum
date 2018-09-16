@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour {
 	[SerializeField] protected Vector2 vel;
 	[SerializeField] protected int damage;
 	[SerializeField] protected GameObject source; // Used to exclude the shooter from collision.
+	[SerializeField][ReadOnlyAttribute] protected bool[] collidesWithTeam;
 //	[SerializeField] protected Quaternion myRotation; 
 //	[SerializeField] protected Vector2 pos;
 
@@ -23,12 +24,12 @@ public class Bullet : MonoBehaviour {
 				if(hit.collider.GetComponent<FighterChar>())
 				{
 					FighterChar opponent = hit.collider.GetComponent<FighterChar>();
-					if(opponent.isAlive())
+					if(opponent.isAlive() && collidesWithTeam[opponent.GetTeam()])
 					{
 						opponent.TakeDamage(damage);
 						opponent.v.triggerFlinched = true;
 						bool facingdir = true;
-						if((opponent.GetPosition().x-this.transform.position.x) > 0)
+						if((opponent.GetPosition().x-this.transform.position.x)>0)
 						{
 							facingdir = false;
 						}
@@ -38,9 +39,13 @@ public class Bullet : MonoBehaviour {
 						}
 
 						hit.collider.GetComponent<FighterChar>().v.facingDirection = facingdir;
+						Destroy(this.transform.gameObject); // Only destroy if hitting an alive, enemy fighter.
 					}
 				}
-				Destroy(this.transform.gameObject);
+				else // Hit inanimate object
+				{
+					Destroy(this.transform.gameObject);
+				}
 			}
 		}
 
@@ -48,11 +53,20 @@ public class Bullet : MonoBehaviour {
 //		this.transform.rotation = myRotation; 
 	}
 
+	public void Fire(Vector2 direction, float speed, int dmg, GameObject src, bool[] teamCollisions)
+	{
+		damage = dmg;
+		vel = direction.normalized*speed;
+		source = src;
+		collidesWithTeam = teamCollisions;
+	}
+
 	public void Fire(Vector2 direction, float speed, int dmg, GameObject src)
 	{
 		damage = dmg;
 		vel = direction.normalized*speed;
 		source = src;
+		collidesWithTeam = new bool[] {true,true,true,true,true,true,true,true,true,true};
 	}
 
 

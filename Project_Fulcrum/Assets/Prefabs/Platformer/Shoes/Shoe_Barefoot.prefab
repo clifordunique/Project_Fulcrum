@@ -37,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1667449418817232}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 832.38934, y: 1555.7883, z: 0}
+  m_LocalPosition: {x: 1995.0547, y: 1399.5934, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -91,37 +91,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   itemName: Barefoot
-  itemDesc: +2 Grip \n +2 Ouchies
+  itemDesc: <color=green>+2 Traction</color> <color=red> +2 Ouchies</color>
   shoeID: 0
   soundType: 0
-  m_MinSpeed: 10
-  m_MaxRunSpeed: 200
-  m_StartupAccelRate: 1.2
-  m_VJumpForce: 40
-  m_HJumpForce: 5
-  m_WallVJumpForce: 30
-  m_WallHJumpForce: 10
-  m_EtherJumpForcePerCharge: 5
-  m_EtherJumpForceBase: 40
-  m_TractionChangeT: 20
-  m_WallTractionT: 20
-  m_LinearStopRate: 2
-  m_LinearSlideRate: 0.35
-  m_LinearOverSpeedRate: 0.1
-  m_LinearAccelRate: 0.4
-  m_ImpactDecelMinAngle: 20
-  m_ImpactDecelMaxAngle: 80
-  m_TractionLossMinAngle: 45
-  m_TractionLossMaxAngle: 78
-  m_SlippingAcceleration: 1
-  m_SurfaceClingTime: 1
-  m_ClingReqGForce: 50
-  m_SlamT: 60
-  m_CraterT: 150
-  m_GuardSlamT: 120
-  m_GuardCraterT: 300
-  m_StrandJumpSpeedLossM: 0
-  m_WidestStrandJumpAngle: 45
+  m:
+    minSpeed: 10
+    maxRunSpeed: 200
+    startupAccelRate: 1.2
+    linearAccelRate: 0.4
+    vJumpForce: 40
+    hJumpForce: 5
+    wallVJumpForce: 30
+    wallHJumpForce: 10
+    tractionChangeT: 20
+    wallTractionT: 20
+    linearStopRate: 2
+    linearSlideRate: 0.35
+    linearOverSpeedRate: 0.1
+    impactDecelMinAngle: 20
+    impactDecelMaxAngle: 80
+    tractionLossMinAngle: 45
+    tractionLossMaxAngle: 78
+    slippingAcceleration: 1
+    surfaceClingTime: 1
+    clingReqGForce: 50
+    expiredNormal: {x: 0, y: 0}
+    timeSpentHanging: 0
+    maxTimeHanging: 0
+    maxEmbed: 0.02
+    minEmbed: 0.01
+    etherJumpForcePerCharge: 5
+    etherJumpForceBase: 50
+    velPunchT: 60
+    slamT: 60
+    craterT: 150
+    guardSlamT: 120
+    guardCraterT: 300
+    jumpBufferG: 0
+    jumpBufferC: 0
+    jumpBufferL: 0
+    jumpBufferR: 0
+    jumpBufferFrameAmount: 10
+    airborneDelay: 0.5
+    airborneDelayTimer: 0
+    strandJumpSpeedLossM: 0
+    strandJumpReflectSpd: 0
+    strandJumpReflectDir: {x: 0, y: 0}
+    widestStrandJumpAngle: 45
+    critJumpReady: 0
+    critJumpWindow: 0.17
+    critJumpTimer: 0
+    critJumpFrameWindow: 2
+    critJumpFrameTimer: 0
+    critJumpBonusM: 1.33
 --- !u!212 &212001396967146418
 SpriteRenderer:
   m_ObjectHideFlags: 1

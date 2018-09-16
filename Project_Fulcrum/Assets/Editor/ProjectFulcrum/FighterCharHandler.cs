@@ -19,11 +19,13 @@ public class FighterCharHandler : Editor {
 		DrawDefaultInspector();
 		if(GUILayout.Button("Set default movement variables."))
 		{
+			Undo.RecordObject(myFighterChar, "Set default movement vars" );
 			myFighterChar.m.SetDefaults();
 		}
 
 		if(GUILayout.Button("Set default audiovisual variables."))
 		{
+			Undo.RecordObject(myFighterChar, "Set default audiovisual vars" );
 			myFighterChar.v.SetDefaults();
 		}
 	}

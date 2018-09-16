@@ -72,10 +72,12 @@
      <Compile Include="Assets\GAF\Scripts\Objects\GAFObjectsManager.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFBakedObjectsManagerInternal.cs" />
      <Compile Include="Assets\GAF\Scripts\Objects\Interfaces\GAFObjectsManagerInternal.cs" />
+     <Compile Include="Assets\Interactable.cs" />
      <Compile Include="Assets\ItemSlot.cs" />
      <Compile Include="Assets\MagicLogoEffect.cs" />
      <Compile Include="Assets\NPC_Gunner.cs" />
      <Compile Include="Assets\NavBuilderRay.cs" />
+     <Compile Include="Assets\OneWayPlatform.cs" />
      <Compile Include="Assets\ReleaseModeSwitch.cs" />
      <Compile Include="Assets\Scripts\AnimAudio.cs" />
      <Compile Include="Assets\Scripts\AnimHeightAdjuster.cs" />
@@ -156,6 +158,9 @@
      <Compile Include="Assets\Scripts\UninterruptibleAnim.cs" />
      <Compile Include="Assets\Shaders\ImageEffects\MinimapHolo.cs" />
      <Compile Include="Assets\Shaders\ImageEffects\UIHologram.cs" />
+     <Compile Include="Assets\SlidingDoor.cs" />
+     <Compile Include="Assets\SpikeTrap.cs" />
+     <Compile Include="Assets\Teleporter.cs" />
      <Compile Include="Assets\Test_Gaf_Controller.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\MultiKeyDictionary.cs" />
      <Compile Include="Assets\Unity-Logs-Viewer\Reporter\Reporter.cs" />
@@ -352,6 +357,7 @@
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_Antialiasing\NFAA.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\ScreenSpaceRaytrace.cginc" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\TiltShiftHdrLensBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\Interactable.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\VignetteShader.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
      <None Include="Assets\Standard Assets\Effects\TessellationShaders\Shaders\BumpedSpecularSmooth.shader" />
@@ -369,6 +375,7 @@
      <None Include="Assets\StreamingAssets\desc.txt" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\Contrast Stretch\Apply.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\frag_ao.cginc" />
+     <None Include="Assets\Shaders\Shaders\Motion.cginc" />
      <None Include="Assets\GAF\Resources\Shaders\GAFBlur.shader" />
      <None Include="Assets\Text\LC1.txt" />
      <None Include="Assets\Shaders\Shaders\MinimapLayerCombiner.shader" />

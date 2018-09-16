@@ -19,14 +19,8 @@ public class ShoeHandler : Editor {
 		DrawDefaultInspector();
 		if(GUILayout.Button("Set default movement variables."))
 		{
+			Undo.RecordObject(myShoe, "Set default movement variables.");
 			myShoe.m.SetDefaults();
 		}
 	}
-
-//	public void DefaultMovementVars()
-//	{
-//		myFighterChar.m = new MovementVars();
-//	}
-//
-
 }

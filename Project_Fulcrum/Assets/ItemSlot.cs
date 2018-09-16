@@ -69,7 +69,7 @@ public class ItemSlot : MonoBehaviour {
 		if(newItem!=null)
 		{
 			myItem = newItem;
-			itemName.text = newItem.itemName;
+			itemName.text = newItem.itemName+"\n"+newItem.itemDesc;
 			itemIcon.sprite = newItem.GetComponent<SpriteRenderer>().sprite;
 		}
 	}

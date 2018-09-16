@@ -80,6 +80,8 @@
 				fixed4 col = tex2D(_MainTex, i.uv);
 				//float4 f = _MainTex_TexelSize;
 
+				//clip(col.a-1);
+
 				if(col.a != 0)
 				{
 					col.a = (0.9+0.1*sin(_MainTex_TexelSize.z*i.uv.y))*(1-(0.2*(sin(fmod(i.uv.y+_Time.y/4,1.57)))));

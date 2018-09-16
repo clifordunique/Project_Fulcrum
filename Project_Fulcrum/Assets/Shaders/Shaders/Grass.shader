@@ -1,5 +1,5 @@
 ﻿
-Shader "Custom/Grass" {
+Shader "ProjectFulcrum/Grass" {
 	
 	Properties {
 		_MainTex("Texture", 2D) = "white" {}
@@ -48,17 +48,14 @@ Shader "Custom/Grass" {
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				//o.uv = v.uv;
 				o.color = v.color;
-				o.uv = v.uv;//.xy - fixed2(0.5,0.5);
+				o.uv = v.uv;
 
 				return o;
 			}
 
 			float4 frag(v2f i) : SV_Target
 			{
-				//_Radius = 0.5*((0.15f*sin(_Time.z*2))+0.15f);
-				//float disp = tex2D(_DisplaceTex, i.uv).r;
 				float disp = i.uv.y*_WindForce;
 				if (abs(_WindForce) < 0.5f)
 				{
@@ -74,7 +71,6 @@ Shader "Custom/Grass" {
 
 				colour *= i.color;
 				clip(colour.a-1);
-				//return colour4;
 				return colour;
 			}
 			ENDCG

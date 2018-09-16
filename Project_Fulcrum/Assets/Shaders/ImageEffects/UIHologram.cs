@@ -26,7 +26,7 @@ public class UIHologram : MonoBehaviour {
 		int scrH = Screen.height;
 		outputRT = new RenderTexture((int)(scrW), (int)(scrH), 24);
 //		outputRT.anisoLevel = 0;
-//		outputRT.filterMode = FilterMode.Point;
+		outputRT.filterMode = FilterMode.Point;
 //		outputRT.antiAliasing = 1;
 		outputRT.Create();
 
@@ -37,11 +37,13 @@ public class UIHologram : MonoBehaviour {
 
 	void OnPreRender()
 	{
+		myInputCam.clearFlags = CameraClearFlags.SolidColor;
 		myInputCam.targetTexture = outputRT;
 	}
 
 	void OnPostRender()
 	{
+		myInputCam.clearFlags = CameraClearFlags.Depth;
 		myInputCam.targetTexture = null;
 		Graphics.Blit(outputRT, null, UIHologramMaterial);
 	}

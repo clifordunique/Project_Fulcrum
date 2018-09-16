@@ -416,14 +416,16 @@ public class Player : FighterChar
 
 		if(FighterState.DevKey3)
 		{
-			if(d.autoPressLeft==false)
-			{
-				d.autoPressLeft = true;
-			}
-			else
-			{
-				d.autoPressLeft = false;
-			}
+//			if(d.autoPressLeft==false)
+//			{
+//				d.autoPressLeft = true;
+//			}
+//			else
+//			{
+//				d.autoPressLeft = false;
+//			}
+			Vector2 destination = new Vector2(4442.44f, 11667.56f);
+			Teleport(destination, true);
 			FighterState.DevKey3 = false;
 		}
 

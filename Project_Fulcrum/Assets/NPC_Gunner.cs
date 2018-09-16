@@ -184,7 +184,10 @@ public class NPC_Gunner : NPC
 		GameObject bulletObj = (GameObject)Instantiate(p_BulletPrefab, this.transform.position+(Vector3)(aimDir.normalized/2), fireAngle, this.transform);
 		Bullet b = bulletObj.GetComponent<Bullet>();
 
-		b.Fire(aimDir, 200f, 20, this.gameObject);
+		bool[] bulletHitsTeam = new bool[10] {true,true,true,true,true,true,true,true,true,true};
+		bulletHitsTeam[this.g_Team] = false;
+
+		b.Fire(aimDir, 200f, 20, this.gameObject, bulletHitsTeam);
 
 		//############################################
 		//## Shock Effect Code						##

@@ -884,6 +884,66 @@ MonoBehaviour:
     rigidbody2D: {fileID: 0}
     debugAngleDisplay: {fileID: 0}
     navMaster: {fileID: 0}
+  phys:
+    IGF: 0
+    CGF: 0
+    remainingVelM: 0
+    initialVel: {x: 0, y: 0}
+    distanceTravelled: {x: 0, y: 0}
+    remainingMovement: {x: 0, y: 0}
+    groundContact: 0
+    ceilingContact: 0
+    leftSideContact: 0
+    rightSideContact: 0
+    grounded: 0
+    ceilinged: 0
+    leftWalled: 0
+    rightWalled: 0
+    groundBlocked: 0
+    ceilingBlocked: 0
+    leftWallBlocked: 0
+    rightWallBlocked: 0
+    surfaceCling: 0
+    airborne: 0
+    kneeling: 0
+    worldImpact: 0
+    lastSafePosition: {x: 0, y: 0, z: 0}
+  v:
+    facingDirection: 0
+    facingDirectionV: 0
+    reversingSlideT: 5
+    cameraMode: 0
+    defaultCameraMode: 1
+    cameraXLeashM: 0.5
+    cameraYLeashM: 0.5
+    cameraXLeashLim: 0.8
+    cameraYLeashLim: 0.8
+    dustMoteFrequency: 10
+    dustMoteTimer: 0
+    distFromLastDust: 0
+    distBetweenDust: 0.1
+    defaultColor: {r: 0, g: 0, b: 0, a: 0}
+    currentColor: {r: 0, g: 0, b: 0, a: 0}
+    chargedColor: {r: 1, g: 1, b: 1, a: 1}
+    triggerAtkHit: 0
+    triggerRollOut: 0
+    triggerFlinched: 0
+    airForgiveness: 0
+    punchStrengthSlowmoT: 0.5
+    gender: 1
+    triggerGenderChange: 1
+    speedForMaxLean: 100
+    leanAngle: 0
+    primarySurface: 0
+    truePrimarySurface: 0
+    wallSliding: 0
+    sliding: 0
+    terrainType: []
+    highSpeedMode: 0
+    highSpeedModeT: 100
+    flashTimer: 0
+    flashDuration: 0
+    flashColour: {r: 0, g: 0, b: 0, a: 0}
   k_IsKinematic: 0
   k_KinematicAnim: 0
   k_StrandJumpSlowdownM: 0.66
@@ -928,28 +988,6 @@ MonoBehaviour:
   m_CeilingNormal: {x: 0, y: 0}
   m_LeftNormal: {x: 0, y: 0}
   m_RightNormal: {x: 0, y: 0}
-  m_IGF: 0
-  m_CGF: 0.3710251
-  m_RemainingVelM: 1
-  initialVel: {x: 0, y: 0}
-  m_DistanceTravelled: {x: 0, y: 0}
-  m_RemainingMovement: {x: 0, y: 0}
-  groundContact: 1
-  ceilingContact: 0
-  leftSideContact: 0
-  rightSideContact: 0
-  m_Grounded: 1
-  m_Ceilinged: 0
-  m_LeftWalled: 0
-  m_RightWalled: 0
-  m_GroundBlocked: 0
-  m_CeilingBlocked: 0
-  m_LeftWallBlocked: 0
-  m_RightWallBlocked: 0
-  m_SurfaceCling: 0
-  m_Airborne: 0
-  m_Kneeling: 0
-  m_WorldImpact: 0
   FighterState:
     EtherLevel: 0
     DevMode: 0
@@ -1007,41 +1045,6 @@ MonoBehaviour:
     PlayerMouseVector: {x: 413, y: 5.201796}
     Vel: {x: 0, y: 0}
     FinalPos: {x: -413, y: -5.201796}
-  facingDirection: 0
-  facingDirectionV: 0
-  v_ReversingSlideT: 5
-  v_CameraMode: 1
-  v_DefaultCameraMode: 0
-  v_CameraXLeashM: 0.5
-  v_CameraYLeashM: 0.5
-  v_CameraXLeashLim: 0.8
-  v_CameraYLeashLim: 0.8
-  v_DustMoteFrequency: 10
-  v_DustMoteTimer: 0
-  v_DistFromLastDust: 0
-  v_DistBetweenDust: 0.1
-  v_DefaultColor: {r: 0, g: 0, b: 0, a: 0}
-  v_CurrentColor: {r: 0, g: 0, b: 0, a: 0}
-  v_ChargedColor: {r: 1, g: 1, b: 1, a: 1}
-  v_TriggerAtkHit: 0
-  v_TriggerRollOut: 0
-  v_TriggerFlinched: 0
-  v_AirForgiveness: 0
-  v_PunchStrengthSlowmoT: 0.5
-  v_Gender: 1
-  v_TriggerGenderChange: 1
-  v_SpeedForMaxLean: 100
-  v_LeanAngle: 0
-  v_PrimarySurface: 0
-  v_TruePrimarySurface: 0
-  v_WallSliding: 0
-  v_Sliding: 0
-  v_TerrainType: []
-  v_HighSpeedMode: 0
-  v_HighSpeedModeT: 100
-  v_FlashTimer: 0
-  v_FlashDuration: 0
-  v_FlashColour: {r: 0, g: 0, b: 0, a: 0}
   g_Team: 0
   g_VelocityPunching: 0
   g_VelocityPunchChargeTime: 0.5
