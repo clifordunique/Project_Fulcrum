@@ -2,25 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+[System.Serializable]
+public class GameObjEvent : UnityEvent<GameObject>
+{
+}
+
 public class Interactable : MonoBehaviour {
 
-	[SerializeField] UnityEvent mouseEnterEvent;
-	[SerializeField] UnityEvent mouseExitEvent;
-	[SerializeField] UnityEvent mouseDownEvent;
-	[SerializeField] Material interactableMat;
-
-	[SerializeField][ReadOnlyAttribute] private SpriteRenderer mySprite; 
+	[SerializeField] public GameObject localPlayer;
+	[SerializeField] public GameObjEvent mouseEnterEvent;
+	[SerializeField] public GameObjEvent mouseExitEvent;
+	[SerializeField] public GameObjEvent mouseDownEvent;
+	[SerializeField] public Material interactableMat;
+	[SerializeField][ReadOnlyAttribute] public SpriteRenderer mySprite; 
 
 	void OnMouseEnter()
 	{
-		mouseEnterEvent.Invoke();
+		FindPlayer();
+		mouseEnterEvent.Invoke(localPlayer);
 		mySprite.color = Color.red;
 		//print("MOUSE ENTERED!");
 	}
 
 	void OnMouseExit()
 	{
-		mouseExitEvent.Invoke();
+		FindPlayer();
+		mouseExitEvent.Invoke(localPlayer);
 		mySprite.color = Color.white;
 		//print("MOUSE EXITED!");
 
@@ -28,18 +36,13 @@ public class Interactable : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		mouseDownEvent.Invoke();
+		FindPlayer();
+		mouseDownEvent.Invoke(localPlayer);
 		//print("MOUSE DOWN!");
 	}
 
 	// Use this for initialization
-	void Start () 
-	{
-		mouseEnterEvent = new UnityEvent();
-		mouseExitEvent = new UnityEvent();
-		mouseDownEvent = new UnityEvent();
-		mySprite = this.GetComponent<SpriteRenderer>();
-	}
+	void Start () {}
 
 	public void SetVisuals(int spriteSize, Color flashColour, Color outlineColour)
 	{
@@ -53,6 +56,19 @@ public class Interactable : MonoBehaviour {
 		this.mySprite.material.SetFloat("_FlashMagnitude", mult); 
 	}
 
+	public void FindPlayer() // Yes, I know this is terrible.
+	{
+		Player[] playerlist = FindObjectsOfType<Player>();
+		foreach (Player p in playerlist)
+		{
+			if (p.isLocalPlayer)
+			{
+				localPlayer = p.gameObject;
+			}
+		}
+		print("Local player found to be: " + localPlayer);
+	}
+	
 	// Update is called once per frame
 	void Update () 
 	{

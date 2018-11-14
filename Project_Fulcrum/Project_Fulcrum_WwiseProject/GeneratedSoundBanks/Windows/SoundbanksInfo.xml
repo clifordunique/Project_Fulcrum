@@ -103,6 +103,10 @@
 					<ShortName>gravel2.wav</ShortName>
 					<Path>SFX\gravel2_1C9C67B2.wem</Path>
 				</File>
+				<File Id="98160183" Language="SFX">
+					<ShortName>ElectroKinetic6.wav</ShortName>
+					<Path>SFX\ElectroKinetic6_1C9C67B2.wem</Path>
+				</File>
 				<File Id="110099929" Language="SFX">
 					<ShortName>fist_impact01.wav</ShortName>
 					<Path>SFX\fist_impact01_8F4BB5CC.wem</Path>
@@ -518,10 +522,6 @@
 				<File Id="1047274906" Language="SFX">
 					<ShortName>grass04.wav</ShortName>
 					<Path>SFX\grass04_1C9C67B2.wem</Path>
-				</File>
-				<File Id="1050534839" Language="SFX">
-					<ShortName>Music\DeusExodus.wav</ShortName>
-					<Path>SFX\Music\DeusExodus_1C9C67B2.wem</Path>
 				</File>
 				<File Id="1055253707" Language="SFX">
 					<ShortName>fist_impact03.wav</ShortName>

@@ -3,9 +3,9 @@
 	<Platform GUID="{F1290B89-EB12-45A9-A3B3-498722765758}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="Environment" Hash="3540997527" Timestamp="1535918983"/>
+				<File Name="Environment" Hash="1716363832" Timestamp="1537483337"/>
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="419222313" Timestamp="1535918782"/>
+				<File Name="FighterChar" Hash="1350783056" Timestamp="1537483338"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532444"/>
 				<File Name="Init" Hash="1245275557" Timestamp="1535403893"/>
 				<File Name="UI" Hash="2826825581" Timestamp="1518711592"/>
@@ -13,16 +13,16 @@
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="2312949636" Timestamp="1535918983"/>
+				<File Name="" Hash="1899900602" Timestamp="1537483338"/>
 			</Language>
 		</XMLInfo>
 	</Platform>
 	<Platform GUID="{B88661B7-53E0-4C42-8618-3526EA9C339A}">
 		<Banks>
 			<Language ID="393239870">
-				<File Name="Environment" Hash="3540997527" Timestamp="1535918982"/>
+				<File Name="Environment" Hash="1716363832" Timestamp="1537483336"/>
 				<File Name="Fighter" Hash="3060856277" Timestamp="1517537898"/>
-				<File Name="FighterChar" Hash="419222313" Timestamp="1535918781"/>
+				<File Name="FighterChar" Hash="1350783056" Timestamp="1537483337"/>
 				<File Name="FighterChar2" Hash="858295709" Timestamp="1517532515"/>
 				<File Name="Init" Hash="3113045715" Timestamp="1535403892"/>
 				<File Name="UI" Hash="2826825581" Timestamp="1518711591"/>
@@ -30,7 +30,7 @@
 		</Banks>
 		<XMLInfo>
 			<Language ID="-1">
-				<File Name="" Hash="3754968014" Timestamp="1535918982"/>
+				<File Name="" Hash="2131813796" Timestamp="1537483337"/>
 			</Language>
 		</XMLInfo>
 	</Platform>

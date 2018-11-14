@@ -9,8 +9,7 @@ public class Item : MonoBehaviour {
 	[SerializeField][ReadOnlyAttribute] public int itemType;	// Item's slot type. Shoe(0), Gadget(1), or Weapon(2).
 	[SerializeField] public string itemName;	// Item's name text.
 	[SerializeField] public string itemDesc;	// Item description text.
-	protected SpriteRenderer itemSprite;			// Item description text.
-
+	protected SpriteRenderer itemSprite;            // Item description text.
 
 
 	protected bool falling = true;
@@ -67,17 +66,29 @@ public class Item : MonoBehaviour {
 	{
 		FighterChar thePlayer = theObject.gameObject.GetComponent<FighterChar>();
 
-		if(thePlayer!=null)
-		{
-			if(thePlayer.IsPlayer() && inactiveTimeCur <= 0)
-			{
-				thePlayer.EquipItem(this);
-			}
-		}
-		else //if ( theObject.gameObject.layer == 15 ) // If collided object is a world object.
+		if ( theObject.gameObject.layer == 15 ) // If collided object is a world object.
 		{
 			//print("collided with: "+theObject.name);
 			falling = false;
 		}
 	}
 }
+
+
+//public override void OnTriggerEnter2D(Collider2D theObject)
+//{
+//	FighterChar thePlayer = theObject.gameObject.GetComponent<FighterChar>();
+
+//	if(thePlayer!=null)
+//	{
+//		if(thePlayer.IsPlayer() && inactiveTimeCur <= 0)
+//		{
+//			thePlayer.EquipItem(this);
+//		}
+//	}
+//	else //if ( theObject.gameObject.layer == 15 ) // If collided object is a world object.
+//	{
+//		//print("collided with: "+theObject.name);
+//		falling = false;
+//	}
+//}

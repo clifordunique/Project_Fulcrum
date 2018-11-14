@@ -107,6 +107,8 @@ public class FighterChar : NetworkBehaviour
 	[ReadOnlyAttribute]public Vector2 m_RightNormal;			// Vector holding the slope of RightWall.
 
 	[ReadOnlyAttribute]public RaycastHit2D[] directionContacts;
+	[ReadOnlyAttribute] public RaycastHit2D closeToGroundContact; // Seperate from the contact raycasts, this detects if the ground is *near* below the fighter (but not neccessarily touching)
+
 
 	#endregion
 	//##########################################################################################################################################################################
@@ -374,6 +376,7 @@ public class FighterChar : NetworkBehaviour
 
 		//v.terrainType = new string[]{ "Concrete", "Concrete", "Concrete", "Concrete" };
 		directionContacts = new RaycastHit2D[4];
+		closeToGroundContact = new RaycastHit2D();
 
 		FighterState.CurVigor = 100;					// Current health.
 		FighterState.Dead = false;						// True when the fighter's health reaches 0 and they die.
@@ -761,6 +764,10 @@ public class FighterChar : NetworkBehaviour
 //		}
 		else if(d.gravityEnabled)
 		{ // Airborne with gravity!
+			if (!phys.closeToGround)
+			{
+				m.airborneDelayTimer = -1; // If ground is too far away, disable airborne delay.
+			}
 			if(m.airborneDelayTimer>0)
 			{
 				m.airborneDelayTimer -= Time.fixedDeltaTime;
@@ -3526,6 +3533,7 @@ public class FighterChar : NetworkBehaviour
 		phys.ceilingContact = false;
 		phys.leftSideContact = false;
 		phys.rightSideContact = false;
+		phys.closeToGround = false;
 
 		d.groundLine.endColor = Color.red;
 		d.groundLine.startColor = Color.red;
@@ -3539,7 +3547,9 @@ public class FighterChar : NetworkBehaviour
 		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, m_TerrainMask); 	// Ground
 		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, m_TerrainMask);  	// Ceiling
 		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, m_TerrainMask); 	// Left
-		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask);	// Right  
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask); // Right  
+
+		closeToGroundContact = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength+m.airborneCutoffLength, m_TerrainMask);
 
 		if (directionContacts[0]) 
 		{
@@ -3597,9 +3607,15 @@ public class FighterChar : NetworkBehaviour
 				m_RightNormal.x = 0;
 			if(Mathf.Abs(m_RightNormal.y)<0.00001f) // Floating point imprecision correction for 90 degree angle errors
 				m_RightNormal.y = 0;
-		} 
+		}
 
-		if(!(phys.grounded&&phys.ceilinged)) //Resets wall blocker flags if the player isn't touching a blocking surface.
+		if (closeToGroundContact)
+		{
+			phys.closeToGround = true;
+		}
+		
+
+		if (!(phys.grounded&&phys.ceilinged)) //Resets wall blocker flags if the player isn't touching a blocking surface.
 		{
 			if(!phys.rightWalled)
 			{
@@ -3634,11 +3650,13 @@ public class FighterChar : NetworkBehaviour
 		d.rightSideLine.endColor = Color.red;
 		d.rightSideLine.startColor = Color.red;
 
-		RaycastHit2D[] directionContacts = new RaycastHit2D[4];
 		directionContacts[0] = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength, m_TerrainMask); 	// Ground
 		directionContacts[1] = Physics2D.Raycast(this.transform.position, Vector2.up, m_CeilingFootLength, m_TerrainMask);  	// Ceiling
 		directionContacts[2] = Physics2D.Raycast(this.transform.position, Vector2.left, m_LeftSideLength, m_TerrainMask); 	// Left
-		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask);	// Right  
+		directionContacts[3] = Physics2D.Raycast(this.transform.position, Vector2.right, m_RightSideLength, m_TerrainMask); // Right  
+
+		closeToGroundContact = Physics2D.Raycast(this.transform.position, Vector2.down, m_GroundFootLength+m.airborneCutoffLength, m_TerrainMask);
+
 
 		if (directionContacts[0]) 
 		{
@@ -3663,7 +3681,14 @@ public class FighterChar : NetworkBehaviour
 		{
 			d.rightSideLine.endColor = Color.green;
 			d.rightSideLine.startColor = Color.green;
-		} 
+		}
+
+
+		if (closeToGroundContact)
+		{
+
+		}
+
 
 		int contactCount = 0;
 		if(phys.groundContact){contactCount++;}
@@ -4524,7 +4549,6 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] public bool triggerAtkHit;	// Set to true to activate the attack hit animation.
 	[SerializeField][ReadOnlyAttribute] public bool triggerRollOut;	// Set to true to activate the guard roll animation.
 	[SerializeField][ReadOnlyAttribute] public bool triggerFlinched;	// Set to true to activate the flinch animation.
-	[SerializeField][ReadOnlyAttribute] public float airForgiveness;	// Amount of time the player can be in the air without animating as airborne. Useful for micromovements. NEEDS TO BE IMPLEMENTED
 	[SerializeField][Range(0,1)]public float punchStrengthSlowmoT;	// Percent of maximum clash power at which a player's attack will activate slow motion.
 	[SerializeField] public bool gender;								// Used for character audio.
 	[SerializeField] public bool triggerGenderChange;					// Used for character audio.
@@ -4572,7 +4596,9 @@ public class FighterChar : NetworkBehaviour
 	[SerializeField][ReadOnlyAttribute] public bool groundContact;			//True when touching surface.
 	[SerializeField][ReadOnlyAttribute] public bool ceilingContact;			//True when touching surface.
 	[SerializeField][ReadOnlyAttribute] public bool leftSideContact;			//True when touching surface.
-	[SerializeField][ReadOnlyAttribute] public bool rightSideContact;			//True when touching surface.
+	[SerializeField][ReadOnlyAttribute] public bool rightSideContact;           //True when touching surface.
+	[SerializeField] [ReadOnlyAttribute] public bool closeToGround;         //True when the ground is at most [airborneCutoffLength] distance below the player. Can be true when groundcontact is false.
+
 	[Space(10)]						    
 	[SerializeField][ReadOnlyAttribute] public bool grounded;				// True when making contact with this direction.
 	[SerializeField][ReadOnlyAttribute] public bool ceilinged; 			// True when making contact with this direction.
@@ -4712,10 +4738,11 @@ public class FighterChar : NetworkBehaviour
 	[Tooltip("")][SerializeField][ReadOnlyAttribute]public int jumpBufferC; //Provides an n frame buffer to allow players to jump after leaving the ceiling.
 	[Tooltip("")][SerializeField][ReadOnlyAttribute]public int jumpBufferL; //Provides an n frame buffer to allow players to jump after leaving the leftwall.
 	[Tooltip("")][SerializeField][ReadOnlyAttribute]public int jumpBufferR; //Provides an n frame buffer to allow players to jump after leaving the rightwall.
-	[Tooltip("")][SerializeField][Range(1,600)] public int jumpBufferFrameAmount; //Dictates the duration of the jump buffer (in physics frames).
+	[Tooltip("")][SerializeField][Range(1,600)] public int jumpBufferFrameAmount; //Dictates the duration of the jump buffer (in physics frames). IMPORTANT: Do not merge this with airborne delay because you need to jump after going over sheer cliffs.
 
 	[Tooltip("")][SerializeField][Range(0,2)] public float airborneDelay; //Amount of time after leaving the ground that the player behaves as if they are airborne. Prevents jittering caused by small bumps in the environment.
-	[Tooltip("")][SerializeField][ReadOnlyAttribute] public float airborneDelayTimer; //Time remaining before the player is treated as airborne upon leaving a surface.
+	[Tooltip("")][SerializeField][ReadOnlyAttribute] public float airborneDelayTimer; //Time remaining before the player is treated as airborne upon leaving a surface. Negative 1 when immediately canceled.
+	[Tooltip("")] [SerializeField][Range(0,1)] public float airborneCutoffLength; //Max distance the fighter can be from the ground before airborne delay is canceled. Stops the player from airwalking when far above the ground.
 
 	[Space(10)]
 

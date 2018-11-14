@@ -144,7 +144,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="DeusExodus" ID="{E9369D25-776B-475B-8F41-15C65B7BA375}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
+									<ObjectRef Name="ElectroKinetic6" ID="{7AB186D6-35D8-46A2-98C0-EC8A5E4A5DEA}" WorkUnitID="{E26F496D-BB70-4DCA-A6F6-4551DAC8EDE9}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

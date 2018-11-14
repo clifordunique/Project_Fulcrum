@@ -266,7 +266,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1779611444237324}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.47, y: -6.16, z: 0}
+  m_LocalPosition: {x: 19.7, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4039223620323396}
@@ -860,6 +860,7 @@ MonoBehaviour:
     jumpBufferFrameAmount: 10
     airborneDelay: 0.5
     airborneDelayTimer: 0
+    airborneCutoffLength: 0.5
     strandJumpSpeedLossM: 0
     strandJumpReflectSpd: 0
     strandJumpReflectDir: {x: 0, y: 0}
@@ -895,6 +896,7 @@ MonoBehaviour:
     ceilingContact: 0
     leftSideContact: 0
     rightSideContact: 0
+    closeToGround: 0
     grounded: 0
     ceilinged: 0
     leftWalled: 0
@@ -928,7 +930,6 @@ MonoBehaviour:
     triggerAtkHit: 0
     triggerRollOut: 0
     triggerFlinched: 0
-    airForgiveness: 0
     punchStrengthSlowmoT: 0.5
     gender: 1
     triggerGenderChange: 1
