@@ -11,8 +11,8 @@ public class InteractableHandler : Editor {
 	void Awake() 
 	{
 		myInteractable = (Interactable)target;
-		myInteractable.mySprite = myInteractable.GetComponent<SpriteRenderer>();
 		myInteractable.interactableMat = (Material)AssetDatabase.LoadAssetAtPath("Assets/Shaders/Tex&Mats/Interactable.mat", typeof(Material));
+		myInteractable.mySprite = myInteractable.GetComponent<SpriteRenderer>();
 		if (myInteractable.mouseEnterEvent == null)
 		{
 			myInteractable.mouseEnterEvent = new GameObjEvent();
