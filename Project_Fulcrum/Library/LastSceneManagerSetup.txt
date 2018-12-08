@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/OutlandsConcept.unity
+- path: Assets/Scenes/TacMap.unity
   isLoaded: 1
   isActive: 1

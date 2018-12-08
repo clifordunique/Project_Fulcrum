@@ -1,7 +1,9 @@
 ﻿Shader "ProjectFulcrum/MenuWipe" {
 	Properties {
 		_MainTex("Texture", 2D) = "white" {}
-		_SliceGuide("Slice Guide (RGB)", 2D) = "white" {}
+		_SliceGuide("SliceGuide", 2D) = "white" {}
+		_SliceDirection("_SliceDirection", Range(-1.0, 1.0)) = 1.0
+		_Brightness("_Brightness", Range(0, 1)) = 1
 		_SliceAmount("_SliceAmount", Range(0.0, 1.0)) = 0.5
 	}
 	SubShader 
@@ -19,6 +21,7 @@
 			Name "MenuWipe"
 			Blend SrcAlpha OneMinusSrcAlpha 
 
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -30,6 +33,8 @@
 			float4 _Color;
 			sampler2D _SliceGuide;
 			float _SliceAmount;
+			float _SliceDirection;
+			float _Brightness;
 			float2 uv_SliceGuide;
 
 			#include "UnityCG.cginc"
@@ -60,9 +65,15 @@
 			float4 frag(v2f i) : SV_Target
 			{
 				float4 colour = tex2D(_MainTex, i.uv);
+				colour.rgb = colour.rgb*_Brightness;
 
-
-				clip(tex2D(_SliceGuide, i.uv).rgb - _SliceAmount);
+				float2 sliceUV = i.uv;
+				sliceUV.x = sliceUV.x*_SliceDirection;
+				float offset = 0.5 - 0.5*_SliceDirection;
+				sliceUV.x = offset+sliceUV.x;
+				float3 sliceColour = tex2D(_SliceGuide, sliceUV.xy).rgb;
+				float cutoff = 0.666f*sliceColour.r + 0.333f*sliceColour.g;
+				clip(cutoff - _SliceAmount);
 
 
 				//colour *= i.color;
@@ -74,42 +85,3 @@
 		}
 	}
 }
-
-
-
-
-
-
-
-	//	Properties{
-	//	  _MainTex("Texture (RGB)", 2D) = "white" {}
-	//	  _SliceGuide("Slice Guide (RGB)", 2D) = "white" {}
-	//	  _SliceAmount("Slice Amount", Range(0.0, 1.0)) = 0.5
-	//	}
-	//		SubShader{
-	//			Tags
-	//			{
-	//				"Queue" = "Transparent"
-	//				"RenderType" = "Transparent"
-	//				"IgnoreProjector" = "True"
-	//			}
-	//			ZWrite Off
-	//			CGPROGRAM
-	//			#pragma vertex vert
-	//			#pragma fragment frag
-	//			struct Input {
-	//				float2 uv_MainTex;
-	//				float2 uv_SliceGuide;
-	//				float _SliceAmount;
-	//			};
-	//			sampler2D _MainTex;
-	//			sampler2D _SliceGuide;
-	//			float _SliceAmount;
-	//			void surf(Input IN, inout SurfaceOutput o) {
-	//				clip(tex2D(_SliceGuide, IN.uv_SliceGuide).rgb - _SliceAmount);
-	//				o.Albedo = tex2D(_MainTex, IN.uv_MainTex).rgb;
-	//			}
-	//			ENDCG
-	//	  }
-	//		  Fallback "Diffuse"
-	//}

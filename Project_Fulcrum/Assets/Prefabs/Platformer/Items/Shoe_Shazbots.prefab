@@ -96,6 +96,8 @@ MonoBehaviour:
     traction</color>
   shoeID: 2
   soundType: 1
+  maxPickupDistance: 10
+  myInteractable: {fileID: 114969131427900662}
   m:
     minSpeed: 10
     maxRunSpeed: 200
@@ -158,23 +160,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c2aa566416213e48ad38674967a3cb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localPlayer: {fileID: 0}
   mouseEnterEvent:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    m_TypeName: GameObjEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mouseExitEvent:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    m_TypeName: GameObjEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mouseDownEvent:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  interactableMat: {fileID: 2100000, guid: 4bee03112b67f624fa802bc279fb9144, type: 2}
+    m_TypeName: GameObjEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  enterTriggerEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: GameObjEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  exitTriggerEvent:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: GameObjEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   mySprite: {fileID: 0}
+  highlightMat: {fileID: 2100000, guid: 4bee03112b67f624fa802bc279fb9144, type: 2}
+  myOutlineColour: {r: 1, g: 0, b: 0, a: 1}
+  myFlashColour: {r: 0.5735294, g: 0.29519898, b: 0.29519898, a: 1}
+  useHighlightShader: 1
 --- !u!212 &212552059182516730
 SpriteRenderer:
   m_ObjectHideFlags: 1

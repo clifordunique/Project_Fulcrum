@@ -8,11 +8,16 @@ using UnityEditor;
 public class InteractableHandler : Editor {
 
 	private Interactable myInteractable;
-	void Awake() 
+	void OnEnable() 
 	{
 		myInteractable = (Interactable)target;
-		myInteractable.interactableMat = (Material)AssetDatabase.LoadAssetAtPath("Assets/Shaders/Tex&Mats/Interactable.mat", typeof(Material));
 		myInteractable.mySprite = myInteractable.GetComponent<SpriteRenderer>();
+		myInteractable.highlightMat = (Material)AssetDatabase.LoadAssetAtPath("Assets/Shaders/Tex&Mats/Interactable.mat", typeof(Material));
+		myInteractable.originalMat = myInteractable.mySprite.sharedMaterial;
+
+		Debug.Log("My sprite size: " + (int)myInteractable.mySprite.sprite.rect.x);
+		myInteractable.mySpriteSize = (int)myInteractable.mySprite.sprite.rect.x;
+
 		if (myInteractable.mouseEnterEvent == null)
 		{
 			myInteractable.mouseEnterEvent = new GameObjEvent();
@@ -27,8 +32,8 @@ public class InteractableHandler : Editor {
 		}
 	}
 
-	void OnEnable()
-	{
+	//void OnEnable()
+	//{
 
-	}
+	//}
 }
