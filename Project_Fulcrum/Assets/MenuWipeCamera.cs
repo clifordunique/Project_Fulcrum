@@ -17,9 +17,12 @@ public class MenuWipeCamera : MonoBehaviour
 	[SerializeField] [ReadOnlyAttribute] private MaterialPropertyBlock propBlock;
 	[SerializeField] [ReadOnlyAttribute] public Material myMaterial;
 	[SerializeField] [ReadOnlyAttribute] public bool isRightNeighbourOnTop;
+	[SerializeField] [ReadOnlyAttribute] public bool isLeftNeighbourOnTop;
 	[SerializeField] [ReadOnlyAttribute] public bool isBottomLayer = true;
+	[SerializeField] [ReadOnlyAttribute] public bool isTopLayer = false;
 	//[SerializeField] [ReadOnlyAttribute] public float wipeAmountLerp = 1; // 0-1 range.
 
+	public int menuID;
 	[SerializeField] public MenuWipeCamera neighbourLeft;
 	[SerializeField] public MenuWipeCamera neighbourRight;
 	[SerializeField] public bool triggerWipe;
@@ -27,16 +30,27 @@ public class MenuWipeCamera : MonoBehaviour
 
 	//Managered variables
 	[SerializeField] [ReadOnlyAttribute] public float curWipeAmount = 1; // 0-1 range.
+	[SerializeField] [ReadOnlyAttribute] public float curBrightness = 1; // 0-1 range.
+	[SerializeField] [ReadOnlyAttribute] public float curBrightnessLerp = 1; // 0-1 range.
 	[SerializeField] [ReadOnlyAttribute] public float debugGlobalSliderValue = 0; // 0-4 range.
 	[SerializeField] [ReadOnlyAttribute] public float debugGlobalSliderLerpValue = 0; // 0-4 range.
 
+	//V3 variables
+	public int moveState; // 1, 0, or -1  for right, stationary, and left respectively. 
+	public int currentLayerDepth;
+	public float goalValue;
+	public bool hasAGoal;
+	public float offset;
+
+	// Lerp variables
+	public float followWipeExp = 1;
+	public float followWipeLinear = 0.2f;
+	public float leadWipeExp = 0.5f;
+	public float leadWipeLinear = 0.1f;
+	public float brightnessExp = 0.5f;
+	public float brightnessLinear = 0.1f;
 
 
-
-	//	void LateUpdate()
-	//	{
-	//		myInputCam.Render();
-	//	}
 
 	// Use this for initialization
 	void Start()
@@ -56,125 +70,246 @@ public class MenuWipeCamera : MonoBehaviour
 		myOutputPanel.GetComponent<RawImage>().material = myMaterial;
 	}
 
-	public void WipeSetup(bool wipesRight, float myBrightness)
+	void UpdateWipeRight()
 	{
-		//print("Set layer to orderDepth of:" + orderDepth);
-		if (wipesRight)
-		{
-			isRightNeighbourOnTop = true;
-			myMaterial.SetFloat("_SliceDirection", 1.0f);
-			myMaterial.SetFloat("_Brightness", myBrightness);
+		if (neighbourRight != null)
+			{neighbourRight.isLeftNeighbourOnTop = true;}
 
-		}
-		else
+		if (isLeftNeighbourOnTop) // FOLLOW WIPE
 		{
-			isRightNeighbourOnTop = false;
-			myMaterial.SetFloat("_SliceDirection", -1.0f);
-			myMaterial.SetFloat("_Brightness", myBrightness);
+			float localGoal = neighbourLeft.curWipeAmount - 0.1f;
+			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.fixedDeltaTime*followWipeExp);
+			if (curWipeAmount < localGoal) { curWipeAmount += Time.fixedDeltaTime * followWipeLinear; }
+			if (curWipeAmount > localGoal) { curWipeAmount -= Time.fixedDeltaTime * followWipeLinear; }
+			if (Mathf.Abs(curWipeAmount - localGoal) <= 0.001f)
+			{ curWipeAmount = localGoal; }
+		}
+		else // LEADING WIPE
+		{
+			bool a = (goalValue == 0 && curWipeAmount > 0);
+			bool b = (goalValue == 1 && curWipeAmount < 1);
+			bool c = (goalValue < 1 && goalValue > 0);
+			if (a || b || c)
+			{
+				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.fixedDeltaTime * leadWipeExp);
+				if (curWipeAmount < goalValue) { curWipeAmount += Time.fixedDeltaTime * leadWipeLinear; }
+				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.fixedDeltaTime * leadWipeLinear; }
+				if (Mathf.Abs(curWipeAmount - goalValue) <= 0.001f)
+				{ curWipeAmount = goalValue; }
+			}
+			else
+			{
+				curWipeAmount = goalValue;
+			}
 		}
 	}
 
-	//private void Update()
-	//{
-	//	if (triggerWipe)
-	//	{
-	//		if (wipeAmountLerp < 1)
-	//		{
-	//			wipeAmountLerp = Mathf.Lerp(wipeAmountLerp, 1, Time.deltaTime);
-	//			wipeAmountLerp += Time.deltaTime/5;
-	//			if (myMaterial != null)
-	//			{
-	//				myMaterial.SetFloat("_SliceAmount", wipeAmountLerp);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			triggerWipe = false;
-	//		}
-	//	}
-	//	if (isBottomLayer)
-	//	{
-	//		if (isRightNeighbourOnTop)
-	//		{
-	//			if (neighbourRight != null)
-	//			{
-	//				float brightnessM = neighbourRight.wipeAmountLerp;
-	//				if (brightnessM > 1) { brightnessM = 1; }
-	//				if (brightnessM < 0) { brightnessM = 0; }
-	//				myMaterial.SetFloat("_Brightness", brightnessM);
-	//			}
-	//			else
-	//			{
-	//				myMaterial.SetFloat("_Brightness", 1);
-	//			}
-	//		}
-	//		else
-	//		{
-	//			if (neighbourLeft != null)
-	//			{
-	//				float brightnessM = neighbourLeft.wipeAmountLerp;
-	//				if (brightnessM > 1) { brightnessM = 1; }
-	//				if (brightnessM < 0) { brightnessM = 0; }
-	//				myMaterial.SetFloat("_Brightness", brightnessM);
-	//			}
-	//			else
-	//			{
-	//				myMaterial.SetFloat("_Brightness", 1);
-	//			}
-	//		}
-	//	}
-	//}
+	void UpdateWipeLeft()
+	{
+		if (neighbourLeft != null)
+			{neighbourLeft.isRightNeighbourOnTop = true;}
+
+		if (isRightNeighbourOnTop) // FOLLOW WIPE
+		{
+			float localGoal = neighbourRight.curWipeAmount - 0.1f;
+			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.fixedDeltaTime * followWipeExp);
+			if (curWipeAmount < localGoal) { curWipeAmount += Time.fixedDeltaTime * followWipeLinear; }
+			else if (curWipeAmount > localGoal) { curWipeAmount -= Time.fixedDeltaTime * followWipeLinear; }
+			if (Mathf.Abs(curWipeAmount - localGoal) <= 0.001f)
+			{ curWipeAmount = localGoal; }
+		}
+		else // LEADING WIPE
+		{
+			bool a = (goalValue == 0 && curWipeAmount > 0);
+			bool b = (goalValue == 1 && curWipeAmount < 1);
+			bool c = (goalValue < 1 && goalValue > 0);
+			if (a || b || c)
+			{
+				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.fixedDeltaTime * leadWipeExp);
+				if (curWipeAmount < goalValue) { curWipeAmount += Time.fixedDeltaTime * leadWipeLinear; }
+				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.fixedDeltaTime * leadWipeLinear; }
+				if (Mathf.Abs(curWipeAmount - goalValue) <= 0.001f)
+				{ curWipeAmount = goalValue; }
+			}
+			else
+			{
+				curWipeAmount = goalValue;
+			}
+		}
+	}
+
+	private void SetBrightness( bool applyInstantly)
+	{
+		if (!isLeftNeighbourOnTop && !isRightNeighbourOnTop)
+		{
+			currentLayerDepth = 0;
+		}
+		if (isBottomLayer)
+		{
+			applyInstantly = true;
+			if (isRightNeighbourOnTop && neighbourRight != null)
+			{
+				if ( neighbourRight.moveState !=0 )
+				{
+					float brightnessM = neighbourRight.curWipeAmount*1.3f;
+					if (brightnessM > 1) { brightnessM = 1; }
+					if (brightnessM < 0) { brightnessM = 0; }
+					curBrightness = brightnessM;
+				}
+				else
+				{
+					curBrightness = 1;
+				}
+			}
+			else if(isLeftNeighbourOnTop && neighbourLeft != null)
+			{
+				if (neighbourLeft.moveState != 0)
+				{
+					float brightnessM = neighbourLeft.curWipeAmount * 1.3f;
+					if (brightnessM > 1) { brightnessM = 1; }
+					if (brightnessM < 0) { brightnessM = 0; }
+					curBrightness = brightnessM;
+				}
+				else
+				{
+					curBrightness = 1;
+				}
+			}
+		}
+		else
+		{
+			curBrightness = 0.5f + (0.5f / ((float)currentLayerDepth + 1));
+		}
+
+		if (applyInstantly)
+		{
+			curBrightnessLerp = curBrightness;
+		}
+		else
+		{
+			if (Mathf.Abs(curBrightnessLerp - curBrightness) > 0.01f)
+			{
+				curBrightnessLerp = Mathf.Lerp(curBrightnessLerp, curBrightness, Time.fixedDeltaTime);
+				if (curBrightnessLerp < curBrightness) { curBrightnessLerp += Time.fixedDeltaTime / 10; }
+				if (curBrightnessLerp > curBrightness) { curBrightnessLerp -= Time.fixedDeltaTime / 10; }
+				if (Mathf.Abs(curBrightnessLerp - curBrightness) <= 0.01f)
+				{ curBrightnessLerp = curBrightness; }
+			}
+		}
+
+
+		myMaterial.SetFloat("_Brightness", curBrightnessLerp);
+
+
+	}
+
+	public void CompleteTransition()
+	{
+		//print("Transition complete for " + myUITabManager.debugTN[menuID]);
+		myUITabManager.movingTabsCount--;
+
+		if (goalValue == 1)
+		{
+			myUITabManager.tabRenderLayers[menuID].SetSiblingIndex(1);
+			myUITabManager.currentMenu = menuID + moveState; // gives you the next menu in the requested direction.
+		}
+		else if (goalValue == 0)
+		{
+			//myUITabManager.tabRenderLayers[menuID].SetSiblingIndex(5);
+			//myUITabManager.currentMenu = menuID;
+		}
+		moveState = 0;
+		curWipeAmount = 0;
+		myMaterial.SetFloat("_SliceAmount", curWipeAmount);
+		curBrightness = 1;
+		currentLayerDepth = 0;
+		myMaterial.SetFloat("_Brightness", 1);
+
+		if (neighbourLeft != null)
+		{
+			neighbourLeft.isRightNeighbourOnTop = false;
+		}
+		if (neighbourRight != null)
+		{
+			neighbourRight.isLeftNeighbourOnTop = false;
+		}
+		//currentLayerDepth = -1; //Set to the unused value;
+	}
+
+	public void StartTransition(int direction)
+	{
+		if (direction == 0|| moveState != 0) { return; }
+		myUITabManager.movingTabsCount++;
+		moveState = direction;
+		myMaterial.SetFloat("_SliceDirection", direction);
+		//SetBrightness(true);
+	}
 
 	private void Update()
 	{
 		debugGlobalSliderValue = myUITabManager.currentSlideValue;
-		debugGlobalSliderLerpValue = myUITabManager.currentSlideLerp;
-		//if (triggerWipe)
-		//{
-		//	if (wipeAmountLerp < 1)
-		//	{
-		//		wipeAmountLerp = Mathf.Lerp(wipeAmountLerp, 1, Time.deltaTime);
-		//		wipeAmountLerp += Time.deltaTime / 5;
-		//		if (myMaterial != null)
-		//		{
-		//			myMaterial.SetFloat("_SliceAmount", wipeAmountLerp);
-		//		}
-		//	}
-		//	else
-		//	{
-		//		triggerWipe = false;
-		//	}
-		//}
-		if (isBottomLayer)
+
+		if (moveState == 0) { isBottomLayer = true; }
+		else { isBottomLayer = false; }
+
+		SetBrightness( true );
+
+		if (moveState == 0)
 		{
-			if (isRightNeighbourOnTop)
+			return;
+		}
+
+
+		offset = myUITabManager.currentSlideValue - menuID;
+
+		if (moveState == 1)
+		{
+			if (offset >= 1 )
 			{
-				if (neighbourRight != null)
-				{
-					float brightnessM = neighbourRight.curWipeAmount;
-					if (brightnessM > 1) { brightnessM = 1; }
-					if (brightnessM < 0) { brightnessM = 0; }
-					myMaterial.SetFloat("_Brightness", brightnessM);
-				}
-				else
-				{
-					myMaterial.SetFloat("_Brightness", 1);
-				}
+				goalValue = 1;
+				hasAGoal = true;
+			}
+			else if (offset <= 0 )
+			{
+				goalValue = 0;
+				hasAGoal = true;
 			}
 			else
 			{
-				if (neighbourLeft != null)
-				{
-					float brightnessM = neighbourLeft.curWipeAmount;
-					if (brightnessM > 1) { brightnessM = 1; }
-					if (brightnessM < 0) { brightnessM = 0; }
-					myMaterial.SetFloat("_Brightness", brightnessM);
-				}
-				else
-				{
-					myMaterial.SetFloat("_Brightness", 1);
-				}
+				//print("nogoal triggered on +1 movestate");
+				goalValue = Mathf.Abs(offset);
+				hasAGoal = false;
 			}
+			UpdateWipeRight();
 		}
+
+		if (moveState == -1)
+		{
+			if (offset <= -1)
+			{
+				goalValue = 1;
+				hasAGoal = true;
+			}
+			else if (offset >= 0)
+			{
+				goalValue = 0;
+				hasAGoal = true;
+			}
+			else
+			{
+				//print("nogoal triggered on -1 movestate");
+				goalValue = Mathf.Abs(offset);
+				hasAGoal = false;
+			}
+			UpdateWipeLeft();
+		}
+
+		myMaterial.SetFloat("_SliceAmount", curWipeAmount);
+
+		if (curWipeAmount == goalValue && hasAGoal)
+		{
+			CompleteTransition();
+		}
+
 	}
 }

@@ -1,305 +1,171 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+//using FulcrumHelpers.mp;
 
 public class UITabManager : MonoBehaviour {
 	public MenuWipeCamera[] tabWipers;
 	public FulcrumSlideSelector mySlideSelector;
 	public Slider mainMenuSlider;
-	public int currentMenu;
-	public int goalMenu;
-	public GameObject[] tabRenderTextures;
+	public RectTransform[] tabRenderLayers;
 	public string[] debugTN;
 	private float layerDelay = 0.175f;
 	//private float layerDelay = 0.5f;
 
 	//Managered variables
-	public float[] tabWipeAmount;
 	public float currentSlideValue;
-	public float currentSlideLerp;
-	public int movingState; //1 is right, 0 stopped, and -1 is left.
-	public int transLayerCount;
+
+	//V3 Variables
+	public int movingTabsCount; // Cannot dispatch any opposite direction tabs until this reaches 0;
+	public float linearMenuGoal; // set by fulcrumslideselector.
+	public int movingState; //1 is right, 0 stopped, and -1 is left. cannot change until movingtabscount = 0
+	public int currentMenu;
+
 
 	// Use this for initialization
 	void Start ()
 	{
-		tabWipeAmount = new float[tabWipers.Length];
-		TransitionTo(0);
-		goalMenu = currentMenu;
-		CompleteTransition();
+		currentMenu = 4;
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
-		if (movingState != 0)
+
+		currentSlideValue = mySlideSelector.currentPosGoalPercent * 5;
+
+
+		if (currentSlideValue - Mathf.RoundToInt(currentSlideValue) <= 0.05f)
+			{currentSlideValue = Mathf.RoundToInt(currentSlideValue);}
+
+		if (Mathf.Abs(currentSlideValue - currentMenu) > 0.001f && movingState == 0)
+			{StartTransition();}
+		if ((currentMenu - currentSlideValue  > movingTabsCount && movingState == -1)|| (currentSlideValue - currentMenu > movingTabsCount && movingState == 1))
+			{LateDispatch();}
+		if (movingTabsCount == 0 && movingState != 0)
+			{CompleteTransition();}
+
+	}
+
+	void CompleteTransition()
+	{
+		//print("TRANSITION FINISHED. Ended on menu: "+debugTN[currentMenu]);
+		movingState = 0;
+	}
+
+	void LateDispatch()
+	{
+		if (movingTabsCount == 0) { return; }
+
+		int tabsInvolved = Mathf.Abs((int)(currentSlideValue - currentMenu)) + 1;
+		//print("Transitioning with " + tabsInvolved + " tabs.");
+		if (movingState == -1) // Moving left
 		{
-			currentSlideValue = mySlideSelector.currentPosLerpPercent * 5;
-			float currentSlideTab = mySlideSelector.currentTab;
+			string multiprint = "Late dispatch left...\n";
 
-			currentSlideLerp = Mathf.Lerp(currentSlideLerp, currentSlideValue, Time.deltaTime);
-
-			if (Mathf.Abs(currentSlideLerp - currentSlideValue) < 0.0001f)
+			multiprint += "(int)currentSlideValue=" + (int)currentSlideValue;
+			multiprint += "\tcurrentMenu=" + currentMenu;
+			//print(multiprint);
+			for (int i = currentMenu-movingTabsCount; i > (int)(currentSlideValue); i--)
 			{
-				currentSlideLerp = currentSlideValue;
-				CompleteTransition();
-				return;
+				print("LATE LEFT DISPATCH ON debugTN[i]");
+				//print("Starting transition for " + debugTN[i] + " in direction " + movingState);
+				tabWipers[i].currentLayerDepth = currentMenu - i;
+				tabWipers[i].StartTransition(movingState);
 			}
+		}
+		else if (movingState == 1) // Moving right
+		{
+			string multiprint = " Late dispatch right...\n";
 
-			if (currentSlideLerp < currentSlideValue)
+			multiprint += "(int)currentSlideValue=" + (int)currentSlideValue;
+			multiprint += "\tcurrentMenu=" + currentMenu;
+			//print(multiprint);
+			for (int i = currentMenu+movingTabsCount; i < (int)(currentSlideValue); i++)
 			{
-				currentSlideLerp += Time.deltaTime / 5;
-			}
-			else
-			{
-				currentSlideLerp -= Time.deltaTime / 5;
-			}
-
-			
-
-			for (int i = 0; i < tabWipers.Length; i++)
-			{
-				//bool betweenRight = (i > currentMenu && i < goalMenu);
-				//bool betweenLeft = (i < currentMenu && i > goalMenu);
-				//if (betweenRight || betweenLeft)
-				//{
-				if (movingState == 1)
-				{
-					tabWipeAmount[i] = currentSlideLerp - i;
-				}
-				else
-				{
-					tabWipeAmount[i] = i - currentSlideLerp;
-				}
-					if (tabWipeAmount[i] >= 1) { tabWipeAmount[i] = 1.1f; }
-					tabWipers[i].curWipeAmount = tabWipeAmount[i];
-					tabWipers[i].myMaterial.SetFloat("_SliceAmount", tabWipeAmount[i]);
-				//}
+				print("LATE RIGHT DISPATCH ON debugTN[i]");
+				//print("Starting transition for "+ debugTN[i]+" in direction "+movingState);
+				tabWipers[i].currentLayerDepth = i - currentMenu;
+				tabWipers[i].StartTransition(movingState);
 			}
 		}
 		else
 		{
-			for (int i = 0; i < tabWipers.Length; i++)
-			{
-				tabWipeAmount[i] = 0;
-				tabWipers[i].curWipeAmount = tabWipeAmount[i];
-				tabWipers[i].myMaterial.SetFloat("_SliceAmount", tabWipeAmount[i]);
-			}
+			//print("transitioning to nowhere lol.");
 		}
 	}
 
-	public void TransitionTo(int menuID)
+	void StartTransition()
 	{
-		if (movingState == 0)
-		{
-			StartTransition(menuID);
-		}
-		else
-		{
-			RedirectTransition(menuID);
-		}
-	}
-
-	public void StartTransition(int menuID)
-	{
-		if (currentMenu == menuID) { return; }
-		goalMenu = menuID;
-		print("Starting transition to " + menuID + " from " + currentMenu);
-		foreach (MenuWipeCamera m in tabWipers)
-		{
-			m.myMaterial.SetFloat("_SliceAmount", 0);
-		}
-
-		int menuIterator = currentMenu;
-		float interval = Mathf.Abs(1 / (float)(currentMenu - goalMenu));
-		print("interval " + interval);
-		tabWipers[goalMenu].triggerWipe = false;
+		if (movingTabsCount != 0) { return; }
 
 
-		if (goalMenu > currentMenu) //BRANCH A
+		int tabsInvolved = Mathf.Abs((int)(currentSlideValue-currentMenu))+1;
+		//print("Transitioning with " + tabsInvolved + " tabs.");
+		if (currentSlideValue - currentMenu < 0) // Moving left
 		{
-			movingState = 1;
-			print("Moving Right.");
-			string multiprint = "Ordering layers:\n";
-			for (int i = 5; i > 0; i--)
-			{
-				if (menuIterator > 4){menuIterator = 0;}
-				RectTransform nextUp = tabRenderTextures[menuIterator].GetComponent<RectTransform>();
-				nextUp.SetSiblingIndex(i);
-				multiprint += debugTN[menuIterator] + "[" + i + "]======> ";
-				menuIterator++;
-			}
-
-			print(multiprint);
-			int middleLayers = 0;
-			for (int i = currentMenu; i < goalMenu; i++)
-			{
-				int countUp = i-currentMenu;
-				int countDown = goalMenu-i;
-				tabWipers[i].WipeSetup(false, 0.4f+(0.5f*countDown * interval));
-				tabWipers[i].isBottomLayer = false;
-				middleLayers++;
-			}
-			transLayerCount = middleLayers;
-			tabWipers[currentMenu].WipeSetup(false, 1);
-			tabWipers[goalMenu].WipeSetup(false, 0);
-			tabWipers[goalMenu].isBottomLayer = true;
-		}
-		else //BRANCH B
-		{
+			string multiprint = "Moving left...\n";
 			movingState = -1;
-			print("Moving Left");
-			string multiprint = "Ordering layers:\n";
+			RearrangeLayers(movingState);
 
+			multiprint += "(int)currentSlideValue=" + (int)currentSlideValue;
+			multiprint += "\tcurrentMenu=" + currentMenu;
+			//print(multiprint);
+			for (int i = currentMenu; i > (int)(currentSlideValue); i--)
+			{
+				//print("Starting transition for " + debugTN[i] + " in direction " + movingState);
+				print("Setting tab " + debugTN[i] + " to layer depth " + (currentMenu - i));
+				tabWipers[i].currentLayerDepth = currentMenu-i;
+				tabWipers[i].StartTransition(movingState);
+			}
+		}
+		else if (currentSlideValue - currentMenu > 0) // Moving right
+		{
+			string multiprint = "Moving right...\n";
+			movingState = 1;
+			RearrangeLayers(movingState);
+
+			multiprint += "(int)currentSlideValue=" + (int)currentSlideValue;
+			multiprint += "\tcurrentMenu=" + currentMenu;
+			//print(multiprint);
+			for (int i = currentMenu; i < (int)(currentSlideValue); i++)
+			{
+				print("Setting tab "+ debugTN[i]+" to layer depth "+ (i - currentMenu));
+				tabWipers[i].currentLayerDepth = i-currentMenu;
+				tabWipers[i].StartTransition(movingState);
+			}
+		}
+		else
+		{
+			//print("transitioning to nowhere lol.");
+		}
+	}
+
+	void RearrangeLayers(int direction)
+	{
+		int menuIterator = currentMenu;
+		if (direction == -1)
+		{
+			string multiprint = "Ordering layers:\n";
 			for (int i = 5; i > 0; i--)
 			{
 				if (menuIterator < 0) { menuIterator = 4; }
-				RectTransform nextUp = tabRenderTextures[menuIterator].GetComponent<RectTransform>();
-				nextUp.SetSiblingIndex(i);
-				multiprint += debugTN[menuIterator] + "[" + i +"]======> ";
+				tabRenderLayers[menuIterator].SetSiblingIndex(i);
+				multiprint += debugTN[menuIterator] + "[" + i + "]======> ";
 				menuIterator--;
-				//layerOrder--;
 			}
-			print(multiprint);
-			int middleLayers = 0;
-			for (int i = currentMenu; i > goalMenu; i--)
-			{
-				int countUp = currentMenu - i;
-				int countDown = i - goalMenu;
-				tabWipers[i].triggerWipe = true;
-				tabWipers[i].WipeSetup(true, 0.4f + (0.5f * countDown * interval));
-				tabWipers[i].isBottomLayer = false;
-				middleLayers++;
-			}
-			transLayerCount = middleLayers;
-			tabWipers[currentMenu].WipeSetup(true, 1);
-			tabWipers[goalMenu].WipeSetup(true, 0);
-			tabWipers[goalMenu].isBottomLayer = true;
+			//print(multiprint);
 		}
-	}
-
-	public void RedirectTransition(int menuID)
-	{
-
-	}
-
-	public void CompleteTransition()
-	{
-		print("Completed transition to " + goalMenu+" from "+ currentMenu);
-		transLayerCount = 0;
-		currentMenu = goalMenu;
-		movingState = 0;
-
-		tabWipers[currentMenu].isBottomLayer = false;
-		tabWipers[currentMenu].WipeSetup(false, 1);
-
-		int menuIterator = currentMenu;
-		string multiprint = "Ordering layers:\n";
-		for (int i = 5; i > 0; i--)
+		else if (direction == 1)
 		{
-			if (menuIterator > 4) { menuIterator = 0; }
-			RectTransform nextUp = tabRenderTextures[menuIterator].GetComponent<RectTransform>();
-			nextUp.SetSiblingIndex(i);
-			multiprint += debugTN[menuIterator] + "[" + i + "]======> ";
-			menuIterator++;
+			string multiprint = "Ordering layers:\n";
+
+			for (int i = 5; i > 0; i--)
+			{ 
+				if (menuIterator > 4) { menuIterator = 0; }
+				tabRenderLayers[menuIterator].SetSiblingIndex(i);
+				multiprint += debugTN[menuIterator] + "[" + i + "]======> ";
+				menuIterator++;
+			}
+			//print(multiprint);
 		}
-		print(multiprint);
-
-		//currentSlideLerp = currentSlideValue;
-		//for (int i = 0; i < tabWipers.Length; i++)
-		//{
-		//	tabWipeAmount[i] = 0;
-		//	tabWipers[i].myMaterial.SetFloat("_SliceAmount", tabWipeAmount[i]);
-		//}
-
 	}
-
-	//public void OpenMenu(int menuID)
-	//{
-	//	goalMenu = menuID;
-	//	if (currentMenu == goalMenu) { return; }
-	//	foreach (MenuWipeCamera m in tabWipers)
-	//	{
-	//		if (m.triggerWipe) { return; }
-	//	}
-	//	foreach (MenuWipeCamera m in tabWipers)
-	//	{
-	//		m.myMaterial.SetFloat("_SliceAmount", 0);
-	//	}
-
-	//	int menuIterator = currentMenu;
-	//	float interval = Mathf.Abs(1 / (float)(currentMenu - goalMenu));
-	//	print("interval " + interval);
-	//	tabWipers[goalMenu].triggerWipe = false;
-
-
-	//	if (goalMenu > currentMenu) //BRANCH A
-	//	{
-	//		print("Branch A selected.");
-	//		for (int i = 5; i > 0; i--)
-	//		{
-	//			if (menuIterator > 4){menuIterator = 0;}
-	//			RectTransform nextUp = tabRenderTextures[menuIterator].GetComponent<RectTransform>();
-	//			nextUp.SetSiblingIndex(i);
-	//			print("Setting: "+debugTN[menuIterator]+" to position "+i);
-	//			menuIterator++;
-	//			//layerOrder--;
-	//		}
-
-	//		print("currentMenu: " + currentMenu);
-	//		print("goalMenu: " + goalMenu);
-
-	//		for (int i = currentMenu; i < goalMenu; i++)
-	//		{
-	//			int countUp = i-currentMenu;
-	//			int countDown = goalMenu-i;
-	//			tabWipers[i].triggerWipe = true;
-	//			tabWipers[i].WipeSetup(false, 0.4f+(0.5f*countDown * interval));
-	//			print("Giving menu " + debugTN[i] + " brightness of:" + countDown * interval);
-	//			float delay = (countUp * layerDelay);
-	//			//print("Giving menu: " + debugTN[i] + " delay of:" + delay);
-	//			tabWipers[i].timer = 0-delay;
-	//			tabWipers[i].isBottomLayer = false;
-	//			tabWipers[i].wipeAmountLerp = 0 - delay;
-	//		}
-	//		tabWipers[currentMenu].WipeSetup(false, 1);
-	//		tabWipers[goalMenu].WipeSetup(false, 0);
-	//		tabWipers[goalMenu].isBottomLayer = true;
-	//	}
-	//	else //BRANCH B
-	//	{
-	//		print("Branch B selected.");
-
-	//		for (int i = 5; i > 0; i--)
-	//		{
-	//			if (menuIterator < 0) { menuIterator = 4; }
-	//			RectTransform nextUp = tabRenderTextures[menuIterator].GetComponent<RectTransform>();
-	//			nextUp.SetSiblingIndex(i);
-	//			//print("Setting: " + debugTN[menuIterator] + " to position " + i);
-	//			menuIterator--;
-	//			//layerOrder--;
-	//		}
-
-	//		print("currentMenu: " + currentMenu);
-	//		print("goalMenu: " + goalMenu);
-	//		for (int i = currentMenu; i > goalMenu; i--)
-	//		{
-	//			int countUp = currentMenu - i;
-	//			int countDown = i - goalMenu;
-	//			tabWipers[i].triggerWipe = true;
-	//			tabWipers[i].WipeSetup(true, 0.4f + (0.5f * countDown * interval));
-	//			print("Giving menu " + debugTN[i] + " brightness of:" + countUp * interval);
-	//			float delay = (countUp * layerDelay);
-	//			//print("Giving menu: " + debugTN[i] + " delay of:" + delay);
-	//			tabWipers[i].timer = 0-delay;
-	//			tabWipers[i].isBottomLayer = false;
-	//			tabWipers[i].wipeAmountLerp = 0 - delay;
-	//		}
-	//		tabWipers[currentMenu].WipeSetup(true, 1);
-	//		tabWipers[goalMenu].WipeSetup(true, 0);
-	//		tabWipers[goalMenu].isBottomLayer = true;
-	//	}
-	//	currentMenu = goalMenu;
-	//	//Set goal layer under current layer, 
-	//	print("OPENMENU: " + menuID);
-	//}
 }

@@ -15,10 +15,10 @@ public class FulcrumSlideSelector : MonoBehaviour {
 	[HideInInspector] public float dragStartTab;
 	public UITabManager myUITabManager;
 	public float currentPosGoal;
+	public float currentPosGoalPercent;
 	public float currentPosLerp;
 	public float currentPosLerpPercent;
 
-	public Transform[] dbgMarker;
 
 	// Use this for initialization
 	void Start ()
@@ -31,31 +31,29 @@ public class FulcrumSlideSelector : MonoBehaviour {
 		spacesCount = buttonCount - 1;
 		spacing = scrW / buttonCount;
 		this.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.4f;
-
-		for (int i = 0; i <= 4; i++)
-		{
-			dbgMarker[i].position = new Vector3((i * spacing)+(buttonWidth/2), this.transform.position.y, this.transform.position.z);
-		}
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		currentPosLerp = Mathf.Lerp(currentPosLerp, currentPosGoal, Time.deltaTime*10);
-		if (Mathf.Abs(currentPosLerp - currentPosGoal) < 0.0001f)
+		currentPosLerp = Mathf.Lerp(currentPosLerp, currentPosGoal, Time.fixedDeltaTime*5);//*10);
+		if (Mathf.Abs(currentPosLerp - currentPosGoal) < 0.001f)
 		{
 			currentPosLerp = currentPosGoal;
 		}
 		currentPosLerpPercent = currentPosLerp / scrW;
+		currentPosGoalPercent = currentPosGoal / scrW;
 
-		
+
+
+
 
 		this.transform.position = new Vector3(currentPosLerp, this.transform.position.y, this.transform.position.z);
 	}
 
 	public void SetCurrentSliderTab(int tab)
 	{
-		if (myUITabManager.movingState != 0) { return; }
+		//if (myUITabManager.movingState != 0) { return; }
 		currentTab = tab;
 		if (currentTab > 4) { currentTab = 4; }
 		DragRelease();
@@ -65,7 +63,7 @@ public class FulcrumSlideSelector : MonoBehaviour {
 	{
 		if (currentTab > 4) { currentTab = 4; }
 		currentPosGoal = currentTab * buttonWidth;
-		myUITabManager.TransitionTo(currentTab);
+		//myUITabManager.TransitionTo(currentTab);
 	}
 
 	public void DragStart()
@@ -80,7 +78,7 @@ public class FulcrumSlideSelector : MonoBehaviour {
 		if (currentTab != dragStartTab)
 		{
 			DragStart();
-			myUITabManager.TransitionTo(currentTab);
+			//myUITabManager.TransitionTo(currentTab);
 		}
 		//float mouseMovement = Input.mousePosition.x - dragStartPos - ((currentTab-dragStartTab)*buttonWidth);
 		float mouseMovement = Input.mousePosition.x - dragStartPos;
@@ -95,43 +93,17 @@ public class FulcrumSlideSelector : MonoBehaviour {
 		if (weighted < 0) { weighted = 0; }
 		if (weighted > (buttonCount-1) * buttonWidth) { weighted = (buttonCount-1) * buttonWidth; }
 
-		dbgMarker[5].position = new Vector3(tabCenter + mouseMovement, this.transform.position.y + 10, this.transform.position.z);
 
-		print("(currentTab * buttonWidth) " + (currentTab * buttonWidth) + "\nmouseMovement " + mouseMovement + "\nweighted" + weighted);
+
+
+		//print("(currentTab * buttonWidth) " + (currentTab * buttonWidth) + "\nmouseMovement " + mouseMovement + "\nweighted" + weighted);
+		
+		
+		
 		//currentTab = (int)(weighted / spacing);
 		currentPosGoal = weighted;
-
 		//print("Input.mousePosition.x "+ Input.mousePosition.x + "\nspacing "+ spacing + "\ncurrentTab" + currentTab);
 
 		//this.transform.position = new Vector3(currentTab * buttonWidth+mouseMovement, this.transform.position.y, this.transform.position.z);
 	}
-
-
-	//public void DragRelease()
-	//{
-	//	float mouseMovement = Input.mousePosition.x - dragStartPos;
-	//	float translatedPos = (currentTab * spacing) + mouseMovement;
-	//	currentTab = (int)(translatedPos / spacing);
-	//	this.transform.position = new Vector3(currentTab*spacing, this.transform.position.y, this.transform.position.z);
-	//}
-
-	//public void DragStart()
-	//{
-	//	dragStartPos = Input.mousePosition.x;
-	//}
-
-	//public void Dragging()
-	//{
-	//	//currentTab = (int)(Input.mousePosition.x / spacing);
-	//	float mouseMovement = Input.mousePosition.x - dragStartPos;
-	//	float translatedPos = (currentTab * spacing) + mouseMovement;
-	//	currentTab = (int)(translatedPos / spacing);
-	//	float weighted = ((currentTab * 2 * spacing) + translatedPos) / 3;
-
-	//	print("mouseMovement " + mouseMovement + "\ntranslatedPos " + translatedPos + "\nweighted" + weighted);
-	//	//currentTab = (int)(weighted / spacing);
-
-	//	//print("Input.mousePosition.x "+ Input.mousePosition.x + "\nspacing "+ spacing + "\ncurrentTab" + currentTab);
-	//	this.transform.position = new Vector3(weighted, this.transform.position.y, this.transform.position.z);
-	//}
 }
