@@ -11,16 +11,17 @@
 
 		Tags
 		{
-			"Queue" = "Transparent"
-			"RenderType" = "Transparent"
+			"Queue" = "AlphaTest"
+			"RenderType" = "TransparentCutout"
 			"IgnoreProjector" = "True"
 		}
+		Cull Off
+		Lighting Off
 		ZWrite Off
 		Pass
 		{
 			Name "MenuWipe"
-			Blend SrcAlpha OneMinusSrcAlpha 
-
+			Blend SrcAlpha OneMinusSrcAlpha
 
 			CGPROGRAM
 			#pragma vertex vert

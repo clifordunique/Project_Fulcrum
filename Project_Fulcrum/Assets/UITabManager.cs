@@ -66,7 +66,7 @@ public class UITabManager : MonoBehaviour {
 			//print(multiprint);
 			for (int i = currentMenu-movingTabsCount; i > (int)(currentSlideValue); i--)
 			{
-				print("LATE LEFT DISPATCH ON debugTN[i]");
+				print("LATE LEFT DISPATCH ON " + debugTN[i]);
 				//print("Starting transition for " + debugTN[i] + " in direction " + movingState);
 				tabWipers[i].currentLayerDepth = currentMenu - i;
 				tabWipers[i].StartTransition(movingState);
@@ -81,7 +81,7 @@ public class UITabManager : MonoBehaviour {
 			//print(multiprint);
 			for (int i = currentMenu+movingTabsCount; i < (int)(currentSlideValue); i++)
 			{
-				print("LATE RIGHT DISPATCH ON debugTN[i]");
+				print("LATE RIGHT DISPATCH ON " + debugTN[i]);
 				//print("Starting transition for "+ debugTN[i]+" in direction "+movingState);
 				tabWipers[i].currentLayerDepth = i - currentMenu;
 				tabWipers[i].StartTransition(movingState);

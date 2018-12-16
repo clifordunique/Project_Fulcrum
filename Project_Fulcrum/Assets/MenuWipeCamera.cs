@@ -19,6 +19,7 @@ public class MenuWipeCamera : MonoBehaviour
 	[SerializeField] [ReadOnlyAttribute] public bool isRightNeighbourOnTop;
 	[SerializeField] [ReadOnlyAttribute] public bool isLeftNeighbourOnTop;
 	[SerializeField] [ReadOnlyAttribute] public bool isBottomLayer = true;
+	[SerializeField] [ReadOnlyAttribute] public bool wasBottomLayer = false; // Used to trigger a smooth brightness transition when the layer is changed from bottom layer to non bottom layer.
 	[SerializeField] [ReadOnlyAttribute] public bool isTopLayer = false;
 	//[SerializeField] [ReadOnlyAttribute] public float wipeAmountLerp = 1; // 0-1 range.
 
@@ -63,6 +64,7 @@ public class MenuWipeCamera : MonoBehaviour
 		//		outputRT.antiAliasing = 1;
 		outputRT.Create();
 		isBottomLayer = false;
+		wasBottomLayer = false;
 		myInputCam = this.gameObject.GetComponent<Camera>();
 		myInputCam.targetTexture = outputRT;
 		myOutputPanel.GetComponent<RawImage>().texture = outputRT;
@@ -78,9 +80,9 @@ public class MenuWipeCamera : MonoBehaviour
 		if (isLeftNeighbourOnTop) // FOLLOW WIPE
 		{
 			float localGoal = neighbourLeft.curWipeAmount - 0.1f;
-			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.fixedDeltaTime*followWipeExp);
-			if (curWipeAmount < localGoal) { curWipeAmount += Time.fixedDeltaTime * followWipeLinear; }
-			if (curWipeAmount > localGoal) { curWipeAmount -= Time.fixedDeltaTime * followWipeLinear; }
+			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.smoothDeltaTime * 2.5f *followWipeExp);
+			if (curWipeAmount < localGoal) { curWipeAmount += Time.smoothDeltaTime * 2.5f  * followWipeLinear; }
+			if (curWipeAmount > localGoal) { curWipeAmount -= Time.smoothDeltaTime * 2.5f  * followWipeLinear; }
 			if (Mathf.Abs(curWipeAmount - localGoal) <= 0.001f)
 			{ curWipeAmount = localGoal; }
 		}
@@ -91,9 +93,9 @@ public class MenuWipeCamera : MonoBehaviour
 			bool c = (goalValue < 1 && goalValue > 0);
 			if (a || b || c)
 			{
-				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.fixedDeltaTime * leadWipeExp);
-				if (curWipeAmount < goalValue) { curWipeAmount += Time.fixedDeltaTime * leadWipeLinear; }
-				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.fixedDeltaTime * leadWipeLinear; }
+				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.smoothDeltaTime * 2.5f  * leadWipeExp);
+				if (curWipeAmount < goalValue) { curWipeAmount += Time.smoothDeltaTime * 2.5f  * leadWipeLinear; }
+				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.smoothDeltaTime * 2.5f  * leadWipeLinear; }
 				if (Mathf.Abs(curWipeAmount - goalValue) <= 0.001f)
 				{ curWipeAmount = goalValue; }
 			}
@@ -112,9 +114,9 @@ public class MenuWipeCamera : MonoBehaviour
 		if (isRightNeighbourOnTop) // FOLLOW WIPE
 		{
 			float localGoal = neighbourRight.curWipeAmount - 0.1f;
-			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.fixedDeltaTime * followWipeExp);
-			if (curWipeAmount < localGoal) { curWipeAmount += Time.fixedDeltaTime * followWipeLinear; }
-			else if (curWipeAmount > localGoal) { curWipeAmount -= Time.fixedDeltaTime * followWipeLinear; }
+			curWipeAmount = Mathf.Lerp(curWipeAmount, localGoal, Time.smoothDeltaTime * 2.5f  * followWipeExp);
+			if (curWipeAmount < localGoal) { curWipeAmount += Time.smoothDeltaTime * 2.5f  * followWipeLinear; }
+			else if (curWipeAmount > localGoal) { curWipeAmount -= Time.smoothDeltaTime * 2.5f  * followWipeLinear; }
 			if (Mathf.Abs(curWipeAmount - localGoal) <= 0.001f)
 			{ curWipeAmount = localGoal; }
 		}
@@ -125,9 +127,9 @@ public class MenuWipeCamera : MonoBehaviour
 			bool c = (goalValue < 1 && goalValue > 0);
 			if (a || b || c)
 			{
-				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.fixedDeltaTime * leadWipeExp);
-				if (curWipeAmount < goalValue) { curWipeAmount += Time.fixedDeltaTime * leadWipeLinear; }
-				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.fixedDeltaTime * leadWipeLinear; }
+				curWipeAmount = Mathf.Lerp(curWipeAmount, goalValue, Time.smoothDeltaTime * 2.5f  * leadWipeExp);
+				if (curWipeAmount < goalValue) { curWipeAmount += Time.smoothDeltaTime * 2.5f  * leadWipeLinear; }
+				else if (curWipeAmount > goalValue) { curWipeAmount -= Time.smoothDeltaTime * 2.5f  * leadWipeLinear; }
 				if (Mathf.Abs(curWipeAmount - goalValue) <= 0.001f)
 				{ curWipeAmount = goalValue; }
 			}
@@ -140,7 +142,7 @@ public class MenuWipeCamera : MonoBehaviour
 
 	private void SetBrightness( bool applyInstantly)
 	{
-		if (!isLeftNeighbourOnTop && !isRightNeighbourOnTop)
+		if (!isLeftNeighbourOnTop && !isRightNeighbourOnTop && goalValue == 0)
 		{
 			currentLayerDepth = 0;
 		}
@@ -189,9 +191,9 @@ public class MenuWipeCamera : MonoBehaviour
 		{
 			if (Mathf.Abs(curBrightnessLerp - curBrightness) > 0.01f)
 			{
-				curBrightnessLerp = Mathf.Lerp(curBrightnessLerp, curBrightness, Time.fixedDeltaTime);
-				if (curBrightnessLerp < curBrightness) { curBrightnessLerp += Time.fixedDeltaTime / 10; }
-				if (curBrightnessLerp > curBrightness) { curBrightnessLerp -= Time.fixedDeltaTime / 10; }
+				curBrightnessLerp = Mathf.Lerp(curBrightnessLerp, curBrightness, Time.smoothDeltaTime * 2.5f );
+				if (curBrightnessLerp < curBrightness) { curBrightnessLerp += Time.smoothDeltaTime * 2.5f  / 10; }
+				if (curBrightnessLerp > curBrightness) { curBrightnessLerp -= Time.smoothDeltaTime * 2.5f  / 10; }
 				if (Mathf.Abs(curBrightnessLerp - curBrightness) <= 0.01f)
 				{ curBrightnessLerp = curBrightness; }
 			}
@@ -223,6 +225,7 @@ public class MenuWipeCamera : MonoBehaviour
 		myMaterial.SetFloat("_SliceAmount", curWipeAmount);
 		curBrightness = 1;
 		currentLayerDepth = 0;
+		wasBottomLayer = false;
 		myMaterial.SetFloat("_Brightness", 1);
 
 		if (neighbourLeft != null)
@@ -242,6 +245,7 @@ public class MenuWipeCamera : MonoBehaviour
 		myUITabManager.movingTabsCount++;
 		moveState = direction;
 		myMaterial.SetFloat("_SliceDirection", direction);
+		wasBottomLayer = false;
 		//SetBrightness(true);
 	}
 
@@ -249,15 +253,18 @@ public class MenuWipeCamera : MonoBehaviour
 	{
 		debugGlobalSliderValue = myUITabManager.currentSlideValue;
 
-		if (moveState == 0) { isBottomLayer = true; }
-		else { isBottomLayer = false; }
+		if (moveState == 0)
+			{ isBottomLayer = true; }
+		else if(isBottomLayer)
+		{
+			isBottomLayer = false;
+			wasBottomLayer = true;
+		}
 
-		SetBrightness( true );
+		SetBrightness(!wasBottomLayer);
 
 		if (moveState == 0)
-		{
-			return;
-		}
+			{return;}
 
 
 		offset = myUITabManager.currentSlideValue - menuID;
